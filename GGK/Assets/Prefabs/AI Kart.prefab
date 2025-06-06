@@ -675,7 +675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2400193464568685126}
   - component: {fileID: 3071147744749809248}
-  - component: {fileID: 8215663960244862019}
+  - component: {fileID: 1732716482767276912}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -750,7 +750,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8215663960244862019
+--- !u!114 &1732716482767276912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -759,11 +759,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 6975708812319054009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a920eccc5b900984a977bdda046a5f8b, type: 3}
+  m_Script: {fileID: 11500000, guid: bf62c11ccfcec6040a8458e78135105d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  playerCamera: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 7b7240160a399ae42bf5253934dba1df, type: 3}
+  - {fileID: 21300000, guid: f1affd61a6bd8f040a98a5fd0d2c0d3f, type: 3}
+  - {fileID: 21300000, guid: d90764cc681c2a24ea99a575dd1a515e, type: 3}
+  - {fileID: 21300000, guid: 383c583504c738e48b59b521fb9a4c03, type: 3}
+  - {fileID: 21300000, guid: eb3ef4a1ea7794247b5955f36c0b8fef, type: 3}
+  - {fileID: 21300000, guid: 188b3f372543e5a4aacc5750866c41f8, type: 3}
+  colors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &7554644659649487565
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,8 +788,9 @@ GameObject:
   - component: {fileID: 1310493894267133345}
   - component: {fileID: 7220748844497080306}
   - component: {fileID: 22347426078274127}
+  - component: {fileID: 3006441214431082745}
   m_Layer: 0
-  m_Name: Kart
+  m_Name: AI Kart
   m_TagString: Kart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1016,6 +1027,20 @@ MonoBehaviour:
   lap: 1
   placement: 0
   distanceSquaredToNextCP: 0
+--- !u!114 &3006441214431082745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7554644659649487565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1594fa3dd31944746bd179b190f6bad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angleToStartX: 15
+  angleToStartDrift: 25
 --- !u!1 &8479029041556741024
 GameObject:
   m_ObjectHideFlags: 0
