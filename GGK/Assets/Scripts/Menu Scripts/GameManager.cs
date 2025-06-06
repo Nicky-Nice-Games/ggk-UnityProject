@@ -10,9 +10,12 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     // Instance
-    public static GameObject gameManagerInstace;
-    public string previousScene;
+    public static GameObject gameManagerInstance;
+
+    // Options
+    public OptionsHandler options;
     public GameObject optionsPanel;
+    public string previousScene;
 
     // Character
     public Sprite characterSprite;
@@ -26,14 +29,16 @@ public class GameManager : MonoBehaviour
     
     void Awake()
     {
-        if (gameManagerInstace == null)
+        if (gameManagerInstance == null)
         {
-            gameManagerInstace = gameObject;
+            gameManagerInstance = gameObject;
             DontDestroyOnLoad(gameObject);
         }
     }
     void Start()
     {
+        OptionsHandler options = gameObject.GetComponent<OptionsHandler>();
+
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
         SceneManager.sceneLoaded += ConnectOptions;
@@ -44,13 +49,13 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Options();
         }
     }
 
-    // Menu Transition Methods
+    // Scene Transition Methods
     public void StartGame()
     {
         SceneManager.LoadScene("PlayerModeMenu");
@@ -69,9 +74,17 @@ public class GameManager : MonoBehaviour
     }
     public void LoadTrack(string trackName)
     {
-        SceneManager.LoadScene(trackName);
+        SceneManager.LoadScene(trackName.Trim());
     }
-    
+    public void GameFinished()
+    {
+        SceneManager.LoadScene("GameOverMenu");
+    }
+    public void LoadStartMenu()
+    {
+        SceneManager.LoadScene("StartMenu");
+    }
+
     // Options methods
     public void Options()
     {
@@ -90,17 +103,18 @@ public class GameManager : MonoBehaviour
         if (!optionsPanel.activeSelf)
         {
             optionsPanel.SetActive(true);
+            options.volumeSlider.Select();
         }
         else
         {
             optionsPanel.SetActive(false);
+            RefreshSelected();
         }
     }
 
     public void ConnectOptions()
     {
         // Grabbing options panel
-        OptionsHandler options = gameObject.GetComponent<OptionsHandler>();
         GameObject canvas = GameObject.FindAnyObjectByType<Canvas>().gameObject;
         optionsPanel = canvas.transform.GetChild(canvas.transform.childCount-1).gameObject;
         
