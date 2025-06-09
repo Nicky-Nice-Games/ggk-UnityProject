@@ -7,6 +7,7 @@ public class PlacementManager : MonoBehaviour
 {
     public List<LapCounter> karts;
     private List<LapCounter> sortedList;
+    private List<LapCounter> finishedList;
 
     void Start()
     {
@@ -16,6 +17,7 @@ public class PlacementManager : MonoBehaviour
     void Update()
     {
         CheckPlacement();
+
     }
 
     public void CheckPlacement()
@@ -24,6 +26,7 @@ public class PlacementManager : MonoBehaviour
         sortedList = karts.OrderByDescending(kart => kart.lap)
             .ThenByDescending(kart => kart.currentCheckPoint)
             .ThenBy(kart => kart.distanceSquaredToNextCP)
+            .ThenBy(kart => kart.timeFinished)
             .ToList();
 
         // Assign Placements

@@ -9,6 +9,8 @@ public class TrackHandler : MonoBehaviour
 {
     // References
     public GameManager gameManager;
+    public GameObject leaderboard;
+    public GameObject leaderboardItem;
 
     // Kart Spawning
     public List<GameObject> spawnpoints;
@@ -20,11 +22,31 @@ public class TrackHandler : MonoBehaviour
     public GameObject playerKart;
     public GameObject NPCKart;
 
-    public void Start()
+    // Timer
+    public float currentTime;
+
+    void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
 
         SpawnKarts();
+    }
+
+    void Update()
+    {
+        currentTime += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (leaderboard.activeSelf)
+            {
+                leaderboard.SetActive(false);
+            }
+            else
+            {
+                leaderboard.SetActive(true);
+            }
+        }
     }
 
     public void SpawnKarts()
@@ -63,7 +85,6 @@ public class TrackHandler : MonoBehaviour
         player.lapCountText.text = "LAP 1/3";
         player.checkpointText.text = "Check 1/" + checkpoints.Count;
 
-
         // Camera
         SpeedCameraEffect cam = FindAnyObjectByType<SpeedCameraEffect>();
         cam.target = player.gameObject.transform.GetChild(2);
@@ -83,5 +104,23 @@ public class TrackHandler : MonoBehaviour
         input.actions["Turn"].performed += driver.OnTurn;
         input.actions["Drift Hop"].started += driver.OnDrift;
         input.actions["Drift Hop"].canceled += driver.OnDrift;
+    }
+
+    public void Finished(LapCounter kart)
+    {
+        // Pull up leaderboards if player finished
+        if (kart == player)
+        {
+            leaderboard.gameObject.SetActive(true);
+        }
+
+        // Otherwise add time to leaderboad like normal
+        GameObject tempItem = Instantiate(leaderboardItem);
+        TextMeshProUGUI[] tempArray = leaderboardItem.GetComponentsInChildren<TextMeshProUGUI>();
+        tempArray[0].text = kart.placement.ToString();
+        tempArray[1].text = kart.name;
+        tempArray[2].text = kart.timeFinished.ToString();
+
+        tempItem.transform.SetParent(leaderboard.transform);
     }
 }

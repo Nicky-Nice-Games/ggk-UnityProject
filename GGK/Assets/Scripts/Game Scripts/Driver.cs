@@ -252,7 +252,7 @@ public class Driver : MonoBehaviour
                 isDriftingLeft = movementDirection.x < 0f;
                 driftTime = 0f;
 
-                Debug.Log("Started Drift: " + (isDriftingLeft ? "Left" : "Right"));
+                // Debug.Log("Started Drift: " + (isDriftingLeft ? "Left" : "Right"));
 
                 // Visual drift lean
                 float yRot = isDriftingLeft ? -driftVisualAngle : driftVisualAngle;

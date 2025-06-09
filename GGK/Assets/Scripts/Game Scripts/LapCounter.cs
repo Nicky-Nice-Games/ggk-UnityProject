@@ -17,6 +17,8 @@ public class LapCounter : MonoBehaviour
     public int lap = 1;
     public int placement;
     public float distanceSquaredToNextCP = 0;
+    public bool finished = false;
+    public float timeFinished;
 
     void Update()
     {
@@ -38,6 +40,15 @@ public class LapCounter : MonoBehaviour
             {
                 lap++;
                 if (lapCountText != null) lapCountText.text = "LAP " + lap + "/3";
+                if (lap >= 4)
+                {
+                    finished = true;
+                    gameObject.GetComponent<Driver>().enabled = false;
+                    TrackHandler temp = FindAnyObjectByType<TrackHandler>();
+                    timeFinished = temp.currentTime;
+                    temp.Finished(this);
+                }
+                    
             }
 
             if (checkpointText != null) checkpointText.text = "Check " + (currentCheckPoint + 1) + "/" + checkpoints.Count; 
