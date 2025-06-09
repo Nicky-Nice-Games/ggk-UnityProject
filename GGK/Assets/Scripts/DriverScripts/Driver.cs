@@ -68,7 +68,7 @@ public class Driver : MonoBehaviour
     bool lastDriftDirectionLeft;
 
     public float airGravityMultiplier = 2f;
-    private Gamemanager gamemanagerObj;
+    private GameManager gamemanagerObj;
 
     [Header("Sound Settings")]
 
@@ -95,7 +95,7 @@ public class Driver : MonoBehaviour
 
         soundPlayer = GetComponent<AudioSource>();
 
-        gamemanagerObj = FindAnyObjectByType<Gamemanager>();
+        gamemanagerObj = FindAnyObjectByType<GameManager>();
     }
 
     void Update()
