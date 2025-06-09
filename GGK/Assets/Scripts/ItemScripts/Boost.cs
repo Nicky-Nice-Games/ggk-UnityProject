@@ -1,0 +1,84 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Boost : BaseItem
+{
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        DecreaseTimer();
+    }
+
+    // the boost spawns on the user as an empty gameobject and applies a force to the kart
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Kart")
+        {
+            Driver driver = null;
+            NPCDriver npcDriver = null;
+            if (collision.gameObject.GetComponent<Driver>() != null)
+            {
+                driver = collision.gameObject.GetComponent<Driver>();
+            }
+            else if (collision.gameObject.GetComponent<NPCDriver>() != null)
+            {
+                npcDriver = collision.gameObject.GetComponent<NPCDriver>();
+            }
+
+            float boostMult = 0f;
+            Debug.Log("COLLIDED!");
+
+            if (isUpgraded)
+            {
+                Vector3 boost = driver.transform.forward * 2000f * 5;
+                if (driver != null)
+                {
+                    driver.velocity += boost * 0.3f;
+                    driver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                }
+                else if (npcDriver != null)
+                {
+                    npcDriver.velocity += boost * 0.3f;
+                    npcDriver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                }
+            }
+            else
+            {
+
+                Vector3 boost = transform.forward * 1150f * 5;
+                if (driver != null)
+                {
+                    driver.velocity += boost * 0.3f;
+                    driver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                }
+                else if (npcDriver != null)
+                {
+                    npcDriver.velocity += boost * 0.3f;
+                    npcDriver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                }
+
+            }
+            StartCoroutine(ApplyBoost(driver, boostMult, 5.0f));
+            Debug.Log("Applying Boost Item!");
+        }
+    }
+
+    IEnumerator ApplyBoost(Driver driver, float boostForce, float duration)
+    {
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = driver.transform.forward * boostForce;
+
+            driver.rBody.AddForce(boostDirection, ForceMode.VelocityChange);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+}
