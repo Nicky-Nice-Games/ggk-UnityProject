@@ -7,10 +7,10 @@ using Unity.Mathematics;
 public class LapCounter : MonoBehaviour
 {
     // References
-    public TextMeshPro lapCountText;
-    public TextMeshPro checkpointText;
-    public TextMeshPro placementText;
-    [HideInInspector] public List<CheckPoint> checkPoints;
+    public TextMeshProUGUI lapCountText;
+    public TextMeshProUGUI checkpointText;
+    public TextMeshProUGUI placementText;
+    [HideInInspector] public List<CheckPoint> checkpoints;
 
     // Values
     public int currentCheckPoint = 0;
@@ -20,16 +20,16 @@ public class LapCounter : MonoBehaviour
 
     void Update()
     {
-        distanceSquaredToNextCP = math.distancesq(gameObject.transform.position, checkPoints[(currentCheckPoint + 1) % checkPoints.Count].transform.position);
+        distanceSquaredToNextCP = math.distancesq(gameObject.transform.position, checkpoints[(currentCheckPoint + 1) % checkpoints.Count].transform.position);
     }
 
     public void CheckCheckPoint(CheckPoint checkpoint)
     {
         // Get index of other checkpoint
-        int otherCheckPoint = checkPoints.IndexOf(checkpoint);
+        int otherCheckPoint = checkpoints.IndexOf(checkpoint);
 
         // Compare checkpoints
-        if (otherCheckPoint == (currentCheckPoint + 1) % checkPoints.Count)
+        if (otherCheckPoint == (currentCheckPoint + 1) % checkpoints.Count)
         {
             currentCheckPoint = otherCheckPoint; // Not currentCheckPoint++ because need to loop around
 
@@ -40,7 +40,7 @@ public class LapCounter : MonoBehaviour
                 if (lapCountText != null) lapCountText.text = "LAP " + lap + "/3";
             }
 
-            if (checkpointText != null) checkpointText.text = "Check " + (currentCheckPoint + 1) + "/" + checkPoints.Count; 
+            if (checkpointText != null) checkpointText.text = "Check " + (currentCheckPoint + 1) + "/" + checkpoints.Count; 
         }
     }
 }

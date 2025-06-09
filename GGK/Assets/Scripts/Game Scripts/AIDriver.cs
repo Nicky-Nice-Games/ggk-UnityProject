@@ -25,7 +25,7 @@ public class AIDriver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 desiredLocation = lapCounter.checkPoints[(lapCounter.currentCheckPoint + 1) % lapCounter.checkPoints.Count].transform.position;
+        Vector3 desiredLocation = lapCounter.checkpoints[(lapCounter.currentCheckPoint + 1) % lapCounter.checkpoints.Count].transform.position;
         Vector3 desiredDirection = (desiredLocation - gameObject.transform.position).normalized;
 
         // Test if direction is in front, back, left or right or kart

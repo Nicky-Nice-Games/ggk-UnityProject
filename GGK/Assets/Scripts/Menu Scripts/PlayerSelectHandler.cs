@@ -17,7 +17,7 @@ public class PlayerSelectHandler : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.FindAnyObjectByType<GameManager>();
+        gameManager = FindAnyObjectByType<GameManager>();
         // gameManager.characterSprite = characterButtons[0].GetComponentsInChildren<Image>()[2].sprite;
         gameManager.characterSprite = gameManager.firstInteractable.GetComponent<Image>().sprite;
         gameManager.characterColor = Color.white;

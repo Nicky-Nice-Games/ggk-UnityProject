@@ -12,7 +12,7 @@ public class TrackSelectHandler : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.FindAnyObjectByType<GameManager>();
+        gameManager = FindAnyObjectByType<GameManager>();
 
         foreach (GameObject trackButton in trackButtons)
         {

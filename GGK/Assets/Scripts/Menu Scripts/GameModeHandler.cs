@@ -8,7 +8,7 @@ public class GameModeHandler : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.FindAnyObjectByType<GameManager>();
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     // Taking the relevant buttons from Game Manager

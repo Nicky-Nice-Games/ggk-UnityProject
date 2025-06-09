@@ -6,17 +6,11 @@ using UnityEngine;
 public class PlacementManager : MonoBehaviour
 {
     public List<LapCounter> karts;
-    public List<CheckPoint> checkPoints;
     private List<LapCounter> sortedList;
 
     void Start()
     {
-        karts = FindObjectsOfType<LapCounter>().ToList();
-        
-        foreach (LapCounter kart in karts)
-        {
-            kart.checkPoints = checkPoints;
-        }
+        karts = gameObject.GetComponent<TrackHandler>().karts;
     }
 
     void Update()

@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
     public void ConnectOptions()
     {
         // Grabbing options panel
-        GameObject canvas = GameObject.FindAnyObjectByType<Canvas>().gameObject;
+        GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
         optionsPanel = canvas.transform.GetChild(canvas.transform.childCount-1).gameObject;
         
         // Grabbing options panel refrences
