@@ -30,7 +30,7 @@ public class NEWDriver : MonoBehaviour
 
     [Header("Drift Settings")]
     //To determine drifting stuff in update
-    bool isDrifting;
+    public bool isDrifting;
     float driftTime = 0f;
     public float driftFactor = 0.8f;
     public float driftTurnMultiplier = 1.5f;
@@ -73,7 +73,17 @@ public class NEWDriver : MonoBehaviour
     //Tween stuff
     Tween driftRotationTween;
     float driftVisualAngle = 10f;
-    float driftTweenDuration = 0.4f;    
+    float driftTweenDuration = 0.4f;
+
+
+    [Header("Sound Settings")]
+
+    AudioSource soundPlayer;
+
+    [SerializeField]
+    AudioClip driveSound;
+
+    public bool isDriving;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +103,20 @@ public class NEWDriver : MonoBehaviour
         driftSparksRightFront.Stop();
         driftSparksRightBack.Stop();
 
+        soundPlayer = GetComponent<AudioSource>();
+
+    }
+
+    void Update()
+    {
+        // plays sound when kart is moving
+        if (isDriving)
+        {
+            if (!soundPlayer.isPlaying)
+            {
+                soundPlayer.PlayOneShot(driveSound);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -444,6 +468,22 @@ public class NEWDriver : MonoBehaviour
         movementDirection.z = movementDirection.y;
 
         movementDirection.y = 0; //We are not gonna jump duh
+
+        // determines when driving starts and when driving ends
+        if (context.started)
+        {
+            isDriving = true;
+        }
+        else if (context.canceled)
+        {
+            isDriving = false;
+
+            // stops engine sound
+            if (soundPlayer.isPlaying)
+            {
+                soundPlayer.Stop();
+            }
+        }
     }
 
     public void OnDrift(InputAction.CallbackContext context)
@@ -461,6 +501,16 @@ public class NEWDriver : MonoBehaviour
     public void OnAcceleration(InputAction.CallbackContext context)
     {
         movementDirection.z = context.ReadValue<float>();
+
+        // determines when driving starts and when driving ends
+        if (context.started)
+        {
+            isDriving = true;
+        }
+        else if (context.canceled)
+        {
+            isDriving = false;
+        }
     }
 
     public void OnTurn(InputAction.CallbackContext context)

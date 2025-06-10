@@ -10,7 +10,7 @@ public class GroundSounds : MonoBehaviour
     AudioSource soundPlayer;
 
     [SerializeField]
-    Driver driverScript;
+    NEWDriver driverScript;
 
     bool onGround;
 
