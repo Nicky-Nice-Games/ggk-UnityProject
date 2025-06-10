@@ -122,6 +122,68 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &223169240
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_Name
+      value: Kart 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+--- !u!4 &302602520 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3902291809712705986, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 223169240}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &603576557
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +301,7 @@ GameObject:
   - component: {fileID: 978201710}
   - component: {fileID: 978201709}
   - component: {fileID: 978201708}
+  - component: {fileID: 978201711}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -320,6 +383,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &978201711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978201707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd702f15eac1b074fb1a138536000c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1325273530}
+  targetRigidbody: {fileID: 1979041533}
+  lookBackTarget: {fileID: 302602520}
+  minFOV: 55
+  maxFOV: 75
+  maxSpeed: 40
+  fovSmoothSpeed: 8
+  baseOffset: {x: 0, y: 2.5, z: -5}
+  maxZoomOutZ: -7
+  followSpeed: 15
+--- !u!114 &1122174014 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6316634641190557527, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 223169240}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c980f7710f2f52c4f88279024bc6ba66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1325273530 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6866088379297677056, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 223169240}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1639830077
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +633,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1979041533 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 8245124639533166686, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 223169240}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2017216355
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,23 +881,83 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1122174014}
+        m_TargetAssemblyTypeName: NEWDriver, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e238fcfa-ca28-49f8-ab5e-9e4302ed8207
     m_ActionName: Car/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1122174014}
+        m_TargetAssemblyTypeName: NEWDriver, Assembly-CSharp
+        m_MethodName: OnAcceleration
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: ca8b4e14-4cf2-428d-a535-6a816f502036
     m_ActionName: Car/Accelerate
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1122174014}
+        m_TargetAssemblyTypeName: NEWDriver, Assembly-CSharp
+        m_MethodName: OnTurn
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 3860e72e-5332-4002-a50b-720bae4299b4
     m_ActionName: Car/Turn
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1122174014}
+        m_TargetAssemblyTypeName: NEWDriver, Assembly-CSharp
+        m_MethodName: OnDrift
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f3e08b1c-99ae-4145-9756-6a2911c1a600
     m_ActionName: Car/Drift Hop[/Keyboard/leftShift]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 978201711}
+        m_TargetAssemblyTypeName: SpeedCameraEffect, Assembly-CSharp
+        m_MethodName: OnLookBack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 55dc9f75-441f-4df3-abd2-eb86b1ac889e
     m_ActionName: Car/LookBack[/Keyboard/tab]
   - m_PersistentCalls:
@@ -873,3 +1039,4 @@ SceneRoots:
   - {fileID: 603576561}
   - {fileID: 1639830081}
   - {fileID: 2089560922}
+  - {fileID: 223169240}
