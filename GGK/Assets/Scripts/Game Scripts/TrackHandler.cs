@@ -115,12 +115,13 @@ public class TrackHandler : MonoBehaviour
         }
 
         // Otherwise add time to leaderboad like normal
-        GameObject tempItem = Instantiate(leaderboardItem);
+        GameObject tempItem = leaderboardItem;
         TextMeshProUGUI[] tempArray = leaderboardItem.GetComponentsInChildren<TextMeshProUGUI>();
         tempArray[0].text = kart.placement.ToString();
         tempArray[1].text = kart.name;
         tempArray[2].text = kart.timeFinished.ToString();
 
+        tempItem = Instantiate(leaderboardItem);
         tempItem.transform.SetParent(leaderboard.transform);
     }
 }
