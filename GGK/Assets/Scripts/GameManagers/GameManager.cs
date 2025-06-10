@@ -26,6 +26,11 @@ public class GameManager : MonoBehaviour
     public static GameObject thisManagerObjInstance;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
+    // Character Data
+    public Sprite characterSprite; // In the future replace with GameObject that holds character model
+    public Color characterColor;
+
     void Awake()
     {
         thisManagerInstance = this;
