@@ -22,11 +22,11 @@ public class Boost : BaseItem
     {
         if (collision.gameObject.tag == "Kart")
         {
-            Driver driver = null;
+            NEWDriver driver = null;
             NPCDriver npcDriver = null;
-            if (collision.gameObject.GetComponent<Driver>() != null)
+            if (collision.gameObject.GetComponent<NEWDriver>() != null)
             {
-                driver = collision.gameObject.GetComponent<Driver>();
+                driver = collision.gameObject.GetComponent<NEWDriver>();
             }
             else if (collision.gameObject.GetComponent<NPCDriver>() != null)
             {
@@ -41,8 +41,8 @@ public class Boost : BaseItem
                 Vector3 boost = driver.transform.forward * 2000f * 5;
                 if (driver != null)
                 {
-                    driver.velocity += boost * 0.3f;
-                    driver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                    driver.sphere.velocity += boost * 0.3f;
+                    driver.sphere.AddForce(boost, ForceMode.VelocityChange);
                 }
                 else if (npcDriver != null)
                 {
@@ -56,8 +56,8 @@ public class Boost : BaseItem
                 Vector3 boost = transform.forward * 1150f * 5;
                 if (driver != null)
                 {
-                    driver.velocity += boost * 0.3f;
-                    driver.rBody.AddForce(boost, ForceMode.VelocityChange);
+                    driver.sphere.velocity += boost * 0.3f;
+                    driver.sphere.AddForce(boost, ForceMode.VelocityChange);
                 }
                 else if (npcDriver != null)
                 {
@@ -71,13 +71,13 @@ public class Boost : BaseItem
         }
     }
 
-    IEnumerator ApplyBoost(Driver driver, float boostForce, float duration)
+    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = driver.transform.forward * boostForce;
 
-            driver.rBody.AddForce(boostDirection, ForceMode.VelocityChange);
+            driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
     }

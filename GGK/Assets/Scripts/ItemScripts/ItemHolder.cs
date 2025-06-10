@@ -14,7 +14,7 @@ public class ItemHolder : MonoBehaviour
     private bool holdingItem;
 
     [SerializeField]
-    private Driver thisDriver;
+    private NEWDriver thisDriver;
 
     [SerializeField]
     private NPCDriver npcDriver;
@@ -124,7 +124,7 @@ public class ItemHolder : MonoBehaviour
             if (thisDriver != null)
             {
 
-                thisDriver.velocity /= 8000;
+                thisDriver.sphere.velocity /= 8000;
             }
             else if (npcDriver != null)
             {
@@ -142,7 +142,7 @@ public class ItemHolder : MonoBehaviour
             Destroy(collision.gameObject);
             if (thisDriver != null)
             {
-                thisDriver.velocity /= 8000;
+                thisDriver.sphere.velocity /= 8000;
             }
             else if (npcDriver != null)
             {
@@ -156,8 +156,9 @@ public class ItemHolder : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider collision)
+    public void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("Collided");
         // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
         {
@@ -187,7 +188,7 @@ public class ItemHolder : MonoBehaviour
         if (collision.gameObject.transform.tag == "Projectile")
         {
             Destroy(collision.gameObject);
-            thisDriver.velocity /= 8;
+            thisDriver.sphere.velocity /= 8;
         }
 
     }
