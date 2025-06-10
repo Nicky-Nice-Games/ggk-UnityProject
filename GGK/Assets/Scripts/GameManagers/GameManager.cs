@@ -1,4 +1,3 @@
-using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+using DG.Tweening.Core.Easing;
 
 // Enum to hold the various game states
 public enum GameStates
@@ -19,18 +20,35 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager2 : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
+    // Enum
     private GameStates curState;
-    public static GameManager2 thisManagerInstance;
-    public static GameObject thisManagerObjInstance;
-    //the first button that should be selected should a controller need input
+
+    // Instance
+    public static GameObject gameManagerInstance;
+
+    // Options
+    private OptionsHandler options;
+    private GameObject optionsPanel;
+
+    // Options Data
+    public int volume = 100;
+
+    // Character
+    public Sprite characterSprite;
+    public Color characterColor;
+    
+    // Non-mouse support
     public GameObject currentSceneFirst;
+
     void Awake()
     {
-        thisManagerInstance = this;
-        thisManagerObjInstance = gameObject;
-        DontDestroyOnLoad(thisManagerObjInstance);
+        if (gameManagerInstance == null)
+        {
+            gameManagerInstance = gameObject;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     // Start is called before the first frame update
@@ -38,146 +56,118 @@ public class GameManager2 : MonoBehaviour
     {
         curState = GameStates.start;
 
-        //add functions to device config change and scene loaded events
+        // Call ConnectOptions on scene load and current scene
+        SceneManager.sceneLoaded += ConnectOptions;
+        ConnectOptions();
+
+        // Call RefreshSelected on device change, scene load and current scene
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
-
-        //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Options();
+        }
     }
 
-    /// <summary>
-    /// Changes the game state to multi /single player select
-    /// </summary>
+    // Scene Transition Methods
     public void StartGame()
     {
         SceneManager.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
-
-    /// <summary>
-    /// Connects the player to either a single or multiplayer lobby
-    /// Could prob be put into 2 functions in needed and even in a script attached
-    /// to the new scene like the player/Kart script
-    /// </summary>
-    public void MultiSingleConnect()
+    public void SinglePlayer()
     {
-        if (GetComponent<ButtonBehavior>().buttonClickedName == "Single")
-        {
-            // Proceed with single player
-            // ...
-
-            // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
-            curState = GameStates.gameMode;
-        }
-        else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
-        {
-            // Connect to multiplayer
-            // ...
-
-            // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
-            curState = GameStates.gameMode;
-        }
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
     }
-
-    /// <summary>
-    /// Called once the game mode is selected and loaded
-    /// </summary>
-    public void LoadedGameMode()
+    public void MutliPlayer()
     {
-        SceneManager.LoadScene("PlayerKartSelectScene");
+        // When there is appropriate mutliplayer support add correct scene
+    }
+    public void QuickRace()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
     }
-
-    /// <summary>
-    /// Holds logic for when the player selects their cart
-    /// Basic for now but might need to be ediited when
-    /// multyplayer is added
-    /// </summary>
     public void PlayerSelected()
     {
         SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
-
-    /// <summary>
-    /// Loads the game scene
-    /// </summary>
-    public void MapSelected()
+    public void MapSelected(string mapName)
     {
-        SceneManager.LoadScene("(HUD)DrivingMyKartAround");
+        SceneManager.LoadScene(mapName.Trim());
         curState = GameStates.game;
     }
-
-    /// <summary>
-    /// Triggers when the game finishes
-    /// </summary>
     public void GameFinished()
     {
         SceneManager.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
     }
-
     public void LoadStartMenu()
     {
         SceneManager.LoadScene("StartScene");
         curState = GameStates.start;
     }
 
-
-    public void RefreshSelected()
+    // Options methods
+    public void Options()
     {
-        // get the current EventSystem
-        EventSystem cur = EventSystem.current;
-
-        // if the current EventSystem has a first object..
-        if (cur.firstSelectedGameObject)
+        if (!optionsPanel.activeSelf)
         {
-            // ..store it in the currentSceneFirst variable
-            currentSceneFirst = cur.firstSelectedGameObject;
+            optionsPanel.SetActive(true);
+            options.volumeSlider.Select();
         }
-
-        // if no controllers detected..
-        if (Gamepad.all.Count == 0)
-        {
-            // deselect all buttons
-            cur.firstSelectedGameObject = null;
-            cur.SetSelectedGameObject(null);
-        }
-        // otherwise(aka. if a controller is detected)...
         else
         {
-            // if there is not a first selected gameObject and a currently stored firstSelected
-            // (aka was it removed previously?)...
-            if (!cur.firstSelectedGameObject && currentSceneFirst)
-            {
-                //set the first selected back
-                cur.firstSelectedGameObject = currentSceneFirst;
-            }
-            //set the current scene's selected game object to the first
-            cur.SetSelectedGameObject(cur.firstSelectedGameObject);
+            optionsPanel.SetActive(false);
+            RefreshSelected();
         }
     }
+    public void ConnectOptions()
+    {
+        // Grabbing options panel
+        options = FindAnyObjectByType<OptionsHandler>(FindObjectsInactive.Include);
+        optionsPanel = options.gameObject;
+        options.gameManager = this;
+        options.volumeSlider.value = volume;
+        options.volumeValue.text = volume.ToString();
+    }
+    public void ConnectOptions(Scene s, LoadSceneMode l)
+    {
+        ConnectOptions();
+    }
 
+    // Non-mouse support methods
+    public void RefreshSelected()
+    {
+        // Grab first interactable game object
+        currentSceneFirst = EventSystem.current.firstSelectedGameObject;
+
+        // Check what kind of interactable it is
+        if (currentSceneFirst.GetComponent<Button>() != null)
+        {
+            currentSceneFirst.GetComponent<Button>().Select();
+        }
+        else if (currentSceneFirst.GetComponent<Slider>() != null)
+        {
+            currentSceneFirst.GetComponent<Slider>().Select();
+        }
+    }
     //refresh selected should a new scene be loaded
     public void RefreshSelected(Scene s, LoadSceneMode l)
     {
         RefreshSelected();
     }
-
-
     //refresh selected should a device confirguration be changed
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
         RefreshSelected();
     }
-
 }
