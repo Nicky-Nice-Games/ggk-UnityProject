@@ -2,14 +2,13 @@ using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class PlayerKartHandeler : MonoBehaviour
 {
     // References
     public GameManager gameManager;
+    public CharacterData characterData;
     public List<GameObject> playerOptions;
     public Image characterSelectImage;
     private Image prevImageBorder;
@@ -22,6 +21,7 @@ public class PlayerKartHandeler : MonoBehaviour
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
+        characterData = FindAnyObjectByType<CharacterData>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in playerOptions)
@@ -34,10 +34,10 @@ public class PlayerKartHandeler : MonoBehaviour
         }
 
         // So scene can still work if not started from start scene
-        if ( gameManager != null )
+        if ( characterData != null )
         {
-            gameManager.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
-            gameManager.characterColor = Color.white;
+            characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
+            characterData.characterColor = Color.white;
         }
 
         // Connect character buttons to ChangeCharacter with appropriate arguments
@@ -69,15 +69,15 @@ public class PlayerKartHandeler : MonoBehaviour
         }
 
         characterSelectImage.sprite = characterImage.sprite;
-        if (gameManager != null) 
-            gameManager.characterSprite = characterImage.sprite;
+        if (characterData != null)
+            characterData.characterSprite = characterImage.sprite;
         border.color = Color.yellow;
         prevImageBorder = border;
     }
     public void ChangeColor(Image color)
     {
         characterSelectImage.color = color.color;
-        if (gameManager != null)
-            gameManager.characterColor = color.color;
+        if (characterData != null)
+            characterData.characterColor = color.color;
     }
 }

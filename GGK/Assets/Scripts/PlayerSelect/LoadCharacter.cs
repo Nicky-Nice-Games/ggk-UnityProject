@@ -5,17 +5,17 @@ using UnityEngine;
 public class LoadCharacter : MonoBehaviour
 {
     // References
-    public GameManager gameManager;
+    private CharacterData characterData;
     private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         // Get GameManger and Camera
-        gameManager = GameObject.FindAnyObjectByType<GameManager>();
+        characterData = FindAnyObjectByType<CharacterData>();
 
         // Load saved selected character
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = gameManager.characterSprite;
-        spriteRenderer.color = gameManager.characterColor;
+        spriteRenderer.sprite = characterData.characterSprite;
+        spriteRenderer.color = characterData.characterColor;
     }
 }
