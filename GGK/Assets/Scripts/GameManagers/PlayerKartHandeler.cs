@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class PlayerKartHandeler : MonoBehaviour
 {
     // References
     public GameManager gameManager;
+    public List<GameObject> playerOptions;
     public Image characterSelectImage;
     private Image prevImageBorder;
 
@@ -20,6 +22,16 @@ public class PlayerKartHandeler : MonoBehaviour
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
+
+        // Assigning the buttons their listeners
+        foreach (GameObject obj in playerOptions)
+        {
+            Button button = obj.GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            gameManager.GetComponent<ButtonBehavior>().OnClick());
+            button.onClick.AddListener(() =>
+            gameManager.GetComponent<GameManager>().PlayerSelected());
+        }
 
         // So scene can still work if not started from start scene
         if ( gameManager != null )
@@ -47,11 +59,6 @@ public class PlayerKartHandeler : MonoBehaviour
 
             btn.onClick.AddListener(() => ChangeColor(images[1]));
         }
-    }
-
-    public void PlayerSelected()
-    {
-        gameManager.PlayerSelected();
     }
 
     public void ChangeCharacter(Image characterImage, Image border)
