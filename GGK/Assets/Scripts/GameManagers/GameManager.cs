@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        SceneManager.LoadScene("PlayerKartSelectScene");
+        SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
     }
 
@@ -113,7 +113,24 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MapSelected()
     {
-        SceneManager.LoadScene("(HUD)DrivingMyKartAround");
+        // Loads the race based on the name of the button clicked
+        switch (GetComponent<ButtonBehavior>().buttonClickedName)
+        {
+            case "1-1":
+                SceneManager.LoadScene("1-1");
+                break;
+            case "1-2":
+                SceneManager.LoadScene("1-2");
+                break;
+            case "1-3":
+                SceneManager.LoadScene("1-3");
+                break;
+            case "1-4":
+                SceneManager.LoadScene("1-4");
+                break;
+            default:
+                break;
+        }
         curState = GameStates.game;
     }
 
