@@ -22,7 +22,7 @@ public class MultiSingleHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().MultiSingleConnect());
+            gamemanagerObj.GetComponent<GameManager2>().MultiSingleConnect());
         }
     }
 

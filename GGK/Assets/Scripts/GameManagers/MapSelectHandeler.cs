@@ -22,7 +22,7 @@ public class MapSelectHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().MapSelected());
+            gamemanagerObj.GetComponent<GameManager2>().MapSelected());
         }
     }
 

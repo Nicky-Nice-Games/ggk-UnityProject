@@ -22,7 +22,7 @@ public class GameModeHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
+            gamemanagerObj.GetComponent<GameManager2>().LoadedGameMode());
         }
     }
 

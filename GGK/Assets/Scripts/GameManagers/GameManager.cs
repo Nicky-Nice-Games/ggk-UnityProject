@@ -19,10 +19,10 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager2 : MonoBehaviour
 {
     private GameStates curState;
-    public static GameManager thisManagerInstance;
+    public static GameManager2 thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
