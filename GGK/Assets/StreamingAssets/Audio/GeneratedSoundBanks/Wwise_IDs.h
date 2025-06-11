@@ -17,6 +17,24 @@ namespace AK
         static const AkUniqueID PLAY_ENGINE_HIGH = 3755593723U;
         static const AkUniqueID PLAY_ENGINE_HIGH_FULL = 1413651457U;
         static const AkUniqueID PLAY_ENGINE_REV = 1487915922U;
+        static const AkUniqueID PLAY_HIT_SPINOUT = 3595663260U;
+        static const AkUniqueID PLAY_ITEM_PICKUP = 2652605998U;
+        static const AkUniqueID PLAY_SCROLL = 2085636989U;
+        static const AkUniqueID PLAY_SELECT_BACK_ITEM_DROP = 2165390282U;
+        static const AkUniqueID PLAY_SELECT_CONFIRM = 4158910119U;
+        static const AkUniqueID PLAY_SELECT_DIRECTIONS_ALT = 3326643471U;
+        static const AkUniqueID PLAY_SELECT_DOWN = 3300653317U;
+        static const AkUniqueID PLAY_SELECT_LEFT = 450400542U;
+        static const AkUniqueID PLAY_SELECT_RIGHT = 1756715325U;
+        static const AkUniqueID PLAY_SELECT_START = 3240429611U;
+        static const AkUniqueID PLAY_SELECT_UP = 3823515762U;
+        static const AkUniqueID PLAY_THUD1 = 2096220506U;
+        static const AkUniqueID PLAY_THUD2 = 2096220505U;
+        static const AkUniqueID PLAY_THUD3 = 2096220504U;
+        static const AkUniqueID PLAY_THUD4 = 2096220511U;
+        static const AkUniqueID PLAY_THUD5 = 2096220510U;
+        static const AkUniqueID PLAY_THUD6 = 2096220509U;
+        static const AkUniqueID PLAY_THUD7 = 2096220508U;
     } // namespace EVENTS
 
     namespace BANKS
