@@ -12,7 +12,7 @@ public class KartVisual : MonoBehaviour
     public Transform[] suspensionPoints;
 
     [Header("Suspension Settings")]
-    public float suspensionLength = 0.5f;
+    public float suspensionLength = 0.69f;
     public float suspensionOffset = 0.2f;
     public LayerMask groundLayer;
     public float rotationFactor = 10f;
@@ -20,12 +20,12 @@ public class KartVisual : MonoBehaviour
     [Header("Lean Settings")]
     public float maxPitch = 10f;
     public float maxRoll = 15f;
-    public float leanSmoothing = 5f;
+    public float leanSmoothing = 2f;
 
     [Header("Bounce Settings")]
     public float landingVelocityThreshold = -6f;
-    public float squashAmount = 0.9f;
-    public float squashSpeed = 8f;
+    public float squashAmount = 2f;
+    public float squashSpeed = 11f;
 
     private Vector3 lastVelocity;
     private Vector3 visualVelocity;
