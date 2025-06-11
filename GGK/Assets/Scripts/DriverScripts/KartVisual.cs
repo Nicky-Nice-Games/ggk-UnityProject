@@ -56,29 +56,29 @@ public class KartVisual : MonoBehaviour
 
     void ApplySuspension()
     {
-        Vector3 avgNormal = Vector3.up;
-        float totalCompression = 0f;
-        int hitCount = 0;
-
-        foreach (var point in suspensionPoints)
-        {
-            if (Physics.Raycast(point.position, Vector3.down, out RaycastHit hit, suspensionLength, groundLayer))
-            {
-                avgNormal += hit.normal;
-                totalCompression += 1f - (hit.distance / suspensionLength);
-                hitCount++;
-            }
-        }
-
-        if (hitCount > 0)
-        {
-            avgNormal.Normalize();
-            totalCompression /= hitCount;
-            
-            // Compress visualRoot vertically
-            Vector3 offset = -avgNormal * totalCompression * suspensionOffset;
-            visualRoot.localPosition = Vector3.SmoothDamp(visualRoot.localPosition, offset, ref visualVelocity, 0.1f);
-        }
+        //Vector3 avgNormal = Vector3.up;
+        //float totalCompression = 0f;
+        //int hitCount = 0;
+        //
+        //foreach (var point in suspensionPoints)
+        //{
+        //    if (Physics.Raycast(point.position, Vector3.down, out RaycastHit hit, suspensionLength, groundLayer))
+        //    {
+        //        avgNormal += hit.normal;
+        //        totalCompression += 1f - (hit.distance / suspensionLength);
+        //        hitCount++;
+        //    }
+        //}
+        //
+        //if (hitCount > 0)
+        //{
+        //    avgNormal.Normalize();
+        //    totalCompression /= hitCount;
+        //    
+        //    // Compress visualRoot vertically
+        //    Vector3 offset = -avgNormal * totalCompression * suspensionOffset;
+        //    visualRoot.localPosition = Vector3.SmoothDamp(visualRoot.localPosition, offset, ref visualVelocity, 0.1f);
+        //}
 
         // Update wheel positions
         for (int i = 0; i < suspensionPoints.Length; i++)
@@ -88,7 +88,7 @@ public class KartVisual : MonoBehaviour
 
             float targetOffset = wheelRestDistance;
 
-            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, suspensionLength, groundLayer))
+            if (Physics.Raycast(rayOrigin, -visualRoot.transform.up, out RaycastHit hit, suspensionLength, groundLayer))
             {
                 float compression = 1f - (hit.distance / suspensionLength);
                 targetOffset -= compression * wheelMaxCompression;
@@ -157,10 +157,10 @@ public class KartVisual : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(suspensionPoints[0].position, Vector3.down * suspensionLength);
-        Gizmos.DrawRay(suspensionPoints[1].position, Vector3.down * suspensionLength);
-        Gizmos.DrawRay(suspensionPoints[2].position, Vector3.down * suspensionLength);
-        Gizmos.DrawRay(suspensionPoints[3].position, Vector3.down * suspensionLength);
+        Gizmos.DrawRay(suspensionPoints[0].position, -visualRoot.transform.up * suspensionLength);
+        Gizmos.DrawRay(suspensionPoints[1].position, -visualRoot.transform.up * suspensionLength);
+        Gizmos.DrawRay(suspensionPoints[2].position, -visualRoot.transform.up * suspensionLength);
+        Gizmos.DrawRay(suspensionPoints[3].position, -visualRoot.transform.up * suspensionLength);
 
     }
 }
