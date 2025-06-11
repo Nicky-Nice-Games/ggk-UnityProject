@@ -16,15 +16,15 @@ public class NEWDriver : MonoBehaviour
     [Header("Kart Settings")]
     //acceleration, decceleration
     public float accelerationRate, deccelerationRate;
-    public float minSpeed = 5f;
-    public float turnSpeed = 40;   
+    public float minSpeed, maxSpeed;
+    public float turnSpeed;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
-    public float gravity = 40;
-    public float tractionCoefficient = 7f;
+    public float gravity;
+    public float tractionCoefficient = 8f;
 
     [Header("Sphere Collider stuff")]
-    public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
+    public float colliderOffset = 0.4f; //Offset for the sphere collider to position kart correctly
     public Transform spherePosTransform; //Reference to the sphere collider transform
     public Rigidbody sphere;
 
@@ -32,12 +32,12 @@ public class NEWDriver : MonoBehaviour
     //To determine drifting stuff in update
     public bool isDrifting;
     float driftTime = 0f;
-    public float driftFactor = 2f;
+    public float driftFactor = 0.8f;
     public float driftTurnMultiplier = 1.5f;
-    public float minDriftTime = 25f;
-    public float driftBoostForce = 0.5f;
+    public float minDriftTime = 1f;
+    public float driftBoostForce = 10f;
     public float hopForce = 8f;
-    public float minDriftSteer = 40f;
+    public float minDriftSteer = 5f;
 
     //To determine drifting direction
     bool isDriftingLeft;
@@ -67,7 +67,7 @@ public class NEWDriver : MonoBehaviour
     // Ground snapping variables
     public bool isGrounded;
     bool attemptingDrift;
-    public float groundCheckDistance = 1.05f;    
+    public float groundCheckDistance = 4.5f;    
     public float rotationAlignSpeed = 0.05f;
 
     //Tween stuff
@@ -147,17 +147,14 @@ public class NEWDriver : MonoBehaviour
         ApplyWheelVisuals();
 
         //Follow Collider
-        transform.position = 
-            new Vector3(spherePosTransform.transform.position.x, 
-            spherePosTransform.transform.position.y - colliderOffset, 
-            spherePosTransform.transform.position.z);
+        transform.position = new Vector3(spherePosTransform.transform.position.x, spherePosTransform.transform.position.y - colliderOffset, spherePosTransform.transform.position.z);
 
 
 
         //------------Movement stuff---------------------
 
         //Acceleration
-        if (movementDirection.z != 0f && isGrounded)
+        if (movementDirection.z != 0f)
         {
             //velocity.y = 0f;
             acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
@@ -249,7 +246,7 @@ public class NEWDriver : MonoBehaviour
             else
             {
                 kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }            
+            }
         }
        
         // Apply extra downward force to fall faster
@@ -301,10 +298,6 @@ public class NEWDriver : MonoBehaviour
             kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
             kartNormal.Rotate(0, transform.eulerAngles.y, 0);
         }
-        else
-        {
-            isGrounded = false; 
-        }
     }
 
     void ApplyWheelVisuals()
@@ -331,11 +324,12 @@ public class NEWDriver : MonoBehaviour
             kartModel.DOLocalMoveY(1.0f, 0.2f)
                 .SetLoops(2, LoopType.Yoyo)
                 .SetEase(Ease.OutQuad);
-            
+
             // Optional squash/stretch
-            kartModel.parent.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.1f)
+            kartModel.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.1f)
                 .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.OutSine);            
+                .SetEase(Ease.OutSine);
+
         }
     }
 
@@ -424,8 +418,10 @@ public class NEWDriver : MonoBehaviour
 
         if (driftTime > minDriftTime)
         {
-            StartCoroutine(Boost(driftBoostForce, 0.5f));
-            
+            //Vector3 boost = transform.forward * driftBoostForce;
+            StartCoroutine(Boost(driftBoostForce, 2.5f));
+            //rBody.AddForce(boost, ForceMode.VelocityChange);
+            Debug.Log("Drift Boost Applied");
         }
 
         isDrifting = false;

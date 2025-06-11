@@ -6,78 +6,32 @@ using UnityEngine.UI;
 
 public class PlayerKartHandeler : MonoBehaviour
 {
-    // References
-    public GameManager gameManager;
-    public CharacterData characterData;
-    public List<GameObject> playerOptions;
-    public Image characterSelectImage;
-    private Image prevImageBorder;
+    [SerializeField]
+    private List<GameObject> playerOptions = new List<GameObject>();
+    private GameManager gamemanagerObj;
 
-    // Reference Lists
-    public List<GameObject> characterButtons;
-    public List<GameObject> colorButtons;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        characterData = FindAnyObjectByType<CharacterData>();
+        gamemanagerObj = FindAnyObjectByType<GameManager>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in playerOptions)
         {
             Button button = obj.GetComponent<Button>();
             button.onClick.AddListener(() =>
-            gameManager.GetComponent<ButtonBehavior>().OnClick());
+            gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gameManager.GetComponent<GameManager>().PlayerSelected());
-        }
-
-        // So scene can still work if not started from start scene
-        if ( characterData != null )
-        {
-            characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
-            characterData.characterColor = Color.white;
-        }
-
-        // Connect character buttons to ChangeCharacter with appropriate arguments
-        foreach (GameObject characterButton in characterButtons)
-        {
-            Image[] images = characterButton.GetComponentsInChildren<Image>();
-
-            Button btn = characterButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0]));
-        }
-
-        // Connect color buttons to ChangeColor with appropriate arguments
-        foreach (GameObject colorButton in colorButtons)
-        {
-            Image[] images = colorButton.GetComponentsInChildren<Image>();
-
-            Button btn = colorButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeColor(images[1]));
+            gamemanagerObj.GetComponent<GameManager>().PlayerSelected());
         }
     }
 
-    public void ChangeCharacter(Image characterImage, Image border)
+    // Update is called once per frame
+    void Update()
     {
-        if (prevImageBorder != null)
-        {
-            prevImageBorder.color = Color.white;
-        }
 
-        characterSelectImage.sprite = characterImage.sprite;
-        if (characterData != null)
-            characterData.characterSprite = characterImage.sprite;
-        border.color = Color.yellow;
-        prevImageBorder = border;
     }
-    public void ChangeColor(Image color)
-    {
-        characterSelectImage.color = color.color;
-        if (characterData != null)
-            characterData.characterColor = color.color;
-    }
+
+    // Each button can assign the unique player 
 }
