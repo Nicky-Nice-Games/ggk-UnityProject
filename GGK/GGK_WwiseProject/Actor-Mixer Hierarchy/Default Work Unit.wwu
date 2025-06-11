@@ -207,33 +207,6 @@
 						<ActiveSource Name="RaceStart_RR" ID="{FAF43B3E-D135-4E3C-A28A-04DBB78FFC71}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
-				<Sound Name="thud2" ID="{56E19091-C4DD-4DC0-A9DA-D284109EA7CC}" ShortID="73970645">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud2" ID="{654F8E3E-67F3-484D-89F9-32B89EE4DA8D}">
-							<PropertyList>
-								<Property Name="FadeOutDuration" Type="Real64" Value="0.718690439138618"/>
-								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-								<Property Name="TrimEnd" Type="Real64" Value="1.09260370814993"/>
-							</PropertyList>
-							<Language>SFX</Language>
-							<AudioFile>thud2.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="392937246"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud2" ID="{654F8E3E-67F3-484D-89F9-32B89EE4DA8D}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
 				<Sound Name="engine_high_full" ID="{802B31E0-6F28-4E14-8CB0-8F7E2AE41537}" ShortID="734768293">
 					<PropertyList>
 						<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
@@ -502,11 +475,12 @@
 						<ActiveSource Name="select_up" ID="{6264FC71-BD51-415B-8E78-28DD8F5CE39E}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
-				<Sound Name="thud1" ID="{70D45683-3C51-46CD-A50E-D4FDCA3A6568}" ShortID="316846475">
+				<RandomSequenceContainer Name="thud" ID="{7709507F-70CE-4FE6-9F70-E50FCECF3867}" ShortID="141908868">
 					<PropertyList>
+						<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-5</Value>
+								<Value>-10</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -519,133 +493,186 @@
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<AudioFileSource Name="thud1" ID="{46F8EF44-B034-40AE-ADED-188F09BFDE0A}">
+						<Sound Name="thud6" ID="{F6C91330-C533-4D0C-A98E-6B8C9FD646AF}" ShortID="472085074">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud6" ID="{D355251C-DD67-4715-A6E9-BA67BB302FED}">
+									<Language>SFX</Language>
+									<AudioFile>thud6.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="787860068"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud6" ID="{D355251C-DD67-4715-A6E9-BA67BB302FED}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud4" ID="{CDBD0892-F395-43CB-8B42-6519183524AE}" ShortID="482712018">
 							<PropertyList>
-								<Property Name="FadeOutDuration" Type="Real64" Value="0.253135698723934"/>
-								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-								<Property Name="TrimEnd" Type="Real64" Value="0.283672703649361"/>
+								<Property Name="Weight" Type="Real64">
+									<ValueList>
+										<Value>70</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
-							<Language>SFX</Language>
-							<AudioFile>thud1.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="323369164"/>
-							</MediaIDList>
-						</AudioFileSource>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud4" ID="{663048EC-B710-4830-A319-7B21E441515C}">
+									<Language>SFX</Language>
+									<AudioFile>thud4.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="342802278"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud4" ID="{663048EC-B710-4830-A319-7B21E441515C}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud2" ID="{56E19091-C4DD-4DC0-A9DA-D284109EA7CC}" ShortID="73970645">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud2" ID="{654F8E3E-67F3-484D-89F9-32B89EE4DA8D}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.718690439138618"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="1.09260370814993"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>thud2.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="392937246"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud2" ID="{654F8E3E-67F3-484D-89F9-32B89EE4DA8D}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud5" ID="{62A05329-D733-42D2-9C63-26656EC259D3}" ShortID="823414691">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud5" ID="{E07650DA-9638-43FC-A6D2-5B586EED619F}">
+									<Language>SFX</Language>
+									<AudioFile>thud5.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1060406226"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud5" ID="{E07650DA-9638-43FC-A6D2-5B586EED619F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud1" ID="{70D45683-3C51-46CD-A50E-D4FDCA3A6568}" ShortID="316846475">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud1" ID="{46F8EF44-B034-40AE-ADED-188F09BFDE0A}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.253135698723934"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.283672703649361"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>thud1.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="323369164"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud1" ID="{46F8EF44-B034-40AE-ADED-188F09BFDE0A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud7" ID="{FC9A5799-91CD-42B1-B74F-840BAADBC900}" ShortID="573677676">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud7" ID="{8BFF03EC-176F-440B-9EBE-2EB0085A5BED}">
+									<Language>SFX</Language>
+									<AudioFile>thud7.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="278000742"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud7" ID="{8BFF03EC-176F-440B-9EBE-2EB0085A5BED}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="thud3" ID="{29439B51-C474-41CD-B217-F142FAF2A495}" ShortID="499992498">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="thud3" ID="{DF354D30-4A93-49A4-9600-CAA13CEFA83E}">
+									<Language>SFX</Language>
+									<AudioFile>thud3.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="860057301"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="thud3" ID="{DF354D30-4A93-49A4-9600-CAA13CEFA83E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud1" ID="{46F8EF44-B034-40AE-ADED-188F09BFDE0A}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="thud3" ID="{29439B51-C474-41CD-B217-F142FAF2A495}" ShortID="499992498">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud3" ID="{DF354D30-4A93-49A4-9600-CAA13CEFA83E}">
-							<Language>SFX</Language>
-							<AudioFile>thud3.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="860057301"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud3" ID="{DF354D30-4A93-49A4-9600-CAA13CEFA83E}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="thud5" ID="{62A05329-D733-42D2-9C63-26656EC259D3}" ShortID="823414691">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud5" ID="{E07650DA-9638-43FC-A6D2-5B586EED619F}">
-							<Language>SFX</Language>
-							<AudioFile>thud5.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="1060406226"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud5" ID="{E07650DA-9638-43FC-A6D2-5B586EED619F}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="thud6" ID="{F6C91330-C533-4D0C-A98E-6B8C9FD646AF}" ShortID="472085074">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud6" ID="{D355251C-DD67-4715-A6E9-BA67BB302FED}">
-							<Language>SFX</Language>
-							<AudioFile>thud6.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="787860068"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud6" ID="{D355251C-DD67-4715-A6E9-BA67BB302FED}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="thud7" ID="{FC9A5799-91CD-42B1-B74F-840BAADBC900}" ShortID="573677676">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud7" ID="{8BFF03EC-176F-440B-9EBE-2EB0085A5BED}">
-							<Language>SFX</Language>
-							<AudioFile>thud7.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="278000742"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud7" ID="{8BFF03EC-176F-440B-9EBE-2EB0085A5BED}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="thud4" ID="{CDBD0892-F395-43CB-8B42-6519183524AE}" ShortID="482712018">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="thud4" ID="{663048EC-B710-4830-A319-7B21E441515C}">
-							<Language>SFX</Language>
-							<AudioFile>thud4.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="342802278"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="thud4" ID="{663048EC-B710-4830-A319-7B21E441515C}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
+				</RandomSequenceContainer>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

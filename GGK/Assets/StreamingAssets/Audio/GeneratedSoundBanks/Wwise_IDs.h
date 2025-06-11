@@ -28,13 +28,7 @@ namespace AK
         static const AkUniqueID PLAY_SELECT_RIGHT = 1756715325U;
         static const AkUniqueID PLAY_SELECT_START = 3240429611U;
         static const AkUniqueID PLAY_SELECT_UP = 3823515762U;
-        static const AkUniqueID PLAY_THUD1 = 2096220506U;
-        static const AkUniqueID PLAY_THUD2 = 2096220505U;
-        static const AkUniqueID PLAY_THUD3 = 2096220504U;
-        static const AkUniqueID PLAY_THUD4 = 2096220511U;
-        static const AkUniqueID PLAY_THUD5 = 2096220510U;
-        static const AkUniqueID PLAY_THUD6 = 2096220509U;
-        static const AkUniqueID PLAY_THUD7 = 2096220508U;
+        static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
 
     namespace BANKS
