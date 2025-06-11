@@ -56,7 +56,11 @@ public class ItemBox : MonoBehaviour
 
     private void OnDisable()
     {
-        AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
+        // makes sure scene is loaded to not cause error
+        if (gameObject.scene.isLoaded)
+        {
+            AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
+        }
     }
 
 }

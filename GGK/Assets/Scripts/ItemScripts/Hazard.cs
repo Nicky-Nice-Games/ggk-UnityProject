@@ -36,7 +36,7 @@ public class Hazard : BaseItem
     {
         // AudioSource.PlayClipAtPoint(hazardSound, transform.position);
 
-        if (this.gameObject.scene.isLoaded)
+        if (gameObject.scene.isLoaded)
         {
             // create temp game object at hazard location to make an audio source
             GameObject tempSoundObject = new GameObject("TempAudio");
