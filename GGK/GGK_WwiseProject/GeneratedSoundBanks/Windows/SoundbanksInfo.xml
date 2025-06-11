@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="16" SoundBankVersion="150">
+	<RootPaths>
+		<ProjectRoot>../..</ProjectRoot>
+		<SourceFilesRoot>../../.cache/Windows</SourceFilesRoot>
+		<SoundBanksRoot>.</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>.</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<SoundBanks>
+		<SoundBank Id="393239870" Type="User" Language="SFX" Hash="{4AE1FA97-55EB-2876-EF7E-6701B3F917EF}">
+			<ShortName>SFX</ShortName>
+			<Path>SFX.bnk</Path>
+			<Media>
+				<File Id="141423795" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>driftScreech.wav</ShortName>
+					<CachePath>SFX/driftScreech_818F3B66.wem</CachePath>
+				</File>
+				<File Id="644276054" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>engine_rev.wav</ShortName>
+					<CachePath>SFX/engine_rev_818F3B66.wem</CachePath>
+				</File>
+				<File Id="823229656" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>engine_high.wav</ShortName>
+					<CachePath>SFX/engine_high_818F3B66.wem</CachePath>
+				</File>
+				<File Id="880922148" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>engine_high_full.wav</ShortName>
+					<CachePath>SFX/engine_high_full_27EB6CFF.wem</CachePath>
+				</File>
+			</Media>
+			<Events>
+				<Event Id="3158137442" Name="Play_driftScreech" DurationType="OneShot" DurationMin="2.7280045" DurationMax="2.7280045">
+					<MediaRefs>
+						<MediaRef Id="141423795"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3755593723" Name="Play_engine_high" DurationType="OneShot" DurationMin="15.686009" DurationMax="15.686009">
+					<MediaRefs>
+						<MediaRef Id="823229656"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1413651457" Name="Play_engine_high_full" DurationType="Infinite">
+					<MediaRefs>
+						<MediaRef Id="880922148"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1487915922" Name="Play_engine_rev" DurationType="OneShot" DurationMin="3.1448526" DurationMax="3.1448526">
+					<MediaRefs>
+						<MediaRef Id="644276054"/>
+					</MediaRefs>
+				</Event>
+			</Events>
+		</SoundBank>
+		<SoundBank Id="1355168291" Type="User" Language="SFX" Hash="{B6CBD692-12EC-CDBA-0932-48F63C40C91F}">
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+			<Plugins>
+				<AudioDevices>
+					<Plugin Id="2317455096" Name="No_Output" LibName="No Output" LibId="11862023"/>
+					<Plugin Id="3859886410" Name="System" LibName="System" LibId="11403271"/>
+				</AudioDevices>
+			</Plugins>
+			<Busses>
+				<Bus Id="3803692087" Name="Master Audio Bus"/>
+			</Busses>
+		</SoundBank>
+	</SoundBanks>
+	<FileHash>{F1DDD4D1-C691-3D3E-7C7A-4F641A3CF1ED}</FileHash>
+</SoundBanksInfo>
