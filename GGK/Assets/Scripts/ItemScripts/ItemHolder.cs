@@ -190,8 +190,5 @@ public class ItemHolder : MonoBehaviour
             Destroy(collision.gameObject);
             thisDriver.sphere.velocity /= 8;
         }
-
     }
-
-
 }

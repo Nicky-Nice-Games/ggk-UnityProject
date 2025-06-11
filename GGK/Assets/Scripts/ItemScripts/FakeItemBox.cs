@@ -8,7 +8,6 @@ public class FakeItemBox : BaseItem
 {
     [SerializeField]
     AudioClip hazardSound;
-    [SerializeField]
 
 
     // Start is called before the first frame update
@@ -16,11 +15,11 @@ public class FakeItemBox : BaseItem
     {
 
         // sends the hazard slightly up and behind the player before landing on the ground
-        Transform kartTransform = kart.transform; // assuming BaseItem has `kart` reference set by ItemHolder
+        // Transform kartTransform = kart.transform; // assuming BaseItem has `kart` reference set by ItemHolder
 
-        transform.position = kartTransform.position
-                             - kartTransform.forward * 30f   // behind the kart
-                             + kartTransform.up * 1.0f;       // slightly above ground
+        transform.position = transform.position
+                             - transform.forward * 5f   // behind the kart
+                             + transform.up * 1.0f;       // slightly above ground
         if (isUpgraded)
         {
 
@@ -41,13 +40,7 @@ public class FakeItemBox : BaseItem
     // Update is called once per frame
     void Update()
     {
-
         RotateBox();
-        // stop the box from falling at the specified height (same as regular item box)
-        if (transform.position.y <= kart.transform.position.y + 2.5)
-        {
-            Destroy(rb);
-        }
     }
 
     private void FixedUpdate()

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6700976075920660207}
   - component: {fileID: -2140440458312195221}
   - component: {fileID: 3692130072636075715}
+  - component: {fileID: 8824100670664009122}
   m_Layer: 3
   m_Name: FakeItemBox
   m_TagString: Hazard
@@ -101,7 +102,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -132,7 +133,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &3692130072636075715
 MonoBehaviour:
@@ -149,3 +150,24 @@ MonoBehaviour:
   timer: 30
   rb: {fileID: -2140440458312195221}
   hazardSound: {fileID: 8300000, guid: a7c27e308abc8c14cacb62041ebc16d2, type: 3}
+--- !u!135 &8824100670664009122
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117759039799724987}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.87308604
+  m_Center: {x: 0.016431851, y: -0.02463601, z: 0}
