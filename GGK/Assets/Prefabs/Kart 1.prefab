@@ -682,9 +682,10 @@ GameObject:
   - component: {fileID: 844448088337341499}
   - component: {fileID: 8454440059229698920}
   - component: {fileID: 8245124639533166686}
+  - component: {fileID: 1662150045652356610}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Kart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -753,6 +754,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1662150045652356610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2442241708735958748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da26d93ae4c86794eb9a962b356fde8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointId: 0
+  lap: 0
+  placement: 0
+  name: 
+  checkpointList: []
+  checkPointParent: {fileID: 0}
+  distanceSquaredToNextCP: 0
 --- !u!1 &2694363133196758276
 GameObject:
   m_ObjectHideFlags: 0
@@ -21445,7 +21465,7 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   movementDirection: {x: 0, y: 0, z: 0}
   turning: {x: 0, y: 0, z: 0, w: 0}
-  accelerationRate: 3500
+  accelerationRate: 3000
   deccelerationRate: 5
   minSpeed: 5
   turnSpeed: 40
