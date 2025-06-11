@@ -12,7 +12,7 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     TextMeshProUGUI timeDisplay;
 
     [SerializeField]
-    Driver kart;
+    NEWDriver kart;
 
     [SerializeField]
     SpeedBar speedBar;
@@ -31,8 +31,8 @@ public class SpeedAndTimeDisplay : MonoBehaviour
         timer += Time.deltaTime;
         float seconds = timer % 60;
         int minutes = (int)timer / 60;
-        speedBar.SetSpeed(kart.velocity.magnitude);
-        speedDisplay.text = "Speed: " + kart.velocity.magnitude.ToString("n2");
+        speedBar.SetSpeed(kart.sphere.velocity.magnitude);
+        speedDisplay.text = "Speed: " + kart.sphere.velocity.magnitude.ToString("n2");
         timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 }
