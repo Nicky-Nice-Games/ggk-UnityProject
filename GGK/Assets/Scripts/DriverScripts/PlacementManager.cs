@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using System.Linq;
 
@@ -12,14 +11,25 @@ public class PlacementManager : MonoBehaviour
     public List<KartCheckpoint> sortedList;
     void Start()
     {
+        GameObject[] karts = GameObject.FindGameObjectsWithTag("Kart");
 
+        checkpointList.Clear();
+
+        foreach (GameObject kart in karts)
+        {
+            KartCheckpoint cp = kart.GetComponent<KartCheckpoint>();
+            if (cp != null)
+            {
+                checkpointList.Add(cp);
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         checkPlacement();
-
+        
     }
 
     private void checkPlacement()
