@@ -66,12 +66,13 @@ public class APIManager : MonoBehaviour
         }
     }
 
+
     IEnumerator RunAPIFlow()
     {
         // Sending the request for the PID
         // Currentally getting data from local
         // Swap URI and some logic when remote server is up
-        string path = System.IO.Path.Combine(/*Insert paath to server json*/);
+        string path = "/*Insert paath to server endpoint*/";    // TODO
         Debug.Log("Path: " + path);
 
         // Chaining the Coroutines so this one finishes before the main one
@@ -109,6 +110,6 @@ public class APIManager : MonoBehaviour
         serializable.ConvertToSerializable(testPlayer);
         string json = JsonUtility.ToJson(serializable);
 
-        StartCoroutine(PostJson("http://127.0.0.1:5000/postdata", json));
+        StartCoroutine(PostJson("/*Insert paath to server json*/", json));  // TODO 
     }
 }
