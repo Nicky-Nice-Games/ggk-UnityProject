@@ -16,15 +16,15 @@ public class NEWDriver : MonoBehaviour
     [Header("Kart Settings")]
     //acceleration, decceleration
     public float accelerationRate, deccelerationRate;
-    public float minSpeed;
-    public float turnSpeed;   
+    public float minSpeed = 5f;
+    public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
-    public float gravity;
-    public float tractionCoefficient = 8f;
+    public float gravity = 40;
+    public float tractionCoefficient = 7f;
 
     [Header("Sphere Collider stuff")]
-    public float colliderOffset = 0.4f; //Offset for the sphere collider to position kart correctly
+    public float colliderOffset = 1.84f; //Offset for the sphere collider to position kart correctly
     public Transform spherePosTransform; //Reference to the sphere collider transform
     public Rigidbody sphere;
 
@@ -32,12 +32,12 @@ public class NEWDriver : MonoBehaviour
     //To determine drifting stuff in update
     public bool isDrifting;
     float driftTime = 0f;
-    public float driftFactor = 0.8f;
+    public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
-    public float minDriftTime = 1f;
-    public float driftBoostForce = 10f;
+    public float minDriftTime = 25f;
+    public float driftBoostForce = 0.5f;
     public float hopForce = 8f;
-    public float minDriftSteer = 5f;
+    public float minDriftSteer = 40f;
 
     //To determine drifting direction
     bool isDriftingLeft;
@@ -67,7 +67,7 @@ public class NEWDriver : MonoBehaviour
     // Ground snapping variables
     public bool isGrounded;
     bool attemptingDrift;
-    public float groundCheckDistance = 4.5f;    
+    public float groundCheckDistance = 0.69f;    
     public float rotationAlignSpeed = 0.05f;
 
     //Tween stuff

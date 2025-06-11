@@ -21085,6 +21085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2772615197910849762}
+  - component: {fileID: 781573474891534595}
   m_Layer: 0
   m_Name: Normal
   m_TagString: Untagged
@@ -21108,6 +21109,38 @@ Transform:
   - {fileID: 186836618869148178}
   m_Father: {fileID: 435256397205002614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &781573474891534595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6707693195846792361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32bbfdc005ea164fbe731c74ab6e456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereRigidbody: {fileID: 8245124639533166686}
+  visualRoot: {fileID: 2772615197910849762}
+  leanContainer: {fileID: 186836618869148178}
+  suspensionPoints:
+  - {fileID: 5012185203631867538}
+  - {fileID: 9204742179596030861}
+  - {fileID: 4953343127079608460}
+  - {fileID: 3751149186887105555}
+  suspensionLength: 0.69
+  suspensionOffset: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  rotationFactor: 10
+  maxPitch: 10
+  maxRoll: 15
+  leanSmoothing: 2
+  landingVelocityThreshold: -3
+  squashAmount: 2
+  squashSpeed: 11
 --- !u!1 &7245150984270585285
 GameObject:
   m_ObjectHideFlags: 0
@@ -21420,7 +21453,7 @@ MonoBehaviour:
   kartNormal: {fileID: 2772615197910849762}
   gravity: 40
   tractionCoefficient: 7
-  colliderOffset: 2.1
+  colliderOffset: 1.96
   spherePosTransform: {fileID: 1192304704561040256}
   sphere: {fileID: 8245124639533166686}
   isDrifting: 0
