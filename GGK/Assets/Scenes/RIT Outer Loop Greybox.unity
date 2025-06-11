@@ -4258,11 +4258,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1671686728}
   m_LocalEulerAnglesHint: {x: 0, y: -31.908, z: 0}
---- !u!1 &505062182 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-  m_PrefabInstance: {fileID: 1638308135}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &507538899
 GameObject:
   m_ObjectHideFlags: 0
@@ -5502,25 +5497,6 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 8245124639533166686, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 1638308135}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &736235168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 505062182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da26d93ae4c86794eb9a962b356fde8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkpointId: 0
-  lap: 0
-  placement: 0
-  name: 
-  checkpointList: []
-  checkPointParent: {fileID: 180943480}
-  distanceSquaredToNextCP: 0
 --- !u!1001 &739929204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32766,17 +32742,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_TagString
-      value: Kart
-      objectReference: {fileID: 0}
+    - target: {fileID: 1662150045652356610, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: checkPointParent
+      value: 
+      objectReference: {fileID: 180943480}
     - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Name
       value: Kart 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32818,25 +32790,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6316634641190557527, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: maxSpeed
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 6316634641190557527, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: accelerationRate
-      value: 1750
-      objectReference: {fileID: 0}
-    - target: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 736235168}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
 --- !u!1 &1641040941
 GameObject:
