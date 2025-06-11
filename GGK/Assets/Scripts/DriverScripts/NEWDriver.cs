@@ -24,7 +24,7 @@ public class NEWDriver : MonoBehaviour
     public float tractionCoefficient = 7f;
 
     [Header("Sphere Collider stuff")]
-    public float colliderOffset = 1.84f; //Offset for the sphere collider to position kart correctly
+    public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
     public Transform spherePosTransform; //Reference to the sphere collider transform
     public Rigidbody sphere;
 
@@ -67,7 +67,7 @@ public class NEWDriver : MonoBehaviour
     // Ground snapping variables
     public bool isGrounded;
     bool attemptingDrift;
-    public float groundCheckDistance = 0.69f;    
+    public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
 
     //Tween stuff
