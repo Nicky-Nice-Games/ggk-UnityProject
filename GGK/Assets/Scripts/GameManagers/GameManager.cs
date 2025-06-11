@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
             case "1-1":
-                SceneManager.LoadScene("1-1");
+                SceneManager.LoadScene("RIT Outer Loop Greybox");
                 break;
             case "1-2":
                 SceneManager.LoadScene("1-2");
