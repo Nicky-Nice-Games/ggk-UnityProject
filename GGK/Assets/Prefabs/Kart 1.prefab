@@ -805,6 +805,8 @@ MonoBehaviour:
   checkpointList: []
   checkPointParent: {fileID: 0}
   distanceSquaredToNextCP: 0
+  placementDisplay: {fileID: 0}
+  lapDisplay: {fileID: 0}
 --- !u!1 &2694363133196758276
 GameObject:
   m_ObjectHideFlags: 0
@@ -21478,6 +21480,7 @@ GameObject:
   - component: {fileID: 435256397205002614}
   - component: {fileID: 3781514375417614312}
   - component: {fileID: 6316634641190557527}
+  - component: {fileID: 542155201836405092}
   m_Layer: 0
   m_Name: Kart
   m_TagString: Untagged
@@ -21576,6 +21579,31 @@ MonoBehaviour:
   rotationAlignSpeed: 0.05
   driveSound: {fileID: 0}
   isDriving: 0
+--- !u!114 &542155201836405092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937854632911162198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f12438d7fd34a4fb5ea4285a37ad62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  data:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 3f44c2f2af6675640b90c377a6bb512d, type: 2}
+  decodeBank: 0
+  overrideLoadSetting: 0
+  loadAsynchronous: 0
+  saveDecodedBank: 0
+  unloadTriggerList: 958ca0ea
+  bankNameInternal: 
+  valueGuidInternal: 
 --- !u!1 &8186770775592861054
 GameObject:
   m_ObjectHideFlags: 0

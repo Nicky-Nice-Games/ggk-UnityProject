@@ -84,6 +84,8 @@ public class NEWDriver : MonoBehaviour
     AudioClip driveSound;
 
     public bool isDriving;
+    private uint drivingID;
+    private uint driftingID;
 
     // Start is called before the first frame update
     void Start()
@@ -110,13 +112,31 @@ public class NEWDriver : MonoBehaviour
     void Update()
     {
         //// plays sound when kart is moving
-        //if (isDriving)
-        //{
-        //    if (!soundPlayer.isPlaying)
-        //    {
-        //        soundPlayer.PlayOneShot(driveSound);
-        //    }
-        //}
+        if (isDriving)
+        {
+            if (drivingID == 0)
+            {
+                drivingID = AkSoundEngine.PostEvent("play_engine_high_full", this.gameObject);
+            }
+        }
+        else
+        {
+            AkSoundEngine.StopPlayingID(drivingID, 500, AkCurveInterpolation.AkCurveInterpolation_LastFadeCurve);
+            drivingID = 0;
+        }
+
+        if (isDrifting)
+        {
+            if (driftingID == 0)
+            {
+                driftingID = AkSoundEngine.PostEvent("play_driftScreech", this.gameObject);
+            }
+        }
+        else
+        {
+            AkSoundEngine.StopPlayingID(driftingID, 500, AkCurveInterpolation.AkCurveInterpolation_Constant);
+            driftingID = 0;
+        }
     }
 
     // Update is called once per frame
