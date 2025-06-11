@@ -40,11 +40,14 @@ public class NPCDriver : MonoBehaviour
     private float blendTimer = 0f;
     [SerializeField]
     private float topMaxSpeed;
+    public bool boosted = false;
+    public float boostDistanceMultiplier = 4f; // 2000 * 4 = 8000
     void Start()
     {
         rBody.drag = 0.5f;
         rBody.freezeRotation = true;
         topMaxSpeed = maxSpeed;
+        boosted = false;
     }
 
     void FixedUpdate()
@@ -57,8 +60,18 @@ public class NPCDriver : MonoBehaviour
             Vector3 snapPos = hit.point + hit.normal * suspensionOffset;
             transform.position = snapPos;
 
-            Quaternion groundRot = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-            transform.rotation = Quaternion.Slerp(transform.rotation, groundRot, rotationAlignSpeed * Time.deltaTime);
+            if (velocity.magnitude > 1f)
+            {
+                Vector3 forwardDir = Vector3.ProjectOnPlane(velocity.normalized, hit.normal).normalized;
+                Quaternion groundAlignedRotation = Quaternion.LookRotation(forwardDir, hit.normal);
+                transform.rotation = Quaternion.Slerp(transform.rotation, groundAlignedRotation, rotationAlignSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Just align to ground if not moving
+                Quaternion groundRot = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+                transform.rotation = Quaternion.Slerp(transform.rotation, groundRot, rotationAlignSpeed * Time.deltaTime);
+            }
         }
         else
         {
@@ -88,7 +101,8 @@ public class NPCDriver : MonoBehaviour
 
         distanceSquaredToFollow = math.distancesq(transform.position, followTarget.position);
 
-        if (distanceSquaredToFollow > 2000)
+        float maxDistance = boosted ? 24000f * boostDistanceMultiplier : 24000f;
+        if (distanceSquaredToFollow > maxDistance)
         {
             returningToTarget = true;
         }
@@ -151,13 +165,13 @@ public class NPCDriver : MonoBehaviour
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         if (velocity.magnitude < minSpeed) velocity = Vector3.zero;
 
-        // ROTATION TO MATCH TARGET
-        Quaternion targetRotation = followTarget.rotation;
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationAlignSpeed * Time.fixedDeltaTime);
-
-        // VELOCITY ALIGNMENT (optional, for smooth forward motion)
-        Vector3 desiredForward = followTarget.forward;
-        velocity = Vector3.Lerp(velocity, desiredForward * velocity.magnitude, Time.fixedDeltaTime * 5f);
+        //// ROTATION TO MATCH TARGET
+        //Quaternion targetRotation = followTarget.rotation;
+        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationAlignSpeed * Time.fixedDeltaTime);
+        //
+        //// VELOCITY ALIGNMENT (optional, for smooth forward motion)
+        //Vector3 desiredForward = followTarget.forward;
+        //velocity = Vector3.Lerp(velocity, desiredForward * velocity.magnitude, Time.fixedDeltaTime * 5f);
 
 
         rBody.velocity = velocity;
