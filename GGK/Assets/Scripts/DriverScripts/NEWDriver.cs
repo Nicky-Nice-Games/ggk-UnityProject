@@ -16,7 +16,7 @@ public class NEWDriver : MonoBehaviour
     [Header("Kart Settings")]
     //acceleration, decceleration
     public float accelerationRate, deccelerationRate;
-    public float minSpeed, maxSpeed;
+    public float minSpeed;
     public float turnSpeed;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
@@ -126,14 +126,17 @@ public class NEWDriver : MonoBehaviour
         ApplyWheelVisuals();
 
         //Follow Collider
-        transform.position = new Vector3(spherePosTransform.transform.position.x, spherePosTransform.transform.position.y - colliderOffset, spherePosTransform.transform.position.z);
+        transform.position = 
+            new Vector3(spherePosTransform.transform.position.x, 
+            spherePosTransform.transform.position.y - colliderOffset, 
+            spherePosTransform.transform.position.z);
 
 
 
         //------------Movement stuff---------------------
 
         //Acceleration
-        if (movementDirection.z != 0f)
+        if (movementDirection.z != 0f && isGrounded)
         {
             //velocity.y = 0f;
             acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
@@ -225,7 +228,7 @@ public class NEWDriver : MonoBehaviour
             else
             {
                 kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }
+            }            
         }
        
         // Apply extra downward force to fall faster
@@ -277,6 +280,10 @@ public class NEWDriver : MonoBehaviour
             kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
             kartNormal.Rotate(0, transform.eulerAngles.y, 0);
         }
+        else
+        {
+            isGrounded = false; 
+        }
     }
 
     void ApplyWheelVisuals()
@@ -303,12 +310,11 @@ public class NEWDriver : MonoBehaviour
             kartModel.DOLocalMoveY(1.0f, 0.2f)
                 .SetLoops(2, LoopType.Yoyo)
                 .SetEase(Ease.OutQuad);
-
+            
             // Optional squash/stretch
-            kartModel.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.1f)
+            kartModel.parent.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.1f)
                 .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.OutSine);
-
+                .SetEase(Ease.OutSine);            
         }
     }
 
@@ -397,10 +403,8 @@ public class NEWDriver : MonoBehaviour
 
         if (driftTime > minDriftTime)
         {
-            //Vector3 boost = transform.forward * driftBoostForce;
-            StartCoroutine(Boost(driftBoostForce, 2.5f));
-            //rBody.AddForce(boost, ForceMode.VelocityChange);
-            Debug.Log("Drift Boost Applied");
+            StartCoroutine(Boost(driftBoostForce, 0.5f));
+            
         }
 
         isDrifting = false;
