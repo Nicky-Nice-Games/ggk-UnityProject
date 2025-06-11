@@ -12,7 +12,7 @@ public class KartVisual : MonoBehaviour
     public Transform[] suspensionPoints;
 
     [Header("Suspension Settings")]
-    public float suspensionLength = 0.69f;
+    public float suspensionLength = 0.9f;
     public float suspensionOffset = 0.2f;
     public LayerMask groundLayer;
     public float rotationFactor = 10f;
@@ -27,6 +27,14 @@ public class KartVisual : MonoBehaviour
     public float squashAmount = 2f;
     public float squashSpeed = 11f;
 
+    [Header("Wheel Suspension Settings")]
+    public Transform[] wheelMeshes;            // Match order with suspensionPoints
+    public float wheelRestDistance = 0.61f;     // Default distance from suspension point to wheel
+    public float wheelMaxCompression = 1.32f;   // Max how far it can push into chassis
+    public float wheelSmoothTime = 0.05f;
+
+    private Vector3[] wheelVelocity;           // For SmoothDamp per wheel
+
     private Vector3 lastVelocity;
     private Vector3 visualVelocity;
     private Vector3 squashScaleVelocity;
@@ -35,6 +43,7 @@ public class KartVisual : MonoBehaviour
     void Start()
     {
         lastVelocity = sphereRigidbody.velocity;
+        wheelVelocity = new Vector3[wheelMeshes.Length];
     }
 
     void LateUpdate()
@@ -65,14 +74,32 @@ public class KartVisual : MonoBehaviour
         {
             avgNormal.Normalize();
             totalCompression /= hitCount;
-
-            // Rotate visualRoot to match ground
-            //Quaternion targetRot = Quaternion.FromToRotation(visualRoot.up, avgNormal) * visualRoot.rotation;
-            //visualRoot.rotation = Quaternion.Slerp(visualRoot.rotation, targetRot, Time.deltaTime * rotationFactor);
-
+            
             // Compress visualRoot vertically
             Vector3 offset = -avgNormal * totalCompression * suspensionOffset;
             visualRoot.localPosition = Vector3.SmoothDamp(visualRoot.localPosition, offset, ref visualVelocity, 0.1f);
+        }
+
+        // Update wheel positions
+        for (int i = 0; i < suspensionPoints.Length; i++)
+        {
+            var rayOrigin = suspensionPoints[i].position;
+            var wheel = wheelMeshes[i];
+
+            float targetOffset = wheelRestDistance;
+
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, suspensionLength, groundLayer))
+            {
+                float compression = 1f - (hit.distance / suspensionLength);
+                targetOffset -= compression * wheelMaxCompression;
+            }
+
+            // Convert world-space target position back to local relative to suspension point
+            Vector3 localTarget = suspensionPoints[i].InverseTransformPoint(rayOrigin - Vector3.up * targetOffset);
+            Vector3 localCurrent = suspensionPoints[i].InverseTransformPoint(wheel.position);
+
+            Vector3 newLocal = Vector3.SmoothDamp(localCurrent, localTarget, ref wheelVelocity[i], wheelSmoothTime);
+            wheel.position = suspensionPoints[i].TransformPoint(newLocal);
         }
     }
 

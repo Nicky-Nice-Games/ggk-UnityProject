@@ -149,7 +149,39 @@ Transform:
   m_Children:
   - {fileID: 9204742179596030861}
   - {fileID: 7578680979251469717}
+  - {fileID: 7907447638523832856}
   m_Father: {fileID: 5857699670960481112}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &820097931417032183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8631776341100628903}
+  m_Layer: 0
+  m_Name: SuspensionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8631776341100628903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820097931417032183}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.02, y: 0.008384051, z: 0.01359267}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 410845664824020606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &868513582923597323
 GameObject:
@@ -761,7 +793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2442241708735958748}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da26d93ae4c86794eb9a962b356fde8c, type: 3}
   m_Name: 
@@ -5906,6 +5938,7 @@ Transform:
   m_Children:
   - {fileID: 5012185203631867538}
   - {fileID: 3477787797667036373}
+  - {fileID: 8631776341100628903}
   m_Father: {fileID: 5857699670960481112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4828833863746977510
@@ -5972,6 +6005,7 @@ Transform:
   m_Children:
   - {fileID: 4953343127079608460}
   - {fileID: 7852759933606070127}
+  - {fileID: 471853254272815339}
   m_Father: {fileID: 5857699670960481112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5082259818458553816
@@ -15902,6 +15936,7 @@ Transform:
   m_Children:
   - {fileID: 3751149186887105555}
   - {fileID: 8168530628167119424}
+  - {fileID: 2931448716891871397}
   m_Father: {fileID: 5857699670960481112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5623001849396873522
@@ -20932,6 +20967,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6070421916535177872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6385874172144653040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7907447638523832856}
+  m_Layer: 0
+  m_Name: SuspensionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7907447638523832856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385874172144653040}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.019999998, y: 0.00838405, z: 0.013592667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1409675164571406781}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6502294386542655283
 GameObject:
   m_ObjectHideFlags: 0
@@ -21145,11 +21211,11 @@ MonoBehaviour:
   visualRoot: {fileID: 2772615197910849762}
   leanContainer: {fileID: 186836618869148178}
   suspensionPoints:
-  - {fileID: 5012185203631867538}
-  - {fileID: 9204742179596030861}
-  - {fileID: 4953343127079608460}
-  - {fileID: 3751149186887105555}
-  suspensionLength: 0.69
+  - {fileID: 8631776341100628903}
+  - {fileID: 7907447638523832856}
+  - {fileID: 471853254272815339}
+  - {fileID: 2931448716891871397}
+  suspensionLength: 0.9
   suspensionOffset: 0.2
   groundLayer:
     serializedVersion: 2
@@ -21158,9 +21224,17 @@ MonoBehaviour:
   maxPitch: 10
   maxRoll: 15
   leanSmoothing: 2
-  landingVelocityThreshold: -3
+  landingVelocityThreshold: -6
   squashAmount: 2
   squashSpeed: 11
+  wheelMeshes:
+  - {fileID: 5012185203631867538}
+  - {fileID: 9204742179596030861}
+  - {fileID: 4953343127079608460}
+  - {fileID: 3751149186887105555}
+  wheelRestDistance: 0.61
+  wheelMaxCompression: 1.32
+  wheelSmoothTime: 0.05
 --- !u!1 &7245150984270585285
 GameObject:
   m_ObjectHideFlags: 0
@@ -21473,7 +21547,7 @@ MonoBehaviour:
   kartNormal: {fileID: 2772615197910849762}
   gravity: 40
   tractionCoefficient: 7
-  colliderOffset: 1.96
+  colliderOffset: 1.69
   spherePosTransform: {fileID: 1192304704561040256}
   sphere: {fileID: 8245124639533166686}
   isDrifting: 0
@@ -21498,7 +21572,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   isGrounded: 0
-  groundCheckDistance: 0.69
+  groundCheckDistance: 1.05
   rotationAlignSpeed: 0.05
   driveSound: {fileID: 0}
   isDriving: 0
@@ -21662,6 +21736,37 @@ Transform:
   - {fileID: 87194024810166413}
   m_Father: {fileID: 7500937683957546145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8646326900774920476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 471853254272815339}
+  m_Layer: 0
+  m_Name: SuspensionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &471853254272815339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8646326900774920476}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.02, y: 0.00838405, z: -0.01363985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8593001711269005750}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9107621980728699142
 GameObject:
   m_ObjectHideFlags: 0
@@ -21746,6 +21851,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &9154253915425267859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2931448716891871397}
+  m_Layer: 0
+  m_Name: SuspensionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2931448716891871397
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154253915425267859}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.02, y: 0.00838405, z: -0.013639848}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 265004517125000166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9161316147925957296
 GameObject:
   m_ObjectHideFlags: 0
