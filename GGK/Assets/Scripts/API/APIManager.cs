@@ -4,9 +4,7 @@ using UnityEngine;
 using JetBrains.Annotations;
 using UnityEngine.Networking;
 
-// If using Python server nav to the server location and use command: python server.py to start
-
-// OUTDATED - Impliment new logis to connect to server. This will NOR work as of current file setup
+// Script relies on the data.json being in the same directory as API
 
 public class APIManager : MonoBehaviour
 {
@@ -46,6 +44,7 @@ public class APIManager : MonoBehaviour
         }
     }
 
+    // Get endpoint on local maven server should be sm like http://localhost:8080/getdata
     IEnumerator GetRequest(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -56,6 +55,7 @@ public class APIManager : MonoBehaviour
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
+                // Right now the Json only has the PID data so there are no additional checks
                 string data = webRequest.downloadHandler.text;
                 PID = int.Parse(data);
             }
@@ -71,7 +71,7 @@ public class APIManager : MonoBehaviour
         // Sending the request for the PID
         // Currentally getting data from local
         // Swap URI and some logic when remote server is up
-        string path = System.IO.Path.Combine(Application.streamingAssetsPath, "testData.txt");
+        string path = System.IO.Path.Combine(/*Insert paath to server json*/);
         Debug.Log("Path: " + path);
 
         // Chaining the Coroutines so this one finishes before the main one
@@ -86,6 +86,7 @@ public class APIManager : MonoBehaviour
             collisionsWithPlayers = 3,
             collisionWithWalls = 4,
             characterUsed = 1,
+            fellOffMap = 2,
             boostUsage =
             {
                 ["Speed Boost 1"] = 5,

@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 public class PlayerInfo : ScriptableObject
 {
     // Basic player and match stats
-    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed;
+    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public Dictionary<string, int> boostUsage = new Dictionary<string, int>();
     public Dictionary<string, int> offenceUsage = new Dictionary<string, int>();
     public Dictionary<string, int> trapUsage = new Dictionary<string, int>();
