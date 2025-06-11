@@ -4,6 +4,9 @@
 		<WorkUnit Name="Default Work Unit" ID="{3F0A0B34-35FE-45B6-A5AB-4FE50C56D1C9}" PersistMode="Standalone">
 			<ChildrenList>
 				<Sound Name="driftScreech" ID="{31042EF1-54FF-415D-85FB-54FFFE175C57}" ShortID="690290270">
+					<PropertyList>
+						<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
@@ -14,6 +17,10 @@
 					</ReferenceList>
 					<ChildrenList>
 						<AudioFileSource Name="driftScreech" ID="{F4CA3FF9-BBA9-4BE8-BF3A-47096E71C71E}">
+							<PropertyList>
+								<Property Name="LoopBegin" Type="Real64" Value="0.759482125137557"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+							</PropertyList>
 							<Language>SFX</Language>
 							<AudioFile>driftScreech.wav</AudioFile>
 							<MediaIDList>
