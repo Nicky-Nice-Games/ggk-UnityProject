@@ -8,7 +8,6 @@ public class MovingObstacle : MonoBehaviour
     [SerializeField] private float xRange = 5.0f;
     [SerializeField] private float yRange = 0.0f;
     [SerializeField] private float zRange = 0.0f;
-    [SerializeField] private AudioSource AudioClip;
     
     [SerializeField] private bool paused = false;
     [SerializeField] private bool moving = true;
@@ -51,16 +50,7 @@ public class MovingObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && AudioClip != null)
-        {
-            StartCoroutine(PlayAudioForSeconds(3f)); // Adjust time as needed
-        }
     }
 
-    private IEnumerator PlayAudioForSeconds(float duration)
-    {
-        AudioClip.Play();
-        yield return new WaitForSeconds(3);
-        AudioClip.Stop();
-    }
+
 }
