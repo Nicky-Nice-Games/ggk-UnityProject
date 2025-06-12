@@ -109,6 +109,7 @@ public class ItemHolder : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
+<<<<<<< HEAD
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Hazard")
         {
@@ -128,6 +129,8 @@ public class ItemHolder : MonoBehaviour
             }
         }
 
+=======
+>>>>>>> 4e894b0cb1cf78e0011a67b8d2f9d0d42f3371a5
         // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Projectile")
         {
@@ -182,6 +185,45 @@ public class ItemHolder : MonoBehaviour
             thisDriver.velocity /= 8;
         }
 
+<<<<<<< HEAD
+=======
+        // kart uses a boost and is given the boost through a force
+        if (collision.gameObject.CompareTag("Boost"))
+        {
+            Boost boost = collision.gameObject.GetComponent<Boost>();
+            float boostMult;
+            if (boost.IsUpgraded)
+            {
+                boostMult = 2.0f;
+            }
+            else
+            {
+                boostMult = 2.0f;
+            }
+            StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
+            Debug.Log("Applying Boost Item!");
+            Destroy(collision.gameObject);
+        }
+
+        // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
+        if (collision.gameObject.transform.tag == "Hazard")
+        {
+            Destroy(collision.gameObject);
+            if (thisDriver != null)
+            {
+
+                thisDriver.sphere.velocity /= 8000;
+            }
+            else if (npcDriver != null)
+            {
+                npcDriver.DisableDriving();
+                npcDriver.velocity /= 8000;
+                npcDriver.maxSpeed = 100;
+                npcDriver.accelerationRate = 500;
+                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+            }
+        }
+>>>>>>> 4e894b0cb1cf78e0011a67b8d2f9d0d42f3371a5
     }
 
 
