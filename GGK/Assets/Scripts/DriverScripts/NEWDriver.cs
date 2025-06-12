@@ -76,12 +76,6 @@ public class NEWDriver : MonoBehaviour
     float driftTweenDuration = 0.4f;
 
 
-    [Header("Sound Settings")]
-
-    AudioSource soundPlayer;
-
-    [SerializeField]
-    AudioClip driveSound;
 
     public bool isDriving;
     private uint drivingID;
@@ -106,7 +100,6 @@ public class NEWDriver : MonoBehaviour
         driftSparksRightFront.Stop();
         driftSparksRightBack.Stop();
 
-        //soundPlayer = GetComponent<AudioSource>();
 
     }
 
@@ -503,11 +496,6 @@ public class NEWDriver : MonoBehaviour
         {
             isDriving = false;
 
-            // // stops engine sound
-            // if (soundPlayer.isPlaying)
-            // {
-            //     soundPlayer.Stop();
-            // }
         }
     }
 

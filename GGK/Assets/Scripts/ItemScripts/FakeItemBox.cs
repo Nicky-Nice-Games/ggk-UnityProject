@@ -6,8 +6,7 @@ using UnityEngine.UIElements;
 
 public class FakeItemBox : BaseItem
 {
-    [SerializeField]
-    AudioClip hazardSound;
+
     [SerializeField]
 
 
@@ -58,30 +57,5 @@ public class FakeItemBox : BaseItem
     public void RotateBox()
     {
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
-    }
-
-    private void OnDisable()
-    {
-        // AudioSource.PlayClipAtPoint(hazardSound, transform.position);
-
-        // create temp game object at hazard location to make an audio source
-        GameObject tempSoundObject = new GameObject("TempAudio");
-        tempSoundObject.transform.position = transform.position;
-
-        // add audio source to temporary game object
-        AudioSource soundPlayer = tempSoundObject.AddComponent<AudioSource>();
-        soundPlayer.clip = hazardSound;
-
-        // start audio clip from half a second in
-        soundPlayer.time = 0.5f;
-
-        // lower volume
-        soundPlayer.volume = 0.1f;
-
-        // play from audio source
-        soundPlayer.Play();
-
-        // destroy temp sound object after 2.5 seconds
-        Destroy(tempSoundObject, 2.0f);
     }
 }

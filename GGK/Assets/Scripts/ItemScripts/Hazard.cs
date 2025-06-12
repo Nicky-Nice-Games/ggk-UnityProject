@@ -5,9 +5,7 @@ using UnityEngine;
 public class Hazard : BaseItem
 {
 
-    [SerializeField]
-    AudioClip hazardSound;
-
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -31,28 +29,4 @@ public class Hazard : BaseItem
 
     }
 
-    private void OnDisable()
-    {
-        // AudioSource.PlayClipAtPoint(hazardSound, transform.position);
-
-        // create temp game object at hazard location to make an audio source
-        GameObject tempSoundObject = new GameObject("TempAudio");
-        tempSoundObject.transform.position = transform.position;
-
-        // add audio source to temporary game object
-        AudioSource soundPlayer = tempSoundObject.AddComponent<AudioSource>();
-        soundPlayer.clip = hazardSound;
-
-        // start audio clip from half a second in
-        soundPlayer.time = 0.5f;
-
-        // lower volume
-        soundPlayer.volume = 0.1f;
-
-        // play from audio source
-        soundPlayer.Play();
-
-        // destroy temp sound object after 2.5 seconds
-        Destroy(tempSoundObject, 2.0f);
-    }
 }

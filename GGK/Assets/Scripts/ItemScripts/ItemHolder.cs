@@ -28,11 +28,8 @@ public class ItemHolder : MonoBehaviour
     // [SerializeField]
     // private TextMesh heldItemText;
 
-    // audio variables
-    private AudioSource soundPlayer;
 
-    [SerializeField]
-    AudioClip throwSound;
+
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     // Start is called before the first frame update
@@ -43,7 +40,6 @@ public class ItemHolder : MonoBehaviour
         timer = Random.Range(1, 6);
 
 
-        soundPlayer = GetComponent<AudioSource>();
 
     }
 
@@ -87,7 +83,6 @@ public class ItemHolder : MonoBehaviour
         // handles item usage
         if (holdingItem)
         {
-            soundPlayer.PlayOneShot(throwSound);
             BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
             item.IsUpgraded = heldItem.IsUpgraded;
@@ -101,8 +96,6 @@ public class ItemHolder : MonoBehaviour
         // handles item usage
         if (holdingItem)
         {
-            // sound effect when item thrown
-            soundPlayer.PlayOneShot(throwSound);
 
             BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
