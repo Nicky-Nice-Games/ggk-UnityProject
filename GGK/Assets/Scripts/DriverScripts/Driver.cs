@@ -86,14 +86,14 @@ public class Driver : MonoBehaviour
         velocity = Vector3.zero;
         rBody.freezeRotation = true;
 
-        accelerationRate = 7500f;
-        deccelerationRate = 1f;
-        minSpeed = 1;
-        maxSpeed = 280f;
-        turnSpeed = 75;
+        //accelerationRate = 7500f;
+        //deccelerationRate = 1f;
+        //minSpeed = 1;
+        //maxSpeed = 280f;
+        //turnSpeed = 75;
 
 
-        soundPlayer = GetComponent<AudioSource>();
+        //soundPlayer = GetComponent<AudioSource>();
 
         gamemanagerObj = FindAnyObjectByType<GameManager>();
     }
@@ -103,10 +103,10 @@ public class Driver : MonoBehaviour
         // plays sound when kart is moving
         if (isDriving)
         {
-            if (!soundPlayer.isPlaying)
-            {
-                soundPlayer.PlayOneShot(driveSound);
-            }
+           // if (!soundPlayer.isPlaying)
+           // {
+                //soundPlayer.PlayOneShot(driveSound);
+          //  }
         }
 
     }
@@ -376,10 +376,10 @@ public class Driver : MonoBehaviour
             isDriving = false;
 
             // stops engine sound
-            if (soundPlayer.isPlaying)
-            {
-                soundPlayer.Stop();
-            }
+           // if (soundPlayer.isPlaying)
+           // {
+                //soundPlayer.Stop();
+           // }
         }
     }
 
