@@ -111,7 +111,6 @@ public class NEWDriver : MonoBehaviour
 
     void Update()
     {
-<<<<<<< HEAD
         //// plays sound when kart is moving
         if (isDriving)
         {
@@ -138,16 +137,6 @@ public class NEWDriver : MonoBehaviour
             AkSoundEngine.StopPlayingID(driftingID, 500, AkCurveInterpolation.AkCurveInterpolation_Constant);
             driftingID = 0;
         }
-=======
-        // // plays sound when kart is moving
-        // if (isDriving)
-        // {
-        //     if (!soundPlayer.isPlaying)
-        //     {
-        //         soundPlayer.PlayOneShot(driveSound);
-        //     }
-        // }
->>>>>>> 5e6fab209ddf1dcf86069dc31d1a83ba6cab76d8
     }
 
     // Update is called once per frame
