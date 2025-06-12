@@ -9,10 +9,8 @@ public class Hazard : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        // starts the hazard slightly behind the player
-        Vector3 behindPos = transform.position - transform.forward * 6;
-        transform.position = behindPos;
-        
+        transform.position = new Vector3(transform.position.x, transform.position.y + 15, transform.position.z);
+
         // sends the hazard slightly up and behind the player before landing on the ground
         if (isUpgraded)
         {
