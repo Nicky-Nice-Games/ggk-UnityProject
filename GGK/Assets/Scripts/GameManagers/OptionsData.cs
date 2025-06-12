@@ -36,15 +36,19 @@ public class OptionsData : MonoBehaviour
     }
     public void ConnectOptions()
     {
+        Button optionsButton;
+
         // Grabbing options panel
         options = FindAnyObjectByType<OptionsHandler>(FindObjectsInactive.Include);
-        options.optionsData = this;
-        optionsPanel = options.gameObject;
+        if (options != null)
+        {
+            options.optionsData = this;
+            optionsPanel = options.gameObject;
 
-        // Connect Option Button
-        Button optionsButton = GameObject.Find("Options").GetComponent<Button>();
-        optionsButton.onClick.AddListener(() => gameManager.GetComponent<ButtonBehavior>().OnClick());
-        optionsButton.onClick.AddListener(() => Options());
+            optionsButton = GameObject.Find("Options").GetComponent<Button>();
+            optionsButton.onClick.AddListener(() => gameManager.GetComponent<ButtonBehavior>().OnClick());
+            optionsButton.onClick.AddListener(() => Options());
+        }               
     }
     public void ConnectOptions(Scene s, LoadSceneMode l)
     {
