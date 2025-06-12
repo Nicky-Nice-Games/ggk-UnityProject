@@ -51,13 +51,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "LookBackController",
-                    "type": "Value",
-                    "id": "fb70dff4-f86d-4092-8d38-81d9818a9d3d",
+                    "name": "UseItem",
+                    "type": "Button",
+                    "id": "99d5725f-c325-48c2-8943-59aebc2db633",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold",
-                    "initialStateCheck": true
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "48cec86f-4d9e-4741-bb99-eba1f5c4f993",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -217,6 +226,17 @@
                 },
                 {
                     "name": "",
+                    "id": "57ace4c6-979d-40ab-9d03-1e30773cdbd8",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Drift Hop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7ee17544-e0e1-44ad-9d3d-59efeae0a50c",
                     "path": "<Keyboard>/tab",
                     "interactions": "Hold(duration=0.4,pressPoint=0.5)",
@@ -228,12 +248,56 @@
                 },
                 {
                     "name": "",
-                    "id": "325e72ef-b195-4913-883d-b9b87055231a",
+                    "id": "f153e1a8-937b-4a73-b16a-bf75fdfabc55",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "LookBackController",
+                    "action": "LookBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f178f0b-fbce-45a8-8ba7-bb9031eddf08",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2fa45b20-d76d-4528-8c40-9c73cc1e0e6a",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "UseItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fa535c0b-6299-4ad7-b400-94151ed51162",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1909da7-6ce4-428a-b84c-9e3d7f3dbc18",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
