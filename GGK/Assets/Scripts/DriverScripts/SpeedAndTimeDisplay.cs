@@ -22,7 +22,7 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     void Start()
     {
         timer = 0;
-        speedBar.SetMaxSpeed(kart.maxSpeed);
+        speedBar.SetMaxSpeed(150);
     }
 
     // Update is called once per frame
