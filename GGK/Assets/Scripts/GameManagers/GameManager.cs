@@ -66,6 +66,22 @@ public class GameManager : MonoBehaviour
         curState = GameStates.signin;
     }
 
+    public void Login()
+    {
+
+    }
+
+    public void SignUp()
+    {
+        SceneManager.LoadScene("SignUpScene");
+    }
+    
+    public void LoadMultiSinglePlay()
+    {
+        SceneManager.LoadScene("MultiSinglePlayerScene");
+        curState = GameStates.multiSingle;
+    }
+
     /// <summary>
     /// Connects the player to either a single or multiplayer lobby
     /// Could prob be put into 2 functions in needed and even in a script attached
