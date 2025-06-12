@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 153112907297997618}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -805,6 +805,8 @@ MonoBehaviour:
   checkpointList: []
   checkPointParent: {fileID: 0}
   distanceSquaredToNextCP: 0
+  placementDisplay: {fileID: 0}
+  lapDisplay: {fileID: 0}
 --- !u!1 &2694363133196758276
 GameObject:
   m_ObjectHideFlags: 0
@@ -21478,9 +21480,10 @@ GameObject:
   - component: {fileID: 435256397205002614}
   - component: {fileID: 3781514375417614312}
   - component: {fileID: 6316634641190557527}
+  - component: {fileID: 4107905189492007490}
   m_Layer: 0
   m_Name: Kart
-  m_TagString: Untagged
+  m_TagString: Kart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21513,10 +21516,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -21576,6 +21579,23 @@ MonoBehaviour:
   rotationAlignSpeed: 0.05
   driveSound: {fileID: 0}
   isDriving: 0
+--- !u!114 &4107905189492007490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937854632911162198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisDriver: {fileID: 6316634641190557527}
+  npcDriver: {fileID: 0}
+  heldItem: {fileID: 0}
+  timer: 5
+  throwSound: {fileID: 0}
 --- !u!1 &8186770775592861054
 GameObject:
   m_ObjectHideFlags: 0
