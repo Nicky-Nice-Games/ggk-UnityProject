@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
     gameMode,
     playerKart,
@@ -57,8 +58,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene("MultiSinglePlayerScene");
-        curState = GameStates.multiSingle;
+        SceneManager.LoadScene("LoginScene");
+        curState = GameStates.login;
     }
 
     /// <summary>
