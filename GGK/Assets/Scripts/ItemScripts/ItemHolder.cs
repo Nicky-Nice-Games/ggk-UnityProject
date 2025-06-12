@@ -11,7 +11,7 @@ public class ItemHolder : MonoBehaviour
     private bool holdingItem;
 
     [SerializeField]
-    private NEWDriver thisDriver;
+    private Driver thisDriver;
 
     [SerializeField]
     private NPCDriver npcDriver;
@@ -121,7 +121,7 @@ public class ItemHolder : MonoBehaviour
             if (thisDriver != null)
             {
 
-                thisDriver.sphere.velocity /= 8000;
+                thisDriver.velocity /= 8000;
             }
             else if (npcDriver != null)
             {
@@ -139,7 +139,7 @@ public class ItemHolder : MonoBehaviour
             Destroy(collision.gameObject);
             if (thisDriver != null)
             {
-                thisDriver.sphere.velocity /= 8000;
+                thisDriver.velocity /= 8000;
             }
             else if (npcDriver != null)
             {
@@ -153,9 +153,8 @@ public class ItemHolder : MonoBehaviour
 
     }
 
-    public void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Collided");
         // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
         {
@@ -185,35 +184,10 @@ public class ItemHolder : MonoBehaviour
         if (collision.gameObject.transform.tag == "Projectile")
         {
             Destroy(collision.gameObject);
-            thisDriver.sphere.velocity /= 8;
+            thisDriver.velocity /= 8;
         }
 
-        // kart uses a boost and is given the boost through a force
-        if (collision.gameObject.CompareTag("Boost"))
-        {
-            Boost boost = collision.gameObject.GetComponent<Boost>();
-            float boostMult;
-            if (boost.IsUpgraded)
-            {
-                boostMult = 2.0f;
-            }
-            else
-            {
-                boostMult = 2.0f;
-            }
-            StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
-            Debug.Log("Applying Boost Item!");
-            Destroy(collision.gameObject);
-        }
     }
-    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
-    {
-        for (float t = 0; t < duration; t += Time.deltaTime)
-        {
-            Vector3 boostDirection = driver.transform.forward * boostForce;
 
-            driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
-            yield return new WaitForFixedUpdate();
-        }
-    }
+
 }
