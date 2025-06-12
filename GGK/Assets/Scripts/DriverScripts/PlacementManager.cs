@@ -39,6 +39,7 @@ public class PlacementManager : MonoBehaviour
         sortedList = checkpointList.OrderByDescending(kart => kart.lap)
                                        .ThenByDescending(kart => kart.checkpointId)
                                        .ThenBy(kart => kart.distanceSquaredToNextCP)
+                                       .ThenBy(kart => kart.finishTime)
                                        .ToList();
 
         // Assign placements
