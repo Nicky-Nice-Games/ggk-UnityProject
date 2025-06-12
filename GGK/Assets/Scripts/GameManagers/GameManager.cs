@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
-    login,
+    signin,
     multiSingle,
     gameMode,
     playerKart,
@@ -20,11 +20,15 @@ public enum GameStates
     gameOver
 }
 
+
+
 public class GameManager : MonoBehaviour
 {
     private GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
+    //Bool to check if the game is being run on an arcade machine or not
+    bool isArcade = false;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
     void Awake()
@@ -58,8 +62,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene("LoginScene");
-        curState = GameStates.login;
+        SceneManager.LoadScene("SignInScene");
+        curState = GameStates.signin;
     }
 
     /// <summary>
