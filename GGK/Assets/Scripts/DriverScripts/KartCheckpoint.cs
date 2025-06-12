@@ -72,13 +72,28 @@ public class KartCheckpoint : MonoBehaviour
                 checkpointId = 0;
 
                 // 3 laps finished assuming we start on lap 0
-                if (lap == 3)
+                if (lap == 1)
                 {
                     LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
                     finishTime = leaderboardController.curTime;
                     leaderboardController.Finished(this);
+
+                    GameObject gameManagerGO = GameObject.FindGameObjectWithTag("GameManager");
+
+                    if (gameManagerGO == null)
+                    {
+                        Debug.LogError("GameManager not found in the scene. Please ensure it is present.");
+                        return;
+                    }
+                    else
+                    {
+                        GameManager gameManager = gameManagerGO.GetComponent<GameManager>();
+
+                        gameManager.GameFinished();
+                    }
+
                 }
             }
         }
-    }
+    }    
 }
