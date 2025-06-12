@@ -20,8 +20,8 @@ public class NEWDriver : MonoBehaviour
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
-    public float gravity = 40;
-    public float tractionCoefficient = 7f;
+    public float gravity = 20;
+    public float tractionCoefficient = 6f;
 
     [Header("Sphere Collider stuff")]
     public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
@@ -34,8 +34,8 @@ public class NEWDriver : MonoBehaviour
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
-    public float minDriftTime = 25f;
-    public float driftBoostForce = 0.5f;
+    public float minDriftTime = 200f;
+    public float driftBoostForce = 1f;
     public float hopForce = 8f;
     public float minDriftSteer = 40f;
 
@@ -139,7 +139,8 @@ public class NEWDriver : MonoBehaviour
         if (movementDirection.z != 0f && isGrounded)
         {
             //velocity.y = 0f;
-            acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
+            //acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
+            acceleration = Vector3.Lerp(sphere.velocity.normalized, kartModel.forward, 0.1f) * (movementDirection.z * accelerationRate * Time.deltaTime);
 
             //sphere.velocity += acceleration * Time.fixedDeltaTime;
             //
@@ -197,6 +198,12 @@ public class NEWDriver : MonoBehaviour
             {
                 //Applying our calculated turning direction to the turning variable
                 turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+            }
+
+            if (isGrounded && movementDirection.x != 0f)
+            {
+                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
+                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
             }
 
             acceleration = turning * acceleration;
