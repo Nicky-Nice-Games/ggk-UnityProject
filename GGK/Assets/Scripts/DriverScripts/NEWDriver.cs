@@ -109,14 +109,14 @@ public class NEWDriver : MonoBehaviour
 
     void Update()
     {
-        //// plays sound when kart is moving
-        //if (isDriving)
-        //{
-        //    if (!soundPlayer.isPlaying)
-        //    {
-        //        soundPlayer.PlayOneShot(driveSound);
-        //    }
-        //}
+        // // plays sound when kart is moving
+        // if (isDriving)
+        // {
+        //     if (!soundPlayer.isPlaying)
+        //     {
+        //         soundPlayer.PlayOneShot(driveSound);
+        //     }
+        // }
     }
 
     // Update is called once per frame
@@ -482,11 +482,11 @@ public class NEWDriver : MonoBehaviour
         {
             isDriving = false;
 
-           // // stops engine sound
-           // if (soundPlayer.isPlaying)
-           // {
-           //     soundPlayer.Stop();
-           // }
+            // // stops engine sound
+            // if (soundPlayer.isPlaying)
+            // {
+            //     soundPlayer.Stop();
+            // }
         }
     }
 
