@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentSound: {fileID: 8300000, guid: e86f9d5352c873645acb9804801e4fa0, type: 3}
-  driverScript: {fileID: 0}
+  driverScript: {fileID: 1534562678}
 --- !u!1001 &920724324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -523,18 +523,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3117544026776426683, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3781514375417614312, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 55
-      objectReference: {fileID: 0}
-    - target: {fileID: 3781514375417614312, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Name
       value: Kart 1
@@ -579,17 +567,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: m_TagString
-      value: Kart
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1534562677}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
 --- !u!1 &978201707
 GameObject:
@@ -775,34 +756,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
---- !u!1 &1534562675 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+--- !u!114 &1534562677 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 920724324}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1534562677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1534562675}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisDriver: {fileID: 1534562678}
-  npcDriver: {fileID: 0}
-  heldItem: {fileID: 527145452109717806, guid: 793d97737815c3e4bb2dd48f19109467, type: 3}
-  timer: 5
-  throwSound: {fileID: 0}
 --- !u!114 &1534562678 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6316634641190557527, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 920724324}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1534562675}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c980f7710f2f52c4f88279024bc6ba66, type: 3}
@@ -1035,7 +1005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentSound: {fileID: 8300000, guid: e86f9d5352c873645acb9804801e4fa0, type: 3}
-  driverScript: {fileID: 0}
+  driverScript: {fileID: 1534562678}
 --- !u!1001 &1698826641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1087,6 +1057,10 @@ PrefabInstance:
     - target: {fileID: 6700976075920660207, guid: 0b518e80a6b139940be4f5af15419f04, type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700976075920660207, guid: 0b518e80a6b139940be4f5af15419f04, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9117759039799724987, guid: 0b518e80a6b139940be4f5af15419f04, type: 3}
       propertyPath: m_Name
@@ -1315,7 +1289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentSound: {fileID: 8300000, guid: da0842533e6ed4c4bbd74091cf50db5c, type: 3}
-  driverScript: {fileID: 0}
+  driverScript: {fileID: 1534562678}
 --- !u!1 &2017216355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,7 +1411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentSound: {fileID: 8300000, guid: e86f9d5352c873645acb9804801e4fa0, type: 3}
-  driverScript: {fileID: 0}
+  driverScript: {fileID: 1534562678}
 --- !u!82 &2017216361
 AudioSource:
   m_ObjectHideFlags: 0
