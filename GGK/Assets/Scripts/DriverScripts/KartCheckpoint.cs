@@ -16,6 +16,7 @@ public class KartCheckpoint : MonoBehaviour
     [SerializeField] List<GameObject> checkpointList;
     [SerializeField]
     private GameObject checkPointParent;
+    GameManager gameManager;
 
     [SerializeField]
     TextMeshProUGUI placementDisplay;
@@ -33,6 +34,20 @@ public class KartCheckpoint : MonoBehaviour
         if(this.GetComponent<NPCDriver>() == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
+        }
+
+        GameObject gameManagerGO = GameObject.FindGameObjectWithTag("GameManager");
+
+        if (gameManagerGO == null)
+        {
+            Debug.LogError("GameManager not found in the scene. Please ensure it is present.");
+            return;
+        }
+        else
+        {
+            gameManager = gameManagerGO.GetComponent<GameManager>();
+
+
         }
     }
 
@@ -72,13 +87,21 @@ public class KartCheckpoint : MonoBehaviour
                 checkpointId = 0;
 
                 // 3 laps finished assuming we start on lap 0
-                if (lap == 3)
+                if (lap == 1)
                 {
                     LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
                     finishTime = leaderboardController.curTime;
                     leaderboardController.Finished(this);
+                    
+                    StartCoroutine(GameOverWait());
                 }
             }
         }
+    }  
+    
+    IEnumerator GameOverWait()
+    {
+        yield return new WaitForSeconds(5f);
+        gameManager.GameFinished();
     }
 }
