@@ -7,14 +7,15 @@ using UnityEngine;
 public class KartCheckpoint : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int checkpointId;
-    public int lap;
+    public int lap = 0;
+    public int checkpointId = 0;
+    public float distanceSquaredToNextCP;
+    public float finishTime = float.MaxValue;
     public int placement;
     public string name;
     [SerializeField] List<GameObject> checkpointList;
     [SerializeField]
     private GameObject checkPointParent;
-    public float distanceSquaredToNextCP;
 
     [SerializeField]
     TextMeshProUGUI placementDisplay;
@@ -48,21 +49,12 @@ public class KartCheckpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         bool canPass = false;
 
         if (other.gameObject == checkpointList[(checkpointId + 1) % checkpointList.Count])
         {
             canPass = true;
         }
-
-        //for (int i = 0; i < checkpointId; i++) 
-        //{
-        //    if (other.gameObject == checkpointList[checkpointId - i])
-        //    {
-        //        canPass = true;
-        //    }
-        //}    
 
         if (other.CompareTag("Checkpoint") && canPass)
         {
@@ -78,9 +70,15 @@ public class KartCheckpoint : MonoBehaviour
                     lapDisplay.text = "Lap: " + (lap + 1);
                 }
                 checkpointId = 0;
+
+                // 3 laps finished assuming we start on lap 0
+                if (lap == 3)
+                {
+                    LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+                    finishTime = leaderboardController.curTime;
+                    leaderboardController.Finished(this);
+                }
             }
         }
     }
-
-
 }
