@@ -1,0 +1,105 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class LobbyUI : MonoBehaviour
+{
+    public static LobbyUI Instance { get; private set; }
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI playersText;
+    [SerializeField] private Transform lobbyPlayerSingleTemplate;
+    [SerializeField] private Transform container;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button leaveButton;
+
+    private void Awake()
+    {
+        Instance = this;
+        startButton.onClick.AddListener(StartGame);
+        leaveButton.onClick.AddListener(LeaveLobby);
+    }
+
+    private void Start() {  
+        lobbyPlayerSingleTemplate.gameObject.SetActive(false);
+        LobbyManager.Instance.OnJoinedLobbyUpdate += LobbyManager_OnJoinedLobbyUpdate;
+        LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
+        LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
+        LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
+        Hide();
+    }
+    
+    private void OnEnable()
+    {
+        startButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
+    }
+
+    private void LobbyManager_OnKickedFromLobby(object sender, LobbyManager.LobbyEventArgs e)
+    {
+        Hide();
+    }
+
+    private void LobbyManager_OnLeftLobby(object sender, EventArgs e)
+    {
+        Hide();
+    }
+
+    private void LobbyManager_OnJoinedLobby(object sender, LobbyManager.LobbyEventArgs e)
+    {
+        Show();
+        UpdateLobby(e.lobby);
+    }
+
+    private void LobbyManager_OnJoinedLobbyUpdate(object sender, LobbyManager.LobbyEventArgs e)
+    {
+        UpdatePlayerList(e.lobby.Players);
+        startButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
+    }
+
+    private void StartGame()
+    {
+        LobbyManager.Instance.StartGame();
+    }
+
+    private void LeaveLobby()
+    {
+        LobbyManager.Instance.LeaveLobby();
+    }
+
+    private void UpdateLobby(Lobby lobby)
+    {
+        titleText.text = $"{lobby.Name}";
+    }
+
+    private void UpdatePlayerList(List<Player> playerList)
+    {
+        
+        playersText.text = $"{playerList.Count}/{LobbyManager.Instance.GetJoinedLobby().MaxPlayers}";
+        foreach (Transform child in container)
+        {
+            if (child == lobbyPlayerSingleTemplate) continue;
+            Destroy(child.gameObject);
+        }
+        foreach (Player player in playerList)
+        {
+            Transform lobbyPlayerSingleTransform = Instantiate(lobbyPlayerSingleTemplate, container);
+            lobbyPlayerSingleTransform.gameObject.SetActive(true);
+            LobbyPlayerSingleUI lobbyPlayerSingleUI = lobbyPlayerSingleTransform.GetComponent<LobbyPlayerSingleUI>();
+            lobbyPlayerSingleUI.UpdatePlayer(player);
+        }
+    }
+    
+     public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+}
