@@ -10,10 +10,13 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using System;
 
 public class RelayManager : MonoBehaviour
 {
     public static RelayManager Instance { get; private set; }
+
+    public event EventHandler OnRelayStarted;
 
     private void Awake()
     {
@@ -41,6 +44,7 @@ public class RelayManager : MonoBehaviour
                 allocation.ConnectionData
             );
             NetworkManager.Singleton.StartHost();
+            OnRelayStarted?.Invoke(this, EventArgs.Empty);
             return joinCode;
         }
         catch (RelayServiceException e)
@@ -69,6 +73,7 @@ public class RelayManager : MonoBehaviour
                 joinAllocation.HostConnectionData
             );
             NetworkManager.Singleton.StartClient();
+            OnRelayStarted?.Invoke(this, EventArgs.Empty);
         }
         catch (RelayServiceException e)
         {

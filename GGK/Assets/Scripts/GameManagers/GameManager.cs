@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public enum GameStates
 {
     start,
     multiSingle,
+    lobby,
     gameMode,
     playerKart,
     map,
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
-
+        RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
     }
@@ -83,9 +85,25 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
-            curState = GameStates.gameMode;
+            SceneManager.LoadScene("MultiplayerMenus");
+            curState = GameStates.lobby;
         }
+    }
+
+    /// <summary>
+    /// RelayManager OnRelayStarted EventHandler
+    /// </summary>
+    public void RelayManager_OnRelayStarted(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
+    }
+    /// <summary>
+    /// changes game state to the game mode selection scene
+    /// </summary>
+    public void ToGameModeSelectScene()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
     }
 
     /// <summary>
