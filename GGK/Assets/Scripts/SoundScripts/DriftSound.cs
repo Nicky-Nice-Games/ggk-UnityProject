@@ -10,7 +10,7 @@ public class DriftSound : MonoBehaviour
     AudioSource soundPlayer;
 
     [SerializeField]
-    Driver driverScript;
+    NEWDriver driverScript;
 
     // Start is called before the first frame update
     void Start()
