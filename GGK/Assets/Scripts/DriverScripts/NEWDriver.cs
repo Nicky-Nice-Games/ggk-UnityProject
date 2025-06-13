@@ -22,6 +22,8 @@ public class NEWDriver : MonoBehaviour
     public Transform kartNormal;
     public float gravity = 20;
     public float tractionCoefficient = 6f;
+    float controllerX;
+    float controllerZ;
 
     [Header("Sphere Collider stuff")]
     public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
@@ -509,11 +511,17 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
+    public void OnTurn(InputAction.CallbackContext context)
+    {
+        controllerX = context.ReadValue<float>();
+        UpdateControllerMovement(context);
+    }
+
     public void OnAcceleration(InputAction.CallbackContext context)
     {
-        movementDirection.z = context.ReadValue<float>();
+        controllerZ = context.ReadValue<float>();
+        UpdateControllerMovement(context);
 
-        // determines when driving starts and when driving ends
         if (context.started)
         {
             isDriving = true;
@@ -524,9 +532,13 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
-    public void OnTurn(InputAction.CallbackContext context)
+    private void UpdateControllerMovement(InputAction.CallbackContext context)
     {
-        movementDirection.x = context.ReadValue<float>();
+        Vector2 moveInput = new Vector2(controllerX, controllerZ);
+        moveInput = Vector2.ClampMagnitude(moveInput, 1f);
+
+        movementDirection.x = moveInput.x;
+        movementDirection.z = moveInput.y;
     }
 
     private void OnDrawGizmosSelected()
