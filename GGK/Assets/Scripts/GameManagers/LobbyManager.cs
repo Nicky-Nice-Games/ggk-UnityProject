@@ -12,7 +12,6 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour
 {
-    private static LobbyManager instance = null;
     public static LobbyManager Instance { get; private set; }
 
     /// <summary>
@@ -58,9 +57,14 @@ public class LobbyManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null) Destroy(this);
-        Instance = this;
-        DontDestroyOnLoad(this);
+        if (Instance == null) {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        } else if(Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        
     }
 
     private async void Start()
@@ -71,8 +75,10 @@ public class LobbyManager : MonoBehaviour
         {
            Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
         };
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        playerName = $"RIT:{UnityEngine.Random.Range(10, 999)}";
+        if(!AuthenticationService.Instance.IsSignedIn){
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            playerName = $"RIT:{UnityEngine.Random.Range(10, 999)}";
+        }
         //Debug.Log(playerName);
         //Authenticate(playerName);
     }

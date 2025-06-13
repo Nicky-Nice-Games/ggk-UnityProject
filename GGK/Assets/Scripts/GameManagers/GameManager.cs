@@ -30,9 +30,14 @@ public class GameManager : MonoBehaviour
     public GameObject currentSceneFirst;
     void Awake()
     {
-        thisManagerInstance = this;
-        thisManagerObjInstance = gameObject;
-        DontDestroyOnLoad(thisManagerObjInstance);
+        if (thisManagerInstance == null)
+        {
+            thisManagerInstance = this;
+            thisManagerObjInstance = gameObject;
+            DontDestroyOnLoad(thisManagerObjInstance);
+        } else if(thisManagerInstance != this){
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
