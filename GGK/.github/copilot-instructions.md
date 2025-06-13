@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI
 - Active game object:
-  - Name: MultiSingleHandeler
-  - Tag: Untagged
+  - Name: Kart
+  - Tag: Kart
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
