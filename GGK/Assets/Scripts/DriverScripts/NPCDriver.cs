@@ -180,7 +180,7 @@ public class NPCDriver : MonoBehaviour
         // Fall faster if in air
         if (!isGrounded)
         {
-            rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration);
+            rBody.AddForce(Vector3.down * 1000f, ForceMode.Acceleration);
         }
 
         //Debug.Log(velocity.magnitude);
