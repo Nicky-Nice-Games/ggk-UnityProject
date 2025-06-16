@@ -42,6 +42,13 @@ public class NPCDriver : MonoBehaviour
     private float topMaxSpeed;
     public bool boosted = false;
     public float boostDistanceMultiplier = 4f; // 2000 * 4 = 8000
+
+    [SerializeField]
+    private bool isRecoveringFromHit = false;
+    [SerializeField]
+    private float recoveryTimer = 0f;
+    public float recoveryDuration = 2.5f; // Duration to recover full control
+
     void Start()
     {
         rBody.drag = 0.5f;
@@ -141,6 +148,25 @@ public class NPCDriver : MonoBehaviour
             accelerationRate = Mathf.Lerp(accelerationRate, 3500f, Time.deltaTime);
             velocity += direction * (accelerationRate * Time.fixedDeltaTime);
         }
+        else if (isRecoveringFromHit)
+        {
+            recoveryTimer -= Time.deltaTime;
+
+            // Linearly increase values back to normal
+            float t = 1f - (recoveryTimer / recoveryDuration);
+            accelerationRate = Mathf.Lerp(500f, 3500f, t);
+            maxSpeed = Mathf.Lerp(10f, topMaxSpeed, t);
+
+            Vector3 direction = (followTarget.position - transform.position).normalized;
+            velocity += direction * (accelerationRate * Time.fixedDeltaTime);
+
+            if (recoveryTimer <= 0f)
+            {
+                isRecoveringFromHit = false;
+                accelerationRate = 3500f;
+                maxSpeed = topMaxSpeed;
+            }
+        }
         else
         {
             // Full spline following physics mode
@@ -189,7 +215,7 @@ public class NPCDriver : MonoBehaviour
     public void DisableDriving()
     {
         returningToTarget = true;
-        rBody.velocity = Vector3.zero;
+        //rBody.velocity = Vector3.zero;
     }
 
     void OnDrawGizmos()
@@ -207,5 +233,18 @@ public class NPCDriver : MonoBehaviour
                 Gizmos.DrawSphere(transform.position - transform.up * groundCheckDistance, 0.2f);
             }
         }
+    }
+
+    public void StartRecovery()
+    {
+        isRecoveringFromHit = true;
+        recoveryTimer = recoveryDuration;
+
+        // Gently reduce current velocity
+        velocity *= 0.2f;
+
+        // Limit acceleration and maxSpeed temporarily
+        accelerationRate = 500f;
+        maxSpeed = 10f;
     }
 }

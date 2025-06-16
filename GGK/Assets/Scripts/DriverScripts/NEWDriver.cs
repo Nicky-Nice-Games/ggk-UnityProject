@@ -472,7 +472,7 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.2f, zTilt * 0.7f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
 
@@ -554,4 +554,6 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
     }
+
+    
 }
