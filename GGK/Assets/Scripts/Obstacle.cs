@@ -18,8 +18,6 @@ public class MovingObstacle : MonoBehaviour
     private float timeElapsed;
 
     private GameObject player;
-
-    float maxSpeed;
     void Start()
     {
         startPosition = transform.position;
@@ -65,11 +63,18 @@ public class MovingObstacle : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Kart"))
             {
-                GameObject gameobj = collision.gameObject.GetComponentInParent<GameObject>();
-                NEWDriver driver = gameobj.GetComponent<NEWDriver>();
-                Debug.Log("Triggering");
-                float slowFactor = 100f;
-                driver.sphere.AddForce(-driver.acceleration * slowFactor, ForceMode.Acceleration);
+                float slowFactor = 0.5f;
+                Debug.Log("Slowing Down!");
+
+                // gets the parent of the larger collider to get the different child with the driver script
+                GameObject gameobj = collision.transform.parent.gameObject;
+                NEWDriver driver = gameobj.GetComponentInChildren<NEWDriver>();
+
+                if(driver != null)
+                {
+                    // adds a counter force to the kart when driving on the slowdown terrains
+                    driver.sphere.AddForce(-driver.acceleration * slowFactor, ForceMode.Acceleration);
+                }
             }
         }
     }

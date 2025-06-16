@@ -228,19 +228,6 @@ public class ItemHolder : MonoBehaviour
 
     }
 
-    //private void OnTriggerStay(Collider collision)
-    //{
-    //    if (collision.gameObject.transform.tag == "slowDown")
-    //    {
-    //        Debug.Log("SOMETHING!");
-    //        if (thisDriver != null)
-    //        {
-    //            Debug.Log("Slowing Down");
-    //            thisDriver.sphere.velocity /= 200f;
-    //        }
-    //    }
-    //}
-
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
