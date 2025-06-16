@@ -225,7 +225,9 @@ public class ItemHolder : MonoBehaviour
                 npcDriver.StartRecovery();
             }
         }
+
     }
+
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
@@ -236,4 +238,5 @@ public class ItemHolder : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+
 }

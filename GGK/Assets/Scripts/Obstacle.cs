@@ -18,11 +18,10 @@ public class MovingObstacle : MonoBehaviour
     private float timeElapsed;
 
     private GameObject player;
-
     void Start()
     {
         startPosition = transform.position;
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Kart");
 
         string newTag = "slowDown";
 
@@ -51,9 +50,32 @@ public class MovingObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && AudioClip != null)
+        if (collision.gameObject.CompareTag("Kart") && AudioClip != null)
         {
             StartCoroutine(PlayAudioForSeconds(3f)); // Adjust time as needed
+        }
+        
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+        if (slowDown)
+        {
+            if (collision.gameObject.CompareTag("Kart"))
+            {
+                float slowFactor = 0.5f;
+                Debug.Log("Slowing Down!");
+
+                // gets the parent of the larger collider to get the different child with the driver script
+                GameObject gameobj = collision.transform.parent.gameObject;
+                NEWDriver driver = gameobj.GetComponentInChildren<NEWDriver>();
+
+                if(driver != null)
+                {
+                    // adds a counter force to the kart when driving on the slowdown terrains
+                    driver.sphere.AddForce(-driver.acceleration * slowFactor, ForceMode.Acceleration);
+                }
+            }
         }
     }
 
