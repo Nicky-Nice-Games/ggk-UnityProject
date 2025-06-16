@@ -38,7 +38,11 @@ using UnityEngine.UI;
 // 3. Change the min/maxDepthTracking to change the y values that the icons will change size to reflect. If the object's
 //    position exceeds these bounds, the object will not get any smaller/larger.
 // 4. Change the "sizeOffset" variable to change the maximum change in size that the icon will reflect.
-
+//
+//---------------------DEBUG----------------------
+//
+// 
+//
 public class MiniMapHud : MonoBehaviour
 {
     //use these if you want to use points
