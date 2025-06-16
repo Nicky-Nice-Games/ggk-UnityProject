@@ -59,6 +59,9 @@ public class NEWDriver : MonoBehaviour
     public Transform kartModel;
 
     [Header("Particle Effects")]
+    public List<ParticleSystem> particleSystemsBR;
+    public List<ParticleSystem> particleSystemsBL;
+    public List<ParticleSystem> TireScreeches;
     public ParticleSystem driftSparksLeftBack;
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
@@ -100,11 +103,22 @@ public class NEWDriver : MonoBehaviour
         //minSpeed = 1;
         //maxSpeed = 150;
         //turnSpeed = 60;
-
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
+        foreach(ParticleSystem ps in particleSystemsBR)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in particleSystemsBL)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in TireScreeches)
+        {
+            ps.Stop();
+        }
+        //driftSparksLeftBack.Stop();
+        //driftSparksLeftFront.Stop();
+        //driftSparksRightFront.Stop();
+        //driftSparksRightBack.Stop();
 
         //soundPlayer = GetComponent<AudioSource>();
 
@@ -394,16 +408,40 @@ public class NEWDriver : MonoBehaviour
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
         // Sparks!
-        if (isDriftingLeft && driftTime >= minDriftTime && !driftSparksLeftBack.isPlaying)
+        if (isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBL[0].isPlaying)
         {
-            driftSparksLeftBack.Play();
-            driftSparksLeftFront.Play();
+            foreach (ParticleSystem ps in particleSystemsBL)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+            //driftSparksLeftBack.Play();
+            //driftSparksLeftFront.Play();
 
         }
-        else if (!isDriftingLeft && driftTime >= minDriftTime && !driftSparksRightBack.isPlaying)
+        else if (!isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBR[0].isPlaying)
         {
-            driftSparksRightBack.Play();
-            driftSparksRightFront.Play();
+            foreach (ParticleSystem ps in particleSystemsBR)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+            //driftSparksRightBack.Play();
+            //driftSparksRightFront.Play();
+        }
+
+        //Tire Screech Particles
+        if(isDriftingLeft && !TireScreeches[0].isPlaying)
+        {
+            TireScreeches[0].Play();
+        }
+        else if (!isDriftingLeft && !TireScreeches[1].isPlaying)
+        {
+            TireScreeches[1].Play();
         }
     }
 
@@ -430,11 +468,14 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
 
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
+        //driftSparksLeftBack.Stop();
+        //driftSparksLeftFront.Stop();
+        //driftSparksRightFront.Stop();
+        //driftSparksRightBack.Stop();
 
+        particleSystemsBL.ForEach(ps => ps.Stop());
+        particleSystemsBR.ForEach(ps => ps.Stop());
+        TireScreeches.ForEach(ps => ps.Stop());
 
     }
 
