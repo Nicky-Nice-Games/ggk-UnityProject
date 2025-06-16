@@ -120,8 +120,8 @@ public class GameManager : MonoBehaviour
             case "RIT Outer Loop Greybox":
                 sceneLoader.LoadScene("RIT Outer Loop Greybox");
                 break;
-            case "RIT SHED Greybox":
-                sceneLoader.LoadScene("RIT SHED Greybox");
+            case "Golisano Greybox":
+                sceneLoader.LoadScene("Golisano Greybox");
                 break;
             case "RIT Dorm Greybox":
                 sceneLoader.LoadScene("RIT Dorm Greybox");
