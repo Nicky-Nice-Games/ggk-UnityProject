@@ -7,6 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
     public float transitionTime;
+    public bool transitionActive;
 
     public void LoadScene(string sceneName)
     {
@@ -16,13 +17,16 @@ public class SceneLoader : MonoBehaviour
     IEnumerator LoadAnimation(string sceneName)
     {
         // Play start scene transition animation
-        transition.SetTrigger("Start");
+        if (transitionActive)
+            transition.SetTrigger("Start");
 
         // Wait
-        yield return new WaitForSeconds(transitionTime);
+        if (transitionActive)
+            yield return new WaitForSeconds(transitionTime);
 
         // Load Scene and play end scene transition animation
         SceneManager.LoadScene(sceneName);
-        transition.SetTrigger("End");  
+        if (transitionActive)
+            transition.SetTrigger("End");  
     }
 }
