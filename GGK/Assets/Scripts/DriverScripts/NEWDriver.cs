@@ -20,11 +20,8 @@ public class NEWDriver : MonoBehaviour
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
-    public float gravity = 20;
-    public float tractionCoefficient = 6f;
-    float controllerX;
-    float controllerZ;
-    
+    public float gravity = 40;
+    public float tractionCoefficient = 7f;
 
     [Header("Sphere Collider stuff")]
     public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
@@ -37,8 +34,8 @@ public class NEWDriver : MonoBehaviour
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
-    public float minDriftTime = 200f;
-    public float driftBoostForce = 1f;
+    public float minDriftTime = 25f;
+    public float driftBoostForce = 0.5f;
     public float hopForce = 8f;
     public float minDriftSteer = 40f;
 
@@ -156,13 +153,7 @@ public class NEWDriver : MonoBehaviour
         if (movementDirection.z != 0f && isGrounded)
         {
             //velocity.y = 0f;
-            //acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
-            //acceleration = Vector3.Lerp(sphere.velocity.normalized, kartModel.forward, 0.1f) * (movementDirection.z * accelerationRate * Time.deltaTime);
-
-            
-            
-            acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
-
+            acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
 
             //sphere.velocity += acceleration * Time.fixedDeltaTime;
             //
@@ -220,12 +211,6 @@ public class NEWDriver : MonoBehaviour
             {
                 //Applying our calculated turning direction to the turning variable
                 turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
-            }
-
-            if (isGrounded && movementDirection.x != 0f)
-            {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
-                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
             }
 
             acceleration = turning * acceleration;
@@ -526,17 +511,11 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
-    public void OnTurn(InputAction.CallbackContext context)
-    {
-        controllerX = context.ReadValue<float>();
-        UpdateControllerMovement(context);
-    }
-
     public void OnAcceleration(InputAction.CallbackContext context)
     {
-        controllerZ = context.ReadValue<float>();
-        UpdateControllerMovement(context);
+        movementDirection.z = context.ReadValue<float>();
 
+        // determines when driving starts and when driving ends
         if (context.started)
         {
             isDriving = true;
@@ -547,13 +526,9 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
-    private void UpdateControllerMovement(InputAction.CallbackContext context)
+    public void OnTurn(InputAction.CallbackContext context)
     {
-        Vector2 moveInput = new Vector2(controllerX, controllerZ);
-        moveInput = Vector2.ClampMagnitude(moveInput, 1f);
-
-        movementDirection.x = moveInput.x;
-        movementDirection.z = moveInput.y;
+        movementDirection.x = context.ReadValue<float>();
     }
 
     private void OnDrawGizmosSelected()
@@ -563,6 +538,4 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
     }
-
-    
 }

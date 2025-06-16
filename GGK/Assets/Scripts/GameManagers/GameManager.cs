@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     private GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
-    public SceneLoader sceneLoader;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
     void Awake()
@@ -58,7 +57,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        sceneLoader.LoadScene("MultiSinglePlayerScene");
+        SceneManager.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
 
@@ -75,7 +74,7 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            sceneLoader.LoadScene("GameModeSelectScene");
+            SceneManager.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
@@ -84,7 +83,7 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            sceneLoader.LoadScene("GameModeSelectScene");
+            SceneManager.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
         }
     }
@@ -94,7 +93,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        sceneLoader.LoadScene("PlayerKartScene");
+        SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
     }
 
@@ -105,7 +104,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerSelected()
     {
-        sceneLoader.LoadScene("MapSelectScene");
+        SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
 
@@ -118,16 +117,16 @@ public class GameManager : MonoBehaviour
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
             case "1-1":
-                sceneLoader.LoadScene("RIT Outer Loop Greybox");
+                SceneManager.LoadScene("RIT Outer Loop Greybox");
                 break;
             case "1-2":
-                sceneLoader.LoadScene("1-2");
+                SceneManager.LoadScene("1-2");
                 break;
             case "1-3":
-                sceneLoader.LoadScene("1-3");
+                SceneManager.LoadScene("1-3");
                 break;
             case "1-4":
-                sceneLoader.LoadScene("1-4");
+                SceneManager.LoadScene("1-4");
                 break;
             default:
                 break;
@@ -140,13 +139,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameFinished()
     {
-        sceneLoader.LoadScene("GameOverScene");
+        SceneManager.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
     }
 
     public void LoadStartMenu()
     {
-        sceneLoader.LoadScene("StartScene");
+        SceneManager.LoadScene("StartScene");
         curState = GameStates.start;
     }
 

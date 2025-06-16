@@ -7,15 +7,12 @@ public class ItemBoxManager : MonoBehaviour
 
     [SerializeField]
     private List<ItemBox> itemBoxes;
-    [SerializeField] 
-    private GameObject itemBoxParent;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // Automatically find all ItemBox components in the children of the parent
-        itemBoxes.AddRange(itemBoxParent.GetComponentsInChildren<ItemBox>(true));
+
     }
 
     // Update is called once per frame
