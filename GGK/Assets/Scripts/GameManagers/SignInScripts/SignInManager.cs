@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class SignInManager : MonoBehaviour
 {
@@ -30,11 +33,11 @@ public class SignInManager : MonoBehaviour
     {
         if (isArcade)
         {
-            console.log("This is an Arcade Machine");
+         Debug.Log("This is an Arcade Machine");
         }
         else
         {
-            Console.log("This is not an Arcade Machine");
+            Debug.Log("This is not an Arcade Machine");
             SceneManager.LoadScene("SignUpScene");
         }
         
