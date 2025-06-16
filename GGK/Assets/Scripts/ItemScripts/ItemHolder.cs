@@ -187,6 +187,7 @@ public class ItemHolder : MonoBehaviour
         {
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
+            float duration = 2.5f;
             if (boost.IsUpgraded)
             {
                 boostMult = 2.0f;
@@ -195,7 +196,7 @@ public class ItemHolder : MonoBehaviour
             {
                 boostMult = 1.5f;
             }
-            StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
+            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
             Debug.Log("Applying Boost Item!");
             Destroy(collision.gameObject);
         }
