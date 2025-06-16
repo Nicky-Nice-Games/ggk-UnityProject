@@ -19,10 +19,11 @@ public class MovingObstacle : MonoBehaviour
 
     private GameObject player;
 
+    float maxSpeed;
     void Start()
     {
         startPosition = transform.position;
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Kart");
 
         string newTag = "slowDown";
 
@@ -51,9 +52,25 @@ public class MovingObstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && AudioClip != null)
+        if (collision.gameObject.CompareTag("Kart") && AudioClip != null)
         {
             StartCoroutine(PlayAudioForSeconds(3f)); // Adjust time as needed
+        }
+        
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+        if (slowDown)
+        {
+            if (collision.gameObject.CompareTag("Kart"))
+            {
+                GameObject gameobj = collision.gameObject.GetComponentInParent<GameObject>();
+                NEWDriver driver = gameobj.GetComponent<NEWDriver>();
+                Debug.Log("Triggering");
+                float slowFactor = 100f;
+                driver.sphere.AddForce(-driver.acceleration * slowFactor, ForceMode.Acceleration);
+            }
         }
     }
 
