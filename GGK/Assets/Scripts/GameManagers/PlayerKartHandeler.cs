@@ -62,31 +62,46 @@ public class PlayerKartHandeler : MonoBehaviour
         }
     }
 
+    // Select this character button
     public void ChangeCharacter(Image characterImage, Image border, string name)
     {
+        // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
         {
             prevCharacterImageBorder.color = Color.gray;
         }
 
+        // Change selected character information to those on the button
         characterSelectedImage.sprite = characterImage.sprite;
-        if (characterData != null)
-            characterData.characterSprite = characterImage.sprite;
+        characterName.text = name;
+
+        // Save selected button information to change back later and change border color to yellow
         border.color = Color.yellow;
         prevCharacterImageBorder = border;
-        characterName.text = name;
+
+        // Save information to characterData script if it exist
+        if (characterData != null)
+            characterData.characterSprite = characterImage.sprite;
     }
+
+    // Select this color button
     public void ChangeColor(Image color, Image border)
     {
+        // Reset previous color button's border color to black
         if (prevColorImageBorder != null)
         {
             prevColorImageBorder.color = Color.black;
         }
 
+        // Change selected character information to those on the button
         characterSelectedImage.color = color.color;
-        if (characterData != null)
-            characterData.characterColor = color.color;
+
+        // Save selected button information to change back later and change border color to yellow
         border.color = Color.yellow;
         prevColorImageBorder = border;
+
+        // Save information to characterData script if it exist
+        if (characterData != null)
+            characterData.characterColor = color.color;
     }
 }
