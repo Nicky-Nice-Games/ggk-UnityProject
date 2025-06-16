@@ -10,6 +10,10 @@ public class SignInManager : MonoBehaviour
 {
     //Bool to check if the game is being run on an arcade machine or not
     bool isArcade = false;
+
+    //Used to hide things on the scene
+    [SerializeField] GameObject hider;
+    [SerializeField] GameObject shower;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +38,7 @@ public class SignInManager : MonoBehaviour
         if (isArcade)
         {
          Debug.Log("This is an Arcade Machine");
+            SceneManager.LoadScene("ArcadeSignUp");
         }
         else
         {
@@ -41,5 +46,12 @@ public class SignInManager : MonoBehaviour
             SceneManager.LoadScene("SignUpScene");
         }
         
+    }
+
+    //This method is used to hide some of the UI to focus on another part of it
+    public void HideandShow()
+    {
+        hider.SetActive(false);
+        shower.SetActive(true);
     }
 }
