@@ -135,11 +135,12 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8000;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                npcDriver.StartRecovery();
             }
         }
 
@@ -157,7 +158,10 @@ public class ItemHolder : MonoBehaviour
             if (heldItem == null)
             {
                 heldItem = itemBox.RandomizeItem();
-                itemDisplay.texture = heldItem.itemIcon;
+                if (itemDisplay != null) 
+                {
+                    itemDisplay.texture = heldItem.itemIcon;
+                }
             }
             // Disables the item box
             itemBox.gameObject.SetActive(false);
@@ -187,15 +191,16 @@ public class ItemHolder : MonoBehaviour
         {
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
+            float duration = 2.5f;
             if (boost.IsUpgraded)
             {
                 boostMult = 2.0f;
             }
             else
             {
-                boostMult = 2.0f;
+                boostMult = 1.5f;
             }
-            StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
+            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
             Debug.Log("Applying Boost Item!");
             Destroy(collision.gameObject);
         }
@@ -211,11 +216,13 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+
+                npcDriver.StartRecovery();
             }
         }
     }

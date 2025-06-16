@@ -24,6 +24,7 @@ public class NEWDriver : MonoBehaviour
     public float tractionCoefficient = 6f;
     float controllerX;
     float controllerZ;
+    
 
     [Header("Sphere Collider stuff")]
     public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
@@ -142,7 +143,12 @@ public class NEWDriver : MonoBehaviour
         {
             //velocity.y = 0f;
             //acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
-            acceleration = Vector3.Lerp(sphere.velocity.normalized, kartModel.forward, 0.1f) * (movementDirection.z * accelerationRate * Time.deltaTime);
+            //acceleration = Vector3.Lerp(sphere.velocity.normalized, kartModel.forward, 0.1f) * (movementDirection.z * accelerationRate * Time.deltaTime);
+
+            
+            
+            acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
+
 
             //sphere.velocity += acceleration * Time.fixedDeltaTime;
             //
@@ -548,4 +554,6 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
     }
+
+    
 }
