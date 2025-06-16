@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 
 public class ItemHolder : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class ItemHolder : MonoBehaviour
 
     [SerializeField]
     private float timer = 5.0f;
+
+    [SerializeField]
+    private RawImage itemDisplay;
+
+    [SerializeField]
+    private Texture defaultItemDisplay;
+    
 
     // [SerializeField]
     // private TextMesh heldItemText;
@@ -87,6 +95,7 @@ public class ItemHolder : MonoBehaviour
             item.Kart = this;
             item.IsUpgraded = heldItem.IsUpgraded;
             heldItem = null;
+            itemDisplay.texture = defaultItemDisplay;
             holdingItem = false;
         }
     }
@@ -138,11 +147,12 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8000;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                npcDriver.StartRecovery();
             }
         }
 
@@ -159,6 +169,10 @@ public class ItemHolder : MonoBehaviour
             if (heldItem == null)
             {
                 heldItem = itemBox.RandomizeItem();
+                if (itemDisplay != null) 
+                {
+                    itemDisplay.texture = heldItem.itemIcon;
+                }
             }
             // Disables the item box
             itemBox.gameObject.SetActive(false);
@@ -167,6 +181,7 @@ public class ItemHolder : MonoBehaviour
         else if (collision.gameObject.CompareTag("UpgradeBox"))
         {
             UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
+            itemDisplay.texture = heldItem.itemIcon;
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);
@@ -182,6 +197,45 @@ public class ItemHolder : MonoBehaviour
             thisDriver.velocity /= 8;
         }
 
+        // kart uses a boost and is given the boost through a force
+        if (collision.gameObject.CompareTag("Boost"))
+        {
+            Boost boost = collision.gameObject.GetComponent<Boost>();
+            float boostMult;
+            float duration = 2.5f;
+            if (boost.IsUpgraded)
+            {
+                boostMult = 2.0f;
+            }
+            else
+            {
+                boostMult = 1.5f;
+            }
+            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+            Debug.Log("Applying Boost Item!");
+            Destroy(collision.gameObject);
+        }
+
+        // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
+        if (collision.gameObject.transform.tag == "Hazard")
+        {
+            Destroy(collision.gameObject);
+            if (thisDriver != null)
+            {
+
+                thisDriver.sphere.velocity /= 8000;
+            }
+            else if (npcDriver != null)
+            {
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+
+                npcDriver.StartRecovery();
+            }
+        }
     }
 
 
