@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Diagnostics;
 
 public class SignInManager : MonoBehaviour
 {
@@ -30,19 +31,28 @@ public class SignInManager : MonoBehaviour
 
     public void Login()
     {
-
+        if (isArcade)
+        {
+            UnityEngine.Debug.Log("This is an Arcade Machine");
+            SceneManager.LoadScene("ArcadeLogin");
+        }
+        else
+        {
+            UnityEngine.Debug.Log("This is not an Arcade Machine");
+            SceneManager.LoadScene("Login");
+        }
     }
 
     public void SignUp()
     {
         if (isArcade)
         {
-         Debug.Log("This is an Arcade Machine");
+            UnityEngine.Debug.Log("This is an Arcade Machine");
             SceneManager.LoadScene("ArcadeSignUp");
         }
         else
         {
-            Debug.Log("This is not an Arcade Machine");
+            UnityEngine.Debug.Log("This is not an Arcade Machine");
             SceneManager.LoadScene("SignUpScene");
         }
         
