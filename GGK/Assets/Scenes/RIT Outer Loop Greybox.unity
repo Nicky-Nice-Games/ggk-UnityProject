@@ -2018,7 +2018,7 @@ Transform:
   m_GameObject: {fileID: 332117604}
   serializedVersion: 2
   m_LocalRotation: {x: 0.116945624, y: -0.1438514, z: 0.023259986, w: 0.98238975}
-  m_LocalPosition: {x: -167.71483, y: -27.50616, z: -56.201263}
+  m_LocalPosition: {x: -188.69, y: -28.8, z: -45.56}
   m_LocalScale: {x: 0.06046906, y: 0.060469054, z: 0.06046906}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34207,7 +34207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -190.21849
+      value: -190.26076
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -34215,23 +34215,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -40.51424
+      value: -40.52352
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9767405
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.21442488
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -34239,7 +34239,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -24.764
       objectReference: {fileID: 0}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -37177,6 +37177,7 @@ GameObject:
   - component: {fileID: 2013023913}
   - component: {fileID: 2013023912}
   - component: {fileID: 2013023917}
+  - component: {fileID: 2013023918}
   m_Layer: 0
   m_Name: dev_kart (1)
   m_TagString: Kart
@@ -37329,6 +37330,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: eb3ef4a1ea7794247b5955f36c0b8fef, type: 3}
   color: {r: 0.17895675, g: 1, b: 0, a: 1}
+--- !u!114 &2013023918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013023911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisDriver: {fileID: 0}
+  npcDriver: {fileID: 0}
+  heldItem: {fileID: 0}
+  timer: 5
+  itemDisplay: {fileID: 0}
+  defaultItemDisplay: {fileID: 0}
+  throwSound: {fileID: 0}
 --- !u!1001 &2019772149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43432,6 +43452,7 @@ GameObject:
   - component: {fileID: 5954472818605481481}
   - component: {fileID: 5954472818605481480}
   - component: {fileID: 5954472818605481482}
+  - component: {fileID: 5954472818605481483}
   m_Layer: 0
   m_Name: dev_kart
   m_TagString: Kart
@@ -54411,6 +54432,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: d90764cc681c2a24ea99a575dd1a515e, type: 3}
   color: {r: 1, g: 0.6526397, b: 0, a: 1}
+--- !u!114 &5954472818605481483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122434342029693649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisDriver: {fileID: 0}
+  npcDriver: {fileID: 5954472818605481479}
+  heldItem: {fileID: 0}
+  timer: 5
+  itemDisplay: {fileID: 0}
+  defaultItemDisplay: {fileID: 0}
+  throwSound: {fileID: 0}
 --- !u!1 &5999886164714066082
 GameObject:
   m_ObjectHideFlags: 0
