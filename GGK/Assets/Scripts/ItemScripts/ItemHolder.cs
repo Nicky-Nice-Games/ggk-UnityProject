@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 
 public class ItemHolder : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class ItemHolder : MonoBehaviour
 
     [SerializeField]
     private float timer = 5.0f;
+
+    [SerializeField]
+    private RawImage itemDisplay;
+
+    [SerializeField]
+    private Texture defaultItemDisplay;
+    
 
     // [SerializeField]
     // private TextMesh heldItemText;
@@ -92,6 +100,7 @@ public class ItemHolder : MonoBehaviour
             item.Kart = this;
             item.IsUpgraded = heldItem.IsUpgraded;
             heldItem = null;
+            itemDisplay.texture = defaultItemDisplay;
             holdingItem = false;
         }
     }
@@ -148,6 +157,7 @@ public class ItemHolder : MonoBehaviour
             if (heldItem == null)
             {
                 heldItem = itemBox.RandomizeItem();
+                itemDisplay.texture = heldItem.itemIcon;
             }
             // Disables the item box
             itemBox.gameObject.SetActive(false);
@@ -156,6 +166,7 @@ public class ItemHolder : MonoBehaviour
         else if (collision.gameObject.CompareTag("UpgradeBox"))
         {
             UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
+            itemDisplay.texture = heldItem.itemIcon;
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);
