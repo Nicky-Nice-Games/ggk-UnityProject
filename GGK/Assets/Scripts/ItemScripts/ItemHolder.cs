@@ -193,7 +193,7 @@ public class ItemHolder : MonoBehaviour
             }
             else
             {
-                boostMult = 2.0f;
+                boostMult = 1.5f;
             }
             StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
             Debug.Log("Applying Boost Item!");
