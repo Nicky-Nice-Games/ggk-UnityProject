@@ -196,7 +196,7 @@ public class LobbyManager : MonoBehaviour
     }
     #endregion
 
-
+    #region creating and deleting lobbies
     /// <summary>
     /// Creates a lobby on Unity Gaming Services.
     /// </summary>
@@ -241,6 +241,24 @@ public class LobbyManager : MonoBehaviour
             Debug.Log(e);
         }
     }
+
+    /// <summary>
+    /// Allows the host to delete the lobby
+    /// </summary>
+    private async void DeleteLobby()
+    {
+        try
+        {
+            if (!IsLobbyHost()) return;
+            await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// updates the list of lobbies seen on the client. 
@@ -301,6 +319,8 @@ public class LobbyManager : MonoBehaviour
             Debug.Log(e);
         }
     }
+
+    #region joining lobbies
 
     /// <summary>
     /// Allows for joining of lobbies through an ID (can be changed to a code later). Right now set to join the first available lobby.
@@ -383,6 +403,9 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region exiting lobbies
     /// <summary>
     /// Actually removes the player from the lobby.
     /// Closing the game doesnt update the lobby on the UGS that the player has left.
@@ -394,22 +417,6 @@ public class LobbyManager : MonoBehaviour
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
             joinedLobby = null;
             OnLeftLobby?.Invoke(this, EventArgs.Empty);
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }
-
-    /// <summary>
-    /// Allows the host to delete the lobby
-    /// </summary>
-    private async void DeleteLobby()
-    {
-        try
-        {
-            if (!IsLobbyHost()) return;
-            await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
         }
         catch (LobbyServiceException e)
         {
@@ -444,6 +451,8 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    #endregion
+
     /// <summary>
     /// Prints and Lists Lobby info to console.
     /// </summary>
@@ -466,10 +475,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    #region extra lobby utilities
     /// <summary>
     /// returns player information formatted for lobby and query options
     /// </summary>
-    private Player GetPlayer()
+    public Player GetPlayer()
     {
         return new Player
         {
@@ -510,6 +520,7 @@ public class LobbyManager : MonoBehaviour
         }
         return false;
     }
+    #endregion
 
     /// <summary>
     /// starts a relay and passes the code around through the lobby

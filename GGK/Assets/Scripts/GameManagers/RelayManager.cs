@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using System;
+using Unity.Services.Lobbies.Models;
 
 /// <summary>
 /// RelayManager Class by Phillip Brown
@@ -24,6 +25,7 @@ public class RelayManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        OnRelayStarted += RelayManager_OnRelayStarted;
     }
 
     /// <summary>
@@ -82,5 +84,11 @@ public class RelayManager : MonoBehaviour
         {
             Debug.Log(e);
         }
+    }
+
+    public void RelayManager_OnRelayStarted(object sender, EventArgs e)
+    {
+        Player lobbyPlayer = LobbyManager.Instance.GetPlayer();
+        PlayerObjectData player = new PlayerObjectData(lobbyPlayer.Data["PlayerName"].Value);
     }
 }

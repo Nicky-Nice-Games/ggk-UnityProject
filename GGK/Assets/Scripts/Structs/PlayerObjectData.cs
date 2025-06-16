@@ -13,16 +13,16 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
     private string playerName;
 
     // public fields
-    public ulong ClientId;
+    //public ulong ClientId;
     public int PlayerNumber;
 
     // Properties
     public string PlayerName { get; private set; }
 
     // constructor
-    public PlayerObjectData(ulong clientId, string name, int playerNumber)
+    public PlayerObjectData(/*ulong clientId,*/ string name, int playerNumber = -1)
     {
-        ClientId = clientId;
+        //ClientId = clientId;
         PlayerNumber = playerNumber;
         playerName = name;
         PlayerName = playerName;
@@ -30,14 +30,14 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        serializer.SerializeValue(ref ClientId);
+        //serializer.SerializeValue(ref ClientId);
         serializer.SerializeValue(ref playerName);
         serializer.SerializeValue(ref PlayerNumber);
     }
 
     public bool Equals(PlayerObjectData other)
     {
-        return  ClientId == other.ClientId &&
+        return  /*ClientId == other.ClientId &&*/
                 playerName.Equals(other.playerName) &&
                 PlayerNumber == other.PlayerNumber;
     }
