@@ -135,11 +135,12 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8000;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                npcDriver.StartRecovery();
             }
         }
 
@@ -215,11 +216,13 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+
+                npcDriver.StartRecovery();
             }
         }
     }
