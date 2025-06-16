@@ -6,6 +6,9 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
 
+/// <summary>
+/// LobbyCreateUI Class by Phillip Brown
+/// </summary>
 public class LobbyCreateUI : MonoBehaviour
 {
     public static LobbyCreateUI Instance { get; private set; }
@@ -31,14 +34,14 @@ public class LobbyCreateUI : MonoBehaviour
     private void Start()
     {
         LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
-        Hide();  
+        Hide();
     }
 
     private void OnEnable()
     {
         nameInput.text = "";
-    } 
-    
+    }
+
     private void LobbyManager_OnJoinedLobby(object sender, LobbyManager.LobbyEventArgs e)
     {
         Hide();

@@ -12,6 +12,9 @@ using UnityEngine.UI;
 using System.Threading.Tasks;
 using System;
 
+/// <summary>
+/// RelayManager Class by Phillip Brown
+/// </summary>
 public class RelayManager : MonoBehaviour
 {
     public static RelayManager Instance { get; private set; }

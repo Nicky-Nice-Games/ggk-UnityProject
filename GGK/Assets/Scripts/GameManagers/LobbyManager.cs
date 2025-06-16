@@ -10,6 +10,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LobbyManager Class by Phillip Brown
+/// </summary>
 public class LobbyManager : MonoBehaviour
 {
     public static LobbyManager Instance { get; private set; }
@@ -55,27 +58,31 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private bool arcadeToggle;
     [SerializeField] private string arcadeCode = "arcade";
 
+    #region initalization functions
     private void Awake()
     {
-        if (Instance == null) {
+        if (Instance == null)
+        {
             Instance = this;
             DontDestroyOnLoad(this);
-        } else if(Instance != this)
+        }
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
-        
+
     }
 
     private async void Start()
     {
         await UnityServices.InitializeAsync();
-        
+
         AuthenticationService.Instance.SignedIn += () =>
         {
-           Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
+            Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
         };
-        if(!AuthenticationService.Instance.IsSignedIn){
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             playerName = $"RIT:{UnityEngine.Random.Range(10, 999)}";
         }
@@ -100,7 +107,9 @@ public class LobbyManager : MonoBehaviour
         };
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
+    #endregion
 
+    #region looping functions
     private void Update()
     {
         //HandleRefreshLobbyList(); // Disabled for testing so that we dont hit rate limit within the same IP
@@ -185,6 +194,8 @@ public class LobbyManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
 
     /// <summary>
     /// Creates a lobby on Unity Gaming Services.
@@ -193,7 +204,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if(lobbyName == "") lobbyName = playerName + "\'s MyLobby";
+            if (lobbyName == "") lobbyName = playerName + "\'s MyLobby";
             Player player = GetPlayer();
             CreateLobbyOptions options = new CreateLobbyOptions
             {
@@ -206,16 +217,16 @@ public class LobbyManager : MonoBehaviour
             };
 
             // extra information if this client is on an arcade machine
-            if (/*arcadeToggle*/ false) // for debugging purposes
-            {
-                options.Data.Add(
-                        "Arcade", new DataObject(
-                            visibility: DataObject.VisibilityOptions.Public,
-                            value: arcadeCode,
-                            index: DataObject.IndexOptions.S1
-                            )
-                );
-            };
+            // if (/*arcadeToggle*/ false) // for debugging purposes
+            // {
+            //     options.Data.Add(
+            //             "Arcade", new DataObject(
+            //                 visibility: DataObject.VisibilityOptions.Public,
+            //                 value: arcadeCode,
+            //                 index: DataObject.IndexOptions.S1
+            //                 )
+            //     );
+            // };
 
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
 
@@ -266,7 +277,7 @@ public class LobbyManager : MonoBehaviour
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
-        }        
+        }
     }
 
     /// <summary>
@@ -317,7 +328,6 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    
     public async void JoinLobbyByCode(string lobbyCode)
     {
         try
@@ -390,7 +400,6 @@ public class LobbyManager : MonoBehaviour
             Debug.Log(e);
         }
     }
-
 
     /// <summary>
     /// Allows the host to delete the lobby
@@ -521,7 +530,6 @@ public class LobbyManager : MonoBehaviour
                         {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
                     }
                 });
-
                 joinedLobby = lobby;
             }
             catch (LobbyServiceException e)

@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LobbyUI Class by Phillip Brown
+/// </summary>
 public class LobbyUI : MonoBehaviour
 {
     public static LobbyUI Instance { get; private set; }
@@ -24,7 +27,8 @@ public class LobbyUI : MonoBehaviour
         leaveButton.onClick.AddListener(LeaveLobby);
     }
 
-    private void Start() {  
+    private void Start()
+    {
         lobbyPlayerSingleTemplate.gameObject.SetActive(false);
         LobbyManager.Instance.OnJoinedLobbyUpdate += LobbyManager_OnJoinedLobbyUpdate;
         LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
@@ -32,7 +36,7 @@ public class LobbyUI : MonoBehaviour
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
         Hide();
     }
-    
+
     private void OnEnable()
     {
         startButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
@@ -58,6 +62,14 @@ public class LobbyUI : MonoBehaviour
     {
         UpdatePlayerList(e.lobby.Players);
         startButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
+        if (e.lobby.Players.Count < 2)
+        {
+            DisableStartButton();
+        }
+        else
+        {
+            EnableStartButton();
+        }
     }
 
     private void StartGame()
@@ -75,9 +87,27 @@ public class LobbyUI : MonoBehaviour
         titleText.text = $"{lobby.Name}";
     }
 
+    private void EnableStartButton()
+    {
+        startButton.gameObject.GetComponent<Image>().color = Color.white;
+        startButton.gameObject.GetComponentInChildren<TMP_Text>().color = Color.white;
+        startButton.gameObject.GetComponent<Button>().enabled = true;
+    }
+
+    private void DisableStartButton()
+    {
+        Color color;
+        UnityEngine.ColorUtility.TryParseHtmlString("#323232", out color);
+        startButton.gameObject.GetComponent<Image>().color = color;
+        UnityEngine.ColorUtility.TryParseHtmlString("#808080", out color);
+        startButton.gameObject.GetComponentInChildren<TMP_Text>().color = color;
+        startButton.gameObject.GetComponent<Button>().enabled = false;
+
+    }
+
     private void UpdatePlayerList(List<Player> playerList)
     {
-        
+
         playersText.text = $"{playerList.Count}/{LobbyManager.Instance.GetJoinedLobby().MaxPlayers}";
         foreach (Transform child in container)
         {
@@ -92,8 +122,8 @@ public class LobbyUI : MonoBehaviour
             lobbyPlayerSingleUI.UpdatePlayer(player);
         }
     }
-    
-     public void Hide()
+
+    public void Hide()
     {
         gameObject.SetActive(false);
     }

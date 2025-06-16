@@ -5,6 +5,9 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LobbyListSingleUI Class by Phillip Brown
+/// </summary>
 public class LobbyListSingleUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI lobbyNameText;

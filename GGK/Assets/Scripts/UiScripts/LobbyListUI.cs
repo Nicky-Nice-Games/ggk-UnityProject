@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LobbyListUI Class by Phillip Brown
+/// </summary>
 public class LobbyListUI : MonoBehaviour
 {
     public static LobbyListUI Instance { get; private set; }
@@ -31,7 +34,7 @@ public class LobbyListUI : MonoBehaviour
         LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
     }
-    
+
     private void LobbyManager_OnKickedFromLobby(object sender, LobbyManager.LobbyEventArgs e)
     {
         Show();
@@ -47,7 +50,7 @@ public class LobbyListUI : MonoBehaviour
         print("hiding lobby list");
         Hide();
     }
-   
+
     private void LobbyManager_OnLobbyListChanged(object sender, LobbyManager.OnLobbyListChangedEventArgs e)
     {
         UpdateLobbyList(e.lobbyList);

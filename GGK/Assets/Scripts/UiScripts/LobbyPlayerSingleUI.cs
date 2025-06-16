@@ -5,6 +5,9 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LobbyPlayerUI Class by Phillip Brown
+/// </summary>
 public class LobbyPlayerSingleUI : MonoBehaviour
 {
     public const string KEY_PLAYER_NAME = "PlayerName";
