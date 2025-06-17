@@ -253,7 +253,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2074355879}
   m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
 --- !u!1 &238007351
 GameObject:
@@ -962,7 +965,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4c5a57f72240de14093bcdee1fde48ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1330,6 +1333,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 24.555, y: 0, z: -76.566}
+--- !u!1 &2074355875 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 223169240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2074355879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074355875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisDriver: {fileID: 0}
+  npcDriver: {fileID: 0}
+  heldItem: {fileID: 0}
+  timer: 5
 --- !u!1 &2087261428
 GameObject:
   m_ObjectHideFlags: 0
