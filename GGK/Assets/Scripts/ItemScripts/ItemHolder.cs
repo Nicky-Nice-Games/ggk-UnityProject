@@ -200,8 +200,17 @@ public class ItemHolder : MonoBehaviour
             {
                 boostMult = 1.5f;
             }
-            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-            Debug.Log("Applying Boost Item!");
+            
+            if(thisDriver != null)
+            {
+                StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
+            else if(npcDriver != null)
+            {
+                StartCoroutine(ApplyNPCBoost(npcDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
             Destroy(collision.gameObject);
         }
 
@@ -235,6 +244,17 @@ public class ItemHolder : MonoBehaviour
             Vector3 boostDirection = driver.transform.forward * boostForce;
 
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    IEnumerator ApplyNPCBoost(NPCDriver driver, float boostForce, float duration)
+    {
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = driver.transform.forward * boostForce;
+
+            driver.rBody.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
     }
