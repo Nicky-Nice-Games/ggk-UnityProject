@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 3214903186709095701}
   - component: {fileID: 723589215055915382}
   - component: {fileID: 1093172496520741459}
-  m_Layer: 0
+  - component: {fileID: -99161482775410209}
+  m_Layer: 3
   m_Name: ItemBox
   m_TagString: ItemBox
   m_Icon: {fileID: 0}
@@ -118,5 +119,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baddcda8225ec5240a122f53e3f7bb42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items: []
-  itemBoxSound: {fileID: 0}
+  items:
+  - {fileID: 4452591039646941683, guid: e4bfa60d79acc0b448a2b48e96843039, type: 3}
+  - {fileID: 3692130072636075715, guid: 0b518e80a6b139940be4f5af15419f04, type: 3}
+  - {fileID: 2055685921588137374, guid: 2d9ffd843713ab44ea7ca3210ee15e1d, type: 3}
+  - {fileID: 4323936219153965337, guid: 3eace89b8f2c3f1458a5f078ec42c750, type: 3}
+  - {fileID: 527145452109717806, guid: 793d97737815c3e4bb2dd48f19109467, type: 3}
+--- !u!54 &-99161482775410209
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843868577639019765}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0

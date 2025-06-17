@@ -16613,7 +16613,19 @@ MonoBehaviour:
     m_ActionId: 55dc9f75-441f-4df3-abd2-eb86b1ac889e
     m_ActionName: Car/LookBack[/Keyboard/tab]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 839629504}
+        m_TargetAssemblyTypeName: ItemHolder, Assembly-CSharp
+        m_MethodName: OnThrow
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 99d5725f-c325-48c2-8943-59aebc2db633
     m_ActionName: Car/UseItem[/Keyboard/e]
   - m_PersistentCalls:
@@ -33776,6 +33788,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 9206983809371343992, guid: f6a67ba8c83fc3341866646e8e6e9975, type: 3}
+    - target: {fileID: 3781514375417614312, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 3781514375417614312, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3781821914978865508, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -33856,6 +33876,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: -2273850011908149984, guid: 2dcebb5c34074e54797115f6eea64a16, type: 3}
+    - target: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_TagString
+      value: Kart
+      objectReference: {fileID: 0}
     - target: {fileID: 8018595970359045054, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
