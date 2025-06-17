@@ -59,6 +59,11 @@ public class NEWDriver : MonoBehaviour
     public Transform kartModel;
 
     [Header("Particle Effects")]
+    public List<ParticleSystem> particleSystemsBR;
+    public List<ParticleSystem> particleSystemsBL;
+    public List<ParticleSystem> TireScreechesLtoR;
+    public List<ParticleSystem> transitionSparksLtoR;
+    public List<Color> turboColors;
     public ParticleSystem driftSparksLeftBack;
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
@@ -92,34 +97,24 @@ public class NEWDriver : MonoBehaviour
     void Start()
     {
         sphere.drag = 0.5f;
-        //velocity = Vector3.zero;
 
-
-        //accelerationRate = 3500f;
-        //deccelerationRate = 1f;
-        //minSpeed = 1;
-        //maxSpeed = 150;
-        //turnSpeed = 60;
-
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
-
-        //soundPlayer = GetComponent<AudioSource>();
-
-    }
-
-    void Update()
-    {
-        // // plays sound when kart is moving
-        // if (isDriving)
-        // {
-        //     if (!soundPlayer.isPlaying)
-        //     {
-        //         soundPlayer.PlayOneShot(driveSound);
-        //     }
-        // }
+        //-------------Particles----------------
+        foreach (ParticleSystem ps in particleSystemsBR)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in particleSystemsBL)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in TireScreechesLtoR)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in transitionSparksLtoR)
+        {
+            ps.Stop();
+        }
     }
 
     // Update is called once per frame
@@ -140,23 +135,13 @@ public class NEWDriver : MonoBehaviour
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
-        {
-            //velocity.y = 0f;
-            //acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
-            //acceleration = Vector3.Lerp(sphere.velocity.normalized, kartModel.forward, 0.1f) * (movementDirection.z * accelerationRate * Time.deltaTime);
-
-            
-            
+        {              
+            //Setting acceleration 
             acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
-
-
-            //sphere.velocity += acceleration * Time.fixedDeltaTime;
-            //
-            //sphere.velocity = Vector3.ClampMagnitude(sphere.velocity, maxSpeed);
         }
         else
         {
-            //sphere.velocity *= 1f - (deccelerationRate * Time.fixedDeltaTime);
+            //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
 
             //Stop the vehicle once we reach a certain minimum speed
@@ -393,17 +378,48 @@ public class NEWDriver : MonoBehaviour
 
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
-        // Sparks!
-        if (isDriftingLeft && driftTime >= minDriftTime && !driftSparksLeftBack.isPlaying)
-        {
-            driftSparksLeftBack.Play();
-            driftSparksLeftFront.Play();
+        //--------------------Particles----------------
 
-        }
-        else if (!isDriftingLeft && driftTime >= minDriftTime && !driftSparksRightBack.isPlaying)
+        ColorDrift();
+
+        if (isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBL[0].isPlaying)
         {
-            driftSparksRightBack.Play();
-            driftSparksRightFront.Play();
+            //Activate left drift sparks when we get the boost
+            foreach (ParticleSystem ps in particleSystemsBL)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+
+            //Adding transition sparks
+            transitionSparksLtoR[0].Play();
+        }
+        else if (!isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBR[0].isPlaying)
+        {
+            //Activate right drift sparks when we get the boost
+            foreach (ParticleSystem ps in particleSystemsBR)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+
+            //Adding transition sparks
+            transitionSparksLtoR[1].Play();
+            
+        }
+
+        //Tire Screech Particles
+        if(isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
+        {
+            TireScreechesLtoR[0].Play();
+        }
+        else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
+        {
+            TireScreechesLtoR[1].Play();
         }
     }
 
@@ -430,15 +446,58 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
 
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
+        //driftSparksLeftBack.Stop();
+        //driftSparksLeftFront.Stop();
+        //driftSparksRightFront.Stop();
+        //driftSparksRightBack.Stop();
 
+        particleSystemsBL.ForEach(ps => ps.Stop());
+        particleSystemsBR.ForEach(ps => ps.Stop());
+        TireScreechesLtoR.ForEach(ps => ps.Stop());
 
     }
 
-    IEnumerator Boost(float boostForce, float duration)
+    public void ColorDrift()
+    {
+        Color c = Color.clear;
+
+        
+        if (driftTime > minDriftTime)
+        {
+            //Blue
+            c = turboColors[1];
+        }
+        else
+        {
+            //Default color
+            c = turboColors[0];
+        }
+
+        foreach (ParticleSystem ps in particleSystemsBL)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+        foreach (ParticleSystem ps in particleSystemsBR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+        foreach (ParticleSystem ps in TireScreechesLtoR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+            
+        }
+        foreach (ParticleSystem ps in transitionSparksLtoR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+
+    }
+
+        IEnumerator Boost(float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
