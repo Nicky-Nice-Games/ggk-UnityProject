@@ -403,7 +403,8 @@ public class NEWDriver : MonoBehaviour
        
            //Adding transition sparks
            transitionSparksLtoR[0].Play();
-       }
+            transitionSparksLtoR[2].Play();
+        }
        else if (!isDriftingLeft && driftTier > currentDriftTier)
        {
 
@@ -422,8 +423,10 @@ public class NEWDriver : MonoBehaviour
        
            //Adding transition sparks
            transitionSparksLtoR[1].Play();
-           
-       }      
+            transitionSparksLtoR[3].Play();
+
+
+        }      
 
 
         //Tire Screech Particles
@@ -479,6 +482,7 @@ public class NEWDriver : MonoBehaviour
         particleSystemsBL.ForEach(ps => ps.Stop());
         particleSystemsBR.ForEach(ps => ps.Stop());
         TireScreechesLtoR.ForEach(ps => ps.Stop());
+        transitionSparksLtoR.ForEach(ps => ps.Stop());
 
     }
 
