@@ -9,6 +9,9 @@ public class BaseItem : MonoBehaviour
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
     protected ItemHolder kart;                 // The kart holding the item
 
+    [SerializeField]
+    public Texture itemIcon;
+
     /// <summary>
     /// Read and write property for the upgrade tier
     /// </summary>
@@ -17,6 +20,7 @@ public class BaseItem : MonoBehaviour
     /// Read and write property for the kart holding the item
     /// </summary>
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
+
 
     // Start is called before the first frame update
     void Start()
