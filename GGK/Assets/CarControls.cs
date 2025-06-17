@@ -73,13 +73,22 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""LookBackController"",
-                    ""type"": ""Value"",
-                    ""id"": ""fb70dff4-f86d-4092-8d38-81d9818a9d3d"",
+                    ""name"": ""UseItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""99d5725f-c325-48c2-8943-59aebc2db633"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": true
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""48cec86f-4d9e-4741-bb99-eba1f5c4f993"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -239,6 +248,17 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""57ace4c6-979d-40ab-9d03-1e30773cdbd8"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Drift Hop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""7ee17544-e0e1-44ad-9d3d-59efeae0a50c"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": ""Hold(duration=0.4,pressPoint=0.5)"",
@@ -250,12 +270,56 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""325e72ef-b195-4913-883d-b9b87055231a"",
+                    ""id"": ""f153e1a8-937b-4a73-b16a-bf75fdfabc55"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""LookBackController"",
+                    ""action"": ""LookBack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f178f0b-fbce-45a8-8ba7-bb9031eddf08"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2fa45b20-d76d-4528-8c40-9c73cc1e0e6a"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa535c0b-6299-4ad7-b400-94151ed51162"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1909da7-6ce4-428a-b84c-9e3d7f3dbc18"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -848,7 +912,8 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         m_Car_Turn = m_Car.FindAction("Turn", throwIfNotFound: true);
         m_Car_DriftHop = m_Car.FindAction("Drift Hop", throwIfNotFound: true);
         m_Car_LookBack = m_Car.FindAction("LookBack", throwIfNotFound: true);
-        m_Car_LookBackController = m_Car.FindAction("LookBackController", throwIfNotFound: true);
+        m_Car_UseItem = m_Car.FindAction("UseItem", throwIfNotFound: true);
+        m_Car_Pause = m_Car.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -927,7 +992,8 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Car_Turn;
     private readonly InputAction m_Car_DriftHop;
     private readonly InputAction m_Car_LookBack;
-    private readonly InputAction m_Car_LookBackController;
+    private readonly InputAction m_Car_UseItem;
+    private readonly InputAction m_Car_Pause;
     public struct CarActions
     {
         private @CarControls m_Wrapper;
@@ -937,7 +1003,8 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         public InputAction @Turn => m_Wrapper.m_Car_Turn;
         public InputAction @DriftHop => m_Wrapper.m_Car_DriftHop;
         public InputAction @LookBack => m_Wrapper.m_Car_LookBack;
-        public InputAction @LookBackController => m_Wrapper.m_Car_LookBackController;
+        public InputAction @UseItem => m_Wrapper.m_Car_UseItem;
+        public InputAction @Pause => m_Wrapper.m_Car_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -962,9 +1029,12 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @LookBack.started += instance.OnLookBack;
             @LookBack.performed += instance.OnLookBack;
             @LookBack.canceled += instance.OnLookBack;
-            @LookBackController.started += instance.OnLookBackController;
-            @LookBackController.performed += instance.OnLookBackController;
-            @LookBackController.canceled += instance.OnLookBackController;
+            @UseItem.started += instance.OnUseItem;
+            @UseItem.performed += instance.OnUseItem;
+            @UseItem.canceled += instance.OnUseItem;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(ICarActions instance)
@@ -984,9 +1054,12 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @LookBack.started -= instance.OnLookBack;
             @LookBack.performed -= instance.OnLookBack;
             @LookBack.canceled -= instance.OnLookBack;
-            @LookBackController.started -= instance.OnLookBackController;
-            @LookBackController.performed -= instance.OnLookBackController;
-            @LookBackController.canceled -= instance.OnLookBackController;
+            @UseItem.started -= instance.OnUseItem;
+            @UseItem.performed -= instance.OnUseItem;
+            @UseItem.canceled -= instance.OnUseItem;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(ICarActions instance)
@@ -1174,7 +1247,8 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         void OnTurn(InputAction.CallbackContext context);
         void OnDriftHop(InputAction.CallbackContext context);
         void OnLookBack(InputAction.CallbackContext context);
-        void OnLookBackController(InputAction.CallbackContext context);
+        void OnUseItem(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

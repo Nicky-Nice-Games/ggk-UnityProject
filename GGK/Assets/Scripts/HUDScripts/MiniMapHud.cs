@@ -3,13 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//-----------------------------------------------
+//
+//          MINIMAP TOOL: HOW TO USE
+//
+//-----------------------------------------------
+
+//-----------------USING POINTS------------------
+//
+// 1. The "points" field is a list of points that the script will use to generate a set of bounds.
+//    Add points by adding Vector3s to the list as needed.
+// 2. The script will use the points to generate a center, width, height, and depth that encloses
+//    the shape created by the connected points.
+// 2. If you don't want to use points and instead wish to set these variables yourself, ensure the 
+//    "usePoints" boolean is unchecked.
+//
+//---------------USING DIMENSIONS----------------
+//
+// 1. The "center", "width", "height", and "depth" fields are the locations and dimensions of the box
+//    that the map will track. set these accordingly: width is the X, height the Z, and depth Y.
+// 2. Done! The script will track objects' locations relative to the box.
+//
+//----------------ADDING OBJECTS-----------------
+//
+// 1. Add objects to track by adding their GameObjects to the "objects" GameObject list. Ensure these objects
+//    have an "AppearanceSettings" component if you wish to depcify their appearance on the map. 
+// 2. Do NOT add anything to the "mapIcons" list. This will populate itself automatically. 
+//
+//----------------TRACKING DEPTH-----------------
+//
+// 1. If you don't want to track depth, check the "ignoreDepth" boolean.
+// 2. Change the "averageSize:" float to change the size of the icons a tthe middle. an averageSize of 1 means that the 
+//    icons are normally at 5% of the minimap's size.
+// 3. Change the min/maxDepthTracking to change the y values that the icons will change size to reflect. If the object's
+//    position exceeds these bounds, the object will not get any smaller/larger.
+// 4. Change the "sizeOffset" variable to change the maximum change in size that the icon will reflect.
+//
+//---------------------DEBUG----------------------
+//
+// 
+//
 public class MiniMapHud : MonoBehaviour
 {
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
-    // top left, top right, bottom left, bottom right of game world
-    [SerializeField] private Vector3 posTLeft;
-    [SerializeField] private Vector3 posTRight, posBLeft, posBRight;
+    // list of points
+    [SerializeField] private List<Vector3> points;
 
     //Should you use the four points(above) as opposed to a center then box size(below)?
     [SerializeField] private bool usePoints;
@@ -26,8 +65,6 @@ public class MiniMapHud : MonoBehaviour
     [SerializeField] private List<GameObject> objects;
     //..along with their respective icons on the map
     [SerializeField] private List<Image> mapIcons;
-
-
 
     [Header("Depth")]
     // should icons on the map
@@ -70,8 +107,9 @@ public class MiniMapHud : MonoBehaviour
         if (usePoints)
         {
             //establish the bounds using the 4 points
-            EstablishBounds(posTLeft, posTRight, posBLeft, posBRight);
+            EstablishBounds(points);
         }
+        DebugBounds();
 
         //find the minimap and icon reference
         miniMap = GameObject.Find(gameObject.name + "/MiniMap").GetComponent<Image>();
@@ -82,13 +120,19 @@ public class MiniMapHud : MonoBehaviour
         {
             //add objects to the icon list
             iconRef.SetActive(true);
-            mapIcons.Add(iconRef.GetComponent<Image>());
+            Image refImage = iconRef.GetComponent<Image>();
+            mapIcons.Add(refImage);
+
+            EstablishAppearance(objects[0], refImage);
 
             //create more icons as more are needed
-            for (int i = 0; i < objects.Count - 1; i++)
+            for (int i = 1; i < objects.Count; i++)
             {
                 GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
-                mapIcons.Add(newIcon.GetComponent<Image>());
+                refImage = newIcon.GetComponent<Image>();
+                mapIcons.Add(refImage);
+
+                EstablishAppearance(objects[i], refImage);
             }
         }
     }
@@ -134,7 +178,7 @@ public class MiniMapHud : MonoBehaviour
     //---------------------------------
 
     /// <summary>
-    /// Establishes the play area's bounds using four points.  
+    /// (DEPRECATED)Establishes the play area's bounds using four points.  
     /// The play area's bounds will be set to the smallest rectangle that encompasses
     /// the polygon formed by the points.
     /// </summary>
@@ -154,7 +198,7 @@ public class MiniMapHud : MonoBehaviour
             pointsMaker.SetPosition(4, tLeft);
         }
 
-        Vector3[] pointList = { tLeft, tRight, bLeft, bRight };
+        List<Vector3> pointList = new List<Vector3>{ tLeft, tRight, bLeft, bRight };
 
         EstablishBounds(pointList);
     }
@@ -165,7 +209,7 @@ public class MiniMapHud : MonoBehaviour
     /// the polygon formed by the points.
     /// </summary>
     /// <param name="pointList">A list of points to use.</param>
-    private void EstablishBounds(Vector3[] pointList)
+    private void EstablishBounds(List<Vector3> pointList)
     {
         float minX, minY, minZ;
         minX = minY = minZ = Mathf.Infinity;
@@ -233,6 +277,11 @@ public class MiniMapHud : MonoBehaviour
         this.height = height;
         this.depth = depth;
 
+        DebugBounds();
+    }
+
+    private void DebugBounds()
+    {
         if (showDebug)
         {
             boundsMaker.positionCount = 5;
@@ -243,6 +292,17 @@ public class MiniMapHud : MonoBehaviour
             boundsMaker.SetPosition(4, new Vector3(center.x - width / 2, 2, center.y + height / 2));
         }
 
+    }
+
+    private void EstablishAppearance(GameObject obj, Image img)
+    {
+        AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
+
+        if (settings != null)
+        {
+            img.sprite = settings.icon;
+            img.color = settings.color;
+        }
     }
 }
 
