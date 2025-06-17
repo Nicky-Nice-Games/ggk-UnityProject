@@ -29,7 +29,6 @@ public class PlacementManager : MonoBehaviour
     void Update()
     {
         checkPlacement();
-        
     }
 
     private void checkPlacement()
