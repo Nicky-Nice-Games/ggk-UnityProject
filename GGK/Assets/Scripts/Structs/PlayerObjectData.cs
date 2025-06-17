@@ -19,6 +19,9 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
     // Properties
     public string PlayerName { get; private set; }
 
+    public string PlayerCharacter;
+    public Color PlayerColor;
+
     // constructor
     public PlayerObjectData(/*ulong clientId,*/ string name, int playerNumber = -1)
     {
@@ -26,6 +29,8 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
         PlayerNumber = playerNumber;
         playerName = name;
         PlayerName = playerName;
+        PlayerCharacter = "Not Set";
+        PlayerColor = Color.white;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -33,12 +38,16 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
         //serializer.SerializeValue(ref ClientId);
         serializer.SerializeValue(ref playerName);
         serializer.SerializeValue(ref PlayerNumber);
+        serializer.SerializeValue(ref PlayerCharacter);
+        serializer.SerializeValue(ref PlayerColor);
     }
 
     public bool Equals(PlayerObjectData other)
     {
         return  /*ClientId == other.ClientId &&*/
                 playerName.Equals(other.playerName) &&
-                PlayerNumber == other.PlayerNumber;
+                PlayerNumber == other.PlayerNumber &&
+                PlayerCharacter.Equals(other.PlayerCharacter) &&
+                PlayerColor == other.PlayerColor;
     }
 }

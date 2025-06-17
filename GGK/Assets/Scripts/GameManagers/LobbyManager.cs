@@ -79,7 +79,7 @@ public class LobbyManager : MonoBehaviour
 
         AuthenticationService.Instance.SignedIn += () =>
         {
-            Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
+            //Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
         };
         if (!AuthenticationService.Instance.IsSignedIn)
         {
@@ -101,7 +101,7 @@ public class LobbyManager : MonoBehaviour
         AuthenticationService.Instance.SignedIn += () =>
         {
             //do nothing
-            Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
+            //Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
 
             //RefreshLobbyList();
         };
@@ -175,7 +175,7 @@ public class LobbyManager : MonoBehaviour
                 if (!IsPlayerInLobby())
                 {
                     // player was kicked
-                    Debug.Log("Kicked from Lobby!");
+                    //Debug.Log("Kicked from Lobby!");
 
                     joinedLobby = null;
 
@@ -233,8 +233,8 @@ public class LobbyManager : MonoBehaviour
             joinedLobby = lobby;
             OnJoinedLobby?.Invoke(this, new LobbyEventArgs { lobby = lobby });
 
-            Debug.Log("Created Lobby! " + lobby.Name + " " + lobby.MaxPlayers);
-            PrintPlayers(lobby);
+            //Debug.Log("Created Lobby! " + lobby.Name + " " + lobby.MaxPlayers);
+            //PrintPlayers(lobby);
         }
         catch (LobbyServiceException e)
         {
@@ -340,7 +340,7 @@ public class LobbyManager : MonoBehaviour
             joinedLobby = lobby;
 
             OnJoinedLobby?.Invoke(this, new LobbyEventArgs { lobby = lobby });
-            PrintPlayers(lobby);
+            //PrintPlayers(lobby);
         }
         catch (LobbyServiceException e)
         {
@@ -394,7 +394,7 @@ public class LobbyManager : MonoBehaviour
             };
             Lobby lobby = await LobbyService.Instance.QuickJoinLobbyAsync(options);
             joinedLobby = lobby;
-            PrintPlayers(lobby);
+            //PrintPlayers(lobby);
         }
         catch (LobbyServiceException e)
         {
@@ -531,7 +531,7 @@ public class LobbyManager : MonoBehaviour
         {
             try
             {
-                Debug.Log("StartGame");
+                //Debug.Log("StartGame");
                 string relayCode = await RelayManager.Instance.CreateRelay();
 
                 Lobby lobby = await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
@@ -541,7 +541,7 @@ public class LobbyManager : MonoBehaviour
                         {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
                     }
                 });
-                joinedLobby = lobby;
+                joinedLobby = null;
             }
             catch (LobbyServiceException e)
             {

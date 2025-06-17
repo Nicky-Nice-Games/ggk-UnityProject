@@ -2,6 +2,7 @@ using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -21,13 +22,14 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     private GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
     void Awake()
     {
         if (thisManagerInstance == null)
@@ -49,14 +51,9 @@ public class GameManager : MonoBehaviour
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
         RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
+        SceneManager.activeSceneChanged += LoadedScene;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -97,11 +94,22 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// RelayManager OnRelayStarted EventHandler
+    /// written by Phillip Brown
     /// </summary>
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        if (IsHost)
+        {
+            Debug.Log("running ToGameModeSelectScene function");
+            ToGameModeSelectScene();
+        }
+        else
+        {
+            Debug.Log("running ToClientGameModeSelectScene function");
+            ToClientGameModeSelectScene();
+        }
     }
+    
     /// <summary>
     /// changes game state to the game mode selection scene
     /// </summary>
@@ -111,10 +119,33 @@ public class GameManager : MonoBehaviour
         curState = GameStates.gameMode;
     }
 
+    public void ToClientGameModeSelectScene()
+    {
+        SceneManager.LoadScene("ClientGameModeSelectionScene",LoadSceneMode.Single);
+        curState = GameStates.gameMode;
+    }
+
+    private void LoadedScene(Scene current, Scene next)
+    {
+        Debug.Log($"loaded {next.name}");
+    }
+
     /// <summary>
     /// Called once the game mode is selected and loaded
     /// </summary>
     public void LoadedGameMode()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
+
+        if (IsHost)
+        {
+            LoadedGameModeRpc();
+        }
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void LoadedGameModeRpc()
     {
         SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
@@ -155,6 +186,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         curState = GameStates.game;
+        
     }
 
     /// <summary>

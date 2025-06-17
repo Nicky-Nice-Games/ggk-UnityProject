@@ -26,11 +26,5 @@ public class GameModeHandeler : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // Each game mode can load their own stuff
 }
