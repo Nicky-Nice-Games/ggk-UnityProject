@@ -20,8 +20,11 @@ public class NEWDriver : MonoBehaviour
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
-    public float gravity = 40;
-    public float tractionCoefficient = 7f;
+    public float gravity = 20;
+    public float tractionCoefficient = 6f;
+    float controllerX;
+    float controllerZ;
+    
 
     [Header("Sphere Collider stuff")]
     public float colliderOffset = 1.69f; //Offset for the sphere collider to position kart correctly
@@ -34,8 +37,8 @@ public class NEWDriver : MonoBehaviour
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
-    public float minDriftTime = 25f;
-    public float driftBoostForce = 0.5f;
+    public float minDriftTime = 200f;
+    public float driftBoostForce = 1f;
     public float hopForce = 8f;
     public float minDriftSteer = 40f;
 
@@ -56,6 +59,11 @@ public class NEWDriver : MonoBehaviour
     public Transform kartModel;
 
     [Header("Particle Effects")]
+    public List<ParticleSystem> particleSystemsBR;
+    public List<ParticleSystem> particleSystemsBL;
+    public List<ParticleSystem> TireScreechesLtoR;
+    public List<ParticleSystem> transitionSparksLtoR;
+    public List<Color> turboColors;
     public ParticleSystem driftSparksLeftBack;
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
@@ -76,60 +84,36 @@ public class NEWDriver : MonoBehaviour
     float driftTweenDuration = 0.4f;
 
 
+    [Header("Sound Settings")]
+
+    AudioSource soundPlayer;
+
+    [SerializeField]
+    AudioClip driveSound;
 
     public bool isDriving;
-    private uint drivingID;
-    private uint driftingID;
-
 
     // Start is called before the first frame update
     void Start()
     {
         sphere.drag = 0.5f;
-        //velocity = Vector3.zero;
 
-
-        //accelerationRate = 3500f;
-        //deccelerationRate = 1f;
-        //minSpeed = 1;
-        //maxSpeed = 150;
-        //turnSpeed = 60;
-
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
-
-
-    }
-
-    void Update()
-    {
-        //// plays sound when kart is moving
-        if (isDriving)
+        //-------------Particles----------------
+        foreach (ParticleSystem ps in particleSystemsBR)
         {
-            if (drivingID == 0)
-            {
-                drivingID = AkSoundEngine.PostEvent("play_engine_high_full", this.gameObject);
-            }
+            ps.Stop();
         }
-        else
+        foreach (ParticleSystem ps in particleSystemsBL)
         {
-            AkSoundEngine.StopPlayingID(drivingID, 500, AkCurveInterpolation.AkCurveInterpolation_LastFadeCurve);
-            drivingID = 0;
+            ps.Stop();
         }
-
-        if (isDrifting)
+        foreach (ParticleSystem ps in TireScreechesLtoR)
         {
-            if (driftingID == 0)
-            {
-                driftingID = AkSoundEngine.PostEvent("play_driftScreech", this.gameObject);
-            }
+            ps.Stop();
         }
-        else
+        foreach (ParticleSystem ps in transitionSparksLtoR)
         {
-            AkSoundEngine.StopPlayingID(driftingID, 500, AkCurveInterpolation.AkCurveInterpolation_Constant);
-            driftingID = 0;
+            ps.Stop();
         }
     }
 
@@ -151,17 +135,13 @@ public class NEWDriver : MonoBehaviour
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
-        {
-            //velocity.y = 0f;
-            acceleration = kartModel.transform.forward * (movementDirection.z * accelerationRate * Time.deltaTime);
-
-            //sphere.velocity += acceleration * Time.fixedDeltaTime;
-            //
-            //sphere.velocity = Vector3.ClampMagnitude(sphere.velocity, maxSpeed);
+        {              
+            //Setting acceleration 
+            acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
         }
         else
         {
-            //sphere.velocity *= 1f - (deccelerationRate * Time.fixedDeltaTime);
+            //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
 
             //Stop the vehicle once we reach a certain minimum speed
@@ -211,6 +191,12 @@ public class NEWDriver : MonoBehaviour
             {
                 //Applying our calculated turning direction to the turning variable
                 turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+            }
+
+            if (isGrounded && movementDirection.x != 0f)
+            {
+                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
+                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
             }
 
             acceleration = turning * acceleration;
@@ -392,17 +378,48 @@ public class NEWDriver : MonoBehaviour
 
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
-        // Sparks!
-        if (isDriftingLeft && driftTime >= minDriftTime && !driftSparksLeftBack.isPlaying)
-        {
-            driftSparksLeftBack.Play();
-            driftSparksLeftFront.Play();
+        //--------------------Particles----------------
 
-        }
-        else if (!isDriftingLeft && driftTime >= minDriftTime && !driftSparksRightBack.isPlaying)
+        ColorDrift();
+
+        if (isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBL[0].isPlaying)
         {
-            driftSparksRightBack.Play();
-            driftSparksRightFront.Play();
+            //Activate left drift sparks when we get the boost
+            foreach (ParticleSystem ps in particleSystemsBL)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+
+            //Adding transition sparks
+            transitionSparksLtoR[0].Play();
+        }
+        else if (!isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBR[0].isPlaying)
+        {
+            //Activate right drift sparks when we get the boost
+            foreach (ParticleSystem ps in particleSystemsBR)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+
+            //Adding transition sparks
+            transitionSparksLtoR[1].Play();
+            
+        }
+
+        //Tire Screech Particles
+        if(isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
+        {
+            TireScreechesLtoR[0].Play();
+        }
+        else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
+        {
+            TireScreechesLtoR[1].Play();
         }
     }
 
@@ -429,15 +446,58 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
 
-        driftSparksLeftBack.Stop();
-        driftSparksLeftFront.Stop();
-        driftSparksRightFront.Stop();
-        driftSparksRightBack.Stop();
+        //driftSparksLeftBack.Stop();
+        //driftSparksLeftFront.Stop();
+        //driftSparksRightFront.Stop();
+        //driftSparksRightBack.Stop();
 
+        particleSystemsBL.ForEach(ps => ps.Stop());
+        particleSystemsBR.ForEach(ps => ps.Stop());
+        TireScreechesLtoR.ForEach(ps => ps.Stop());
 
     }
 
-    IEnumerator Boost(float boostForce, float duration)
+    public void ColorDrift()
+    {
+        Color c = Color.clear;
+
+        
+        if (driftTime > minDriftTime)
+        {
+            //Blue
+            c = turboColors[1];
+        }
+        else
+        {
+            //Default color
+            c = turboColors[0];
+        }
+
+        foreach (ParticleSystem ps in particleSystemsBL)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+        foreach (ParticleSystem ps in particleSystemsBR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+        foreach (ParticleSystem ps in TireScreechesLtoR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+            
+        }
+        foreach (ParticleSystem ps in transitionSparksLtoR)
+        {
+            var main = ps.main;
+            main.startColor = c;
+        }
+
+    }
+
+        IEnumerator Boost(float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
@@ -471,7 +531,7 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.2f, zTilt * 0.7f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
 
@@ -496,6 +556,11 @@ public class NEWDriver : MonoBehaviour
         {
             isDriving = false;
 
+            // // stops engine sound
+            // if (soundPlayer.isPlaying)
+            // {
+            //     soundPlayer.Stop();
+            // }
         }
     }
 
@@ -511,11 +576,17 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
+    public void OnTurn(InputAction.CallbackContext context)
+    {
+        controllerX = context.ReadValue<float>();
+        UpdateControllerMovement(context);
+    }
+
     public void OnAcceleration(InputAction.CallbackContext context)
     {
-        movementDirection.z = context.ReadValue<float>();
+        controllerZ = context.ReadValue<float>();
+        UpdateControllerMovement(context);
 
-        // determines when driving starts and when driving ends
         if (context.started)
         {
             isDriving = true;
@@ -526,9 +597,13 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
-    public void OnTurn(InputAction.CallbackContext context)
+    private void UpdateControllerMovement(InputAction.CallbackContext context)
     {
-        movementDirection.x = context.ReadValue<float>();
+        Vector2 moveInput = new Vector2(controllerX, controllerZ);
+        moveInput = Vector2.ClampMagnitude(moveInput, 1f);
+
+        movementDirection.x = moveInput.x;
+        movementDirection.z = moveInput.y;
     }
 
     private void OnDrawGizmosSelected()
@@ -538,4 +613,6 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
     }
+
+    
 }
