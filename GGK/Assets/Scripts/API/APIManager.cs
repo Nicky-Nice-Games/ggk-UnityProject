@@ -8,7 +8,6 @@ using UnityEngine.Networking;
 
 public class APIManager : MonoBehaviour
 {
-    private int PID = 0;
 
     void Start()
     {
@@ -55,32 +54,40 @@ public class APIManager : MonoBehaviour
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
-                // Right now the Json only has the PID data so there are no additional checks
+                // UPDATE THIS SO GOOD REQUEST RETURNS PLAYERINFO DATA STRUCT WITH PLAYER INFO COPIED OVER
+                // Getting the data from the json get request
                 string data = webRequest.downloadHandler.text;
-                PID = int.Parse(data);
+                WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
+                Debug.Log("PID: " + userData.pid);
             }
             else
             {
+                // UPDATE THIS SO BAD REQUEST / NULL OBJ RETURNED (CHECK WITH BACKEND ON THAT) RETURNS CONSTRUCTED DEFAULT PLAYER INFO DATA STRUCT
                 Debug.LogError("Failed to get data" + webRequest.error);
             }
         }
     }
 
-
+    /// <summary>
+    /// Wrapper method for running the API manager flow
+    /// </summary>
+    /// <returns></returns>
     IEnumerator RunAPIFlow()
     {
-        // Sending the request for the PID
-        // Currentally getting data from local
-        // Swap URI and some logic when remote server is up
-        string path = "/*Insert paath to server endpoint*/";    // TODO
-        Debug.Log("Path: " + path);
+        // Get info from user login
+
+        // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/webservice/playerinfo/getinfo/26ec3c18-3fe5-11f0-8cc9-ac1f6bbcd350";    // UPDATE THIS
+        Debug.Log("Path: " + getPath);
 
         // Chaining the Coroutines so this one finishes before the main one
-        yield return StartCoroutine(GetRequest(path));
+        // Sending request for existing player data
+        yield return StartCoroutine(GetRequest(getPath));
 
+        // testing player ---
         PlayerInfo testPlayer = new PlayerInfo
         {
-            playerID = PID,
+            playerID = 0,
             raceStartTime = 0330,   // 3:30
             racePosition = 1,
             mapRaced = 2,
@@ -105,11 +112,16 @@ public class APIManager : MonoBehaviour
                 ["Oil spill 2"] = 1
             }
         };
+        // ---
 
+        // UPDATE PLAYER STATS FOR THE MATCH
+
+        // Serializing data to send back
         SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
         serializable.ConvertToSerializable(testPlayer);
         string json = JsonUtility.ToJson(serializable);
 
-        StartCoroutine(PostJson("/*Insert paath to server json*/", json));  // TODO 
+        // Post the updated data struct
+        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));     // UPDATE URI IF NEEDED
     }
 }
