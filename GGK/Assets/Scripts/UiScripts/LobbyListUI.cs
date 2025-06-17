@@ -47,7 +47,6 @@ public class LobbyListUI : MonoBehaviour
 
     private void LobbyManager_OnJoinedLobby(object sender, LobbyManager.LobbyEventArgs e)
     {
-        print("hiding lobby list");
         Hide();
     }
 
