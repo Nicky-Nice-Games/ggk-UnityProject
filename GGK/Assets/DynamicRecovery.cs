@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class DynamicRecovery : MonoBehaviour
 {
-    public Transform respawnPoint;
-    public float hoverHeight = 3f;
+    //public Transform respawnPoint;
+    public float hoverHeight = 1.4f;
     public float hoverTime = 2f;
     public float fadeTime = 1f;
     public CanvasGroup fadeCanvas;
@@ -16,6 +16,8 @@ public class DynamicRecovery : MonoBehaviour
 
     private Rigidbody rb;
     private bool isRecovering = false;
+
+    public Transform kartModel;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,14 @@ public class DynamicRecovery : MonoBehaviour
         if (checkpoints.Length > 0)
             currentCheckpoint = checkpoints[0];
     }
+
+    void Update()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.red); // your kart
+        if (currentCheckpoint != null)
+            Debug.DrawRay(currentCheckpoint.position, currentCheckpoint.forward * 5, Color.green); // the checkpoint
+    }
+
 
     public void StartRecovery()
     {
@@ -73,9 +83,17 @@ public class DynamicRecovery : MonoBehaviour
         //fade to black
         yield return StartCoroutine(Fade(1));
 
-        // Teleport above checkpoint
+        // Teleport at checkpoint
         Vector3 hoverPos = currentCheckpoint.position + Vector3.up * hoverHeight;
         transform.position = hoverPos;
+
+        rb.velocity = Vector3.zero; // Reset first
+        rb.angularVelocity = Vector3.zero;
+
+
+        //face forward
+        kartModel.rotation = currentCheckpoint.rotation;
+
         rb.useGravity = false;
 
         yield return new WaitForSeconds(hoverTime);
@@ -84,8 +102,9 @@ public class DynamicRecovery : MonoBehaviour
         //fade back in
         yield return StartCoroutine(Fade(0));
 
-        rb.velocity = new Vector3(0, -10f, 0);
-        rb.angularVelocity = Vector3.zero;
+        //rb.velocity = new Vector3(0, -10f, 0);
+        rb.AddForce(Vector3.down * 10f, ForceMode.VelocityChange);
+
         rb.useGravity = true;
         isRecovering = false;
 
