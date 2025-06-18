@@ -27,10 +27,6 @@ public class MultiplayerManager : NetworkBehaviour
     /// </summary>
     private NetworkVariable<int> selectedMap = new NetworkVariable<int>(0); // data type should be however we are representing the maps
 
-    //
-    //private NetworkVariable<Dictionary<ulong, PlayerData>> players = new NetworkVariable<Dictionary<ulong, PlayerData>>();
-    //
-
     // timer variables for kart select and map select scenes
     [SerializeField] private const float kartSelectionTimerMax = 30f;
     private float kartSelectionTimer = 30f;
@@ -153,6 +149,10 @@ public class MultiplayerManager : NetworkBehaviour
     public void ForcePlayerKartSelectRpc()
     {
         // Auto picks the kart they are hovering
+    }
+
+    public bool AllPlayerKartsSelected(){
+        return false;
     }
     #endregion
 
