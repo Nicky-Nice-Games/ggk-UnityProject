@@ -21,9 +21,10 @@ public enum GameStates
 
 public class GameManager : MonoBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
+    public SceneLoader sceneLoader;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
     void Awake()
@@ -57,7 +58,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene("MultiSinglePlayerScene");
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
 
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
+            sceneLoader.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
@@ -83,7 +84,7 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
+            sceneLoader.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
         }
     }
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        SceneManager.LoadScene("PlayerKartScene");
+        sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
     }
 
@@ -104,7 +105,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerSelected()
     {
-        SceneManager.LoadScene("MapSelectScene");
+        sceneLoader.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
 
@@ -116,17 +117,17 @@ public class GameManager : MonoBehaviour
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
-            case "1-1":
-                SceneManager.LoadScene("RIT Outer Loop Greybox");
+            case "RIT Outer Loop Greybox":
+                sceneLoader.LoadScene("RIT Outer Loop Greybox");
                 break;
-            case "1-2":
-                SceneManager.LoadScene("1-2");
+            case "Golisano Greybox":
+                sceneLoader.LoadScene("Golisano Greybox");
                 break;
-            case "1-3":
-                SceneManager.LoadScene("1-3");
+            case "RIT Dorm Greybox":
+                sceneLoader.LoadScene("RIT Dorm Greybox");
                 break;
-            case "1-4":
-                SceneManager.LoadScene("1-4");
+            case "RIT Woods Greybox":
+                sceneLoader.LoadScene("RIT Woods Greybox");
                 break;
             default:
                 break;
@@ -139,13 +140,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameFinished()
     {
-        SceneManager.LoadScene("GameOverScene");
+        sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
     }
 
     public void LoadStartMenu()
     {
-        SceneManager.LoadScene("StartScene");
+        sceneLoader.LoadScene("StartScene");
         curState = GameStates.start;
     }
 

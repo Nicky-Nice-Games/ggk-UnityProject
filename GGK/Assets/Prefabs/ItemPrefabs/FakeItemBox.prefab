@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 14.21, y: 7.225891, z: 0.13}
-  m_LocalScale: {x: 6.34, y: 6.34, z: 6.34}
+  m_LocalScale: {x: 2.6134, y: 2.6134, z: 2.6134}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,7 +101,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -130,9 +130,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &3692130072636075715
 MonoBehaviour:
@@ -146,5 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8044fcaf0c56b1f448367db2d69bfa64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 7
+  timer: 30
   rb: {fileID: -2140440458312195221}
+  itemIcon: {fileID: 2800000, guid: 1ad214199b390f440bba4813bde47118, type: 3}
+  hazardSound: {fileID: 8300000, guid: a7c27e308abc8c14cacb62041ebc16d2, type: 3}

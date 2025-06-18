@@ -1,9 +1,9 @@
 using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PlayerKartHandeler : MonoBehaviour
 {
@@ -30,23 +30,6 @@ public class PlayerKartHandeler : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
         characterData = FindAnyObjectByType<CharacterData>();
 
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in playerOptions)
-        {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gameManager.GetComponent<ButtonBehavior>().OnClick());
-            button.onClick.AddListener(() =>
-            gameManager.GetComponent<GameManager>().PlayerSelected());
-        }
-
-        // So scene can still work if not started from start scene
-        //if ( characterData != null )
-        //{
-        //    characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
-        //    characterData.characterColor = Color.white;
-        //}
-
         // Connect character buttons to ChangeCharacter with appropriate arguments
         foreach (GameObject characterButton in characterButtons)
         {
@@ -60,6 +43,16 @@ public class PlayerKartHandeler : MonoBehaviour
         // Invoke default selection
         characterButtons[0].GetComponentInChildren<Button>().onClick.Invoke();
         ColorChange();
+
+        // Assigning the buttons their listeners
+        foreach (GameObject obj in playerOptions)
+        {
+            Button button = obj.GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            gameManager.GetComponent<ButtonBehavior>().OnClick());
+            button.onClick.AddListener(() =>
+            gameManager.GetComponentInChildren<GameManager>().PlayerSelected());
+        }
     }
 
     // Update is called once per frame
@@ -78,14 +71,21 @@ public class PlayerKartHandeler : MonoBehaviour
     // Select this character button
     public void ChangeCharacter(Image characterImage, Image border, string name)
     {
+        // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
         {
-            prevCharacterImageBorder.color = Color.white;
+            prevCharacterImageBorder.color = Color.gray;
         }
 
+        // Change selected character information to those on the button
         characterSelectedImage.sprite = characterImage.sprite;
         characterName.text = name;
 
+        // Save selected button information to change back later and change border color to yellow
+        border.color = Color.yellow;
+        prevCharacterImageBorder = border;
+
+        // Save information to characterData script if it exist
         if (characterData != null)
             characterData.characterSprite = characterImage.sprite;
     }
