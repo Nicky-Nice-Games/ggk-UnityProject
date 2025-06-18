@@ -9,7 +9,6 @@ public class FakeItemBox : BaseItem
     [SerializeField]
     AudioClip hazardSound;
 
-
     // Start is called before the first frame update
     void Start()
     {

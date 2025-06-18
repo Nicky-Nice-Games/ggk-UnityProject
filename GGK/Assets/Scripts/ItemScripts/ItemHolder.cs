@@ -32,6 +32,7 @@ public class ItemHolder : MonoBehaviour
     private Texture defaultItemDisplay;
 
     private BaseItem item;
+    private int driverItemTier;
     private int uses;
 
     // [SerializeField]
@@ -44,6 +45,8 @@ public class ItemHolder : MonoBehaviour
     //AudioClip throwSound;
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
+    public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -85,7 +88,8 @@ public class ItemHolder : MonoBehaviour
 
         if (holdingItem && item)
         {
-            if (item.UseCount == 1 && item.isTimed)
+            // for shield
+            if (item.isTimed)
             {
                 if (item.Timer <= 0.0f)
                 {
@@ -95,10 +99,10 @@ public class ItemHolder : MonoBehaviour
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
-                    Destroy(item.gameObject);
                 }
             }
-            else if (item.UseCount == 1 && !item.isTimed)
+            // for puck, boost, and spill
+            else if (item.UseCount >= 1)
             {
                 if (uses == 0)
                 {
@@ -108,33 +112,6 @@ public class ItemHolder : MonoBehaviour
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
-                    Destroy(item.gameObject);
-                }
-            }
-            else if (item.UseCount > 1 && item.isTimed)
-            {
-                if (item.Timer <= 0.0f || uses == 0)
-                {
-                    heldItem = null;
-                    holdingItem = false;
-                    if (thisDriver)
-                    {
-                        itemDisplay.texture = defaultItemDisplay;
-                    }
-                    Destroy(item.gameObject);
-                }
-            }
-            else if (item.UseCount > 1 && !item.isTimed)
-            {
-                if (uses == 0)
-                {
-                    heldItem = null;
-                    holdingItem = false;
-                    if (thisDriver)
-                    {
-                        itemDisplay.texture = defaultItemDisplay;
-                    }
-                    Destroy(item.gameObject);
                 }
             }
         }
@@ -288,7 +265,7 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.accelerationRate = 500;
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
-                boostMult = 1.5f;
+            boostMult = 1.5f;
             
             if(thisDriver != null)
             {
