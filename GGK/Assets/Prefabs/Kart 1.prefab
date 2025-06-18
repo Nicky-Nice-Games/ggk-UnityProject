@@ -51535,6 +51535,7 @@ MonoBehaviour:
   turning: {x: 0, y: 0, z: 0, w: 0}
   accelerationRate: 2000
   deccelerationRate: 5
+  airDeccelerationRate: 2
   minSpeed: 5
   turnSpeed: 40
   maxSteerAngle: 20
@@ -51587,8 +51588,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   isGrounded: 0
-  groundCheckDistance: 1.05
-  rotationAlignSpeed: 0.05
+  groundCheckDistance: 1.04
+  rotationAlignSpeed: 8
+  horizontalOffset: 0.21
   driveSound: {fileID: 0}
   isDriving: 0
 --- !u!114 &4107905189492007490
