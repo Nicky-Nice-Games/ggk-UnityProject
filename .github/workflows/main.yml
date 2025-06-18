@@ -3,14 +3,14 @@ name: Test & Build
 on: 
     pull_request:
     push:
-        branches:
-            - main
+        #branches:
+        #    - main
 permissions: write-all
 
 jobs:
   test:
     name: Test the project
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
 
       # Checkout
@@ -41,7 +41,7 @@ jobs:
   build:
     name: Build the project
     # needs: test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
 
       # Checkout
