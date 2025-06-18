@@ -21,7 +21,7 @@ public enum GameStates
 
 public class GameManager : MonoBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
