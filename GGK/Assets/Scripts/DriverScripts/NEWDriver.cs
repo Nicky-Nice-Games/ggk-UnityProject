@@ -401,7 +401,7 @@ public class NEWDriver : MonoBehaviour
         //
         //acceleration += localVel;
 
-        sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
+        sphere.AddForce(kartModel.right * direction * driftFactor, ForceMode.Acceleration);
 
         //--------------------Particles----------------                        
         ColorDrift();
