@@ -565,7 +565,7 @@ public class NEWDriver : MonoBehaviour
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = transform.forward * driftBoostForce;
+            Vector3 boostDirection = kartNormal.forward * driftBoostForce;
 
             sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
