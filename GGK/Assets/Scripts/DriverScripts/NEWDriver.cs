@@ -68,6 +68,8 @@ public class NEWDriver : MonoBehaviour
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
+    int driftTier;
+    int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
 
     [Header("Raycast Settings")]
@@ -379,41 +381,56 @@ public class NEWDriver : MonoBehaviour
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
         //--------------------Particles----------------
-
+        
+        
+        
         ColorDrift();
 
-        if (isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBL[0].isPlaying)
-        {
-            //Activate left drift sparks when we get the boost
-            foreach (ParticleSystem ps in particleSystemsBL)
+       if (isDriftingLeft && driftTier > currentDriftTier)
+       {
+            if(!particleSystemsBL[0].isPlaying)
             {
-                if (!ps.isPlaying)
+                //Activate left drift sparks when we get the boost
+                foreach (ParticleSystem ps in particleSystemsBL)
                 {
-                    ps.Play();
+                    if (!ps.isPlaying)
+                    {
+                        ps.Play();
+                    }
                 }
             }
-
-            //Adding transition sparks
-            transitionSparksLtoR[0].Play();
+           
+       
+           //Adding transition sparks
+           transitionSparksLtoR[0].Play();
+            transitionSparksLtoR[2].Play();
         }
-        else if (!isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBR[0].isPlaying)
-        {
-            //Activate right drift sparks when we get the boost
-            foreach (ParticleSystem ps in particleSystemsBR)
+       else if (!isDriftingLeft && driftTier > currentDriftTier)
+       {
+
+            if (!particleSystemsBR[0].isPlaying)
             {
-                if (!ps.isPlaying)
+                //Activate right drift sparks when we get the boost
+                foreach (ParticleSystem ps in particleSystemsBR)
                 {
-                    ps.Play();
+                    if (!ps.isPlaying)
+                    {
+                        ps.Play();
+                    }
                 }
             }
-
-            //Adding transition sparks
-            transitionSparksLtoR[1].Play();
             
-        }
+       
+           //Adding transition sparks
+           transitionSparksLtoR[1].Play();
+            transitionSparksLtoR[3].Play();
+
+
+        }      
+
 
         //Tire Screech Particles
-        if(isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
+        if (isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
         {
             TireScreechesLtoR[0].Play();
         }
@@ -421,6 +438,8 @@ public class NEWDriver : MonoBehaviour
         {
             TireScreechesLtoR[1].Play();
         }
+
+        currentDriftTier = driftTier;
     }
 
     /// <summary>
@@ -432,10 +451,19 @@ public class NEWDriver : MonoBehaviour
 
         if (!isDrifting) return;
 
-        if (driftTime > minDriftTime)
+
+        //---------Boost Types----------------
+        if (driftTime > minDriftTime * 3f)
         {
-            StartCoroutine(Boost(driftBoostForce, 0.5f));
-            
+            StartCoroutine(Boost(driftBoostForce, 0.8f));            
+        }
+        else if(driftTime > minDriftTime * 2f)
+        {
+            StartCoroutine(Boost(driftBoostForce, 0.4f));
+        }
+        else if (driftTime > minDriftTime)
+        {
+            StartCoroutine(Boost(driftBoostForce, 0.2f));
         }
 
         isDrifting = false;
@@ -454,6 +482,7 @@ public class NEWDriver : MonoBehaviour
         particleSystemsBL.ForEach(ps => ps.Stop());
         particleSystemsBR.ForEach(ps => ps.Stop());
         TireScreechesLtoR.ForEach(ps => ps.Stop());
+        transitionSparksLtoR.ForEach(ps => ps.Stop());
 
     }
 
@@ -462,15 +491,29 @@ public class NEWDriver : MonoBehaviour
         Color c = Color.clear;
 
         
-        if (driftTime > minDriftTime)
+        if (driftTime > minDriftTime * 3f)
         {
-            //Blue
-            c = turboColors[1];
+            //red
+            c = turboColors[3];
+            driftTier = 3; 
         }
+        else if(driftTime > minDriftTime * 2f)
+        {
+            //Orange
+            c = turboColors[2];
+            driftTier = 2; 
+        }
+        else if (driftTime > minDriftTime)
+        {
+            //Red
+            c = turboColors[1];
+            driftTier = 1;
+        }        
         else
         {
             //Default color
             c = turboColors[0];
+            driftTier = 0;
         }
 
         foreach (ParticleSystem ps in particleSystemsBL)
@@ -497,7 +540,7 @@ public class NEWDriver : MonoBehaviour
 
     }
 
-        IEnumerator Boost(float boostForce, float duration)
+    IEnumerator Boost(float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
@@ -531,7 +574,7 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.2f, zTilt * 0.7f), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.8f, zTilt * 0.7f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
 
