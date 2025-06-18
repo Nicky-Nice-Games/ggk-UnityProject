@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class BaseItem : MonoBehaviour
 {
-    protected bool isUpgraded;                 // If the item is upgraded (tier 2)
     [SerializeField] protected float timer;    // Seconds until the item disappears
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
     protected ItemHolder kart;                 // The kart holding the item
+    [SerializeField] protected string itemCategory;
+
+    [SerializeField] protected int useCount;
+    [SerializeField] public bool isTimed;
+    protected int itemTier;
 
     [SerializeField]
     public Texture itemIcon;
@@ -15,7 +19,17 @@ public class BaseItem : MonoBehaviour
     /// <summary>
     /// Read and write property for the upgrade tier
     /// </summary>
-    public bool IsUpgraded { get { return isUpgraded; } set { isUpgraded = value; } }
+    public int ItemTier { get { return itemTier; } set { itemTier = value; } }
+    /// <summary>
+    /// Read and write property for the upgrade tier
+    /// </summary>
+    public int UseCount { get { return useCount; } set { useCount = value; } }
+    /// <summary>
+    /// Read and write property for the upgrade tier
+    /// </summary>
+    public float Timer { get { return timer; } set { timer = value; } }
+
+
     /// <summary>
     /// Read and write property for the kart holding the item
     /// </summary>
