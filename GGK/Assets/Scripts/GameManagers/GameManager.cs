@@ -51,7 +51,7 @@ public class GameManager : NetworkBehaviour
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
         RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
-        SceneManager.activeSceneChanged += LoadedScene;
+        RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
     }
@@ -98,16 +98,12 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
-        if (IsHost)
-        {
-            Debug.Log("running ToGameModeSelectScene function");
-            ToGameModeSelectScene();
-        }
-        else
-        {
-            Debug.Log("running ToClientGameModeSelectScene function");
-            ToClientGameModeSelectScene();
-        }
+        ToGameModeSelectScene();
+    }
+
+    public void RelayManager_OnRelayJoined(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
     }
     
     /// <summary>
@@ -117,17 +113,6 @@ public class GameManager : NetworkBehaviour
     {
         SceneManager.LoadScene("GameModeSelectScene");
         curState = GameStates.gameMode;
-    }
-
-    public void ToClientGameModeSelectScene()
-    {
-        SceneManager.LoadScene("ClientGameModeSelectionScene",LoadSceneMode.Single);
-        curState = GameStates.gameMode;
-    }
-
-    private void LoadedScene(Scene current, Scene next)
-    {
-        Debug.Log($"loaded {next.name}");
     }
 
     /// <summary>
@@ -154,12 +139,19 @@ public class GameManager : NetworkBehaviour
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
-    /// multyplayer is added
+    /// multiplayer is added
     /// </summary>
     public void PlayerSelected()
     {
-        SceneManager.LoadScene("MapSelectScene");
-        curState = GameStates.map;
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            
+        }
+        else
+        {   
+            SceneManager.LoadScene("MapSelectScene");
+            curState = GameStates.map;
+        }
     }
 
     /// <summary>

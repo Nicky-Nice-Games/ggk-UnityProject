@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,9 @@ public class MultiplayerManager : NetworkBehaviour
 {
     public static MultiplayerManager Instance;
 
+    public bool IsMultiplayer { get; set; }
+
+    public PlayerData playerData { get; set; }
     /// <summary>
     /// Current Gamemode
     /// </summary>
@@ -23,23 +27,9 @@ public class MultiplayerManager : NetworkBehaviour
     /// </summary>
     private NetworkVariable<int> selectedMap = new NetworkVariable<int>(0); // data type should be however we are representing the maps
 
-    /*
-    // variable of everyone's kart decision
-    private string[] kartChoices;
-    //private NetworkVariable<List<Dictionary<int, string>>> kartChoices = new NetworkVariable<List<Dictionary<int, string>>>();
-    
-
-    // variable of everyone's map vote 
-    private int[] mapChoices;
-    // private NetworkVariable<List<Dictionary<int,string>>> mapChoices = new NetworkVariable<List<Dictionary<int, string>>>();
-
-    // private NetworkVariable<bool> allVotesIn = new NetworkVariable<bool>(false);
-
-    // player list
-    public List<Player> Players = new List<Player>();
-    private Player[] players;
-    */
-
+    //
+    //private NetworkVariable<Dictionary<ulong, PlayerData>> players = new NetworkVariable<Dictionary<ulong, PlayerData>>();
+    //
 
     // timer variables for kart select and map select scenes
     [SerializeField] private const float kartSelectionTimerMax = 30f;
@@ -58,6 +48,7 @@ public class MultiplayerManager : NetworkBehaviour
 
     private void Awake()
     {
+        IsMultiplayer = false;
         if (Instance == null)
         {
             Instance = this;
@@ -69,16 +60,21 @@ public class MultiplayerManager : NetworkBehaviour
         }
     }
 
-    public override void OnNetworkSpawn()
+    public void Start()
     {
-        gamemode.OnValueChanged += OnGameodeChanged;
+        gamemode.OnValueChanged += OnGamemodeChanged;
         selectedMap.OnValueChanged += OnMapSelected;
+        RelayManager.Instance.OnRelayStarted += MultiplayerStarted;
+        RelayManager.Instance.OnRelayJoined += MultiplayerStarted;
     }
 
-    public override void OnNetworkDespawn()
+    private void MultiplayerStarted(object sender, EventArgs e)
     {
-        gamemode.OnValueChanged -= OnGameodeChanged;
-        selectedMap.OnValueChanged -= OnMapSelected;
+        IsMultiplayer = true;
+    }
+    private void MultiplayerEnded(object sender, EventArgs e)
+    {
+        IsMultiplayer = false;
     }
 
     /// <summary>
@@ -90,7 +86,6 @@ public class MultiplayerManager : NetworkBehaviour
         kartSelectionTimer = kartSelectionTimerMax;
         mapSelectionTimer = mapSelectionTimerMax;
     }
-
 
     private void Update()
     {
@@ -119,19 +114,12 @@ public class MultiplayerManager : NetworkBehaviour
             //if (allVotesIn.Value == false)
             {
                 // calculate if all the votes are in
-
             }
         }
     }
 
-
-    private void SetPlayerData(ulong clientId, PlayerObjectData playerObject) // this implmentation is wrong im pretty sure, I need to do more research
-    {
-
-    }
-
     // Show Gamemode select to host, show Clients a waiting screen
-    private void OnGameodeChanged(Gamemode previous, Gamemode current)
+    private void OnGamemodeChanged(Gamemode previous, Gamemode current)
     {
         if (gamemode.Value == Gamemode.Unselected) return;
         // transition all players to the kart select scene
@@ -158,7 +146,7 @@ public class MultiplayerManager : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void SetPlayerKartRpc(/*parameters for the player kart data and who the data should be set on*/)
     {
-
+        
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = true)]

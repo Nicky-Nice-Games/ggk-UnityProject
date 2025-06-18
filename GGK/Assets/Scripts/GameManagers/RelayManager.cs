@@ -21,11 +21,13 @@ public class RelayManager : MonoBehaviour
     public static RelayManager Instance { get; private set; }
 
     public event EventHandler OnRelayStarted;
+    public event EventHandler OnRelayJoined;
 
     private void Awake()
     {
         Instance = this;
         OnRelayStarted += RelayManager_OnRelayStarted;
+        OnRelayJoined += RelayManager_OnRelayJoined;
     }
 
     /// <summary>
@@ -78,7 +80,7 @@ public class RelayManager : MonoBehaviour
                 joinAllocation.HostConnectionData
             );
             NetworkManager.Singleton.StartClient();
-            OnRelayStarted?.Invoke(this, EventArgs.Empty);
+            OnRelayJoined?.Invoke(this, EventArgs.Empty);
         }
         catch (RelayServiceException e)
         {
@@ -89,6 +91,13 @@ public class RelayManager : MonoBehaviour
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
         Player lobbyPlayer = LobbyManager.Instance.GetPlayer();
-        PlayerObjectData player = new PlayerObjectData(lobbyPlayer.Data["PlayerName"].Value);
+        PlayerData player = new PlayerData(lobbyPlayer.Data["PlayerName"].Value);
+        MultiplayerManager.Instance.playerData = player;
+    }
+    public void RelayManager_OnRelayJoined(object sender, EventArgs e)
+    {
+        Player lobbyPlayer = LobbyManager.Instance.GetPlayer();
+        PlayerData player = new PlayerData(lobbyPlayer.Data["PlayerName"].Value);
+        MultiplayerManager.Instance.playerData = player;
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// PlayerObjectData by Phillip Brown
 /// </summary>
-public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectData>
+public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 {
     // private fields
     private string playerName;
@@ -23,7 +23,7 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
     public Color PlayerColor;
 
     // constructor
-    public PlayerObjectData(/*ulong clientId,*/ string name, int playerNumber = -1)
+    public PlayerData(/*ulong clientId,*/ string name, int playerNumber = -1)
     {
         //ClientId = clientId;
         PlayerNumber = playerNumber;
@@ -42,7 +42,7 @@ public struct PlayerObjectData : INetworkSerializable, IEquatable<PlayerObjectDa
         serializer.SerializeValue(ref PlayerColor);
     }
 
-    public bool Equals(PlayerObjectData other)
+    public bool Equals(PlayerData other)
     {
         return  /*ClientId == other.ClientId &&*/
                 playerName.Equals(other.playerName) &&

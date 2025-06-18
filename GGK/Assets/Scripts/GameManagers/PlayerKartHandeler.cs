@@ -34,7 +34,7 @@ public class PlayerKartHandeler : MonoBehaviour
         }
 
         // So scene can still work if not started from start scene
-        if ( characterData != null )
+        if (characterData != null)
         {
             characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
             characterData.characterColor = Color.white;
