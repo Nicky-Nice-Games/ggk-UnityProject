@@ -218,7 +218,7 @@ public class NEWDriver : MonoBehaviour
             //rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration); // Tune value as needed            
 
             // Mid air rotation
-            float rotationSpeed = 2f;
+            float rotationSpeed = 100f;
             Quaternion currentRotation = transform.rotation;
             Quaternion targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
@@ -235,7 +235,7 @@ public class NEWDriver : MonoBehaviour
         }
        
         // Apply extra downward force to fall faster
-        sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration); // Tune value as needed
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); // Tune value as needed
 
         //Update the wheel rotations
         float steerAngle = movementDirection.x * maxSteerAngle;
@@ -276,9 +276,10 @@ public class NEWDriver : MonoBehaviour
         RaycastHit hitNear;
 
 
-        if (Physics.Raycast(transform.position + (transform.up * .2f), Vector3.down, out hitNear, groundCheckDistance, groundLayer))
+        if (Physics.Raycast(transform.position + (transform.up * .2f), -transform.up, out hitNear, groundCheckDistance, groundLayer))
         {
             isGrounded = true;
+
             //Normal Rotation
             kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
             kartNormal.Rotate(0, transform.eulerAngles.y, 0);
@@ -382,10 +383,7 @@ public class NEWDriver : MonoBehaviour
 
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
-        //--------------------Particles----------------
-        
-        
-        
+        //--------------------Particles----------------                        
         ColorDrift();
 
        if (isDriftingLeft && driftTier > currentDriftTier)
@@ -578,7 +576,7 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.8f, zTilt * 0.7f), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt * 0.5f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
         else
@@ -665,7 +663,7 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, sphere.velocity);
         Gizmos.color = Color.magenta;
-        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
+        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
     }
 
     
