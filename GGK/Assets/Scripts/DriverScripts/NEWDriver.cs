@@ -672,6 +672,19 @@ public class NEWDriver : MonoBehaviour
     private void UpdateControllerMovement(InputAction.CallbackContext context)
     {
         Vector2 moveInput = new Vector2(controllerX, controllerZ);
+        if (moveInput.y > 0)
+        {
+            moveInput.y = 1;
+        }
+        else if (moveInput.y < 0)
+        {
+            moveInput.y = -1;
+        }
+        else
+        {
+            moveInput.y = 0;
+        }
+
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
         movementDirection.x = moveInput.x;
