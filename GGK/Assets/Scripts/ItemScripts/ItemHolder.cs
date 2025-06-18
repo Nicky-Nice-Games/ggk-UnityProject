@@ -53,6 +53,11 @@ public class ItemHolder : MonoBehaviour
 
         uses = 0;
 
+        if (thisDriver)
+        {
+            itemDisplay.texture = defaultItemDisplay;
+        }
+
         //soundPlayer = GetComponent<AudioSource>();
 
     }
@@ -78,7 +83,7 @@ public class ItemHolder : MonoBehaviour
         }
 
 
-        if (item != null)
+        if (holdingItem && item)
         {
             if (item.UseCount == 1 && item.isTimed)
             {
@@ -86,8 +91,11 @@ public class ItemHolder : MonoBehaviour
                 {
                     heldItem = null;
                     holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
                     Destroy(item.gameObject);
-                    itemDisplay.texture = defaultItemDisplay;
                 }
             }
             else if (item.UseCount == 1 && !item.isTimed)
@@ -96,17 +104,24 @@ public class ItemHolder : MonoBehaviour
                 {
                     heldItem = null;
                     holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
                     Destroy(item.gameObject);
-                    itemDisplay.texture = defaultItemDisplay;
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
             {
+                if (item.Timer <= 0.0f || uses == 0)
                 {
                     heldItem = null;
                     holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
                     Destroy(item.gameObject);
-                    itemDisplay.texture = defaultItemDisplay;
                 }
             }
             else if (item.UseCount > 1 && !item.isTimed)
@@ -115,11 +130,20 @@ public class ItemHolder : MonoBehaviour
                 {
                     heldItem = null;
                     holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
                     Destroy(item.gameObject);
-                    itemDisplay.texture = defaultItemDisplay;
                 }
             }
         }
+
+        if (thisDriver)
+        {
+            Debug.Log(uses);
+        }
+
 
     }
 
@@ -139,10 +163,9 @@ public class ItemHolder : MonoBehaviour
 
     public void OnThrow(InputAction.CallbackContext context)
     {
-
         if (!holdingItem) return;
 
-        if (uses > 0)
+        if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
             item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
@@ -216,9 +239,12 @@ public class ItemHolder : MonoBehaviour
                 if (uses == 0)
                 {
                     uses = heldItem.UseCount;
-                    Debug.Log("New item acquired. Uses set to: " + uses);
                 }
-                itemDisplay.texture = heldItem.itemIcon;
+                Debug.Log(uses);
+                if (thisDriver)
+                {
+                    itemDisplay.texture = heldItem.itemIcon;
+                }
             }
             // Disables the item box
             itemBox.gameObject.SetActive(false);
@@ -241,6 +267,7 @@ public class ItemHolder : MonoBehaviour
         {
             if (thisDriver != null)
             thisDriver.sphere.velocity /= 8;
+            Destroy(collision.gameObject);
         }
 
         // kart uses a boost and is given the boost through a force
@@ -249,7 +276,7 @@ public class ItemHolder : MonoBehaviour
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
             float duration = 2.5f;
-            if (boost.IsUpgraded)
+            if (boost.ItemTier == 2)
             {
                 thisDriver.sphere.velocity /= 8;
             }
@@ -262,7 +289,6 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
                 boostMult = 1.5f;
-            }
             
             if(thisDriver != null)
             {
@@ -271,36 +297,11 @@ public class ItemHolder : MonoBehaviour
             }
             else if(npcDriver != null)
             {
-                StartCoroutine(ApplyNPCBoost(npcDriver, boostMult, duration));
+                StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
                 Debug.Log("Applying Boost Item!");
             }
             Destroy(collision.gameObject);
         }
-
-        // kart uses a boost and is given the boost through a force
-        //if (collision.gameObject.CompareTag("Boost"))
-        //{
-        //    Boost boost = collision.gameObject.GetComponent<Boost>();
-        //    float boostMult;
-        //    if (boost.IsUpgraded)
-        //    {
-        //        boostMult = 2.0f;
-        //    }
-        //    else
-        //    {
-        //        boostMult = 2.0f;
-        //    }
-        //    if (thisDriver != null)
-        //    {
-        //        StartCoroutine(ApplyBoost(thisDriver, boostMult, 3.0f));
-        //    }
-        //    else if (npcDriver != null)
-        //    {
-        //        StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, 3.0f));
-        //    }
-        //    Debug.Log("Applying Boost Item!");
-        //    Destroy(collision.gameObject);
-        //}
 
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Hazard")
