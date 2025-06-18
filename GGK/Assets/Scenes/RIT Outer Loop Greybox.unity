@@ -5186,7 +5186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemBoxes: []
-  itemBoxParent: {fileID: 1919104349}
+  itemBoxParent: {fileID: 0}
 --- !u!1 &643440572
 GameObject:
   m_ObjectHideFlags: 0
@@ -16877,7 +16877,7 @@ MonoBehaviour:
       - m_Target: {fileID: 839629501}
         m_TargetAssemblyTypeName: ItemHolder, Assembly-CSharp
         m_MethodName: OnThrow
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -16932,6 +16932,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 683f433a-6dca-4ac6-9fbd-d0d595298cca
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 20971245-4ba1-4653-9b30-3fdca188ce63
+    m_ActionName: Car/SplineToggle[/Keyboard/p]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Car
@@ -18987,8 +18991,8 @@ Transform:
   m_GameObject: {fileID: 953688192}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0049006697, y: -0.6509997, z: 0.00907811, w: -0.7590079}
-  m_LocalPosition: {x: 8.7, y: -46.6, z: 29.5}
-  m_LocalScale: {x: 30.733723, y: 29.843512, z: 1}
+  m_LocalPosition: {x: 9.28, y: -40.98, z: 25.87}
+  m_LocalScale: {x: 45, y: 29.843512, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 180943481}
@@ -34173,9 +34177,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1476159673}
     - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: heldItem
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: itemDisplay
       value: 
       objectReference: {fileID: 1080252267}
+    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: defaultItemDisplay
+      value: 
+      objectReference: {fileID: 2800000, guid: 7b68c3fd2d2e4ab4c9af6a29ab528b67, type: 3}
     - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Name
       value: Kart 1
@@ -37172,12 +37184,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: 0.02, z: 0}
+  m_Size: {x: 0.06181905, y: 0.055480517, z: 0.06356123}
+  m_Center: {x: -0.0009018052, y: 0.026475368, z: -0.00027451428}
 --- !u!114 &2013023913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54367,12 +54379,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: 0.02, z: 0}
+  m_Size: {x: 0.058903594, y: 0.06271276, z: 0.06740126}
+  m_Center: {x: -0.0006814296, y: 0.02556185, z: 0.0020041212}
 --- !u!114 &5954472818605481481
 MonoBehaviour:
   m_ObjectHideFlags: 0

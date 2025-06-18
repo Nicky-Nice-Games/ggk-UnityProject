@@ -42,7 +42,7 @@ public class Puck : BaseItem
 
         // Moves puck in a straight line by its forward vector
         // RIGHT NOW UPGRADED FUNCTIONALITY IS NOT IMPLEMENTED
-        if (isUpgraded)
+        if (itemTier > 1)
         {
             rb.velocity = direction;
         }
