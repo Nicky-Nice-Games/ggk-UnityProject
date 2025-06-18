@@ -21,7 +21,7 @@ public enum GameStates
 
 public class GameManager : MonoBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
@@ -117,17 +117,17 @@ public class GameManager : MonoBehaviour
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
-            case "1-1":
+            case "RIT Outer Loop Greybox":
                 sceneLoader.LoadScene("RIT Outer Loop Greybox");
                 break;
-            case "1-2":
-                sceneLoader.LoadScene("1-2");
+            case "Golisano Greybox":
+                sceneLoader.LoadScene("Golisano Greybox");
                 break;
-            case "1-3":
-                sceneLoader.LoadScene("1-3");
+            case "RIT Dorm Greybox":
+                sceneLoader.LoadScene("RIT Dorm Greybox");
                 break;
-            case "1-4":
-                sceneLoader.LoadScene("1-4");
+            case "RIT Woods Greybox":
+                sceneLoader.LoadScene("RIT Woods Greybox");
                 break;
             default:
                 break;
@@ -196,6 +196,11 @@ public class GameManager : MonoBehaviour
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
         RefreshSelected();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
 }
