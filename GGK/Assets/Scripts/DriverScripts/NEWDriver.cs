@@ -34,6 +34,7 @@ public class NEWDriver : MonoBehaviour
     [Header("Drift Settings")]
     //To determine drifting stuff in update
     public bool isDrifting;
+    bool driftMethodCaller = false;
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
@@ -170,7 +171,7 @@ public class NEWDriver : MonoBehaviour
             float turningDirection = movementDirection.x * newTurnSpeed;
 
             //drifting
-            if (isDrifting)
+            if (driftMethodCaller)
             {
                 //Keep drifting
                 Drift();
@@ -304,6 +305,7 @@ public class NEWDriver : MonoBehaviour
     {
         if (isGrounded && !attemptingDrift)
         {
+            isDrifting = true;
             isGrounded = false;
 
             StartCoroutine(DriftHopEnabler());
@@ -467,6 +469,7 @@ public class NEWDriver : MonoBehaviour
         }
 
         isDrifting = false;
+        driftMethodCaller = false;
         driftTime = 0f;
 
         // Reset visuals
@@ -559,10 +562,11 @@ public class NEWDriver : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        
         //Check if player wants to drift either direction
-        if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5)
+        if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5 && isDrifting)
         {
-            isDrifting = true;
+            driftMethodCaller = true;
 
             isDriftingLeft = movementDirection.x < 0f;
             driftTime = 0f;
@@ -577,7 +581,14 @@ public class NEWDriver : MonoBehaviour
             driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.8f, zTilt * 0.7f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
+        else
+        {
+            EndDrift();
+            
 
+        }
+
+        
         attemptingDrift = false;
 
     }
