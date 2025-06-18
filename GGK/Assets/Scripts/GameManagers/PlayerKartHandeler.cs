@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerKartHandeler : MonoBehaviour
 {
     // References
     public GameManager gameManager;
-    public CharacterData characterData;
     public List<GameObject> playerOptions;
 
     public CharacterData characterData;
@@ -41,11 +41,11 @@ public class PlayerKartHandeler : MonoBehaviour
         }
 
         // So scene can still work if not started from start scene
-        if ( characterData != null )
-        {
-            characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
-            characterData.characterColor = Color.white;
-        }
+        //if ( characterData != null )
+        //{
+        //    characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
+        //    characterData.characterColor = Color.white;
+        //}
 
         // Connect character buttons to ChangeCharacter with appropriate arguments
         foreach (GameObject characterButton in characterButtons)
@@ -54,22 +54,12 @@ public class PlayerKartHandeler : MonoBehaviour
 
             Button btn = characterButton.GetComponentInChildren<Button>();
 
-            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0]));
+            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0], btn.name));
         }
 
         // Invoke default selection
         characterButtons[0].GetComponentInChildren<Button>().onClick.Invoke();
         ColorChange();
-
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in playerOptions)
-        {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gameManager.GetComponent<ButtonBehavior>().OnClick());
-            button.onClick.AddListener(() =>
-            gameManager.GetComponentInChildren<GameManager>().PlayerSelected());
-        }
     }
 
     // Update is called once per frame
@@ -88,12 +78,14 @@ public class PlayerKartHandeler : MonoBehaviour
     // Select this character button
     public void ChangeCharacter(Image characterImage, Image border, string name)
     {
-        if (prevImageBorder != null)
+        if (prevCharacterImageBorder != null)
         {
-            prevImageBorder.color = Color.white;
+            prevCharacterImageBorder.color = Color.white;
         }
 
-        characterSelectImage.sprite = characterImage.sprite;
+        characterSelectedImage.sprite = characterImage.sprite;
+        characterName.text = name;
+
         if (characterData != null)
             characterData.characterSprite = characterImage.sprite;
     }
