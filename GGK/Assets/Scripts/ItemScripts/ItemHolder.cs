@@ -38,10 +38,10 @@ public class ItemHolder : MonoBehaviour
     // private TextMesh heldItemText;
 
     // audio variables
-    private AudioSource soundPlayer;
+    //private AudioSource soundPlayer;
 
     [SerializeField]
-    AudioClip throwSound;
+    //AudioClip throwSound;
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     // Start is called before the first frame update
@@ -53,7 +53,7 @@ public class ItemHolder : MonoBehaviour
 
         uses = 0;
 
-        soundPlayer = GetComponent<AudioSource>();
+        //soundPlayer = GetComponent<AudioSource>();
 
     }
 
@@ -144,8 +144,8 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0)
         {
-            soundPlayer.PlayOneShot(throwSound);
             item = Instantiate(heldItem, transform.position, transform.rotation);
+            //soundPlayer.PlayOneShot(throwSound);
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
 
@@ -167,7 +167,7 @@ public class ItemHolder : MonoBehaviour
                 uses -= 1;
             }
             // sound effect when item thrown
-            soundPlayer.PlayOneShot(throwSound);
+            //soundPlayer.PlayOneShot(throwSound);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
@@ -189,11 +189,12 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8000;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                npcDriver.StartRecovery();
             }
         }
 
@@ -238,19 +239,42 @@ public class ItemHolder : MonoBehaviour
         // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Projectile")
         {
-            Destroy(collision.gameObject);
             if (thisDriver != null)
+            thisDriver.sphere.velocity /= 8;
+        }
+
+        // kart uses a boost and is given the boost through a force
+        if (collision.gameObject.CompareTag("Boost"))
+        {
+            Boost boost = collision.gameObject.GetComponent<Boost>();
+            float boostMult;
+            float duration = 2.5f;
+            if (boost.IsUpgraded)
             {
                 thisDriver.sphere.velocity /= 8;
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
+                boostMult = 1.5f;
+            }
+            
+            if(thisDriver != null)
+            {
+                StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
+            else if(npcDriver != null)
+            {
+                StartCoroutine(ApplyNPCBoost(npcDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
+            Destroy(collision.gameObject);
         }
 
         // kart uses a boost and is given the boost through a force
@@ -289,14 +313,18 @@ public class ItemHolder : MonoBehaviour
             }
             else if (npcDriver != null)
             {
-                npcDriver.DisableDriving();
-                npcDriver.velocity /= 8000;
-                npcDriver.maxSpeed = 100;
-                npcDriver.accelerationRate = 500;
-                npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+
+                npcDriver.StartRecovery();
             }
         }
+
     }
+
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
