@@ -197,4 +197,9 @@ public class GameManager : MonoBehaviour
         RefreshSelected();
     }
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
 }
