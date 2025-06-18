@@ -15,7 +15,7 @@ public class NEWDriver : MonoBehaviour
 
     [Header("Kart Settings")]
     //acceleration, decceleration
-    public float accelerationRate, deccelerationRate;
+    public float accelerationRate, deccelerationRate, airDeccelerationRate;
     public float minSpeed = 5f;
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
@@ -34,6 +34,7 @@ public class NEWDriver : MonoBehaviour
     [Header("Drift Settings")]
     //To determine drifting stuff in update
     public bool isDrifting;
+    bool driftMethodCaller = false;
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
@@ -68,6 +69,8 @@ public class NEWDriver : MonoBehaviour
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
+    int driftTier;
+    int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
 
     [Header("Raycast Settings")]
@@ -77,6 +80,7 @@ public class NEWDriver : MonoBehaviour
     bool attemptingDrift;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
+    public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
 
     //Tween stuff
     Tween driftRotationTween;
@@ -139,7 +143,7 @@ public class NEWDriver : MonoBehaviour
             //Setting acceleration 
             acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
         }
-        else
+        else if(isGrounded)
         {
             //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
@@ -151,6 +155,12 @@ public class NEWDriver : MonoBehaviour
                 acceleration = Vector3.zero;
             }
         }
+        else
+        {
+            //In the air, decelerating bc of drag
+            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
+        }
+
 
 
         //------------Turning stuff---------------------
@@ -168,7 +178,7 @@ public class NEWDriver : MonoBehaviour
             float turningDirection = movementDirection.x * newTurnSpeed;
 
             //drifting
-            if (isDrifting)
+            if (driftMethodCaller)
             {
                 //Keep drifting
                 Drift();
@@ -211,28 +221,41 @@ public class NEWDriver : MonoBehaviour
         if (!isGrounded && !attemptingDrift)
         {
 
-            // Apply extra downward force to fall faster
-            //rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration); // Tune value as needed            
+            //// Apply extra downward force to fall faster
+            ////rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration); // Tune value as needed            
+            //
+            //// Mid air rotation
+            //float rotationSpeed = 100f;
+            //Quaternion currentRotation = kartNormal.rotation;
+            //Quaternion targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            //
+            //
+            //Debug.Log("Float angle diff: " + Quaternion.Angle(transform.rotation, targetRotation));
+            //if (Quaternion.Angle(transform.rotation, targetRotation) < .5)
+            //{
+            //    targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            //}
+            //else
+            //{
+            //    kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
+            //}
 
-            // Mid air rotation
-            float rotationSpeed = 2f;
-            Quaternion currentRotation = transform.rotation;
-            Quaternion targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            
+            
+            float airRotationSpeed = 2.0f;
 
+            // Target upright rotation based on Yaw (keep current Y, reset pitch/roll)
+            Quaternion targetUpright = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
-            Debug.Log("Float angle diff: " + Quaternion.Angle(transform.rotation, targetRotation));
-            if (Quaternion.Angle(transform.rotation, targetRotation) < .5)
-            {
-                targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-            }
-            else
-            {
-                kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }            
+            // Smoothly rotate the kart's visual and normal upright orientation back to upright
+            kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+            
+
         }
-       
+
         // Apply extra downward force to fall faster
-        sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration); // Tune value as needed
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); // Tune value as needed
 
         //Update the wheel rotations
         float steerAngle = movementDirection.x * maxSteerAngle;
@@ -273,11 +296,12 @@ public class NEWDriver : MonoBehaviour
         RaycastHit hitNear;
 
 
-        if (Physics.Raycast(transform.position + (transform.up * .2f), Vector3.down, out hitNear, groundCheckDistance, groundLayer))
+        if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
         {
             isGrounded = true;
+
             //Normal Rotation
-            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
+            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
             kartNormal.Rotate(0, transform.eulerAngles.y, 0);
         }
         else
@@ -302,6 +326,7 @@ public class NEWDriver : MonoBehaviour
     {
         if (isGrounded && !attemptingDrift)
         {
+            isDrifting = true;
             isGrounded = false;
 
             StartCoroutine(DriftHopEnabler());
@@ -378,42 +403,54 @@ public class NEWDriver : MonoBehaviour
 
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
-        //--------------------Particles----------------
-
+        //--------------------Particles----------------                        
         ColorDrift();
 
-        if (isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBL[0].isPlaying)
-        {
-            //Activate left drift sparks when we get the boost
-            foreach (ParticleSystem ps in particleSystemsBL)
+       if (isDriftingLeft && driftTier > currentDriftTier)
+       {
+            if(!particleSystemsBL[0].isPlaying)
             {
-                if (!ps.isPlaying)
+                //Activate left drift sparks when we get the boost
+                foreach (ParticleSystem ps in particleSystemsBL)
                 {
-                    ps.Play();
+                    if (!ps.isPlaying)
+                    {
+                        ps.Play();
+                    }
                 }
             }
-
-            //Adding transition sparks
-            transitionSparksLtoR[0].Play();
+           
+       
+           //Adding transition sparks
+           transitionSparksLtoR[0].Play();
+            transitionSparksLtoR[2].Play();
         }
-        else if (!isDriftingLeft && driftTime >= minDriftTime && !particleSystemsBR[0].isPlaying)
-        {
-            //Activate right drift sparks when we get the boost
-            foreach (ParticleSystem ps in particleSystemsBR)
+       else if (!isDriftingLeft && driftTier > currentDriftTier)
+       {
+
+            if (!particleSystemsBR[0].isPlaying)
             {
-                if (!ps.isPlaying)
+                //Activate right drift sparks when we get the boost
+                foreach (ParticleSystem ps in particleSystemsBR)
                 {
-                    ps.Play();
+                    if (!ps.isPlaying)
+                    {
+                        ps.Play();
+                    }
                 }
             }
-
-            //Adding transition sparks
-            transitionSparksLtoR[1].Play();
             
-        }
+       
+           //Adding transition sparks
+           transitionSparksLtoR[1].Play();
+            transitionSparksLtoR[3].Play();
+
+
+        }      
+
 
         //Tire Screech Particles
-        if(isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
+        if (isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
         {
             TireScreechesLtoR[0].Play();
         }
@@ -421,6 +458,8 @@ public class NEWDriver : MonoBehaviour
         {
             TireScreechesLtoR[1].Play();
         }
+
+        currentDriftTier = driftTier;
     }
 
     /// <summary>
@@ -432,13 +471,23 @@ public class NEWDriver : MonoBehaviour
 
         if (!isDrifting) return;
 
-        if (driftTime > minDriftTime)
+
+        //---------Boost Types----------------
+        if (driftTime > minDriftTime * 3f)
         {
-            StartCoroutine(Boost(driftBoostForce, 0.5f));
-            
+            StartCoroutine(Boost(driftBoostForce, 0.8f));            
+        }
+        else if(driftTime > minDriftTime * 2f)
+        {
+            StartCoroutine(Boost(driftBoostForce, 0.4f));
+        }
+        else if (driftTime > minDriftTime)
+        {
+            StartCoroutine(Boost(driftBoostForce, 0.2f));
         }
 
         isDrifting = false;
+        driftMethodCaller = false;
         driftTime = 0f;
 
         // Reset visuals
@@ -454,6 +503,7 @@ public class NEWDriver : MonoBehaviour
         particleSystemsBL.ForEach(ps => ps.Stop());
         particleSystemsBR.ForEach(ps => ps.Stop());
         TireScreechesLtoR.ForEach(ps => ps.Stop());
+        transitionSparksLtoR.ForEach(ps => ps.Stop());
 
     }
 
@@ -462,15 +512,29 @@ public class NEWDriver : MonoBehaviour
         Color c = Color.clear;
 
         
-        if (driftTime > minDriftTime)
+        if (driftTime > minDriftTime * 3f)
         {
-            //Blue
-            c = turboColors[1];
+            //red
+            c = turboColors[3];
+            driftTier = 3; 
         }
+        else if(driftTime > minDriftTime * 2f)
+        {
+            //Orange
+            c = turboColors[2];
+            driftTier = 2; 
+        }
+        else if (driftTime > minDriftTime)
+        {
+            //Red
+            c = turboColors[1];
+            driftTier = 1;
+        }        
         else
         {
             //Default color
             c = turboColors[0];
+            driftTier = 0;
         }
 
         foreach (ParticleSystem ps in particleSystemsBL)
@@ -497,7 +561,7 @@ public class NEWDriver : MonoBehaviour
 
     }
 
-        IEnumerator Boost(float boostForce, float duration)
+    IEnumerator Boost(float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
@@ -516,10 +580,11 @@ public class NEWDriver : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        
         //Check if player wants to drift either direction
-        if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5)
+        if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5 && isDrifting)
         {
-            isDrifting = true;
+            driftMethodCaller = true;
 
             isDriftingLeft = movementDirection.x < 0f;
             driftTime = 0f;
@@ -531,10 +596,17 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.2f, zTilt * 0.7f), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt * 0.5f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
+        else
+        {
+            EndDrift();
+            
 
+        }
+
+        
         attemptingDrift = false;
 
     }
@@ -611,7 +683,7 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, sphere.velocity);
         Gizmos.color = Color.magenta;
-        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
+        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
     }
 
     
