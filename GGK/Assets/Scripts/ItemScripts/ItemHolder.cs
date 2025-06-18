@@ -37,10 +37,10 @@ public class ItemHolder : MonoBehaviour
     // private TextMesh heldItemText;
 
     // audio variables
-    private AudioSource soundPlayer;
+    //private AudioSource soundPlayer;
 
     [SerializeField]
-    AudioClip throwSound;
+    //AudioClip throwSound;
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     // Start is called before the first frame update
@@ -51,7 +51,7 @@ public class ItemHolder : MonoBehaviour
         timer = Random.Range(1, 6);
 
 
-        soundPlayer = GetComponent<AudioSource>();
+        //soundPlayer = GetComponent<AudioSource>();
 
     }
 
@@ -95,7 +95,7 @@ public class ItemHolder : MonoBehaviour
         // handles item usage
         if (holdingItem)
         {
-            soundPlayer.PlayOneShot(throwSound);
+            //soundPlayer.PlayOneShot(throwSound);
             BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
             item.IsUpgraded = heldItem.IsUpgraded;
@@ -111,7 +111,7 @@ public class ItemHolder : MonoBehaviour
         if (holdingItem)
         {
             // sound effect when item thrown
-            soundPlayer.PlayOneShot(throwSound);
+            //soundPlayer.PlayOneShot(throwSound);
 
             BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
@@ -200,8 +200,17 @@ public class ItemHolder : MonoBehaviour
             {
                 boostMult = 1.5f;
             }
-            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-            Debug.Log("Applying Boost Item!");
+            
+            if(thisDriver != null)
+            {
+                StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
+            else if(npcDriver != null)
+            {
+                StartCoroutine(ApplyNPCBoost(npcDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
             Destroy(collision.gameObject);
         }
 
@@ -225,7 +234,9 @@ public class ItemHolder : MonoBehaviour
                 npcDriver.StartRecovery();
             }
         }
+
     }
+
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
@@ -236,4 +247,16 @@ public class ItemHolder : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+
+    IEnumerator ApplyNPCBoost(NPCDriver driver, float boostForce, float duration)
+    {
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = driver.transform.forward * boostForce;
+
+            driver.rBody.AddForce(boostDirection, ForceMode.VelocityChange);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
 }
