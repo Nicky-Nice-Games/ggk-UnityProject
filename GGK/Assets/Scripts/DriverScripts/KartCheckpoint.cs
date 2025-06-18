@@ -80,11 +80,12 @@ public class KartCheckpoint : MonoBehaviour
             if (checkpointId == checkpointList.Count - 1)
             {
                 lap++;
+                checkpointId = 0;
                 if (this.GetComponent<NPCDriver>() == null)
                 {
                     lapDisplay.text = "Lap: " + (lap + 1);
                 }
-                checkpointId = 0;
+                
 
                 // 3 laps finished assuming we start on lap 0
                 if (lap == 1)
