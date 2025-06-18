@@ -14,6 +14,10 @@ public class SplineToggle : MonoBehaviour
 
     [SerializeField]
     private List<Mesh> originalMeshes = new List<Mesh>();
+
+    [SerializeField] private GameObject sphereHolder;
+
+    [SerializeField] private List<MeshRenderer> sphereRenderers = new List<MeshRenderer>();
     private bool isVisible = true;
     void Start()
     {
@@ -29,6 +33,30 @@ public class SplineToggle : MonoBehaviour
             }
         }
 
+
+        foreach (Transform followTransform in sphereHolder.transform)
+        {
+            // Find the Sphere inside this followX
+            Transform sphere = followTransform.Find("Sphere");
+            if (sphere != null)
+            {
+                MeshRenderer mr = sphere.GetComponent<MeshRenderer>();
+                if (mr != null)
+                {
+                    sphereRenderers.Add(mr);
+                }
+                else
+                {
+                    Debug.LogWarning($"{sphere.name} does not have a MeshRenderer.");
+                    sphereRenderers.Add(null);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"{followTransform.name} does not have a child named 'Sphere'.");
+                sphereRenderers.Add(null);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -49,6 +77,12 @@ public class SplineToggle : MonoBehaviour
             if (mf != null)
             {
                 mf.sharedMesh = isVisible ? originalMeshes[i] : null;
+            }
+
+            // Toggle corresponding sphere renderer
+            if (i < sphereRenderers.Count && sphereRenderers[i] != null)
+            {
+                sphereRenderers[i].enabled = isVisible;
             }
         }
     }
