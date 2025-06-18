@@ -1,19 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Boost : BaseItem
 {
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-
+        switch (itemTier)
+        {
+            case 2:
+                useCount = 2;
+                break;
+            case 3:
+                useCount = 1;
+                break;
+            case 4:
+                useCount = 1;
+                break;
+            default:
+                useCount = 1;
+                break;
+        }
+        isTimed = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        switch (itemTier)
+        {
+            case 2:
+                useCount = 2;
+                break;
+            case 3:
+                useCount = 1;
+                break;
+            case 4:
+                useCount = 1;
+                break;
+            default:
+                useCount = 1;
+                break;
+        }
+        isTimed = false;
         DecreaseTimer();
     }
 

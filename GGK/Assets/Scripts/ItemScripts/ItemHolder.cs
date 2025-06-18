@@ -108,7 +108,6 @@ public class ItemHolder : MonoBehaviour
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
-                    Destroy(item.gameObject);
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
@@ -124,7 +123,7 @@ public class ItemHolder : MonoBehaviour
                     Destroy(item.gameObject);
                 }
             }
-            else if (item.UseCount > 1 && !item.isTimed)
+            else if (item.UseCount >= 1 && !item.isTimed)
             {
                 if (uses == 0)
                 {
@@ -134,7 +133,6 @@ public class ItemHolder : MonoBehaviour
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
-                    Destroy(item.gameObject);
                 }
             }
         }
@@ -235,6 +233,7 @@ public class ItemHolder : MonoBehaviour
             if (!holdingItem)
             {
                 heldItem = itemBox.RandomizeItem();
+                
                 // Initialize use count if first use
                 if (uses == 0)
                 {
@@ -253,7 +252,17 @@ public class ItemHolder : MonoBehaviour
         else if (collision.gameObject.CompareTag("UpgradeBox"))
         {
             UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
-            itemDisplay.texture = heldItem.itemIcon;
+            // itemDisplay.texture = heldItem.itemIcon;
+
+            if (heldItem != null)
+            {
+                if (heldItem.ItemTier < 4)
+                {
+                    heldItem.ItemTier++;
+                }
+                heldItem.OnLevelUp(heldItem.ItemTier);
+                uses = heldItem.UseCount;
+            }
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);
@@ -292,7 +301,18 @@ public class ItemHolder : MonoBehaviour
             
             if(thisDriver != null)
             {
-                StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                switch (boost.ItemTier)
+                {
+                    default:
+                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                        break;
+                    case 3:
+                        StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                        break;
+                    case 4:
+                        break;
+
+                }
                 Debug.Log("Applying Boost Item!");
             }
             else if(npcDriver != null)
@@ -331,6 +351,18 @@ public class ItemHolder : MonoBehaviour
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = driver.transform.forward * boostForce;
+
+            driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
+    {
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = driver.transform.forward * boostForce;
+            boostDirection.y = boostForce;
 
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();

@@ -65,4 +65,31 @@ public class BaseItem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// changes corresponding item functionality when upgraded
+    /// </summary>
+    /// <param name="level">current level of item</param>
+    public void OnLevelUp(int level)
+    {
+        if (itemCategory == "Boost")
+        {
+            Debug.Log("Boost Upgraded.");
+            switch (itemTier)
+            {
+                case 2:
+                    useCount = 2;
+                    break;
+                case 3:
+                    useCount = 1;
+                    break;
+                case 4:
+                    useCount = 1;
+                    break;
+                default:
+                    useCount = 1;
+                    break;
+            }
+        }
+    }
+
 }
