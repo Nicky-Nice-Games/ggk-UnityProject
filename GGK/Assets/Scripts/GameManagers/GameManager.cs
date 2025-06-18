@@ -21,7 +21,7 @@ public enum GameStates
 
 public class GameManager : MonoBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
@@ -196,6 +196,11 @@ public class GameManager : MonoBehaviour
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
         RefreshSelected();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
 }

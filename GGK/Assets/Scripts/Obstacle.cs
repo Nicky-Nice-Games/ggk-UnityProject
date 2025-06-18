@@ -67,13 +67,34 @@ public class MovingObstacle : MonoBehaviour
                 Debug.Log("Slowing Down!");
 
                 // gets the parent of the larger collider to get the different child with the driver script
-                GameObject gameobj = collision.transform.parent.gameObject;
-                NEWDriver driver = gameobj.GetComponentInChildren<NEWDriver>();
+                GameObject gameobj = null;
+                NEWDriver driver = null;
 
-                if(driver != null)
+                NPCDriver npc = null;
+                // check the colliders to see if it's a box (NPC) or sphere (Player)
+                if (collision.GetComponent<BoxCollider>() != null)
                 {
-                    // adds a counter force to the kart when driving on the slowdown terrains
+                    // if there is a boxcollider it's an npc
+                    npc = collision.GetComponent<NPCDriver>();
+                }
+                else if (collision.GetComponent<SphereCollider>() != null)
+                {
+                    // if there's a sphere collider it's a player
+                    gameobj = collision.transform.parent.gameObject;
+                    driver = gameobj.GetComponentInChildren<NEWDriver>();
+                }
+
+
+                if (driver != null)
+                {
+                    // applies a counter force to the kart when driving on the slowdown terrains
                     driver.sphere.AddForce(-driver.acceleration * slowFactor, ForceMode.Acceleration);
+                }
+                else if (npc != null)
+                {
+                    // create a Vector3 for the NPC's Acceleration then apply a counter force to slow it down
+                    Vector3 NPCacc = npc.kartModel.forward * (npc.followTarget.position.z - npc.transform.position.z) * (npc.accelerationRate * Time.fixedDeltaTime);
+                    npc.rBody.AddForce(-NPCacc * slowFactor, ForceMode.Acceleration);
                 }
             }
         }

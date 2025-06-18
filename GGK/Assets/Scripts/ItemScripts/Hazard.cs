@@ -17,7 +17,7 @@ public class Hazard : BaseItem
         transform.position = behindPos;
         
         // sends the hazard slightly up and behind the player before landing on the ground
-        if (isUpgraded)
+        if (itemTier > 1)
         {
             this.gameObject.transform.localScale += new Vector3(8.5f, 0.0f, 8.5f);
             rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);

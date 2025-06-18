@@ -89,6 +89,15 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SplineToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""20971245-4ba1-4653-9b30-3fdca188ce63"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -320,6 +329,17 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2ef4939-f6c7-43e5-a745-2c62f0fabab0"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SplineToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -914,6 +934,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         m_Car_LookBack = m_Car.FindAction("LookBack", throwIfNotFound: true);
         m_Car_UseItem = m_Car.FindAction("UseItem", throwIfNotFound: true);
         m_Car_Pause = m_Car.FindAction("Pause", throwIfNotFound: true);
+        m_Car_SplineToggle = m_Car.FindAction("SplineToggle", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -994,6 +1015,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Car_LookBack;
     private readonly InputAction m_Car_UseItem;
     private readonly InputAction m_Car_Pause;
+    private readonly InputAction m_Car_SplineToggle;
     public struct CarActions
     {
         private @CarControls m_Wrapper;
@@ -1005,6 +1027,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         public InputAction @LookBack => m_Wrapper.m_Car_LookBack;
         public InputAction @UseItem => m_Wrapper.m_Car_UseItem;
         public InputAction @Pause => m_Wrapper.m_Car_Pause;
+        public InputAction @SplineToggle => m_Wrapper.m_Car_SplineToggle;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1035,6 +1058,9 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @SplineToggle.started += instance.OnSplineToggle;
+            @SplineToggle.performed += instance.OnSplineToggle;
+            @SplineToggle.canceled += instance.OnSplineToggle;
         }
 
         private void UnregisterCallbacks(ICarActions instance)
@@ -1060,6 +1086,9 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @SplineToggle.started -= instance.OnSplineToggle;
+            @SplineToggle.performed -= instance.OnSplineToggle;
+            @SplineToggle.canceled -= instance.OnSplineToggle;
         }
 
         public void RemoveCallbacks(ICarActions instance)
@@ -1249,6 +1278,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         void OnLookBack(InputAction.CallbackContext context);
         void OnUseItem(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnSplineToggle(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
