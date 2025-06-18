@@ -10832,7 +10832,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -51535,18 +51535,19 @@ MonoBehaviour:
   turning: {x: 0, y: 0, z: 0, w: 0}
   accelerationRate: 2000
   deccelerationRate: 5
+  airDeccelerationRate: 2
   minSpeed: 5
   turnSpeed: 40
   maxSteerAngle: 20
   kartNormal: {fileID: 2772615197910849762}
-  gravity: 20
+  gravity: 30
   tractionCoefficient: 6
   colliderOffset: 1.28
   spherePosTransform: {fileID: 1192304704561040256}
   sphere: {fileID: 8245124639533166686}
   isDrifting: 0
-  driftFactor: 2
-  driftTurnMultiplier: 1.5
+  driftFactor: 0.2
+  driftTurnMultiplier: 0.7
   minDriftTime: 200
   driftBoostForce: 1
   hopForce: 8
@@ -51587,8 +51588,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   isGrounded: 0
-  groundCheckDistance: 1.05
-  rotationAlignSpeed: 0.05
+  groundCheckDistance: 1.04
+  rotationAlignSpeed: 8
+  horizontalOffset: 0.21
   driveSound: {fileID: 0}
   isDriving: 0
 --- !u!114 &4107905189492007490

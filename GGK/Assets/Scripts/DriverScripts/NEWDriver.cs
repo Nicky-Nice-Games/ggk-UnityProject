@@ -15,7 +15,7 @@ public class NEWDriver : MonoBehaviour
 
     [Header("Kart Settings")]
     //acceleration, decceleration
-    public float accelerationRate, deccelerationRate;
+    public float accelerationRate, deccelerationRate, airDeccelerationRate;
     public float minSpeed = 5f;
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
@@ -80,6 +80,7 @@ public class NEWDriver : MonoBehaviour
     bool attemptingDrift;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
+    public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
 
     //Tween stuff
     Tween driftRotationTween;
@@ -142,7 +143,7 @@ public class NEWDriver : MonoBehaviour
             //Setting acceleration 
             acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
         }
-        else
+        else if(isGrounded)
         {
             //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
@@ -154,6 +155,12 @@ public class NEWDriver : MonoBehaviour
                 acceleration = Vector3.zero;
             }
         }
+        else
+        {
+            //In the air, decelerating bc of drag
+            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
+        }
+
 
 
         //------------Turning stuff---------------------
@@ -214,28 +221,41 @@ public class NEWDriver : MonoBehaviour
         if (!isGrounded && !attemptingDrift)
         {
 
-            // Apply extra downward force to fall faster
-            //rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration); // Tune value as needed            
+            //// Apply extra downward force to fall faster
+            ////rBody.AddForce(Vector3.down * 3000f, ForceMode.Acceleration); // Tune value as needed            
+            //
+            //// Mid air rotation
+            //float rotationSpeed = 100f;
+            //Quaternion currentRotation = kartNormal.rotation;
+            //Quaternion targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            //
+            //
+            //Debug.Log("Float angle diff: " + Quaternion.Angle(transform.rotation, targetRotation));
+            //if (Quaternion.Angle(transform.rotation, targetRotation) < .5)
+            //{
+            //    targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            //}
+            //else
+            //{
+            //    kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
+            //}
 
-            // Mid air rotation
-            float rotationSpeed = 2f;
-            Quaternion currentRotation = transform.rotation;
-            Quaternion targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            
+            
+            float airRotationSpeed = 2.0f;
 
+            // Target upright rotation based on Yaw (keep current Y, reset pitch/roll)
+            Quaternion targetUpright = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
-            Debug.Log("Float angle diff: " + Quaternion.Angle(transform.rotation, targetRotation));
-            if (Quaternion.Angle(transform.rotation, targetRotation) < .5)
-            {
-                targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-            }
-            else
-            {
-                kartNormal.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }            
+            // Smoothly rotate the kart's visual and normal upright orientation back to upright
+            kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+            
+
         }
-       
+
         // Apply extra downward force to fall faster
-        sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration); // Tune value as needed
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); // Tune value as needed
 
         //Update the wheel rotations
         float steerAngle = movementDirection.x * maxSteerAngle;
@@ -276,11 +296,12 @@ public class NEWDriver : MonoBehaviour
         RaycastHit hitNear;
 
 
-        if (Physics.Raycast(transform.position + (transform.up * .2f), Vector3.down, out hitNear, groundCheckDistance, groundLayer))
+        if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
         {
             isGrounded = true;
+
             //Normal Rotation
-            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
+            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
             kartNormal.Rotate(0, transform.eulerAngles.y, 0);
         }
         else
@@ -382,10 +403,7 @@ public class NEWDriver : MonoBehaviour
 
         sphere.AddForce(transform.right * direction * driftFactor, ForceMode.Acceleration);
 
-        //--------------------Particles----------------
-        
-        
-        
+        //--------------------Particles----------------                        
         ColorDrift();
 
        if (isDriftingLeft && driftTier > currentDriftTier)
@@ -578,7 +596,7 @@ public class NEWDriver : MonoBehaviour
             float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 1.8f, zTilt * 0.7f), driftTweenDuration)
+            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt * 0.5f), driftTweenDuration)
                 .SetEase(Ease.InOutSine);
         }
         else
@@ -665,7 +683,7 @@ public class NEWDriver : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, sphere.velocity);
         Gizmos.color = Color.magenta;
-        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), Vector3.down * groundCheckDistance);
+        Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
     }
 
     
