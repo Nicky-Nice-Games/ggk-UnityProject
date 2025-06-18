@@ -578,11 +578,28 @@ public class NEWDriver : MonoBehaviour
         //Disabling raycast
         attemptingDrift = true;
 
-        yield return new WaitForSeconds(0.5f);
-
+        int TurnCount = 0;
         
+
+        for (int i = 0; i < 25; i++)
+        {
+            
+
+            //Check if player wants to drift either direction
+            if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5 && isDrifting)
+            {
+                TurnCount++;
+            }
+            else if(!isDrifting)
+            {
+                TurnCount = 0;
+                yield return null;
+            }
+
+            yield return new WaitForFixedUpdate();
+        }
         //Check if player wants to drift either direction
-        if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5 && isDrifting)
+        if (TurnCount > 2)
         {
             driftMethodCaller = true;
 
