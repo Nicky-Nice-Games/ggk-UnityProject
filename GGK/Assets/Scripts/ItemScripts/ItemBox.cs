@@ -40,7 +40,7 @@ public class ItemBox : MonoBehaviour
     public BaseItem RandomizeItem()
     {
         Debug.Log("Collided!");
-        BaseItem bItem = items[4];
+        BaseItem bItem = items[2];
         bItem.ItemTier = 1;
         return bItem;
     }

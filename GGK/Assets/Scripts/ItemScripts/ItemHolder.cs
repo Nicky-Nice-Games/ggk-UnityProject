@@ -254,18 +254,20 @@ public class ItemHolder : MonoBehaviour
             UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
             // itemDisplay.texture = heldItem.itemIcon;
 
-            if (heldItem != null)
-            {
-                if (heldItem.ItemTier < 4)
-                {
-                    heldItem.ItemTier++;
-                }
-                heldItem.OnLevelUp(heldItem.ItemTier);
-                uses = heldItem.UseCount;
-            }
+            // if player missing item, gives random level 2 item or upgrades current item
+            heldItem = upgradeBox.UpgradeItem(this);
+            heldItem.OnLevelUp(heldItem.ItemTier);
+            uses = heldItem.UseCount;
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);
+
+            // displays item in the HUD
+            if (thisDriver)
+            {
+                itemDisplay.texture = heldItem.itemIcon;
+            }
+
             // Disables the upgrade box
             upgradeBox.gameObject.SetActive(false);
             //heldItemText.text = $"Held Item: {baseItem}+";
@@ -285,7 +287,7 @@ public class ItemHolder : MonoBehaviour
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
             float duration = 2.5f;
-            if (boost.ItemTier == 2)
+            if (boost.ItemTier == 2 && npcDriver == null)
             {
                 thisDriver.sphere.velocity /= 8;
             }
@@ -297,7 +299,7 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.accelerationRate = 500;
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
-                boostMult = 1.5f;
+            boostMult = 1.5f;
             
             if(thisDriver != null)
             {
@@ -357,6 +359,13 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// for level 3 boost, adds an speed boost forwards and upwards
+    /// </summary>
+    /// <param name="driver">the player</param>
+    /// <param name="boostForce">amount of force to boost character</param>
+    /// <param name="duration">how long boost should last</param>
+    /// <returns></returns>
     IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)

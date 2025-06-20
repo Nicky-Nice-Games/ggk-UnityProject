@@ -71,11 +71,12 @@ public class BaseItem : MonoBehaviour
     /// <param name="level">current level of item</param>
     public void OnLevelUp(int level)
     {
-        if (itemCategory == "Boost")
+        if (itemCategory == "Boost") // changes the use count for different boost levels
         {
             Debug.Log("Boost Upgraded.");
             switch (itemTier)
             {
+                // use count should always be 1 change boost force
                 case 2:
                     useCount = 2;
                     break;
@@ -87,6 +88,25 @@ public class BaseItem : MonoBehaviour
                     break;
                 default:
                     useCount = 1;
+                    break;
+            }
+        }
+        else if (itemCategory == "Shield") // changes timer on different shield levels
+        {
+            Debug.Log("Shield Upgraded.");
+            switch (itemTier)
+            {
+                case 2:
+                    timer = 6.0f;
+                    break;
+                case 3:
+                    timer = 8.0f;
+                    break;
+                case 4:
+                    timer = 10.0f;
+                    break;
+                default:
+                    timer = 4.0f;
                     break;
             }
         }
