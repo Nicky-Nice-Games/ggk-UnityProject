@@ -12,7 +12,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 public class AkWwiseInitializationSettings : AkCommonPlatformSettings
@@ -65,7 +65,7 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 	//Deprecated
 	public void ResetSoundEngine(bool _)
 	{
-		AkSoundEngineInitialization.Instance.ResetSoundEngine();
+		AkUnitySoundEngineInitialization.Instance.ResetSoundEngine();
 	}
 
 	private static readonly string[] AllGlobalValues = new[]
@@ -119,9 +119,17 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 		"AdvancedSettings.m_SoundBankPersistentDataPath",
 		"AdvancedSettings.m_DebugOutOfRangeCheckEnabled",
 		"AdvancedSettings.m_DebugOutOfRangeLimit",
-		"AdvancedSettings.m_MemoryAllocationSizeLimit",
-		"AdvancedSettings.m_MemoryDebugLevel",
-		"AdvancedSettings.m_MemorySpanCount"
+		"AdvancedSettings.m_UseSubFoldersForGeneratedFiles",
+		"AdvancedSettings.m_MemoryPrimarySbaInitSize",
+		"AdvancedSettings.m_MemoryPrimaryTlsfInitSize",
+		"AdvancedSettings.m_MemoryPrimaryTlsfSpanSize",
+		"AdvancedSettings.m_MemoryPrimaryReservedLimit",
+		"AdvancedSettings.m_MemoryPrimaryAllocSizeHuge",
+		"AdvancedSettings.m_MemoryMediaTlsfInitSize",
+		"AdvancedSettings.m_MemoryMediaTlsfSpanSize",
+		"AdvancedSettings.m_MemoryMediaReservedLimit",
+		"AdvancedSettings.m_MemoryMediaAllocSizeHuge",
+		"AdvancedSettings.m_MemoryDebugLevel"
 	};
 
 	public abstract class PlatformSettings : AkCommonPlatformSettings
@@ -268,7 +276,7 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 #if UNITY_EDITOR
 				var name = typeof(AkWwiseInitializationSettings).Name;
 				m_Instance = GetOrCreateAsset<AkWwiseInitializationSettings>(name, name);
-				AkSoundEngineInitialization.Instance.initializationDelegate += m_Instance.SetActiveSettings;
+				AkUnitySoundEngineInitialization.Instance.initializationDelegate += m_Instance.SetActiveSettings;
 #else
 				m_Instance = CreateInstance<AkWwiseInitializationSettings>();
 				UnityEngine.Debug.LogWarning("WwiseUnity: No platform specific settings were created. Default initialization settings will be used.");
@@ -313,20 +321,19 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 		{
 			m_Instance = this;
 #if UNITY_EDITOR
-			AkSoundEngineInitialization.Instance.initializationDelegate += m_Instance.SetActiveSettings;
+			AkUnitySoundEngineInitialization.Instance.initializationDelegate += m_Instance.SetActiveSettings;
 #endif
 		}
 		else if (m_Instance != this)
 		{
 			UnityEngine.Debug.LogWarning("WwiseUnity: There are multiple AkWwiseInitializationSettings objects instantiated; only one will be used.");
-
 		}
 	}
 
 #if UNITY_EDITOR
 	private void OnDisable()
 	{
-		AkSoundEngineInitialization.Instance.initializationDelegate -= m_Instance.SetActiveSettings;
+		AkUnitySoundEngineInitialization.Instance.initializationDelegate -= m_Instance.SetActiveSettings;
 	}
 #endif
 #endregion
@@ -447,7 +454,7 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 				if (!instance.InvalidReferencePlatforms.Contains(referencePlatform))
 				{
 					instance.InvalidReferencePlatforms.Add(referencePlatform);
-					UnityEngine.Debug.LogError("WwiseUnity: A class has not been registered for the reference platform: " + referencePlatform);
+					UnityEngine.Debug.LogError("WwiseUnity: A class has not been registered for the reference platform: " + referencePlatform + ". Has the platform been added to your Wwise Integration?");
 				}
 				continue;
 			}
@@ -511,6 +518,7 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 				instance.PlatformSettingsList.Add(customPlatformSettingsMap[key]);
 			}
 
+			WwiseProjectDatabase.SetCurrentLanguage(AkWwiseInitializationSettings.ActivePlatformSettings.InitialLanguage);
 			UnityEditor.EditorUtility.SetDirty(instance);
 			UnityEditor.AssetDatabase.SaveAssets();
 			AkUtilities.RepaintInspector();
@@ -669,13 +677,14 @@ public class AkWwiseInitializationSettings : AkCommonPlatformSettings
 			base.OnDeactivate();
 			if(Instance.ActiveSettingsHaveChanged)
 			{
-				if (AkWwiseEditorSettings.Instance.LoadSoundEngineInEditMode && !AkSoundEngine.IsInitialized())
+				WwiseProjectDatabase.SetCurrentLanguage(AkWwiseInitializationSettings.ActivePlatformSettings.InitialLanguage);
+				if (AkWwiseEditorSettings.Instance.LoadSoundEngineInEditMode && !AkUnitySoundEngine.IsInitialized())
 				{
-					AkSoundEngineInitialization.Instance.ResetSoundEngine();
+					AkUnitySoundEngineInitialization.Instance.ResetSoundEngine();
 				}
-				else if (!AkWwiseEditorSettings.Instance.LoadSoundEngineInEditMode && AkSoundEngine.IsInitialized())
+				else if (!AkWwiseEditorSettings.Instance.LoadSoundEngineInEditMode && AkUnitySoundEngine.IsInitialized())
 				{
-					AkSoundEngineInitialization.Instance.TerminateSoundEngine();
+					AkUnitySoundEngineInitialization.Instance.TerminateSoundEngine();
 				}
 			}
 		}

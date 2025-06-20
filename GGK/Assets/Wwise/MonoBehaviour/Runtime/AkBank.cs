@@ -13,7 +13,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 [UnityEngine.AddComponentMenu("Wwise/AkBank")]
@@ -27,7 +27,7 @@ public class AkBank : AkTriggerHandler
 {
 	public AK.Wwise.Bank data = new AK.Wwise.Bank();
 
-	/// Decode this SoundBank upon load
+	/// DEPRECATED Decode this SoundBank upon load
 	public bool decodeBank = false;
 
 	public bool overrideLoadSetting = false;
@@ -35,7 +35,7 @@ public class AkBank : AkTriggerHandler
 	/// Check this to load the SoundBank in the background. Be careful, if Events are triggered and the SoundBank hasn't finished loading, you'll have "Event not found" errors.
 	public bool loadAsynchronous = false;
 
-	/// Save the decoded SoundBank to disk for faster loads in the future
+	/// DEPRECATED Save the decoded SoundBank to disk for faster loads in the future
 	public bool saveDecodedBank = false;
 
 	/// Reserved.
@@ -45,6 +45,8 @@ public class AkBank : AkTriggerHandler
 	protected override void Awake()
 	{
 #if UNITY_EDITOR
+		AkUnitySoundEngineInitialization.Instance.initializationDelegate += HandleEvent;
+
 		if (UnityEditor.BuildPipeline.isBuildingPlayer || AkUtilities.IsMigrating)
 		{
 			return;
@@ -57,7 +59,6 @@ public class AkBank : AkTriggerHandler
 			data.ObjectReference = reference;
 			AkWwiseTypes.DragAndDropObjectReference = null;
 		}
-		AkSoundEngineInitialization.Instance.initializationDelegate += HandleEvent;
 #endif
 
 		base.Awake();
@@ -73,10 +74,6 @@ public class AkBank : AkTriggerHandler
         {
 			return;
         }
-		if (!UnityEditor.EditorApplication.isPlaying)
-		{
-			HandleEvent();
-		}
 		base.OnEnable();
 	}
 #endif
@@ -86,6 +83,10 @@ public class AkBank : AkTriggerHandler
 		if (UnityEditor.BuildPipeline.isBuildingPlayer || AkUtilities.IsMigrating)
 		{
 			return;
+		}
+		if (!UnityEditor.EditorApplication.isPlaying)
+		{
+			HandleEvent();
 		}
 #endif
 
@@ -130,11 +131,12 @@ public class AkBank : AkTriggerHandler
 	protected override void OnDestroy()
 	{
 #if UNITY_EDITOR
+		AkUnitySoundEngineInitialization.Instance.initializationDelegate -= HandleEvent;
+
 		if (UnityEditor.BuildPipeline.isBuildingPlayer || AkUtilities.IsMigrating)
 		{
 			return;
 		}
-		AkSoundEngineInitialization.Instance.initializationDelegate -= HandleEvent;
 #endif
 
 		base.OnDestroy();
@@ -143,10 +145,10 @@ public class AkBank : AkTriggerHandler
 	}
 
 	#region Obsolete
-	[System.Obsolete(AkSoundEngine.Deprecation_2018_1_6)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2018_1_6)]
 	public string bankName { get { return data == null ? string.Empty : data.Name; } }
 
-	[System.Obsolete(AkSoundEngine.Deprecation_2018_1_6)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2018_1_6)]
 	public byte[] valueGuid
 	{
 		get

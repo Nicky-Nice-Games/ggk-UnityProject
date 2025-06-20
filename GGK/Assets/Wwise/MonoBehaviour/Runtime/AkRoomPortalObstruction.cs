@@ -13,7 +13,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 [UnityEngine.AddComponentMenu("Wwise/Spatial Audio/AkRoomPortalObstruction")]
@@ -40,7 +40,7 @@ public class AkRoomPortalObstruction : AkObstructionOcclusion
 	{
 		if (m_portal.IsValid && m_portal.isSetInWwise())
 		{
-			AkSoundEngine.SetPortalObstructionAndOcclusion(m_portal.GetID(), ObsOccPair.Value.currentValue, 0.0f);
+			AkUnitySoundEngine.SetPortalObstructionAndOcclusion(m_portal.GetID(), ObsOccPair.Value.currentValue, 0.0f);
 		}
 	}
 }

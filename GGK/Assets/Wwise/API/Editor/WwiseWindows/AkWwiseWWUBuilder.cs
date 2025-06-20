@@ -15,7 +15,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 #pragma warning disable 0168
@@ -89,14 +89,14 @@ public class AkWwiseWWUBuilder : UnityEditor.AssetPostprocessor
 
 		if (Populate())
 		{
-			AkWwiseXMLBuilder.Populate();
+			AkWwiseJSONBuilder.Populate();
 			//check if WAAPI or not
 			AkWwisePicker.Refresh(ignoreIfWaapi: true);
 			//Make sure that the Wwise picker and the inspector are updated
 			AkUtilities.RepaintInspector();
 		}
 
-		AkUtilities.SoundBankDestinationsUpdated(AkWwiseEditorSettings.Instance.WwiseProjectPath);
+		AkUtilities.WwiseProjectUpdated(AkWwiseEditorSettings.WwiseProjectAbsolutePath);
 		s_lastFileCheck = System.DateTime.Now;
 	}
 

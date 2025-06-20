@@ -12,7 +12,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 #if UNITY_EDITOR
@@ -113,7 +113,7 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 	{
 		if (!BuildTargetToPlatformPluginActivator.TryGetValue(target, out var platformPluginActivator))
 		{
-			Debug.LogError("WwiseUnity: Build Target " + target + " not supported.");
+			Debug.LogError("WwiseUnity: Unable to find Plugin Activator for Build Target " + target + ". Check that platform " + target +  " has been installed as part of your Wwise Integration.");
 			return;
 		}
 
@@ -195,14 +195,17 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 	public static void ActivatePluginsForEditor()
 	{
 		var importers = GetWwisePluginImporters();
-		var ChangedSomeAssets = false;
+		var changedSomeAssets = false;
 
 		bIsAlreadyActivating = true;
+		AssetDatabase.StartAssetEditing();
 		foreach (var pluginImporter in importers)
 		{
 			var pluginPlatform = GetPluginInfoPlatform(pluginImporter.assetPath);
 			if (string.IsNullOrEmpty(pluginPlatform) || (pluginPlatform != "Mac" && pluginPlatform != "Windows"))
 			{
+				pluginImporter.SetCompatibleWithEditor(false);
+				changedSomeAssets = true;
 				continue;
 			}
 
@@ -217,12 +220,12 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 
 			var pluginInfo = platformPluginActivator.GetPluginImporterInformation(pluginImporter);
 			
-			var AssetChanged = false;
+			var assetChanged = false;
 			if (pluginImporter.GetCompatibleWithAnyPlatform())
 			{
 				LogVerbose("ActivatePluginsForEditor: Plugin" + pluginImporter.assetPath + " was compatible with the \"any\" platform, deactivating.");
 				pluginImporter.SetCompatibleWithAnyPlatform(false);
-				AssetChanged = true;
+				assetChanged = true;
 			}
 
 			var bActivate = false;
@@ -250,7 +253,7 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 					pluginImporter.SetEditorData("OS", pluginInfo.EditorOS);
 				}
 
-				AssetChanged |= pluginImporter.GetCompatibleWithEditor() != bActivate;
+				assetChanged |= pluginImporter.GetCompatibleWithEditor() != bActivate;
 				pluginImporter.SetCompatibleWithEditor(bActivate);
 			}
 			else
@@ -258,17 +261,18 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 				LogVerbose("ActivatePluginsForEditor: Could not determine EditorOS for " + pluginImporter.assetPath);
 			}
 
-			if (AssetChanged)
+			if (assetChanged)
 			{
-				ChangedSomeAssets = true;
+				changedSomeAssets = true;
 				LogVerbose("ActivatePluginsForEditor: Changed plugin " + pluginImporter.assetPath + ", saving and reimporting.");
-				pluginImporter.SaveAndReimport();
 			}
 		}
-
-		if (ChangedSomeAssets)
+		
+		AssetDatabase.StopAssetEditing();
+		if (changedSomeAssets)
 		{
 			Debug.Log("WwiseUnity: Plugins successfully activated for " + EditorConfiguration + " in Editor.");
+			AssetDatabase.Refresh();
 		}
 
 		bIsAlreadyActivating = false;
@@ -289,9 +293,14 @@ public class AkPluginActivator : UnityEditor.AssetPostprocessor
 		}
 	}
 
-	public static void Update(bool forceUpdate = false)
+	public static void ForceUpdate()
 	{
-		AkPlatformPluginList.Update(forceUpdate);
+		AkPlatformPluginList.Update(true);
+		Update();
+	}
+
+	public static void Update()
+	{
 		AkPluginActivatorMenus.CheckMenuItems(GetCurrentConfig());
 	}
 

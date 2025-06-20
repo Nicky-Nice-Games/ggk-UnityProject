@@ -13,14 +13,14 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 /// @brief Defines the behavior of a \ref AkEventPlayable within a \ref AkEventTrack.
 /// \sa
 /// - \ref AkEventTrack
 /// - \ref AkEventPlayable
-[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 public class AkEventPlayableBehavior : UnityEngine.Playables.PlayableBehaviour
 {
 	private float currentDuration = -1f;
@@ -352,7 +352,7 @@ public class AkEventPlayableBehavior : UnityEngine.Playables.PlayableBehaviour
 #if UNITY_EDITOR
 		if (!CanPostEvents)
 		{
-			playingID = AkSoundEngine.AK_INVALID_PLAYING_ID;
+			playingID = AkUnitySoundEngine.AK_INVALID_PLAYING_ID;
 		}
 		else if (!UnityEditor.EditorApplication.isPlaying)
 		{
@@ -364,7 +364,7 @@ public class AkEventPlayableBehavior : UnityEngine.Playables.PlayableBehaviour
 			playingID = akEvent.Post(eventObject, CallbackFlags, CallbackHandler, null);
 		}
 
-		eventIsPlaying = playingID != AkSoundEngine.AK_INVALID_PLAYING_ID;
+		eventIsPlaying = playingID != AkUnitySoundEngine.AK_INVALID_PLAYING_ID;
 		return eventIsPlaying;
 	}
 
@@ -426,7 +426,7 @@ public class AkEventPlayableBehavior : UnityEngine.Playables.PlayableBehaviour
 
 		if (eventIsPlaying)
 		{
-			AkSoundEngine.SeekOnEvent(akEvent.Id, eventObject, proportionalTime);
+			AkUnitySoundEngine.SeekOnEvent(akEvent.Id, eventObject, proportionalTime);
 		}
 
 		return proportionalTime;

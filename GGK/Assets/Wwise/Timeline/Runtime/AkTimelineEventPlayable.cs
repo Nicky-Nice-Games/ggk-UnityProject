@@ -20,7 +20,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 /// @brief Defines the behavior of a \ref AkTimelineEventPlayable within a \ref AkTimelineEventTrack.
@@ -126,7 +126,6 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 	public UnityEngine.GameObject eventObject;
 
 	public bool retriggerEvent;
-	private bool wasScrubbingAndRequiresRetrigger;
 	public bool StopEventAtClipEnd;
 
 	public bool PrintDebugInformation = false;
@@ -224,7 +223,6 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 
 		if (IsScrubbing(playable, info))
 		{
-			wasScrubbingAndRequiresRetrigger = true;
 
 #if UNITY_EDITOR
 			if (!UnityEngine.Application.isPlaying)
@@ -246,7 +244,6 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 	public override void OnBehaviourPause(UnityEngine.Playables.Playable playable, UnityEngine.Playables.FrameData info)
 	{
 		PrintInfo("OnBehaviourPause", playable, info);
-		wasScrubbingAndRequiresRetrigger = false;
 
 		base.OnBehaviourPause(playable, info);
 		if (eventObject != null && akEvent != null && StopEventAtClipEnd)
@@ -374,15 +371,15 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 		var fadeDuration = UnityEngine.Mathf.Max(easeInDuration, blendInDuration) - currentClipTime;
 		if (fadeDuration > 0)
 		{
-			AkSoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Pause, playingId, 0, blendInCurve);
-			AkSoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Resume, playingId, (int)(fadeDuration * 1000), blendInCurve);
+			AkUnitySoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Pause, playingId, 0, blendInCurve);
+			AkUnitySoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Resume, playingId, (int)(fadeDuration * 1000), blendInCurve);
 		}
 	}
 
 	private void TriggerFadeOut(UnityEngine.Playables.Playable playable)
 	{
 		var fadeDuration = UnityEngine.Playables.PlayableExtensions.GetDuration(playable) - UnityEngine.Playables.PlayableExtensions.GetTime(playable);
-		AkSoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Stop, playingId, (int)(fadeDuration * 1000), blendOutCurve);	
+		AkUnitySoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Stop, playingId, (int)(fadeDuration * 1000), blendOutCurve);	
 	}
 
 	private void StopEvent(int transition = 0)
@@ -392,7 +389,7 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 			return;
 		}
 
-		AkSoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Stop, playingId);
+		AkUnitySoundEngine.ExecuteActionOnPlayingID(AkActionOnEventType.AkActionOnEventType_Stop, playingId);
 		playingId = 0;
 	}
 
@@ -402,7 +399,7 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 #if UNITY_EDITOR
 		if (!CanPostEvents)
 		{
-			playingId = AkSoundEngine.AK_INVALID_PLAYING_ID;
+			playingId = AkUnitySoundEngine.AK_INVALID_PLAYING_ID;
 		}
 #endif
 		if(playingId == 0)
@@ -426,7 +423,6 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 
 	private void RetriggerEvent(UnityEngine.Playables.Playable playable)
 	{
-		wasScrubbingAndRequiresRetrigger = false;
 
 		if (!PostEvent())
 		{
@@ -479,7 +475,7 @@ public class AkTimelineEventPlayableBehavior : UnityEngine.Playables.PlayableBeh
 
 		if (playingId != 0)
 		{
-			AkSoundEngine.SeekOnEvent(akEvent.Id, eventObject, proportionalTime, false, playingId);
+			AkUnitySoundEngine.SeekOnEvent(akEvent.Id, eventObject, proportionalTime, false, playingId);
 		}
 
 		return proportionalTime;
@@ -562,7 +558,7 @@ public class AkTimelineEventPlayable : UnityEngine.Playables.PlayableAsset, Unit
 	}
 
 #if UNITY_EDITOR
-	[UnityEditor.CustomEditor(typeof(AkTimelineEventPlayable))]
+	[UnityEditor.CustomEditor(typeof(AkTimelineEventPlayable), true)]
 	public class Editor : UnityEditor.Editor
 	{
 		private AkTimelineEventPlayable m_AkTimelineEventPlayable;
@@ -657,10 +653,11 @@ public class AkTimelineEventPlayable : UnityEngine.Playables.PlayableAsset, Unit
 				return;
 			}
 
-			AkUtilities.EnableBoolSoundbankSettingInWproj("SoundBankGenerateEstimatedDuration", AkWwiseEditorSettings.WwiseProjectAbsolutePath);
+			string[] settingsToEnable = {"SoundBankGenerateEstimatedDuration"};
+			AkUtilities.ToggleBoolSoundbankSettingInWproj(settingsToEnable, AkWwiseEditorSettings.WwiseProjectAbsolutePath, true);
 
 			UnityEditor.EditorApplication.delayCall += UpdateAllClips;
-			AkWwiseSoundbanksInfoXMLFileWatcher.Instance.XMLUpdated += UpdateAllClips;
+			WwiseProjectDatabase.SoundBankDirectoryUpdated += UpdateAllClips;
 		}
 
 		private static void UpdateAllClips()

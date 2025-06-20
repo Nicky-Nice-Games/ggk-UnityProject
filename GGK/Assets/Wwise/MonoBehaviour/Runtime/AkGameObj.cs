@@ -13,8 +13,9 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
+using UnityEngine;
 
 [UnityEngine.AddComponentMenu("Wwise/AkGameObj")]
 [UnityEngine.DisallowMultipleComponent]
@@ -44,24 +45,31 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 	private AkGameObjEnvironmentData m_envData;
 
 	private AkGameObjPositionData m_posData;
+	
+	public bool usePositionOffsetData;
 
 	/// When not set to null, the position is offset relative to the Game Object position by the Position Offset
 	public AkGameObjPositionOffsetData m_positionOffsetData;
 
-	private float scalingFactor = -1f;
+	[UnityEngine.SerializeField]
+	private float scalingFactor = 1f;
 
 	public float ScalingFactor
 	{
 		get => scalingFactor;
 		set
 		{
-			if (value < 0)
+			if (value > 0)
 			{
-				scalingFactor = 0;
+				scalingFactor = value;
+				if (enabled)
+				{
+					AkUnitySoundEngine.SetScalingFactor(gameObject, scalingFactor);
+				}
 			}
 			else
 			{
-				scalingFactor = value;
+				UnityEngine.Debug.LogError("Scaling Factor needs to be a positive value greater than 0.");
 			}
 		}
 	}
@@ -77,6 +85,11 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 	}
 
 	private bool isRegistered = false;
+
+	public bool GameObjIsRegistered()
+	{
+		return isRegistered;
+	}
 
 	internal void AddListener(AkAudioListener listener)
 	{
@@ -96,12 +109,12 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 		}
 
 		isRegistered = true;
-		return AkSoundEngine.RegisterGameObj(gameObject, gameObject.name);
+		return AkUnitySoundEngine.RegisterGameObj(gameObject, gameObject.name);
 	}
 
 	private void UnregisterGameObject()
 	{
-		if (AkSoundEngine.IsInitialized())
+		if (AkUnitySoundEngine.IsInitialized())
         {
 			Unregister();
 		}
@@ -116,7 +129,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 
 		isRegistered = false;
 		m_posData = null;
-		return AkSoundEngine.UnregisterGameObj(gameObject);
+		return AkUnitySoundEngine.UnregisterGameObj(gameObject);
 	}
 	
 	private void SetPosition()
@@ -137,7 +150,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 			m_posData.up = up;
 		}
 
-		AkSoundEngine.SetObjectPosition(gameObject, position, forward, up);
+		AkUnitySoundEngine.SetObjectPosition(gameObject, position, forward, up);
 	}
 
 	private void Awake()
@@ -152,8 +165,8 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 		{
 			UnityEditor.EditorApplication.update += CheckStaticStatus;
 		}
-		AkSoundEngineInitialization.Instance.initializationDelegate += RegisterGameObject;
-		AkSoundEngineInitialization.Instance.terminationDelegate += UnregisterGameObject;
+		AkUnitySoundEngineInitialization.Instance.initializationDelegate += RegisterGameObject;
+		AkUnitySoundEngineInitialization.Instance.terminationDelegate += UnregisterGameObject;
 #endif
 
 		// If the object was marked as static, don't update its position to save cycles.
@@ -168,7 +181,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 
     private void RegisterGameObject()
     {
-		if (!AkSoundEngine.IsInitialized())
+		if (!AkUnitySoundEngine.IsInitialized())
         {
 			return;
         }
@@ -191,19 +204,14 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 			}
 
 			m_listeners.Init(this);
-			if (scalingFactor < 0f)
+			//The Listener will win for the scaling factor
+			if (gameObject.GetComponent<AkAudioListener>() == null)
 			{
-				var initializer = AkInitializer.GetAkInitializerGameObject();
-				if (initializer)
+				if (enabled)
 				{
-					scalingFactor = initializer.GetComponent<AkInitializer>().InitializationSettings.UserSettings.m_DefaultScalingFactor;
-				}
-				else
-				{
-					scalingFactor = 1f;
+					AkUnitySoundEngine.SetScalingFactor(gameObject, ScalingFactor);				
 				}
 			}
-			AkSoundEngine.SetScalingFactor(gameObject, scalingFactor);
 		}
 	}
 
@@ -244,7 +252,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 #if UNITY_EDITOR
 	private void OnDisable()
 	{
-		if (!AkSoundEngineInitialization.Instance.ShouldKeepSoundEngineEnabled())
+		if (!AkUnitySoundEngineInitialization.Instance.ShouldKeepSoundEngineEnabled())
 		{
 			Unregister();
 		}
@@ -264,8 +272,8 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 			UnityEditor.EditorApplication.update -= CheckStaticStatus;
 		}
 
-		AkSoundEngineInitialization.Instance.initializationDelegate -= RegisterGameObject;
-		AkSoundEngineInitialization.Instance.terminationDelegate -= UnregisterGameObject;
+		AkUnitySoundEngineInitialization.Instance.initializationDelegate -= RegisterGameObject;
+		AkUnitySoundEngineInitialization.Instance.terminationDelegate -= UnregisterGameObject;
 #endif
 
 		// We can't do the code in OnDestroy if the gameObj is unregistered, so do it now.
@@ -278,7 +286,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 			}
 		}
 
-		if (AkSoundEngine.IsInitialized())
+		if (AkUnitySoundEngine.IsInitialized())
 		{
 			Unregister();
 		}
@@ -308,7 +316,7 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 	/// \return  The position.
 	public virtual UnityEngine.Vector3 GetPosition()
 	{
-		if (m_positionOffsetData == null)
+		if (!usePositionOffsetData)
 		{
 			return transform.position;
 		}
@@ -424,7 +432,11 @@ public class AkGameObj : UnityEngine.MonoBehaviour
 			var fullSceneListenerMask = 0;
 
 			// Get all AkAudioListeners in the scene.
+#if UNITY_6000_0_OR_NEWER
+			var listenerObjects = FindObjectsByType<AkAudioListener>(FindObjectsSortMode.None);
+#else
 			var listenerObjects = FindObjectsOfType<AkAudioListener>();
+#endif
 			foreach (var listener in listenerObjects)
 			{
 				// Add AkGameObj to AkAudioListeners

@@ -13,7 +13,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 [UnityEngine.AddComponentMenu("Wwise/Spatial Audio/AkRoomPortal")]
 [UnityEngine.RequireComponent(typeof(UnityEngine.BoxCollider))]
@@ -78,7 +78,7 @@ public class AkRoomPortal : AkTriggerHandler
 
 	private void SetRoomPortal()
 	{
-		if (!AkSoundEngine.IsInitialized())
+		if (!AkUnitySoundEngine.IsInitialized())
 		{
 			return;
 		}
@@ -97,7 +97,7 @@ public class AkRoomPortal : AkTriggerHandler
 				UnityEngine.Mathf.Abs(extentVector.x),
 				UnityEngine.Mathf.Abs(extentVector.y),
 				UnityEngine.Mathf.Abs(extentVector.z));
-			AkSoundEngine.SetRoomPortal(GetID(), frontRoomID, backRoomID, portalTransform, extent, active, name);
+			AkUnitySoundEngine.SetRoomPortal(GetID(), frontRoomID, backRoomID, portalTransform, extent, active, name);
 			portalSet = true;
 			portalNeedsUpdate = false;
 		}
@@ -106,7 +106,7 @@ public class AkRoomPortal : AkTriggerHandler
 			UnityEngine.Debug.LogWarning(name + " Portal placement is invalid. The portal is not set in the Spatial Audio engine. The front and back Rooms of the Portal cannot be the same or have a ReverbZone-parent relationship.");
 			if (portalSet)
 			{
-				AkSoundEngine.RemovePortal(GetID());
+				AkUnitySoundEngine.RemovePortal(GetID());
 				portalSet = false;
 			}
 		}
@@ -243,7 +243,7 @@ public class AkRoomPortal : AkTriggerHandler
 		AkRoomManager.UnregisterPortal(this);
 		if (portalSet)
 		{
-			AkSoundEngine.RemovePortal(GetID());
+			AkUnitySoundEngine.RemovePortal(GetID());
 		}
 		portalSet = false;
 	}
@@ -404,31 +404,31 @@ public class AkRoomPortal : AkTriggerHandler
 #endif
 
 	#region Obsolete
-	[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 	public void SetRoom(int in_roomIndex, AkRoom in_room)
 	{
 		UnityEngine.Debug.LogFormat("SetRoom is deprecated. Highest priority, active and enabled room will be automatically chosen. Make sure room priorities and game object placements are correct.");
 	}
 
-	[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 	public void SetFrontRoom(AkRoom room)
 	{
 		UnityEngine.Debug.LogFormat("SetFrontRoom is deprecated. Highest priority, active and enabled room will be automatically chosen. Make sure room priorities and game object placements are correct.");
 	}
 
-	[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 	public void SetBackRoom(AkRoom room)
 	{
 		UnityEngine.Debug.LogFormat("SetBackRoom is deprecated. Highest priority, active and enabled room will be automatically chosen. Make sure room priorities and game object placements are correct.");
 	}
 
-	[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 	public void UpdateSoundEngineRoomIDs()
 	{
 		UpdateRoomPortal();
 	}
 
-	[System.Obsolete(AkSoundEngine.Deprecation_2019_2_0)]
+	[System.Obsolete(AkUnitySoundEngine.Deprecation_2019_2_0)]
 	public void UpdateOverlappingRooms()
 	{
 		UpdateRooms();

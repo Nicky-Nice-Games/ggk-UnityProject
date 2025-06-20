@@ -12,7 +12,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 ﻿#if UNITY_STANDALONE_LINUX && !UNITY_EDITOR
@@ -21,6 +21,11 @@ public partial class AkCommonUserSettings
 	partial void SetSampleRate(AkPlatformInitSettings settings)
 	{
 		settings.uSampleRate = m_SampleRate;
+	}
+
+	protected partial string GetPluginPath()
+	{
+		return System.IO.Path.Combine(UnityEngine.Application.dataPath, "Plugins" + System.IO.Path.DirectorySeparatorChar);
 	}
 }
 #endif

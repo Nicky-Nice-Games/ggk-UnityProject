@@ -13,7 +13,7 @@ Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
 in a written agreement between you and Audiokinetic Inc.
-Copyright (c) 2024 Audiokinetic Inc.
+Copyright (c) 2025 Audiokinetic Inc.
 *******************************************************************************/
 
 using System;
@@ -1010,12 +1010,13 @@ public class AkWaapiUtilities
 	/// </summary>
 	/// <param name="topic">The topic URI to subscribe to.</param>
 	/// <param name="subscriptionCallback">Delegate function to call when the topic is published.</param>
-	/// <param name="handshakeCallback">Action to be executed once the subscription has been made. 
+	/// <param name="handshakeCallback">Action to be executed once the subscription has been made.</param>
+	/// <param name="returnOptions">The options the subscription. 
 	/// This should store the subscription ID so that the subscription can be cleaned up when it is no longer needed.</param>
-	public static void Subscribe(string topic, Wamp.PublishHandler subscriptionCallback, System.Action<SubscriptionInfo> handshakeCallback)
+	public static void Subscribe(string topic, Wamp.PublishHandler subscriptionCallback, System.Action<SubscriptionInfo> handshakeCallback, ReturnOptions returnOptions = null)
 	{
 		waapiCommandQueue.Enqueue(new WaapiCommand(
-		   async () => handshakeCallback(await SubscribeAsync(new SubscriptionInfo(topic, subscriptionCallback)))));
+		   async () => handshakeCallback(await SubscribeAsync(new SubscriptionInfo(topic, subscriptionCallback), returnOptions))));
 	}
 
 	/// <summary>
@@ -1023,11 +1024,11 @@ public class AkWaapiUtilities
 	/// Creates and sends a WAAPI command to subscribe to the topic.
 	/// </summary>
 	/// <param name="subscription">SubscriptionInfo object containing the topic URI and the message handling callback.</param>
+	/// <param name="returnOptions">The options the subscription.</param>
 	/// <returns>Updated SubscriptionInfo object containing the subscription ID (uint). </returns>
-	private static async Task<SubscriptionInfo> SubscribeAsync(SubscriptionInfo subscription)
+	private static async Task<SubscriptionInfo> SubscribeAsync(SubscriptionInfo subscription, ReturnOptions returnOptions)
 	{
-		var options = new ReturnOptions(new string[] { "id", "parent", "name", "type", "childrenCount", "path", "workunitType" });
-		uint id = await WaapiClient.Subscribe(subscription.Uri, options, subscription.Callback);
+		uint id = await WaapiClient.Subscribe(subscription.Uri, returnOptions, subscription.Callback);
 		subscription.SubscriptionId = id;
 		return subscription;
 	}
