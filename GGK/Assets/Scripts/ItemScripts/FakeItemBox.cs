@@ -8,7 +8,7 @@ public class FakeItemBox : BaseItem
 {
 
     [SerializeField]
-
+    AudioClip hazardSound;
 
     // Start is called before the first frame update
     void Start()
@@ -17,10 +17,10 @@ public class FakeItemBox : BaseItem
         // sends the hazard slightly up and behind the player before landing on the ground
         Transform kartTransform = kart.transform; // assuming BaseItem has `kart` reference set by ItemHolder
 
-        transform.position = kartTransform.position
-                             - kartTransform.forward * 30f   // behind the kart
-                             + kartTransform.up * 1.0f;       // slightly above ground
-        if (isUpgraded)
+        transform.position = transform.position
+                             - transform.forward * 5f   // behind the kart
+                             + transform.up * 1.0f;       // slightly above ground
+        if (itemTier > 1)
         {
 
             Renderer cubeRenderer = this.GetComponent<Renderer>();
