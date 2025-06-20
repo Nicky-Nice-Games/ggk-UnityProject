@@ -25,6 +25,20 @@ public class Puck : BaseItem
         direction = transform.forward * 280.0f;
 
         bounceCount = 0;
+
+        switch (itemTier)
+        {
+            case 2:
+                useCount = 3;
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                useCount = 1;
+                break;
+        }
     }
 
     void Update()
@@ -42,7 +56,7 @@ public class Puck : BaseItem
 
         // Moves puck in a straight line by its forward vector
         // RIGHT NOW UPGRADED FUNCTIONALITY IS NOT IMPLEMENTED
-        if (isUpgraded)
+        if (itemTier > 1)
         {
             rb.velocity = direction;
         }

@@ -34,7 +34,7 @@ public class UpgradeBox : ItemBox
         }
 
         // Upgrades the item and returns it
-        kart.HeldItem.IsUpgraded = true;
+        kart.HeldItem.ItemTier = 2;
         return kart.HeldItem;
     }
 
