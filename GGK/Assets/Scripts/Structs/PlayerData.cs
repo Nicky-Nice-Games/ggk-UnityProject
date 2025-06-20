@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// PlayerObjectData by Phillip Brown
+/// PlayerObject by Phillip Brown
 /// </summary>
 public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 {

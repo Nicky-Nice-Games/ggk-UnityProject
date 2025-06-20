@@ -27,6 +27,11 @@ public class MultiplayerManager : NetworkBehaviour
     /// </summary>
     private NetworkVariable<int> selectedMap = new NetworkVariable<int>(0); // data type should be however we are representing the maps
 
+    private Dictionary<ulong,bool> playerKartSelectionChecks = new Dictionary<ulong, bool>();
+    private Dictionary<ulong,bool> playerMapSelectionChecks = new Dictionary<ulong, bool>();
+    private Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
+
+
     // timer variables for kart select and map select scenes
     [SerializeField] private const float kartSelectionTimerMax = 30f;
     private float kartSelectionTimer = 30f;
@@ -73,6 +78,7 @@ public class MultiplayerManager : NetworkBehaviour
         IsMultiplayer = false;
     }
 
+    #region initalization functions
     /// <summary>
     /// Call this going into a new multiplayer game (from lobby to game mode select)
     /// </summary>
@@ -81,7 +87,36 @@ public class MultiplayerManager : NetworkBehaviour
         gamemode.Value = Gamemode.Unselected;
         kartSelectionTimer = kartSelectionTimerMax;
         mapSelectionTimer = mapSelectionTimerMax;
+        ResetDictionaries();
     }
+
+    public void ResetDictionaries()
+    {
+        //clear dictionaries
+        playerKartSelectionChecks.Clear();
+        playerMapSelectionChecks.Clear();
+        players.Clear();
+        GetPlayerDataRpc();
+        Debug.Log($"number of connected clients {NetworkManager.ConnectedClientsIds.Count}");
+        foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+        {
+            playerKartSelectionChecks.Add(clientId, false);
+            playerMapSelectionChecks.Add(clientId, false);
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void GetPlayerDataRpc()
+    {
+        SendPlayerDataRpc(NetworkManager.LocalClientId, playerData.PlayerName);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendPlayerDataRpc(ulong clientId, string name) {
+        players.Add(clientId, new PlayerData(name, players.Count));
+    }
+
+    #endregion
 
     private void Update()
     {
@@ -119,7 +154,7 @@ public class MultiplayerManager : NetworkBehaviour
     {
         if (gamemode.Value == Gamemode.Unselected) return;
         // transition all players to the kart select scene
-
+        
         Debug.Log(IsHost ? "I chose Race gamemode" : "the Host chose Race gamemode");
     }
 
@@ -151,8 +186,28 @@ public class MultiplayerManager : NetworkBehaviour
         // Auto picks the kart they are hovering
     }
 
-    public bool AllPlayerKartsSelected(){
-        return false;
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void PlayerKartSelectedRpc(ulong clientId)
+    {
+        Debug.Log($"Rpc called by clientid: {clientId}");
+        playerKartSelectionChecks[clientId] = true;
+        if (AllPlayerKartsSelected())
+        {
+            GameManager.thisManagerInstance.ToMapSelectScreenRpc();
+        }
+    }
+
+    public bool AllPlayerKartsSelected()
+    {
+        bool allSelected = true;
+        string str = "here are player choices\n";
+        foreach (KeyValuePair<ulong, bool> playerChoice in playerKartSelectionChecks)
+        {
+            str += $"client: {playerChoice.Key}, decision: {playerChoice.Value}\n";
+            if (!playerChoice.Value) allSelected = false;
+        }
+        Debug.Log(str);
+        return allSelected;
     }
     #endregion
 

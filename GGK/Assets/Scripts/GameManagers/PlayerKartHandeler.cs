@@ -13,6 +13,9 @@ public class PlayerKartHandeler : MonoBehaviour
     public Image characterSelectImage;
     private Image prevImageBorder;
 
+    [SerializeField] private Transform playerSelectPanel;
+    [SerializeField] private Transform waitingScreen;
+
     // Reference Lists
     public List<GameObject> characterButtons;
     public List<GameObject> colorButtons;
@@ -22,6 +25,8 @@ public class PlayerKartHandeler : MonoBehaviour
     {
         gameManager = FindAnyObjectByType<GameManager>();
         characterData = FindAnyObjectByType<CharacterData>();
+        waitingScreen.gameObject.SetActive(false);
+        playerSelectPanel.gameObject.SetActive(true);
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in playerOptions)
@@ -59,6 +64,17 @@ public class PlayerKartHandeler : MonoBehaviour
 
             btn.onClick.AddListener(() => ChangeColor(images[1]));
         }
+    }
+
+    public void SwitchToWaitingScreen()
+    {
+        playerSelectPanel.gameObject.SetActive(false);
+        waitingScreen.gameObject.SetActive(true);
+    }
+    public void SwitchToPlayerSelectPanel()
+    {
+        playerSelectPanel.gameObject.SetActive(true);
+        waitingScreen.gameObject.SetActive(false);
     }
 
     public void ChangeCharacter(Image characterImage, Image border)

@@ -122,7 +122,7 @@ public class GameManager : NetworkBehaviour
     {
         SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
-
+        MultiplayerManager.Instance.ResetDictionaries();
         if (IsHost)
         {
             LoadedGameModeRpc();
@@ -145,13 +145,25 @@ public class GameManager : NetworkBehaviour
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId);
         }
         else
-        {   
-            SceneManager.LoadScene("MapSelectScene");
-            curState = GameStates.map;
+        {
+            ToMapSelectScreen();
         }
+        //ToMapSelectScreen();
+    }
+
+    public void ToMapSelectScreen() {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToMapSelectScreenRpc()
+    {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
     }
 
     /// <summary>
@@ -178,9 +190,14 @@ public class GameManager : NetworkBehaviour
                 break;
         }
         curState = GameStates.game;
-        
+
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    public void LoadMapRpc(string mapName)
+    {
+
+    }
     /// <summary>
     /// Triggers when the game finishes
     /// </summary>
