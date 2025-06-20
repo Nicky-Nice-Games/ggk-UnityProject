@@ -49,12 +49,9 @@ public class NEWDriver : MonoBehaviour
     [Header("Wheel references")]
     //Front tires GO
     public GameObject frontTireR;
-    public GameObject frontLTireItself;
+    
     public GameObject frontTireL;
-    public GameObject frontRTireItself;
-    //Back tires GO
-    public GameObject backTireR;
-    public GameObject backTireL;
+    
 
     [Header("Reference to the kartModel transform for Animation")]
     public Transform kartModel;
@@ -255,13 +252,13 @@ public class NEWDriver : MonoBehaviour
         }
 
         // Apply extra downward force to fall faster
-        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); // Tune value as needed
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); 
 
         //Update the wheel rotations
-        float steerAngle = movementDirection.x * maxSteerAngle;
-
-        frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
-        frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
+        //float steerAngle = movementDirection.x * maxSteerAngle;
+        //
+        //frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
+        //frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
 
         //rBody.Move(transform.position + velocity * Time.fixedDeltaTime, transform.rotation * turning);
         // Apply movement
@@ -424,6 +421,8 @@ public class NEWDriver : MonoBehaviour
            //Adding transition sparks
            transitionSparksLtoR[0].Play();
             transitionSparksLtoR[2].Play();
+            transitionSparksLtoR[4].Play();
+            transitionSparksLtoR[5].Play();
         }
        else if (!isDriftingLeft && driftTier > currentDriftTier)
        {
@@ -444,6 +443,8 @@ public class NEWDriver : MonoBehaviour
            //Adding transition sparks
            transitionSparksLtoR[1].Play();
             transitionSparksLtoR[3].Play();
+            transitionSparksLtoR[6].Play();
+            transitionSparksLtoR[7].Play();
 
 
         }      
@@ -453,10 +454,12 @@ public class NEWDriver : MonoBehaviour
         if (isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
         {
             TireScreechesLtoR[0].Play();
+            TireScreechesLtoR[2].Play();
         }
         else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
         {
             TireScreechesLtoR[1].Play();
+            TireScreechesLtoR[3].Play();
         }
 
         currentDriftTier = driftTier;
