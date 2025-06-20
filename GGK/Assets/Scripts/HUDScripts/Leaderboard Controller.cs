@@ -17,10 +17,10 @@ public class LeaderboardController : MonoBehaviour
     {
         curTime += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ToggleLeaderBoard();
-        }
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    ToggleLeaderBoard();
+        //}
     }
 
     public void ToggleLeaderBoard()
