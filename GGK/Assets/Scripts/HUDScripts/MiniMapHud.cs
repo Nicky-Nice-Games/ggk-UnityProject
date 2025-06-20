@@ -49,9 +49,8 @@ public class MiniMapHud : MonoBehaviour
 {
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
-    // top left, top right, bottom left, bottom right of game world
-    [SerializeField] private Vector3 posTLeft;
-    [SerializeField] private Vector3 posTRight, posBLeft, posBRight;
+    // list of points
+    [SerializeField] private List<Vector3> points;
 
     //Should you use the four points(above) as opposed to a center then box size(below)?
     [SerializeField] private bool usePoints;
@@ -68,8 +67,6 @@ public class MiniMapHud : MonoBehaviour
     [SerializeField] private List<GameObject> objects;
     //..along with their respective icons on the map
     [SerializeField] private List<Image> mapIcons;
-
-
 
     [Header("Depth")]
     // should icons on the map
@@ -112,8 +109,9 @@ public class MiniMapHud : MonoBehaviour
         if (usePoints)
         {
             //establish the bounds using the 4 points
-            EstablishBounds(posTLeft, posTRight, posBLeft, posBRight);
+            EstablishBounds(points);
         }
+        DebugBounds();
 
         //find the minimap and icon reference
         miniMap = GameObject.Find(gameObject.name + "/MiniMap").GetComponent<Image>();
@@ -124,13 +122,19 @@ public class MiniMapHud : MonoBehaviour
         {
             //add objects to the icon list
             iconRef.SetActive(true);
-            mapIcons.Add(iconRef.GetComponent<Image>());
+            Image refImage = iconRef.GetComponent<Image>();
+            mapIcons.Add(refImage);
+
+            EstablishAppearance(objects[0], refImage);
 
             //create more icons as more are needed
-            for (int i = 0; i < objects.Count - 1; i++)
+            for (int i = 1; i < objects.Count; i++)
             {
                 GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
-                mapIcons.Add(newIcon.GetComponent<Image>());
+                refImage = newIcon.GetComponent<Image>();
+                mapIcons.Add(refImage);
+
+                EstablishAppearance(objects[i], refImage);
             }
         }
     }
@@ -185,7 +189,7 @@ public class MiniMapHud : MonoBehaviour
     //---------------------------------
 
     /// <summary>
-    /// Establishes the play area's bounds using four points.  
+    /// (DEPRECATED)Establishes the play area's bounds using four points.  
     /// The play area's bounds will be set to the smallest rectangle that encompasses
     /// the polygon formed by the points.
     /// </summary>
@@ -205,7 +209,7 @@ public class MiniMapHud : MonoBehaviour
             pointsMaker.SetPosition(4, tLeft);
         }
 
-        Vector3[] pointList = { tLeft, tRight, bLeft, bRight };
+        List<Vector3> pointList = new List<Vector3>{ tLeft, tRight, bLeft, bRight };
 
         EstablishBounds(pointList);
     }
@@ -216,7 +220,7 @@ public class MiniMapHud : MonoBehaviour
     /// the polygon formed by the points.
     /// </summary>
     /// <param name="pointList">A list of points to use.</param>
-    private void EstablishBounds(Vector3[] pointList)
+    private void EstablishBounds(List<Vector3> pointList)
     {
         float minX, minY, minZ;
         minX = minY = minZ = Mathf.Infinity;
@@ -284,6 +288,11 @@ public class MiniMapHud : MonoBehaviour
         this.height = height;
         this.depth = depth;
 
+        DebugBounds();
+    }
+
+    private void DebugBounds()
+    {
         if (showDebug)
         {
             boundsMaker.positionCount = 5;
@@ -299,13 +308,12 @@ public class MiniMapHud : MonoBehaviour
 
     private void EstablishAppearance(GameObject obj, Image img)
     {
-        AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
+        //AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
 
-        if (settings != null)
+        //if (settings != null)
         {
-            img.sprite = settings.icon;
-            img.color = settings.color;
+        //    img.sprite = settings.icon;
+        //    img.color = settings.color;
         }
     }
 }
-

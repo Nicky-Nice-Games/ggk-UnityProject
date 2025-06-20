@@ -41,8 +41,9 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.StartGame();
                 break;
             case GameStates.playerKart:
-                gamemanagerObj.sceneLoader.LoadScene("GameModeSelectScene");
-                gamemanagerObj.curState = GameStates.gameMode;
+            //PLEASE FIX THIS LATER -Giovanni Paulino
+                //gamemanagerObj.sceneLoader.LoadScene("GameModeSelectScene");
+                //gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
                 gamemanagerObj.LoadedGameMode();
