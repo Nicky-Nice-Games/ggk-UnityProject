@@ -51,6 +51,7 @@ public class NEWDriver : MonoBehaviour
     public GameObject frontTireR;
     
     public GameObject frontTireL;
+    public GameObject steeringWheel;
     
 
     [Header("Reference to the kartModel transform for Animation")]
@@ -312,6 +313,7 @@ public class NEWDriver : MonoBehaviour
         float steerAngle = movementDirection.x * maxSteerAngle;
         frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
         frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
+        steeringWheel.transform.Rotate(0, steerAngle * 2f, 0f);
     }
 
     /// <summary>

@@ -15721,6 +15721,38 @@ Transform:
   - {fileID: 6144780802933429876}
   m_Father: {fileID: 87194024810166413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2728337278017016447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6251045435801781259}
+  m_Layer: 0
+  m_Name: SteeringWheelPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6251045435801781259
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2728337278017016447}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.02411, z: 0.01424}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1612227744153803496}
+  m_Father: {fileID: 6377076249359359713}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2836888600027241868
 GameObject:
   m_ObjectHideFlags: 0
@@ -25465,13 +25497,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2911521289919520248}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.4886765, y: -0, z: -0, w: 0.8724651}
-  m_LocalPosition: {x: 0, y: 0.024133654, z: 0.014387062}
-  m_LocalScale: {x: 0.28181395, y: 0.28181395, z: 0.28181395}
+  m_LocalRotation: {x: -0.4778829, y: -0.18235771, z: 0.10214044, w: 0.85319453}
+  m_LocalPosition: {x: 0, y: 0.000023661181, z: 0.00014698878}
+  m_LocalScale: {x: 0.28181386, y: 0.28181395, z: 0.2818138}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6377076249359359713}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 6251045435801781259}
+  m_LocalEulerAnglesHint: {x: -51.096, y: -40.612, z: 33.715}
 --- !u!33 &8451476496927355476
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -109822,6 +109854,7 @@ MonoBehaviour:
   minDriftSteer: 40
   frontTireR: {fileID: 606236551198142739}
   frontTireL: {fileID: 4043692144358727760}
+  steeringWheel: {fileID: 0}
   kartModel: {fileID: 9189572482977137924}
   particleSystemsBR:
   - {fileID: 7739990208082369229}
@@ -115080,7 +115113,7 @@ Transform:
   - {fileID: 453377273632664638}
   - {fileID: 648574450178264351}
   - {fileID: 4559036551766156550}
-  - {fileID: 1612227744153803496}
+  - {fileID: 6251045435801781259}
   - {fileID: 8082465514378097289}
   - {fileID: 6556436986163026143}
   - {fileID: 495768617218723533}
