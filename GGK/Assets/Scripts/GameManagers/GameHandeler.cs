@@ -30,13 +30,17 @@ public class GameHandeler : MonoBehaviour
         {
             NEWDriver[] karts = GameObject.FindObjectsOfType<NEWDriver>();
             curTime = targetTime -= Time.deltaTime;
+            // decrease time when the leaderboard appears, meaning someone finished the race
             if (targetTime <= 0.0f)
             {
                 curTime += Time.deltaTime;
+                // check each player kart and if they finished the race in time 
                 foreach(NEWDriver driver in karts)
                 {
                     GameObject gameobj = driver.transform.parent.gameObject;
                     KartCheckpoint kartCheck = gameobj.GetComponentInChildren<KartCheckpoint>();
+                    // if the finishTime is default, they didn't finish the race
+                    // shows "Too Bad" on the screen
                     if(kartCheck.finishTime == 0)
                     {
                         tooBad.gameObject.SetActive(true);
