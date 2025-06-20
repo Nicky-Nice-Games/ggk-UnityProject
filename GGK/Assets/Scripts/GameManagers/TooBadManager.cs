@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameHandeler : MonoBehaviour
+public class TooBadManager : MonoBehaviour
 {
     private GameManager gamemanagerObj;
     private float targetTime = 5.0f;
