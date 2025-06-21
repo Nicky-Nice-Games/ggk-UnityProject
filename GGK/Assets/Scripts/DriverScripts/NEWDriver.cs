@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,6 +82,7 @@ public class NEWDriver : MonoBehaviour
 
     //Tween stuff
     Tween driftRotationTween;
+    Tween driftPositionTween;
     float driftVisualAngle = 10f;
     float driftTweenDuration = 0.4f;
 
@@ -331,7 +332,7 @@ public class NEWDriver : MonoBehaviour
             StartCoroutine(DriftHopEnabler());
 
             // Animate visual jump
-            kartModel.DOLocalMoveY(1.0f, 0.2f)
+            kartModel.DOLocalMoveY(0.8f, 0.2f)
                 .SetLoops(2, LoopType.Yoyo)
                 .SetEase(Ease.OutQuad);
             
@@ -496,9 +497,11 @@ public class NEWDriver : MonoBehaviour
         driftTime = 0f;
 
         // Reset visuals
+        driftPositionTween?.Kill();
         driftRotationTween?.Kill();
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
+        driftPositionTween = kartModel.DOLocalMove(Vector3.zero, driftTweenDuration);
 
         //driftSparksLeftBack.Stop();
         //driftSparksLeftFront.Stop();
@@ -613,13 +616,45 @@ public class NEWDriver : MonoBehaviour
 
             Debug.Log("Started Drift: " + (isDriftingLeft ? "Left" : "Right"));
 
-            // Visual drift lean
-            float yRot = isDriftingLeft ? -driftVisualAngle : driftVisualAngle;
-            float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
+            //// Visual drift lean
+            //float yRot = isDriftingLeft ? -driftVisualAngle : driftVisualAngle;
+            //float zTilt = isDriftingLeft ? driftVisualAngle : -driftVisualAngle;
+            //
+            //driftRotationTween?.Kill();
+            //driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt * 0.5f), driftTweenDuration)
+            //    .SetEase(Ease.InOutSine);
+
+
+            //--------------Drift Animation-----------------
+
+            float yRot = isDriftingLeft ? -20f : 20f;
+            float zTilt = isDriftingLeft ? 12f : -12f;
+            float snapTilt = isDriftingLeft ? -30f : 30f;
 
             driftRotationTween?.Kill();
-            driftRotationTween = kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt * 0.5f), driftTweenDuration)
-                .SetEase(Ease.InOutSine);
+
+            // Main drift lean
+            driftRotationTween = DOTween.Sequence()
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt), 0.62f).SetEase(Ease.OutQuad))
+                .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 1f).SetEase(Ease.InQuad))
+                .Join(kartModel.DOLocalMoveY(0.7f, 1f).SetEase(Ease.InOutSine))
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.4f).SetEase(Ease.OutBack))
+                .Join(kartModel.DOLocalMoveY(0f, 0.4f).SetEase(Ease.InOutSine))
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.8f).SetEase(Ease.InOutSine));
+                //.OnComplete(() =>
+                //{
+                //    //Snap-Back Tilt Mid Drift
+                //    float snapTilt = isDriftingLeft ? -30f : 30f;
+                //
+                //    // Kick back the Z tilt temporarily, then reset to stable drift tilt
+                //    driftRotationTween = DOTween.Sequence()
+                //        .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 1f).SetEase(Ease.InQuad))
+                //        .Join(kartModel.DOLocalMoveY(1f, 1f).SetEase(Ease.InOutSine))
+                //        .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.4f).SetEase(Ease.OutBack))
+                //        .Join(kartModel.DOLocalMoveY(0f, 0.4f).SetEase(Ease.InOutSine));
+                //
+                //
+                //});
         }
         else
         {
