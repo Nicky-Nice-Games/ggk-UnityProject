@@ -400,7 +400,7 @@ public class NEWDriver : MonoBehaviour
         //localVel.z *= 0.80f;
         //
         //acceleration += localVel;
-
+        acceleration *= 1.2f;
         sphere.AddForce(kartModel.right * direction * driftFactor, ForceMode.Acceleration);
 
         //--------------------Particles----------------                        
@@ -627,20 +627,20 @@ public class NEWDriver : MonoBehaviour
 
             //--------------Drift Animation-----------------
 
-            float yRot = isDriftingLeft ? -30f : 30f;
-            float zTilt = isDriftingLeft ? 8f : -8f;
+            float yRot = isDriftingLeft ? -40f : 40f;
+            float zTilt = isDriftingLeft ? 2f : -2f;
             float snapTilt = isDriftingLeft ? -20f : 20f;
 
             driftRotationTween?.Kill();
 
             // Main drift lean
             driftRotationTween = DOTween.Sequence()
-                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 3f, zTilt), 0.7f).SetEase(Ease.OutBack))    //slide out
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 4f, zTilt), 0.7f).SetEase(Ease.OutBack))    //slide out
                 .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 0.7f).SetEase(Ease.OutQuart))            //tilt side mid drift
                 .Join(kartModel.DOLocalMoveY(0.5f, 0.7f).SetEase(Ease.OutQuart))                                     //subtle elevation                       
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.15f).SetEase(Ease.InQuad))          //untilt
                 .Join(kartModel.DOLocalMoveY(0f, 0.15f).SetEase(Ease.OutBack))                                    //sutble descend
-                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.8f).SetEase(Ease.OutSine));       //slide in slightly
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot / 2f, zTilt), 2.0f).SetEase(Ease.OutSine));       //slide in slightly
                 //.OnComplete(() =>
                 //{
                 //    //Snap-Back Tilt Mid Drift
