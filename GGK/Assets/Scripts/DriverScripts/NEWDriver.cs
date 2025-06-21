@@ -627,20 +627,20 @@ public class NEWDriver : MonoBehaviour
 
             //--------------Drift Animation-----------------
 
-            float yRot = isDriftingLeft ? -20f : 20f;
-            float zTilt = isDriftingLeft ? 12f : -12f;
-            float snapTilt = isDriftingLeft ? -30f : 30f;
+            float yRot = isDriftingLeft ? -30f : 30f;
+            float zTilt = isDriftingLeft ? 8f : -8f;
+            float snapTilt = isDriftingLeft ? -20f : 20f;
 
             driftRotationTween?.Kill();
 
             // Main drift lean
             driftRotationTween = DOTween.Sequence()
-                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 2f, zTilt), 0.62f).SetEase(Ease.OutQuad))
-                .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 1f).SetEase(Ease.InQuad))
-                .Join(kartModel.DOLocalMoveY(0.7f, 1f).SetEase(Ease.InOutSine))
-                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.4f).SetEase(Ease.OutBack))
-                .Join(kartModel.DOLocalMoveY(0f, 0.4f).SetEase(Ease.InOutSine))
-                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.8f).SetEase(Ease.InOutSine));
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 3f, zTilt), 0.7f).SetEase(Ease.OutBack))    //slide out
+                .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 0.7f).SetEase(Ease.OutQuart))            //tilt side mid drift
+                .Join(kartModel.DOLocalMoveY(0.5f, 0.7f).SetEase(Ease.OutQuart))                                     //subtle elevation                       
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.15f).SetEase(Ease.InQuad))          //untilt
+                .Join(kartModel.DOLocalMoveY(0f, 0.15f).SetEase(Ease.OutBack))                                    //sutble descend
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.8f).SetEase(Ease.OutSine));       //slide in slightly
                 //.OnComplete(() =>
                 //{
                 //    //Snap-Back Tilt Mid Drift
