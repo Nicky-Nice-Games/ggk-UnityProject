@@ -19,8 +19,8 @@ public class PlayerKartHandeler : MonoBehaviour
     public GameObject kartModel;
     private int rotation = 140;
 
-    [SerializeField] private Transform playerSelectPanel;
-    [SerializeField] private Transform waitingScreen;
+    //[SerializeField] private Transform playerSelectPanel;
+    //[SerializeField] private Transform waitingScreen;
 
     // Reference Lists
     public List<GameObject> characterButtons;
@@ -32,8 +32,8 @@ public class PlayerKartHandeler : MonoBehaviour
     {
         gameManager = FindAnyObjectByType<GameManager>();
         characterData = FindAnyObjectByType<CharacterData>();
-        waitingScreen.gameObject.SetActive(false);
-        playerSelectPanel.gameObject.SetActive(true);
+        //waitingScreen.gameObject.SetActive(false);
+        //playerSelectPanel.gameObject.SetActive(true);
 
         // Connect character buttons to ChangeCharacter with appropriate arguments
         foreach (GameObject characterButton in characterButtons)
@@ -62,13 +62,13 @@ public class PlayerKartHandeler : MonoBehaviour
 
     public void SwitchToWaitingScreen()
     {
-        playerSelectPanel.gameObject.SetActive(false);
-        waitingScreen.gameObject.SetActive(true);
+        //playerSelectPanel.gameObject.SetActive(false);
+        //waitingScreen.gameObject.SetActive(true);
     }
     public void SwitchToPlayerSelectPanel()
     {
-        playerSelectPanel.gameObject.SetActive(true);
-        waitingScreen.gameObject.SetActive(false);
+        //playerSelectPanel.gameObject.SetActive(true);
+        //waitingScreen.gameObject.SetActive(false);
     }
 
     // Update is called once per frame

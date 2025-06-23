@@ -16,16 +16,16 @@ public class MapSelectHandeler : MonoBehaviour
 {
     [SerializeField] private List<GameObject> mapOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
-    [SerializeField] private Transform waitingScreen;
-    [SerializeField] private Transform mapButtons;
+    // [SerializeField] private Transform waitingScreen;
+    // [SerializeField] private Transform mapButtons;
 
 
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
-        waitingScreen.gameObject.SetActive(false);
-        mapButtons.gameObject.SetActive(true);
+        // waitingScreen.gameObject.SetActive(false);
+        // mapButtons.gameObject.SetActive(true);
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in mapOptions)
@@ -40,13 +40,13 @@ public class MapSelectHandeler : MonoBehaviour
 
     public void SwitchToWaitingScreen()
     {
-        mapButtons.gameObject.SetActive(false);
-        waitingScreen.gameObject.SetActive(true);
+        // mapButtons.gameObject.SetActive(false);
+        // waitingScreen.gameObject.SetActive(true);
     }
     public void SwitchToMapPanel()
     {
-        mapButtons.gameObject.SetActive(true);
-        waitingScreen.gameObject.SetActive(false);
+        // mapButtons.gameObject.SetActive(true);
+        // waitingScreen.gameObject.SetActive(false);
     }
 
 

@@ -123,10 +123,13 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
-        MultiplayerManager.Instance.Reset();
-        if (IsHost)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            LoadedGameModeRpc();
+            MultiplayerManager.Instance.Reset();
+            if (IsHost)
+            {
+                LoadedGameModeRpc();
+            }
         }
     }
 

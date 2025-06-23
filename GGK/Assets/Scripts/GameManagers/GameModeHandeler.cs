@@ -9,8 +9,8 @@ public class GameModeHandeler : MonoBehaviour
     [SerializeField]
     private List<GameObject> modeOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
-    [SerializeField] private Transform gameModeButtons;
-    [SerializeField] private Transform waitingScreen;
+    // [SerializeField] private Transform gameModeButtons;
+    // [SerializeField] private Transform waitingScreen;
 
 
     // Start is called before the first frame update
@@ -33,24 +33,25 @@ public class GameModeHandeler : MonoBehaviour
             gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
         }
 
-        if (!MultiplayerManager.Instance.IsMultiplayer)
-        {
-            waitingScreen.gameObject.SetActive(false);
-            gameModeButtons.gameObject.SetActive(true);
-        }
-        else
-        {
-            if (MultiplayerManager.Instance.IsHost)
-            {
-                waitingScreen.gameObject.SetActive(false);
-                gameModeButtons.gameObject.SetActive(true);
-            }
-            else
-            {
-                gameModeButtons.gameObject.SetActive(false);
-                waitingScreen.gameObject.SetActive(true);
-            }
-        }
+        // this is to bring up the waiting screens for clients when in multiplayer
+        // if (!MultiplayerManager.Instance.IsMultiplayer)
+        // {
+        //     waitingScreen.gameObject.SetActive(false);
+        //     gameModeButtons.gameObject.SetActive(true);
+        // }
+        // else
+        // {
+        //     if (MultiplayerManager.Instance.IsHost)
+        //     {
+        //         waitingScreen.gameObject.SetActive(false);
+        //         gameModeButtons.gameObject.SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         gameModeButtons.gameObject.SetActive(false);
+        //         waitingScreen.gameObject.SetActive(true);
+        //     }
+        // }
     }
 
     // Each game mode can load their own stuff
