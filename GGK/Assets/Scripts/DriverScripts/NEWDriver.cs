@@ -35,6 +35,8 @@ public class NEWDriver : MonoBehaviour
     //To determine drifting stuff in update
     public bool isDrifting;
     bool driftMethodCaller = false;
+    bool turboTwisting;
+    public float turboTwistWindow;
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
@@ -190,7 +192,7 @@ public class NEWDriver : MonoBehaviour
                 // turn influence to apply to turning variable
                 turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
 
-                if (isGrounded && airTime < 1f)
+                if (isGrounded && airTime < 1.5f)
                 {
                     acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
                 }
@@ -408,6 +410,21 @@ public class NEWDriver : MonoBehaviour
             }
         }
 
+        if(movementDirection.z == 0)
+        {   
+            if(turboTwisting)
+            {
+                
+            }
+            else
+            {
+                
+                StartCoroutine(TurboTwist());
+                turboTwisting = true;
+            }
+            
+        }
+
         //Vector3 localVel = transform.InverseTransformDirection(sphere.velocity);
 
         // Add lateral sliding
@@ -465,9 +482,7 @@ public class NEWDriver : MonoBehaviour
            transitionSparksLtoR[1].Play();
             transitionSparksLtoR[3].Play();
             transitionSparksLtoR[6].Play();
-            transitionSparksLtoR[7].Play();
-
-
+            transitionSparksLtoR[7].Play();     
         }      
 
 
@@ -476,11 +491,26 @@ public class NEWDriver : MonoBehaviour
         {
             TireScreechesLtoR[0].Play();
             TireScreechesLtoR[2].Play();
+
+            if (TireScreechesLtoR[1].isPlaying)
+            {
+                TireScreechesLtoR[1].Stop();
+                TireScreechesLtoR[3].Stop();
+                particleSystemsBR.ForEach(ps => ps.Stop());
+
+            }
         }
         else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
         {
             TireScreechesLtoR[1].Play();
             TireScreechesLtoR[3].Play();
+
+            if (TireScreechesLtoR[0].isPlaying)
+            {
+                TireScreechesLtoR[0].Stop();
+                TireScreechesLtoR[2].Stop();
+                particleSystemsBL.ForEach(ps => ps.Stop());
+            }
         }
 
         currentDriftTier = driftTier;
@@ -684,6 +714,67 @@ public class NEWDriver : MonoBehaviour
         
         attemptingDrift = false;
 
+    }
+
+    IEnumerator TurboTwist()
+    {
+        int TurnCount = 0;
+
+        //Checks for 25 frames if we want to turbo twist
+        for (int i = 0; i < 25; i++)
+        {
+            //Check if player wants to drift the opposite direction
+            if(isDriftingLeft && movementDirection.x > 0.1f && movementDirection.z == 0)
+            {
+                TurnCount++;
+            }
+            else if (!isDriftingLeft && movementDirection.x < -0.1f && movementDirection.z == 0)
+            {
+                TurnCount++;
+            }
+
+            if(TurnCount > 3)
+            {
+                
+                break;
+            }
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        //The closer the value is to 1 from below the closer we are to the minimum drift time
+        float recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
+
+        if (TurnCount > 3)
+        {
+            isDriftingLeft = !isDriftingLeft; //Change the direction of the drift
+
+            if(recenBoostvalue <= turboTwistWindow)
+            {
+                StartCoroutine(Boost(driftBoostForce, 0.2f));
+            }
+
+
+            //--------------Drift Animation-----------------
+
+            float yRot = isDriftingLeft ? -40f : 40f;
+            float zTilt = isDriftingLeft ? 2f : -2f;
+            float snapTilt = isDriftingLeft ? -20f : 20f;
+
+            driftRotationTween?.Kill();
+
+            // Main drift lean
+            driftRotationTween = DOTween.Sequence()
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot * 4f, zTilt), 0.7f).SetEase(Ease.OutBack))    //slide out
+                .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 0.7f).SetEase(Ease.OutQuart))            //tilt side mid drift
+                .Join(kartModel.DOLocalMoveY(0.5f, 0.7f).SetEase(Ease.OutQuart))                                     //subtle elevation                       
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.15f).SetEase(Ease.InQuad))          //untilt
+                .Join(kartModel.DOLocalMoveY(0f, 0.15f).SetEase(Ease.OutBack))                                    //sutble descend
+                .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot / 2f, zTilt), 2.0f).SetEase(Ease.OutSine));       //slide in slightly
+
+        }
+
+        turboTwisting = false; //Reset the turbo twisting state
     }
 
     public void OnMove(InputAction.CallbackContext context)
