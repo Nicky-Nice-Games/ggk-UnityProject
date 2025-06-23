@@ -70,6 +70,7 @@ public class NEWDriver : MonoBehaviour
     public ParticleSystem driftSparksLeftFront;
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
+    public List<ParticleSystem> boostFlames;
     int driftTier;
     int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
@@ -119,6 +120,10 @@ public class NEWDriver : MonoBehaviour
             ps.Stop();
         }
         foreach (ParticleSystem ps in transitionSparksLtoR)
+        {
+            ps.Stop();
+        }
+        foreach (ParticleSystem ps in boostFlames)
         {
             ps.Stop();
         }
@@ -619,14 +624,29 @@ public class NEWDriver : MonoBehaviour
 
     IEnumerator Boost(float boostForce, float duration)
     {
+        foreach(ParticleSystem ps in boostFlames)
+        {
+            if (!ps.isPlaying)
+            {
+                ps.Play();
+            }
+        }
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = kartNormal.forward * driftBoostForce;
+
 
             sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
 
+        foreach (ParticleSystem ps in boostFlames)
+        {
+            if (ps.isPlaying)
+            {
+                ps.Stop();
+            }
+        }
     }
 
     IEnumerator DriftHopEnabler()
