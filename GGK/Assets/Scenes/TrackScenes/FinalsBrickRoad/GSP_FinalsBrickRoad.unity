@@ -5415,6 +5415,7 @@ MonoBehaviour:
   timer: 5
   itemDisplay: {fileID: 0}
   defaultItemDisplay: {fileID: 0}
+  miniMap: {fileID: 0}
 --- !u!114 &68159927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5427,10 +5428,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2eb5071d3f56b5488fdaa02fb6553c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 383c583504c738e48b59b521fb9a4c03, type: 3}
-  color: {r: 0.8113208, g: 0, b: 0.022893295, a: 1}
-  name: 
-  models: []
+  icon: {fileID: 21300000, guid: f1affd61a6bd8f040a98a5fd0d2c0d3f, type: 3}
+  color: {r: 1, g: 0.96578836, b: 0.06132078, a: 1}
 --- !u!65 &68159928
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20409,6 +20408,7 @@ MonoBehaviour:
   timer: 5
   itemDisplay: {fileID: 0}
   defaultItemDisplay: {fileID: 0}
+  miniMap: {fileID: 0}
 --- !u!114 &1026030475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20421,10 +20421,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2eb5071d3f56b5488fdaa02fb6553c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:GGK/Assets/Scenes/TrackScenes/FinalsBrickRoad/GSP_FinalsBrickRoad.unity
   icon: {fileID: 21300000, guid: eb3ef4a1ea7794247b5955f36c0b8fef, type: 3}
   color: {r: 0.92024183, g: 1, b: 0, a: 1}
   name: 
   models: []
+=======
+  icon: {fileID: 21300000, guid: 188b3f372543e5a4aacc5750866c41f8, type: 3}
+  color: {r: 0.22880234, g: 0.16042188, b: 0.3301887, a: 1}
+>>>>>>> 0c2cd3f3 (HUD update):GGK/Assets/Scenes/Finals Brick Road Greybox.unity
 --- !u!65 &1026030476
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20605,6 +20610,37 @@ Transform:
   m_Children:
   - {fileID: 1881267031}
   m_Father: {fileID: 402090461}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1045391699
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1045391700}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1045391700
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045391699}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 487, y: -504.91312, z: 2213}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1051906603
 GameObject:
@@ -35529,7 +35565,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e9739d8a8f6124bbdee0b65127636b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  points: []
+  points:
+  - {x: -435, y: 0, z: 1670}
+  - {x: 487, y: 0, z: 1670}
+  - {x: 487, y: 0, z: 2213}
+  - {x: -435, y: 0, z: 2213}
   usePoints: 0
   center: {x: 26, y: 0, z: 1941.5}
   width: 922
@@ -35546,6 +35586,7 @@ MonoBehaviour:
   minDepthTracking: -70
   sizeOffset: 1.5
   showDebug: 0
+  iconSpinoutSpeed: 300
 --- !u!114 &1716925570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43182,6 +43223,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1106090965097549554, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
   m_PrefabInstance: {fileID: 1847941817}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1848389361
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.399387
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -504.91312
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1908.4424
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7114235975888580772, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
+      propertyPath: m_Name
+      value: MiniMapDebugLines
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
 --- !u!1 &1869735823
 GameObject:
   m_ObjectHideFlags: 0
@@ -53840,6 +53938,7 @@ GameObject:
   - component: {fileID: 2081161022}
   - component: {fileID: 2081161024}
   - component: {fileID: 2081161023}
+  - component: {fileID: 2081161025}
   m_Layer: 5
   m_Name: ItemDisplay
   m_TagString: Untagged
@@ -53901,6 +54000,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2081161021}
   m_CullTransparentMesh: 1
+--- !u!114 &2081161025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081161021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &2081245703
 GameObject:
   m_ObjectHideFlags: 0
@@ -54227,4 +54339,9 @@ SceneRoots:
   - {fileID: 316194453}
   - {fileID: 1756857354}
   - {fileID: 114060285}
+<<<<<<< HEAD:GGK/Assets/Scenes/TrackScenes/FinalsBrickRoad/GSP_FinalsBrickRoad.unity
   - {fileID: 1939664228}
+=======
+  - {fileID: 1045391700}
+  - {fileID: 1848389361}
+>>>>>>> 0c2cd3f3 (HUD update):GGK/Assets/Scenes/Finals Brick Road Greybox.unity
