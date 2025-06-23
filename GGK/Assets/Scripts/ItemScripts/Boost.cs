@@ -8,43 +8,12 @@ public class Boost : BaseItem
 
     private void Awake()
     {
-        switch (itemTier)
-        {
-            case 2:
-                useCount = 2;
-                break;
-            case 3:
-                useCount = 1;
-                break;
-            case 4:
-                useCount = 1;
-                break;
-            default:
-                useCount = 1;
-                break;
-        }
-        isTimed = false;
+        
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        switch (itemTier)
-        {
-            case 2:
-                useCount = 2;
-                break;
-            case 3:
-                useCount = 1;
-                break;
-            case 4:
-                useCount = 1;
-                break;
-            default:
-                useCount = 1;
-                break;
-        }
-        isTimed = false;
         DecreaseTimer();
     }
 
