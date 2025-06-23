@@ -1380,6 +1380,7 @@ GameObject:
   - component: {fileID: 1555633134}
   - component: {fileID: 1555633135}
   - component: {fileID: 1555633136}
+  - component: {fileID: 1555633138}
   - component: {fileID: 1555633137}
   m_Layer: 0
   m_Name: GameManager
@@ -1400,6 +1401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63eabf7b426a71640a1bc36263bf3192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curState: 0
   sceneLoader: {fileID: 1555633137}
   currentSceneFirst: {fileID: 0}
 --- !u!4 &1555633133
@@ -1457,7 +1459,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c58e1a953fafd14aac4136fdeaa7bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 100
+  masterVolume: 100
+  dialougeVolume: 100
+  sfxVolume: 100
+  musicVolume: 100
 --- !u!114 &1555633137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1471,8 +1476,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transition: {fileID: 1319836764}
-  transitionTime: 1.5
+  transitionTime: 1
   transitionActive: 1
+--- !u!114 &1555633138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555633131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb5871f021cc124fbe6ef6ccc08f7b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  optionsData: {fileID: 1555633136}
 --- !u!1 &1798033627
 GameObject:
   m_ObjectHideFlags: 0
