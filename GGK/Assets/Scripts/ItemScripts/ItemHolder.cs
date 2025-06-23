@@ -232,7 +232,7 @@ public class ItemHolder : MonoBehaviour
             // Gives kart an item if they don't already have one
             if (!holdingItem)
             {
-                heldItem = itemBox.RandomizeItem();
+                itemBox.RandomizeItem(this.gameObject);
                 
                 // Initialize use count if first use
                 if (uses == 0)
@@ -255,7 +255,7 @@ public class ItemHolder : MonoBehaviour
             // itemDisplay.texture = heldItem.itemIcon;
 
             // if player missing item, gives random level 2 item or upgrades current item
-            heldItem = upgradeBox.UpgradeItem(this);
+            heldItem = upgradeBox.UpgradeItem(this.gameObject);
             heldItem.OnLevelUp(heldItem.ItemTier);
             uses = heldItem.UseCount;
 

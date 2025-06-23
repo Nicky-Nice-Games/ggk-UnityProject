@@ -36,13 +36,14 @@ public class ItemBox : MonoBehaviour
     /// <summary>
     /// Gives the driver a random item
     /// </summary>
-    /// <returns>A random baseItem</returns>
-    public BaseItem RandomizeItem()
+    public void RandomizeItem(GameObject kart)
     {
+        ItemHolder itemScript = kart.GetComponent<ItemHolder>();
+
         Debug.Log("Collided!");
-        BaseItem bItem = items[2];
-        bItem.ItemTier = 1;
-        return bItem;
+        BaseItem bItem = items[4];
+        itemScript.HeldItem = bItem;
+        itemScript.HeldItem.ItemTier = 1;
     }
 
     /// <summary>
