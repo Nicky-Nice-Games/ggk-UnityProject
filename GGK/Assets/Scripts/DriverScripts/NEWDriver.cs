@@ -38,6 +38,7 @@ public class NEWDriver : MonoBehaviour
     float driftTime = 0f;
     public float driftFactor = 2f;
     public float driftTurnMultiplier = 1.5f;
+    public float driftFowardCompensation = 1.2f;
     public float minDriftTime = 200f;
     public float driftBoostForce = 1f;
     public float hopForce = 8f;
@@ -76,6 +77,7 @@ public class NEWDriver : MonoBehaviour
     // Ground snapping variables
     public bool isGrounded;
     bool attemptingDrift;
+    float airTime;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
@@ -187,7 +189,16 @@ public class NEWDriver : MonoBehaviour
 
                 // turn influence to apply to turning variable
                 turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
-                
+
+                if (isGrounded && airTime < 1f)
+                {
+                    acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                }
+                else
+                {
+                    EndDrift();
+                }
+
             }
 
             //If we are going backwards, we need to turn in the opposite direction
@@ -195,6 +206,8 @@ public class NEWDriver : MonoBehaviour
             {
                 //Applying our calculated turning direction to the turning variable
                 turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+
+                EndDrift();
             }
             else
             {
@@ -206,6 +219,8 @@ public class NEWDriver : MonoBehaviour
             {
                 Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
                 sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
+
+                
             }
 
             acceleration = turning * acceleration;
@@ -214,6 +229,7 @@ public class NEWDriver : MonoBehaviour
         else
         {
             turning = Quaternion.Euler(0f, 0f, 0f);
+            EndDrift();
         }
 
         //Falling down
@@ -297,6 +313,7 @@ public class NEWDriver : MonoBehaviour
 
         if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
         {
+            airTime = 0f; //Reset air time when grounded
             isGrounded = true;
 
             //Normal Rotation
@@ -305,6 +322,7 @@ public class NEWDriver : MonoBehaviour
         }
         else
         {
+            airTime += Time.deltaTime; //Keeping track of air time
             isGrounded = false; 
         }
     }
@@ -400,7 +418,7 @@ public class NEWDriver : MonoBehaviour
         //localVel.z *= 0.80f;
         //
         //acceleration += localVel;
-        acceleration *= 1.2f;
+        //acceleration *= 1.2f;
         sphere.AddForce(kartModel.right * direction * driftFactor, ForceMode.Acceleration);
 
         //--------------------Particles----------------                        
