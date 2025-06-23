@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -84,7 +85,7 @@ public class MiniMapHud : MonoBehaviour
     [Header("Misc.")]
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
-
+    [SerializeField] private float iconSpinoutSpeed;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
@@ -94,6 +95,8 @@ public class MiniMapHud : MonoBehaviour
     //Line renderers for calculated bounds and/or points
     private LineRenderer boundsMaker;
     private LineRenderer pointsMaker;
+
+    public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
     // Start is called before the first frame update
     void Start()
@@ -126,7 +129,6 @@ public class MiniMapHud : MonoBehaviour
             mapIcons.Add(refImage);
 
             EstablishAppearance(objects[0], refImage);
-
             //create more icons as more are needed
             for (int i = 1; i < objects.Count; i++)
             {
@@ -135,6 +137,26 @@ public class MiniMapHud : MonoBehaviour
                 mapIcons.Add(refImage);
 
                 EstablishAppearance(objects[i], refImage);
+            }
+
+            foreach (GameObject obj in objects)
+            {
+                ItemHolder holder = obj.GetComponent<ItemHolder>();
+                if (obj.transform.parent != null)
+                {
+                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>(); 
+                    if (recovery.Length > 0)
+                    {
+                        foreach(DynamicRecovery r in recovery)
+                        r.miniMap = this;
+                    }
+                }
+                
+                if (holder)
+                {
+                    holder.miniMap = this;
+                }
+                
             }
         }
     }
@@ -314,6 +336,30 @@ public class MiniMapHud : MonoBehaviour
         {
             img.sprite = settings.icon;
             img.color = settings.color;
+        }
+    }
+
+    public IEnumerator SpinIcon(GameObject obj, int amount)
+    {
+        float spinsRemaining = amount;
+        float displacement = 0;
+        Image icon = mapIcons[objects.IndexOf(obj)].GetComponent<Image>();
+        float dt = Time.deltaTime;
+
+        while (spinsRemaining > 0)
+        {
+            float d = -360 * dt * iconSpinoutSpeed;
+            displacement += Mathf.Abs(d);
+            icon.rectTransform.rotation *= Quaternion.Euler(0, 0, d);
+
+            if (displacement >= 360)
+            {
+                icon.rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+                spinsRemaining--;
+                displacement = 0;
+            }
+
+            yield return new WaitForSeconds(dt);
         }
     }
 }
