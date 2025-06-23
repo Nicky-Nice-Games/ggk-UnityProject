@@ -35,10 +35,10 @@ public class KartVisual : MonoBehaviour
     public float wheelSmoothTime = 0.05f;
 
     [Header("Wheel Rotation Settings")]
-    public float wheelRadius = 0.3f; // Set based on your mesh size
+    public float wheelRadius = 0.3f; //Set based on tire mesh size
 
 
-    private Vector3[] wheelVelocity;           // For SmoothDamp per wheel
+    private Vector3[] wheelVelocity;           //For SmoothDamp per wheel
 
     private Vector3 lastVelocity;
     private Vector3 visualVelocity;
@@ -63,11 +63,11 @@ public class KartVisual : MonoBehaviour
 
     void RotateWheels()
     {
-        // Project velocity onto the forward direction of the visual root (assuming forward is Z+)
+        //Project velocity onto the forward direction of the visual root
         Vector3 forward = visualRoot.forward;
         float forwardSpeed = Vector3.Dot(sphereRigidbody.velocity, forward);
 
-        // Calculate how much to rotate this frame
+        //Calculate how much to rotate this frame
         float rotationAmount = (forwardSpeed / (2f * Mathf.PI * wheelRadius)) * 360f * Time.deltaTime;
 
         foreach (var wheel in wheelMeshes)
@@ -118,7 +118,7 @@ public class KartVisual : MonoBehaviour
                 targetOffset -= compression * wheelMaxCompression;
             }
 
-            // Convert world-space target position back to local relative to suspension point
+            //Convert world-space target position back to local relative to suspension point
             Vector3 localTarget = suspensionPoints[i].InverseTransformPoint(rayOrigin - Vector3.up * targetOffset);
             Vector3 localCurrent = suspensionPoints[i].InverseTransformPoint(wheel.position);
 
