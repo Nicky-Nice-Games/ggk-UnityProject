@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI
 - Active game object:
-  - Name: CharacterButton
-  - Tag: Untagged
+  - Name: GameManager
+  - Tag: GameManager
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

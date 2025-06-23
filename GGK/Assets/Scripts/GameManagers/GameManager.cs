@@ -24,9 +24,10 @@ public enum GameStates
 
 public class GameManager : NetworkBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
+    public SceneLoader sceneLoader;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
 
@@ -61,7 +62,7 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene("MultiSinglePlayerScene");
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
 
@@ -78,7 +79,7 @@ public class GameManager : NetworkBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
+            sceneLoader.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
@@ -120,7 +121,7 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        SceneManager.LoadScene("PlayerKartScene");
+        sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
         MultiplayerManager.Instance.Reset();
         if (IsHost)
@@ -151,7 +152,6 @@ public class GameManager : NetworkBehaviour
         {
             ToMapSelectScreen();
         }
-        //ToMapSelectScreen();
     }
 
     public void ToMapSelectScreen() {
@@ -189,28 +189,27 @@ public class GameManager : NetworkBehaviour
                     break;
                 default:
                     break;
-            }
-            
+            }      
         }
         else
         {
            // Loads the race based on the name of the button clicked
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
-                case "1-1":
-                    SceneManager.LoadScene("RIT Outer Loop Greybox");
-                    break;
-                case "1-2":
-                    SceneManager.LoadScene("1-2");
-                    break;
-                case "1-3":
-                    SceneManager.LoadScene("1-3");
-                    break;
-                case "1-4":
-                    SceneManager.LoadScene("1-4");
-                    break;
-                default:
-                    break;
+                case "RIT Outer Loop Greybox":
+                sceneLoader.LoadScene("RIT Outer Loop Greybox");
+                break;
+            case "Golisano Greybox":
+                sceneLoader.LoadScene("Golisano Greybox");
+                break;
+            case "RIT Dorm Greybox":
+                sceneLoader.LoadScene("RIT Dorm Greybox");
+                break;
+            case "RIT Woods Greybox":
+                sceneLoader.LoadScene("RIT Woods Greybox");
+                break;
+            default:
+                break;
             }
             curState = GameStates.game; 
         }
@@ -228,13 +227,13 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
-        SceneManager.LoadScene("GameOverScene");
+        sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
     }
 
     public void LoadStartMenu()
     {
-        SceneManager.LoadScene("StartScene");
+        sceneLoader.LoadScene("StartScene");
         curState = GameStates.start;
     }
 
@@ -284,6 +283,11 @@ public class GameManager : NetworkBehaviour
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
         RefreshSelected();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
 }

@@ -41,7 +41,7 @@ public class ItemBox : MonoBehaviour
     {
         Debug.Log("Collided!");
         BaseItem bItem = items[Random.Range(0, items.Count)];
-        bItem.IsUpgraded = false;
+        bItem.ItemTier = 1;
         return bItem;
     }
 

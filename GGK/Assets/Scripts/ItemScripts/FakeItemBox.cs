@@ -9,7 +9,6 @@ public class FakeItemBox : BaseItem
     [SerializeField]
     AudioClip hazardSound;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +19,7 @@ public class FakeItemBox : BaseItem
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.0f;       // slightly above ground
-        if (isUpgraded)
+        if (itemTier > 1)
         {
 
             Renderer cubeRenderer = this.GetComponent<Renderer>();
