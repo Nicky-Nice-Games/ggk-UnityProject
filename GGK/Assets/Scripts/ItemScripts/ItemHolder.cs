@@ -89,20 +89,21 @@ public class ItemHolder : MonoBehaviour
             {
                 if (item.Timer <= 0.0f)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(item.gameObject);
+                    Destroy(heldItem.gameObject);
                 }
             }
             else if (item.UseCount == 1 && !item.isTimed)
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
@@ -114,20 +115,21 @@ public class ItemHolder : MonoBehaviour
             {
                 if (item.Timer <= 0.0f || uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(item.gameObject);
+                    Destroy(heldItem.gameObject);
                 }
             }
             else if (item.UseCount >= 1 && !item.isTimed)
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
@@ -167,8 +169,14 @@ public class ItemHolder : MonoBehaviour
         {
             item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
+            item.gameObject.SetActive(true);
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
+
+            if (heldItem.ItemTier > 1)
+            {
+                item.OnLevelUp(item.ItemTier);
+            }
 
             uses--; // Decrease after successful use
         }
@@ -191,6 +199,7 @@ public class ItemHolder : MonoBehaviour
             //soundPlayer.PlayOneShot(throwSound);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
+            item.gameObject.SetActive(true);
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
         }

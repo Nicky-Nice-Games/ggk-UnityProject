@@ -61,7 +61,10 @@ public class BaseItem : MonoBehaviour
         // Destroys the item
         else
         {
-            Destroy(this.gameObject);
+            if (itemCategory != "Shield")
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 
@@ -109,6 +112,7 @@ public class BaseItem : MonoBehaviour
                     timer = 4.0f;
                     break;
             }
+            useCount = 1;
         }
     }
 

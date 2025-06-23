@@ -41,9 +41,10 @@ public class ItemBox : MonoBehaviour
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
         Debug.Log("Collided!");
-        BaseItem bItem = items[2];
+        BaseItem bItem = Instantiate(items[2]);
         itemScript.HeldItem = bItem;
         itemScript.HeldItem.ItemTier = 1;
+        bItem.gameObject.SetActive(false);
     }
 
     /// <summary>
