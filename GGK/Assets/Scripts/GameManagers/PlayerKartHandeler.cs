@@ -41,6 +41,7 @@ public class PlayerKartHandeler : MonoBehaviour
         // So scene can still work if not started from start scene
         if (characterData != null)
         {
+            characterData.character = PlayerKart.Freddie;
             characterData.characterSprite = gameManager.currentSceneFirst.GetComponent<Image>().sprite;
             characterData.characterColor = Color.white;
         }
@@ -51,8 +52,8 @@ public class PlayerKartHandeler : MonoBehaviour
             Image[] images = characterButton.GetComponentsInChildren<Image>();
 
             Button btn = characterButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0]));
+            CharacterButton data = characterButton.GetComponent<CharacterButton>();
+            btn.onClick.AddListener(() => ChangeCharacter(data.playerKart, images[2], images[0]));
         }
 
         // Connect color buttons to ChangeColor with appropriate arguments
@@ -77,7 +78,7 @@ public class PlayerKartHandeler : MonoBehaviour
         waitingScreen.gameObject.SetActive(false);
     }
 
-    public void ChangeCharacter(Image characterImage, Image border)
+    public void ChangeCharacter(PlayerKart playerKart,Image characterImage, Image border)
     {
         if (prevImageBorder != null)
         {
@@ -87,6 +88,7 @@ public class PlayerKartHandeler : MonoBehaviour
         characterSelectImage.sprite = characterImage.sprite;
         if (characterData != null)
             characterData.characterSprite = characterImage.sprite;
+        characterData.character = playerKart;
         border.color = Color.yellow;
         prevImageBorder = border;
     }

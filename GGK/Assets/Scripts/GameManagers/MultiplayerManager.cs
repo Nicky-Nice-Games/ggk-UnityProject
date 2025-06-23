@@ -29,6 +29,7 @@ public class MultiplayerManager : NetworkBehaviour
 
     private Dictionary<ulong,bool> playerKartSelectionChecks = new Dictionary<ulong, bool>();
     private Dictionary<ulong,bool> playerMapSelectionChecks = new Dictionary<ulong, bool>();
+    private Dictionary<ulong, Map> playerMapSelections = new Dictionary<ulong, Map>();
     private Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
 
 
@@ -40,6 +41,7 @@ public class MultiplayerManager : NetworkBehaviour
     private float mapSelectionTimer = 60f;
     [SerializeField] private bool runMapSelectionTimer = false;
 
+    private System.Random random = new System.Random();
 
     enum Gamemode
     {
@@ -82,9 +84,9 @@ public class MultiplayerManager : NetworkBehaviour
     /// <summary>
     /// Call this going into a new multiplayer game (from lobby to game mode select)
     /// </summary>
-    private void Reset()
+    public void Reset()
     {
-        gamemode.Value = Gamemode.Unselected;
+        //gamemode.Value = Gamemode.Unselected;
         kartSelectionTimer = kartSelectionTimerMax;
         mapSelectionTimer = mapSelectionTimerMax;
         ResetDictionaries();
@@ -95,18 +97,20 @@ public class MultiplayerManager : NetworkBehaviour
         //clear dictionaries
         playerKartSelectionChecks.Clear();
         playerMapSelectionChecks.Clear();
+        playerMapSelections.Clear();
         players.Clear();
-        GetPlayerDataRpc();
+        InitPlayerDataRpc();
         Debug.Log($"number of connected clients {NetworkManager.ConnectedClientsIds.Count}");
         foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
         {
             playerKartSelectionChecks.Add(clientId, false);
             playerMapSelectionChecks.Add(clientId, false);
+            playerMapSelections.Add(clientId, Map.RITQuarterMile);
         }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void GetPlayerDataRpc()
+    public void InitPlayerDataRpc()
     {
         SendPlayerDataRpc(NetworkManager.LocalClientId, playerData.PlayerName);
     }
@@ -129,7 +133,6 @@ public class MultiplayerManager : NetworkBehaviour
                 OnKartSelectionTimerEnd();
             }
         }
-
         if (runMapSelectionTimer)
         {
             mapSelectionTimer -= Time.deltaTime;
@@ -137,14 +140,6 @@ public class MultiplayerManager : NetworkBehaviour
             {
                 runMapSelectionTimer = false;
                 OnMapSelectionTimerEnd();
-            }
-        }
-
-        if (IsHost)
-        {
-            //if (allVotesIn.Value == false)
-            {
-                // calculate if all the votes are in
             }
         }
     }
@@ -175,7 +170,7 @@ public class MultiplayerManager : NetworkBehaviour
     #region kart selection
     // Once the game mode is selected, Show Player Kart Selection Scene to everyone (after a timer auto select their last hovered option)
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void SetPlayerKartRpc(/*parameters for the player kart data and who the data should be set on*/)
+    public void SetPlayerKartRpc(ulong clientId)
     {
         
     }
@@ -187,10 +182,15 @@ public class MultiplayerManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void PlayerKartSelectedRpc(ulong clientId)
+    public void PlayerKartSelectedRpc(ulong clientId, PlayerKart playerCharacter, UnityEngine.Color playerColor) // colors are being sent correctly, just need to change how the player character is written to the character data script
     {
         Debug.Log($"Rpc called by clientid: {clientId}");
         playerKartSelectionChecks[clientId] = true;
+        PlayerData player = players[clientId];
+        player.PlayerCharacter = playerCharacter;
+        player.PlayerColor = playerColor;
+        players[clientId] = player;
+        Debug.Log($"Client {clientId} chose {playerCharacter} in color {playerColor}");
         if (AllPlayerKartsSelected())
         {
             GameManager.thisManagerInstance.ToMapSelectScreenRpc();
@@ -200,13 +200,10 @@ public class MultiplayerManager : NetworkBehaviour
     public bool AllPlayerKartsSelected()
     {
         bool allSelected = true;
-        string str = "here are player choices\n";
         foreach (KeyValuePair<ulong, bool> playerChoice in playerKartSelectionChecks)
         {
-            str += $"client: {playerChoice.Key}, decision: {playerChoice.Value}\n";
             if (!playerChoice.Value) allSelected = false;
         }
-        Debug.Log(str);
         return allSelected;
     }
     #endregion
@@ -214,13 +211,39 @@ public class MultiplayerManager : NetworkBehaviour
     #region map votes
     // After a selection has been made show the Map Selection Scene to everyone (after a timer auto select their last hovered option)
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void VoteMapRpc(/*parameters for the Map choice and who the data should be set on*/)
+    public void VoteMapRpc(ulong clientId, Map map)
     {
+        Debug.Log($"Rpc called by clientid: {clientId}");
+        playerMapSelectionChecks[clientId] = true;
+        playerMapSelections[clientId] = map;
+        if (AllPlayerMapVotesIn())
+        {
+            // pick random map
+            List<Map> mapOptions = new List<Map>(playerMapSelections.Values);
+            Map votedMap = mapOptions[random.Next(mapOptions.Count)];
+            switch (votedMap)
+            {
+                case Map.RITOuterLoop:
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Outer Loop Greybox");
+                    break;
+                case Map.RITQuarterMile:
+                    GameManager.thisManagerInstance.LoadMapRpc("1-2");
+                    break;
+                case Map.RITDorm:
+                    GameManager.thisManagerInstance.LoadMapRpc("1-3");
+                    break;
+                case Map.FinalsBrickRoad:
+                    GameManager.thisManagerInstance.LoadMapRpc("1-4");
+                    break;
+                default:
+                    break;
+            }
+        }
 
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void RescindVoteMapRpc(/*parameters for who wants their vote rescinded*/)
+    public void RescindVoteMapRpc(ulong clientId)
     {
 
     }
@@ -229,6 +252,17 @@ public class MultiplayerManager : NetworkBehaviour
     public void ForceVoteMapRpc()
     {
         // Auto picks the map they are hovering
+        VoteMapRpc(NetworkManager.Singleton.LocalClientId, (Map)random.Next((int)Map.FinalsBrickRoad)); // random pick for now
+    }
+
+    public bool AllPlayerMapVotesIn()
+    {
+        bool allVoted = true;
+        foreach (KeyValuePair<ulong, bool> playerChoice in playerMapSelectionChecks)
+        {
+            if (!playerChoice.Value) allVoted = false;
+        }
+        return allVoted;
     }
     #endregion
 

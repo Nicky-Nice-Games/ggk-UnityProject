@@ -19,7 +19,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     // Properties
     public string PlayerName { get; private set; }
 
-    public string PlayerCharacter;
+    public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
     public Color PlayerColor;
 
     // constructor
@@ -29,7 +29,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
         PlayerNumber = playerNumber;
         playerName = name;
         PlayerName = playerName;
-        PlayerCharacter = "Not Set";
+        PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
     }
 
@@ -47,7 +47,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
         return  /*ClientId == other.ClientId &&*/
                 playerName.Equals(other.playerName) &&
                 PlayerNumber == other.PlayerNumber &&
-                PlayerCharacter.Equals(other.PlayerCharacter) &&
+                PlayerCharacter == other.PlayerCharacter &&
                 PlayerColor == other.PlayerColor;
     }
 }

@@ -122,7 +122,7 @@ public class GameManager : NetworkBehaviour
     {
         SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
-        MultiplayerManager.Instance.ResetDictionaries();
+        MultiplayerManager.Instance.Reset();
         if (IsHost)
         {
             LoadedGameModeRpc();
@@ -145,7 +145,7 @@ public class GameManager : NetworkBehaviour
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId);
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId, CharacterData.Instance.character, CharacterData.Instance.characterColor);
         }
         else
         {
@@ -171,32 +171,57 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void MapSelected()
     {
-        // Loads the race based on the name of the button clicked
-        switch (GetComponent<ButtonBehavior>().buttonClickedName)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            case "1-1":
-                SceneManager.LoadScene("RIT Outer Loop Greybox");
-                break;
-            case "1-2":
-                SceneManager.LoadScene("1-2");
-                break;
-            case "1-3":
-                SceneManager.LoadScene("1-3");
-                break;
-            case "1-4":
-                SceneManager.LoadScene("1-4");
-                break;
-            default:
-                break;
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "1-1":
+                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITOuterLoop);
+                    break;
+                case "1-2":
+                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITQuarterMile);
+                    break;
+                case "1-3":
+                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITDorm);
+                    break;
+                case "1-4":
+                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.FinalsBrickRoad);
+                    break;
+                default:
+                    break;
+            }
+            
         }
-        curState = GameStates.game;
+        else
+        {
+           // Loads the race based on the name of the button clicked
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "1-1":
+                    SceneManager.LoadScene("RIT Outer Loop Greybox");
+                    break;
+                case "1-2":
+                    SceneManager.LoadScene("1-2");
+                    break;
+                case "1-3":
+                    SceneManager.LoadScene("1-3");
+                    break;
+                case "1-4":
+                    SceneManager.LoadScene("1-4");
+                    break;
+                default:
+                    break;
+            }
+            curState = GameStates.game; 
+        }
+        
 
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     public void LoadMapRpc(string mapName)
     {
-
+        SceneManager.LoadScene(mapName);
     }
     /// <summary>
     /// Triggers when the game finishes
