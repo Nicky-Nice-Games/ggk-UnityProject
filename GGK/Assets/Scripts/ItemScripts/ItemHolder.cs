@@ -22,7 +22,6 @@ public class ItemHolder : MonoBehaviour
     [SerializeField]
     private BaseItem heldItem;
 
-
     [SerializeField]
     private float timer = 5.0f;
 
@@ -31,7 +30,10 @@ public class ItemHolder : MonoBehaviour
 
     [SerializeField]
     private Texture defaultItemDisplay;
-    
+
+    private BaseItem item;
+    private int driverItemTier;
+    private int uses;
 
     // [SerializeField]
     // private TextMesh heldItemText;
@@ -43,6 +45,8 @@ public class ItemHolder : MonoBehaviour
     //AudioClip throwSound;
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
+    public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +54,12 @@ public class ItemHolder : MonoBehaviour
 
         timer = Random.Range(1, 6);
 
+        uses = 0;
+
+        if (thisDriver)
+        {
+            itemDisplay.texture = defaultItemDisplay;
+        }
 
         //soundPlayer = GetComponent<AudioSource>();
 
@@ -74,6 +84,44 @@ public class ItemHolder : MonoBehaviour
         {
             timer = 0;
         }
+
+
+        if (holdingItem && item)
+        {
+            // for shield
+            if (item.isTimed)
+            {
+                if (item.Timer <= 0.0f)
+                {
+                    heldItem = null;
+                    holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
+                }
+            }
+            // for puck, boost, and spill
+            else if (item.UseCount >= 1)
+            {
+                if (uses == 0)
+                {
+                    heldItem = null;
+                    holdingItem = false;
+                    if (thisDriver)
+                    {
+                        itemDisplay.texture = defaultItemDisplay;
+                    }
+                }
+            }
+        }
+
+        if (thisDriver)
+        {
+            Debug.Log(uses);
+        }
+
+
     }
 
     private bool IsHoldingItem()
@@ -92,16 +140,16 @@ public class ItemHolder : MonoBehaviour
 
     public void OnThrow(InputAction.CallbackContext context)
     {
-        // handles item usage
-        if (holdingItem)
+        if (!holdingItem) return;
+
+        if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
-            BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
-            item.IsUpgraded = heldItem.IsUpgraded;
-            heldItem = null;
-            itemDisplay.texture = defaultItemDisplay;
-            holdingItem = false;
+            item.ItemTier = heldItem.ItemTier;
+
+            uses--; // Decrease after successful use
         }
     }
 
@@ -110,14 +158,20 @@ public class ItemHolder : MonoBehaviour
         // handles item usage
         if (holdingItem)
         {
+            if (uses == 0)
+            {
+                uses = heldItem.UseCount;
+            }
+            else
+            {
+                uses -= 1;
+            }
             // sound effect when item thrown
             //soundPlayer.PlayOneShot(throwSound);
 
-            BaseItem item = Instantiate(heldItem, transform.position, transform.rotation);
+            item = Instantiate(heldItem, transform.position, transform.rotation);
             item.Kart = this;
-            item.IsUpgraded = heldItem.IsUpgraded;
-            heldItem = null;
-            holdingItem = false;
+            item.ItemTier = heldItem.ItemTier;
         }
         timer = Random.Range(1, 6);
 
@@ -155,10 +209,16 @@ public class ItemHolder : MonoBehaviour
             ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
 
             // Gives kart an item if they don't already have one
-            if (heldItem == null)
+            if (!holdingItem)
             {
                 heldItem = itemBox.RandomizeItem();
-                if (itemDisplay != null) 
+                // Initialize use count if first use
+                if (uses == 0)
+                {
+                    uses = heldItem.UseCount;
+                }
+                Debug.Log(uses);
+                if (thisDriver)
                 {
                     itemDisplay.texture = heldItem.itemIcon;
                 }
@@ -182,8 +242,9 @@ public class ItemHolder : MonoBehaviour
         // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Projectile")
         {
-            Destroy(collision.gameObject);
+            if (thisDriver != null)
             thisDriver.sphere.velocity /= 8;
+            Destroy(collision.gameObject);
         }
 
         // kart uses a boost and is given the boost through a force
@@ -192,14 +253,19 @@ public class ItemHolder : MonoBehaviour
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
             float duration = 2.5f;
-            if (boost.IsUpgraded)
+            if (boost.ItemTier == 2)
             {
-                boostMult = 2.0f;
+                thisDriver.sphere.velocity /= 8;
             }
-            else
+            else if (npcDriver != null)
             {
-                boostMult = 1.5f;
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
+            boostMult = 1.5f;
             
             if(thisDriver != null)
             {
@@ -208,7 +274,7 @@ public class ItemHolder : MonoBehaviour
             }
             else if(npcDriver != null)
             {
-                StartCoroutine(ApplyNPCBoost(npcDriver, boostMult, duration));
+                StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
                 Debug.Log("Applying Boost Item!");
             }
             Destroy(collision.gameObject);
@@ -248,7 +314,7 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
-    IEnumerator ApplyNPCBoost(NPCDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
@@ -258,5 +324,4 @@ public class ItemHolder : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-
 }
