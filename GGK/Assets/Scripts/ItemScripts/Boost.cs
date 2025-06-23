@@ -14,7 +14,7 @@ public class Boost : BaseItem
     // Update is called once per frame
     void FixedUpdate()
     {
-        DecreaseTimer();
+        // DecreaseTimer();
     }
 
     // the boost spawns on the user as an empty gameobject and applies a force to the kart

@@ -255,7 +255,7 @@ public class ItemHolder : MonoBehaviour
             // itemDisplay.texture = heldItem.itemIcon;
 
             // if player missing item, gives random level 2 item or upgrades current item
-            heldItem = upgradeBox.UpgradeItem(this.gameObject);
+            upgradeBox.UpgradeItem(this.gameObject);
             heldItem.OnLevelUp(heldItem.ItemTier);
             uses = heldItem.UseCount;
 

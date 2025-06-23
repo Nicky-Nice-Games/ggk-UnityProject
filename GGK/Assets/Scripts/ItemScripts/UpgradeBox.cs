@@ -23,7 +23,7 @@ public class UpgradeBox : ItemBox
     /// </summary>
     /// <param name="kart">The kart that hit it</param>
     /// <returns>An upgraded baseItem</returns>
-    public BaseItem UpgradeItem(GameObject kart)
+    public void UpgradeItem(GameObject kart)
     {
         //BaseItem itemUpgraded = new BaseItem();
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
@@ -39,7 +39,6 @@ public class UpgradeBox : ItemBox
         {
             itemScript.HeldItem.ItemTier++;
         }
-        return itemScript.HeldItem;
     }
 
 }
