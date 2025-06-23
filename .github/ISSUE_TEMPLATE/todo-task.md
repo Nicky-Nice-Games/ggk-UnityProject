@@ -1,6 +1,6 @@
 ---
 name: ToDo Task
-about: Nick is testing a template of asking people to do stuff on the project
+about: Issue template detailing a task that needs to get done.
 title: "[TODO: TASK]"
 labels: ''
 assignees: Fluff74
@@ -8,21 +8,18 @@ assignees: Fluff74
 ---
 
 ### Summary:
-Start to pivot to using issues to track who is working on what. 
+(what needs to be done. Give a description of the feature or task, and what the implementation should allow us to do. For example: adding a new team memebr to the CODEOWNER file. )
 
 ### Time frame?
-We should be ready for a pivot to this and use for week 5. 
+(When should this task be done by)
 
 ### Example Use Case
 
-- In Monday stand-up, we can look at all the open issues, talk about ones that push us closer to our sprint goals, and make sure we have people assigned.
-- In Wednesday stand-up, we can look at the milestone and see the open issues and the progress
-- In Friday stand-up, we can look at the milestone and see how we did. 
+(explain how we could make use of the feature or result of the task to serve the development of the project. Is it a gameplay feature, or is it something that we can use to smooth development?)
 
 ### Related Issues:
 
-- Issue #4 
-- Issue #3 
+- (Include a reference to another relevant issue if applicable.)
 
 ### How to Test:
-- Week five can be a good test to see how this "production feature" goes via the week 5 retrospective.
+(What can we do to ensure that the feature works, or that it is ready to be marked as complete?)
