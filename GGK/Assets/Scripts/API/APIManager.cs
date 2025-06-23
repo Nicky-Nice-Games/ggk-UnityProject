@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
-using JetBrains.Annotations;
 using UnityEngine.Networking;
 
 // Script relies on the data.json being in the same directory as API
@@ -11,7 +13,7 @@ public class APIManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(RunAPIFlow());
+        //StartCoroutine(RunAPIFlow());
     }
 
     /// <summary>
@@ -20,7 +22,7 @@ public class APIManager : MonoBehaviour
     /// <param name="url">where to send the data</param>
     /// <param name="jsonData">json data</param>
     /// <returns></returns>
-    IEnumerator PostJson(string url, string jsonData)
+    private IEnumerator PostJson(string url, string jsonData)
     {
         // Sets up the unity request
         UnityWebRequest request = new UnityWebRequest(url, "POST");
@@ -43,8 +45,7 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    // Get endpoint on local maven server should be sm like http://localhost:8080/getdata
-    IEnumerator GetRequest(string uri)
+    private IEnumerator GetRequest(string uri, PlayerInfo thisPlayer)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -54,16 +55,14 @@ public class APIManager : MonoBehaviour
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
-                // UPDATE THIS SO GOOD REQUEST RETURNS PLAYERINFO DATA STRUCT WITH PLAYER INFO COPIED OVER
-                // Getting the data from the json get request
+                // Getting the data from the json get request and setting the player data
                 string data = webRequest.downloadHandler.text;
-                WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
-                Debug.Log("PID: " + userData.pid);
+                PlayerInfo userData = JsonUtility.FromJson<PlayerInfo>(data);
+                thisPlayer = userData;
             }
             else
             {
-                // UPDATE THIS SO BAD REQUEST / NULL OBJ RETURNED (CHECK WITH BACKEND ON THAT) RETURNS CONSTRUCTED DEFAULT PLAYER INFO DATA STRUCT
-                Debug.LogError("Failed to get data" + webRequest.error);
+                Debug.Log("Failed to get data" + webRequest.error);
             }
         }
     }
@@ -72,19 +71,23 @@ public class APIManager : MonoBehaviour
     /// Wrapper method for running the API manager flow
     /// </summary>
     /// <returns></returns>
+    /*
     IEnumerator RunAPIFlow()
     {
         // Get info from user login
+        // This will have to set the pid so we can communicate with backend
+        string placeHolderPID = "26ec3c18-3fe5-11f0-8cc9-ac1f6bbcd350";
 
         // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
-        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/webservice/playerinfo/getinfo/26ec3c18-3fe5-11f0-8cc9-ac1f6bbcd350";    // UPDATE THIS
-        Debug.Log("Path: " + getPath);
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog/player/" + placeHolderPID;    
+        //Debug.Log("Path: " + getPath);
 
         // Chaining the Coroutines so this one finishes before the main one
         // Sending request for existing player data
         yield return StartCoroutine(GetRequest(getPath));
 
         // testing player ---
+        
         PlayerInfo testPlayer = new PlayerInfo
         {
             playerID = 0,
@@ -112,16 +115,69 @@ public class APIManager : MonoBehaviour
                 ["Oil spill 2"] = 1
             }
         };
+        
         // ---
 
-        // UPDATE PLAYER STATS FOR THE MATCH
+        // UPDATE PLAYER STATS FOR THE MATCH (after race ended)
 
         // Serializing data to send back
         SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
-        serializable.ConvertToSerializable(testPlayer);
+        serializable.ConvertToSerializable(new PlayerInfo());   // Placeholder player info value CHANGE WHEN ABLE TO
         string json = JsonUtility.ToJson(serializable);
 
         // Post the updated data struct
-        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));     // UPDATE URI IF NEEDED
+        // Updated to send post
+        //StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));     // UPDATE URI IF NEEDED
+    }
+    */
+
+    // Starts the corutine for posting json data
+    public void SendPost(string json)
+    {
+        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));    
+    }
+
+    /// <summary>
+    /// Starts the corutine for getting json data
+    /// </summary>
+    /// <param name="pid">the player ID</param>
+    /// <param name="thisPlayer">the player whos data will be set</param>
+    /// <returns></returns>
+    public IEnumerator SendGet(string pid, PlayerInfo thisPlayer)
+    {
+        // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog/player/" + pid;
+        Debug.Log("Path: " + getPath);
+        yield return StartCoroutine(GetRequest(getPath, thisPlayer));
+    }
+
+    /// <summary>
+    /// Using email to check if player exists in online database
+    /// </summary>
+    /// <param name="email">email</param>
+    /// <param name="callback">the bool that will be returned as a callback</param>
+    /// <returns></returns>
+    public IEnumerator CheckForPlayerInData(string email, Action<bool> callback)
+    {
+        // uri = gameservice/playerlog/{email}
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(
+            "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email))
+        {
+            yield return webRequest.SendWebRequest();
+
+            // Checking good request
+            if(webRequest.result == UnityWebRequest.Result.Success)
+            {
+                string json = webRequest.downloadHandler.text;
+
+                // Getting the bool out of the returned data
+                callback(bool.Parse(json.ToLower()));
+            }
+            else
+            {
+                Debug.Log("GET ERROR FOR PLAYER CHECK: " + webRequest.error);
+                callback(false);
+            }
+        }
     }
 }

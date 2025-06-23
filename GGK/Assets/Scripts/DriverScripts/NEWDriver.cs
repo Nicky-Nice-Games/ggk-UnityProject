@@ -98,6 +98,9 @@ public class NEWDriver : MonoBehaviour
 
     public bool isDriving;
 
+    // Player info for API
+    private PlayerInfo playerInfo;
+
     // Start is called before the first frame update
     void Start()
     {
