@@ -31,9 +31,42 @@ namespace AK
         static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
 
+    namespace STATES
+    {
+        namespace MAP_STATES
+        {
+            static const AkUniqueID GROUP = 218522918U;
+
+            namespace STATE
+            {
+                static const AkUniqueID LAP1 = 439635945U;
+                static const AkUniqueID LAP2 = 439635946U;
+                static const AkUniqueID LAP3 = 439635947U;
+                static const AkUniqueID NONE = 748895195U;
+            } // namespace STATE
+        } // namespace MAP_STATES
+
+        namespace MUSIC_STATES
+        {
+            static const AkUniqueID GROUP = 1690668539U;
+
+            namespace STATE
+            {
+                static const AkUniqueID DORM = 2196622405U;
+                static const AkUniqueID FBR = 1167025705U;
+                static const AkUniqueID MENU = 2607556080U;
+                static const AkUniqueID NONE = 748895195U;
+                static const AkUniqueID OUTERLOOP = 1139287912U;
+                static const AkUniqueID POST_RACE = 716187581U;
+            } // namespace STATE
+        } // namespace MUSIC_STATES
+
+    } // namespace STATES
+
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID MUSIC = 3991942870U;
         static const AkUniqueID SFX = 393239870U;
     } // namespace BANKS
 
