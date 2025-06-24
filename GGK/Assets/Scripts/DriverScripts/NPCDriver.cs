@@ -5,6 +5,7 @@ using UnityEngine.Splines;
 using DG.Tweening;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using static UnityEngine.GraphicsBuffer;
 
 public class NPCDriver : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class NPCDriver : MonoBehaviour
     private float recoveryTimer = 0f;
     public float recoveryDuration = 2.5f; // Duration to recover full control
     private float bumpCooldown = 0f;
+
     void Start()
     {
         rBody.drag = 0.5f;
@@ -79,6 +81,7 @@ public class NPCDriver : MonoBehaviour
                 Vector3 forwardDir = Vector3.ProjectOnPlane(velocity.normalized, hit.normal).normalized;
                 Quaternion groundAlignedRotation = Quaternion.LookRotation(forwardDir, hit.normal);
                 transform.rotation = Quaternion.Slerp(transform.rotation, groundAlignedRotation, rotationAlignSpeed * Time.deltaTime);
+
             }
             else
             {
@@ -198,13 +201,7 @@ public class NPCDriver : MonoBehaviour
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         if (velocity.magnitude < minSpeed) velocity = Vector3.zero;
 
-        //// ROTATION TO MATCH TARGET
-        //Quaternion targetRotation = followTarget.rotation;
-        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationAlignSpeed * Time.fixedDeltaTime);
-        //
-        //// VELOCITY ALIGNMENT (optional, for smooth forward motion)
-        //Vector3 desiredForward = followTarget.forward;
-        //velocity = Vector3.Lerp(velocity, desiredForward * velocity.magnitude, Time.fixedDeltaTime * 5f);
+        
 
 
         if (bumpCooldown <= 0f)
@@ -270,7 +267,7 @@ public class NPCDriver : MonoBehaviour
             float bumpForce = 8f;
             rBody.AddForce(bumpDirection * bumpForce, ForceMode.Impulse);
 
-            bumpCooldown = 0.3f;
+            bumpCooldown = 0.2f;
             StartRecovery();
         }
     }
