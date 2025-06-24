@@ -48,6 +48,8 @@ public class NPCDriver : MonoBehaviour
     [SerializeField]
     private float recoveryTimer = 0f;
     public float recoveryDuration = 2.5f; // Duration to recover full control
+
+    public float TopMaxSpeed { get { return topMaxSpeed; } }
     private float bumpCooldown = 0f;
     void Start()
     {
