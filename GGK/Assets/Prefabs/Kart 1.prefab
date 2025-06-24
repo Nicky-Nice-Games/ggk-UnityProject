@@ -109964,11 +109964,12 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   movementDirection: {x: 0, y: 0, z: 0}
   turning: {x: 0, y: 0, z: 0, w: 0}
-  accelerationRate: 2100
+  accelerationRate: 2700
   deccelerationRate: 5
   airDeccelerationRate: 2
   minSpeed: 5
-  turnSpeed: 40
+  maxSpeed: 38
+  turnSpeed: 75
   maxSteerAngle: 20
   kartNormal: {fileID: 2772615197910849762}
   gravity: 30
@@ -109979,12 +109980,14 @@ MonoBehaviour:
   isDrifting: 0
   turboTwistWindow: 40
   driftFactor: 1
-  driftTurnMultiplier: 1
+  driftTurnMultiplier: 0.7
   driftFowardCompensation: 52
   minDriftTime: 200
-  driftBoostForce: 1.2
+  driftBoostForce: 2
   hopForce: 8
   minDriftSteer: 40
+  boostMaxSpeed: 60
+  driftMaxSpeed: 36
   frontTireR: {fileID: 606236551198142739}
   frontTireL: {fileID: 4043692144358727760}
   steeringWheel: {fileID: 2911521289919520248}
