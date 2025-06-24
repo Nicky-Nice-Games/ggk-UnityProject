@@ -49,7 +49,7 @@ public class ItemHolder : MonoBehaviour
     {
         holdingItem = IsHoldingItem();
 
-        timer = Random.Range(1, 6);
+        timer = Random.Range(5, 8);
 
         uses = 0;
 
@@ -103,7 +103,7 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    // heldItem = null;
+                    heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
@@ -129,7 +129,7 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    // heldItem = null;
+                    heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
@@ -203,7 +203,7 @@ public class ItemHolder : MonoBehaviour
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
         }
-        timer = Random.Range(1, 6);
+        timer = Random.Range(5, 8);
 
     }
 
@@ -389,12 +389,27 @@ public class ItemHolder : MonoBehaviour
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
     {
-        for (float t = 0; t < duration; t += Time.deltaTime)
-        {
-            Vector3 boostDirection = driver.transform.forward * boostForce;
+        SplineAnimate spline = driver.followTarget.gameObject.GetComponent<SplineAnimate>();
 
-            driver.rBody.AddForce(boostDirection, ForceMode.VelocityChange);
-            yield return new WaitForFixedUpdate();
-        }
+        // modify variables to increase balls max speed
+        float originalSpeed = spline.MaxSpeed;
+        float boostedSpeed = originalSpeed * boostForce;
+        float progress = spline.NormalizedTime;
+
+        // increase balls max speed
+        spline.MaxSpeed = boostedSpeed;
+        spline.NormalizedTime = progress;
+
+        // apply boost to npc
+        driver.maxSpeed = driver.TopMaxSpeed * boostForce;
+
+        yield return new WaitForSeconds(duration);
+
+        // set max speeds back to original values
+        driver.maxSpeed = driver.TopMaxSpeed;
+        spline.MaxSpeed = originalSpeed;
+        spline.NormalizedTime = spline.NormalizedTime;
+
+        driver.boosted = false;
     }
 }

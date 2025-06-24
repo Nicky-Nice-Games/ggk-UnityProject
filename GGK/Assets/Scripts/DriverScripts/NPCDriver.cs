@@ -49,6 +49,8 @@ public class NPCDriver : MonoBehaviour
     private float recoveryTimer = 0f;
     public float recoveryDuration = 2.5f; // Duration to recover full control
 
+    public float TopMaxSpeed { get { return topMaxSpeed; } }
+
     void Start()
     {
         rBody.drag = 0.5f;
