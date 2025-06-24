@@ -58,14 +58,7 @@ public class PlayerKartHandeler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            RotateLeft();
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            RotateRight();
-        }
+
     }
 
     // Select this character button
@@ -143,18 +136,6 @@ public class PlayerKartHandeler : MonoBehaviour
 
         if (characterData != null)
             characterData.characterColor = middleColor;
-    }
-
-    // Kart Rotation
-    public void RotateLeft()
-    {
-        rotation--;
-        kartModel.transform.rotation = Quaternion.Euler(0, rotation, 0);
-    }
-    public void RotateRight()
-    {
-        rotation++;
-        kartModel.transform.rotation = Quaternion.Euler(0, rotation, 0);
     }
 
     /* Old Code
