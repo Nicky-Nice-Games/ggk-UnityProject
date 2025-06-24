@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -10,6 +10,7 @@ public class KartVisual : MonoBehaviour
     public Transform visualRoot;      // Handles ground alignment and vertical compression
     public Transform leanContainer;   // Handles pitch/roll for acceleration leaning
     public Transform[] suspensionPoints;
+    
 
     [Header("Suspension Settings")]
     public float suspensionLength = 0.9f;
@@ -33,7 +34,11 @@ public class KartVisual : MonoBehaviour
     public float wheelMaxCompression = 1.32f;   // Max how far it can push into chassis
     public float wheelSmoothTime = 0.05f;
 
-    private Vector3[] wheelVelocity;           // For SmoothDamp per wheel
+    [Header("Wheel Rotation Settings")]
+    public float wheelRadius = 0.3f; //Set based on tire mesh size
+
+
+    private Vector3[] wheelVelocity;           //For SmoothDamp per wheel
 
     private Vector3 lastVelocity;
     private Vector3 visualVelocity;
@@ -52,7 +57,26 @@ public class KartVisual : MonoBehaviour
         ApplyLeaning();
         CheckLanding();
         AnimateSquash();
+        RotateWheels();
+
     }
+
+    void RotateWheels()
+    {
+        //Project velocity onto the forward direction of the visual root
+        Vector3 forward = visualRoot.forward;
+        float forwardSpeed = Vector3.Dot(sphereRigidbody.velocity, forward);
+
+        //Calculate how much to rotate this frame
+        float rotationAmount = (forwardSpeed / (2f * Mathf.PI * wheelRadius)) * 360f * Time.deltaTime;
+
+        foreach (var wheel in wheelMeshes)
+        {
+            // Rotate around local X axis (assumes wheel rolls around X)
+            wheel.Rotate(Vector3.right, rotationAmount, Space.Self);
+        }
+    }
+
 
     void ApplySuspension()
     {
@@ -94,7 +118,7 @@ public class KartVisual : MonoBehaviour
                 targetOffset -= compression * wheelMaxCompression;
             }
 
-            // Convert world-space target position back to local relative to suspension point
+            //Convert world-space target position back to local relative to suspension point
             Vector3 localTarget = suspensionPoints[i].InverseTransformPoint(rayOrigin - Vector3.up * targetOffset);
             Vector3 localCurrent = suspensionPoints[i].InverseTransformPoint(wheel.position);
 

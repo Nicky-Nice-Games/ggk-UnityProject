@@ -14,10 +14,10 @@ public class OptionsData : MonoBehaviour
     public GameManager GameManager { get { return gameManager; } }
 
     // Data
-    public int masterVolume = 100;
-    public int dialougeVolume = 100;
-    public int sfxVolume = 100;
-    public int musicVolume = 100;
+    public float masterVolume = 100;
+    public float dialougeVolume = 100;
+    public float sfxVolume = 100;
+    public float musicVolume = 100;
 
     // Start is called before the first frame update
     void Start()
