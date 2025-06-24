@@ -58,6 +58,7 @@ public class NEWDriver : MonoBehaviour
     [Header("Air Tricks Settings")]
     public float airTrickForce = 10f; //Force applied when performing an air trick
     public float airTrickBoostForce = 5f; //Boost force applied after landing
+    public ParticleSystem airTrickParticles; //Particle system for air tricks
     int airTrickCount;
     bool AirTricking;
     bool airTrickInProgress;
@@ -100,8 +101,7 @@ public class NEWDriver : MonoBehaviour
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
 
     //Tween stuff
-    Tween driftRotationTween;
-    Tween driftPositionTween;
+    Tween driftRotationTween;    
     float driftVisualAngle = 10f;
     float driftTweenDuration = 0.4f;
 
@@ -141,6 +141,8 @@ public class NEWDriver : MonoBehaviour
         {
             ps.Stop();
         }
+
+        airTrickParticles.Stop();
     }
 
     // Update is called once per frame
@@ -286,7 +288,7 @@ public class NEWDriver : MonoBehaviour
         {
             if(AirTricking)
             {
-                Boost(airTrickBoostForce, 0.5f * airTrickCount); //Apply boost when landing
+                StartCoroutine(Boost(airTrickBoostForce, 0.5f * airTrickCount)); //Apply boost when landing
             }
             AirTricking = false; //Reset air tricking state
 
@@ -295,14 +297,6 @@ public class NEWDriver : MonoBehaviour
         // Apply extra downward force to fall faster
         sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); 
 
-        //Update the wheel rotations
-        //float steerAngle = movementDirection.x * maxSteerAngle;
-        //
-        //frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
-        //frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
-
-        //rBody.Move(transform.position + velocity * Time.fixedDeltaTime, transform.rotation * turning);
-        // Apply movement
 
         sphere.AddForce(acceleration, ForceMode.Acceleration);       
         transform.rotation = transform.rotation * turning;
@@ -562,11 +556,11 @@ public class NEWDriver : MonoBehaviour
         driftTime = 0f;
 
         // Reset visuals
-        driftPositionTween?.Kill();
+        
         driftRotationTween?.Kill();
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
-        driftPositionTween = kartModel.DOLocalMove(Vector3.zero, driftTweenDuration);
+        
 
         particleSystemsBL.ForEach(ps => ps.Stop());
         particleSystemsBR.ForEach(ps => ps.Stop());
@@ -639,7 +633,13 @@ public class NEWDriver : MonoBehaviour
             {
                 airTrickInProgress = true;
                 //Perform right air trick
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                driftRotationTween?.Kill(); // Kill any existing drift rotation tween
+
+                var main = airTrickParticles.main;
+                main.flipRotation = 0; // Flip the rotation for left air trick
+
+                airTrickParticles.Play(); // Play air trick particles
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -653,7 +653,13 @@ public class NEWDriver : MonoBehaviour
             {
                 airTrickInProgress = true;
                 //Perform left air trick
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                driftRotationTween?.Kill(); // Kill any existing drift rotation tween
+                
+                var main = airTrickParticles.main;
+                main.flipRotation = 1; // Flip the rotation for left air trick
+
+                airTrickParticles.Play(); // Play air trick particles
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -667,7 +673,10 @@ public class NEWDriver : MonoBehaviour
             {
                 airTrickInProgress = true;
                 //Perform default air trick
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                driftRotationTween?.Kill(); // Kill any existing drift rotation tween
+
+                
+                kartModel.DOLocalRotate(new Vector3(360f, 0f, 0f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -768,20 +777,6 @@ public class NEWDriver : MonoBehaviour
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.15f).SetEase(Ease.InQuad))          //untilt
                 .Join(kartModel.DOLocalMoveY(0f, 0.15f).SetEase(Ease.OutBack))                                    //sutble descend
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot / 2f, zTilt), 2.0f).SetEase(Ease.OutSine));       //slide in slightly
-                //.OnComplete(() =>
-                //{
-                //    //Snap-Back Tilt Mid Drift
-                //    float snapTilt = isDriftingLeft ? -30f : 30f;
-                //
-                //    // Kick back the Z tilt temporarily, then reset to stable drift tilt
-                //    driftRotationTween = DOTween.Sequence()
-                //        .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 1f).SetEase(Ease.InQuad))
-                //        .Join(kartModel.DOLocalMoveY(1f, 1f).SetEase(Ease.InOutSine))
-                //        .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.4f).SetEase(Ease.OutBack))
-                //        .Join(kartModel.DOLocalMoveY(0f, 0.4f).SetEase(Ease.InOutSine));
-                //
-                //
-                //});
         }
         else
         {

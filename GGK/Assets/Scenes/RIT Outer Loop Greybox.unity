@@ -2011,11 +2011,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8264439621377251441, guid: dda0392f5141c6c4b8f3cea894a5081b, type: 3}
   m_PrefabInstance: {fileID: 1861737796}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &283176698 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-  m_PrefabInstance: {fileID: 1638308135}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &289386479
 GameObject:
   m_ObjectHideFlags: 0
@@ -6103,24 +6098,6 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 8245124639533166686, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 1638308135}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &736235169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283176698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed4256f3c05af24449fec3d5c5f367e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverHeight: 3
-  hoverTime: 2
-  fadeTime: 1
-  fadeCanvas: {fileID: 1658915561}
-  kartModel: {fileID: 0}
-  kartModel: {fileID: 0}
 --- !u!1001 &739929204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17067,23 +17044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &839629506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839629499}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed4256f3c05af24449fec3d5c5f367e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverHeight: 3
-  hoverTime: 2
-  fadeTime: 1
-  fadeCanvas: {fileID: 1658915561}
-  kartModel: {fileID: 0}
 --- !u!4 &841155122 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8264439621377251441, guid: dda0392f5141c6c4b8f3cea894a5081b, type: 3}
@@ -34809,30 +34769,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1662150045652356610, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: lapDisplay
-      value: 
-      objectReference: {fileID: 747067188}
-    - target: {fileID: 1662150045652356610, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: checkPointParent
-      value: 
-      objectReference: {fileID: 180943480}
-    - target: {fileID: 1662150045652356610, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: placementDisplay
-      value: 
-      objectReference: {fileID: 1476159673}
-    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: heldItem
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: itemDisplay
-      value: 
-      objectReference: {fileID: 1080252267}
-    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      propertyPath: defaultItemDisplay
-      value: 
-      objectReference: {fileID: 2800000, guid: 7b68c3fd2d2e4ab4c9af6a29ab528b67, type: 3}
     - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Name
       value: Kart 1
@@ -34880,13 +34816,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 839629506}
-    - targetCorrespondingSourceObject: {fileID: 2442241708735958748, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 736235169}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
 --- !u!1 &1641040941
 GameObject:
@@ -38958,6 +38888,7 @@ RectTransform:
   - {fileID: 1658915558}
   - {fileID: 289386480}
   - {fileID: 1855355367}
+  - {fileID: 1877185135}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -61167,3 +61098,4 @@ SceneRoots:
   - {fileID: 1311055676}
   - {fileID: 589043636}
   - {fileID: 1951050674}
+  - {fileID: 1176888528}
