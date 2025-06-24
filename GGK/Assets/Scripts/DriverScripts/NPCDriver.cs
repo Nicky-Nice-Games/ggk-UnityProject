@@ -50,17 +50,24 @@ public class NPCDriver : MonoBehaviour
     public float recoveryDuration = 2.5f; // Duration to recover full control
 
     public float TopMaxSpeed { get { return topMaxSpeed; } }
-
+    private float bumpCooldown = 0f;
     void Start()
     {
         rBody.drag = 0.5f;
         rBody.freezeRotation = true;
         topMaxSpeed = maxSpeed;
+        rBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        //rBody.interpolation = RigidbodyInterpolation.Interpolate;
         boosted = false;
     }
 
     void FixedUpdate()
     {
+        if (bumpCooldown > 0f)
+        {
+            bumpCooldown -= Time.fixedDeltaTime;
+        }
+
         RaycastHit hit;
         isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, groundCheckDistance, groundLayer);
 
@@ -110,7 +117,7 @@ public class NPCDriver : MonoBehaviour
 
         distanceSquaredToFollow = math.distancesq(transform.position, followTarget.position);
 
-        float maxDistance = boosted ? 24000f * boostDistanceMultiplier : 24000f;
+        float maxDistance = boosted ? 5000f * boostDistanceMultiplier : 5000f;
         if (distanceSquaredToFollow > maxDistance)
         {
             returningToTarget = true;
@@ -202,7 +209,11 @@ public class NPCDriver : MonoBehaviour
         //velocity = Vector3.Lerp(velocity, desiredForward * velocity.magnitude, Time.fixedDeltaTime * 5f);
 
 
-        rBody.velocity = velocity;
+        if (bumpCooldown <= 0f)
+        {
+            rBody.velocity = velocity;
+        }
+
         rBody.MoveRotation(transform.rotation);
 
         // Fall faster if in air
@@ -248,5 +259,21 @@ public class NPCDriver : MonoBehaviour
         // Limit acceleration and maxSpeed temporarily
         accelerationRate = 500f;
         maxSpeed = 10f;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            Vector3 bumpDirection = transform.position - collision.transform.position;
+            bumpDirection.y = 0f;
+            bumpDirection.Normalize();
+
+            float bumpForce = 8f;
+            rBody.AddForce(bumpDirection * bumpForce, ForceMode.Impulse);
+
+            bumpCooldown = 0.3f;
+            StartRecovery();
+        }
     }
 }

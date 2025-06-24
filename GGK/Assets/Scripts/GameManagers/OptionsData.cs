@@ -14,7 +14,10 @@ public class OptionsData : MonoBehaviour
     public GameManager GameManager { get { return gameManager; } }
 
     // Data
-    public int volume = 100;
+    public float masterVolume = 100;
+    public float dialougeVolume = 100;
+    public float sfxVolume = 100;
+    public float musicVolume = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,7 @@ public class OptionsData : MonoBehaviour
         if (!optionsPanel.activeSelf)
         {
             optionsPanel.SetActive(true);
-            options.volumeSlider.Select();
+            options.masterVolumeSlider.Select();
         }
     }
     public void ConnectOptions()

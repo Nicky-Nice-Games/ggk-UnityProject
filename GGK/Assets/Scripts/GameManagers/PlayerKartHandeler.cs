@@ -12,14 +12,17 @@ public class PlayerKartHandeler : MonoBehaviour
     public List<GameObject> playerOptions;
 
     public CharacterData characterData;
-    public Image characterSelectedImage;
+    public SpriteRenderer characterSelectedImage;
     public TextMeshProUGUI characterName;
     private Image prevCharacterImageBorder;
-    private Image prevColorImageBorder;
+
+    public GameObject kartModel;
+    private int rotation = 140;
 
     // Reference Lists
     public List<GameObject> characterButtons;
     public List<GameObject> colorButtons;
+    public List<Color> colors;
 
     // Start is called before the first frame update
     void Start()
@@ -34,22 +37,12 @@ public class PlayerKartHandeler : MonoBehaviour
 
             Button btn = characterButton.GetComponentInChildren<Button>();
 
-            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0], btn.name));
-        }
-
-        // Connect color buttons to ChangeColor with appropriate arguments
-        foreach (GameObject colorButton in colorButtons)
-        {
-            Image[] images = colorButton.GetComponentsInChildren<Image>();
-
-            Button btn = colorButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeColor(images[1], images[0]));
+            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], btn.name));
         }
 
         // Invoke default selection
         characterButtons[0].GetComponentInChildren<Button>().onClick.Invoke();
-        colorButtons[0].GetComponentInChildren<Button>().onClick.Invoke();
+        ColorChange();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in playerOptions)
@@ -62,13 +55,19 @@ public class PlayerKartHandeler : MonoBehaviour
         }
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
     // Select this character button
     public void ChangeCharacter(Image characterImage, Image border, string name)
     {
         // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
         {
-            prevCharacterImageBorder.color = Color.gray;
+            prevCharacterImageBorder.enabled = false;
         }
 
         // Change selected character information to those on the button
@@ -76,7 +75,7 @@ public class PlayerKartHandeler : MonoBehaviour
         characterName.text = name;
 
         // Save selected button information to change back later and change border color to yellow
-        border.color = Color.yellow;
+        border.enabled = true;
         prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
@@ -84,6 +83,62 @@ public class PlayerKartHandeler : MonoBehaviour
             characterData.characterSprite = characterImage.sprite;
     }
 
+    // Which direction for the color carousel?
+    public void LeftColor()
+    {
+        // Create a new list that shifts everything to the left
+        List<Color> temp = new List<Color>();
+
+        for (int i = 1; i < colorButtons.Count; i++)
+        {
+            temp.Add(colors[i]);
+        }
+        temp.Add(colors[0]);
+
+        // New list overwrites old list
+        colors = temp;
+
+        // Call this to set color of the color carousel
+        ColorChange();
+    }
+    public void RightColor()
+    {
+        // Create a new list that shifts everything to the Right
+        List<Color> temp = new List<Color>();
+
+        temp.Add(colors[colors.Count - 1]);
+
+        for (int i = 0; i < colors.Count - 1; i++)
+        {
+            temp.Add(colors[i]);
+        }
+
+        // New list overwrites old list
+        colors = temp;
+
+        // Call this to set color of the color carousel
+        ColorChange();
+    }
+    public void ColorChange()
+    {
+        // Color Carousel Update
+        for (int i = 0; i < colorButtons.Count; i++)
+        {
+            Image[] images = colorButtons[i].GetComponentsInChildren<Image>();
+
+            // This should be the inner color
+            images[1].color = colors[i];
+        }
+
+        // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
+        Color middleColor = colors[3];
+        characterSelectedImage.color = middleColor;
+
+        if (characterData != null)
+            characterData.characterColor = middleColor;
+    }
+
+    /* Old Code
     // Select this color button
     public void ChangeColor(Image color, Image border)
     {
@@ -97,11 +152,11 @@ public class PlayerKartHandeler : MonoBehaviour
         characterSelectedImage.color = color.color;
 
         // Save selected button information to change back later and change border color to yellow
-        border.color = Color.yellow;
         prevColorImageBorder = border;
 
         // Save information to characterData script if it exist
         if (characterData != null)
             characterData.characterColor = color.color;
     }
+    */
 }
