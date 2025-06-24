@@ -120,13 +120,6 @@ public class ItemHolder : MonoBehaviour
                 }
             }
         }
-
-        if (thisDriver)
-        {
-            Debug.Log(uses);
-        }
-
-
     }
 
     private bool IsHoldingItem()
