@@ -374,14 +374,22 @@ public class ItemHolder : MonoBehaviour
     /// <returns></returns>
     IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
     {
+        // disable driver gravity
+        float oldGravity = driver.gravity;
+        driver.gravity = 5.0f;
+
+        driver.sphere.AddForce(transform.up * boostForce * 0.5f, ForceMode.VelocityChange);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
+            // gives boost effect
             Vector3 boostDirection = driver.transform.forward * boostForce;
-            boostDirection.y = boostForce;
-
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+
+            driver.sphere.AddForce(transform.up * 0.2f * boostForce, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+        // reenable driver gravity 
+        driver.gravity = oldGravity;
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
