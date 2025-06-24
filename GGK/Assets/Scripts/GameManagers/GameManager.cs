@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public static GameObject thisManagerObjInstance;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+    bool isArcade = false; // Set to true if the game is running in arcade mode
     void Awake()
     {
         thisManagerInstance = this;
@@ -64,7 +65,25 @@ public class GameManager : MonoBehaviour
         curState = GameStates.signin;
     }
 
-    
+
+    public void Login()
+    {
+        if (isArcade) { 
+            SceneManager.LoadScene("ArcadeLogin");
+
+        }
+        else
+        {
+            SceneManager.LoadScene("Login");
+        }
+
+    }
+
+    public void SignUp()
+    {
+        SceneManager.LoadScene("SignUpScene");
+    }
+
     
     public void LoadMultiSinglePlay()
     {
