@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -141,5 +142,48 @@ public class ArcadeLoginManager : MonoBehaviour
             StartSwipeMode(); // Restart swipe mode if invalid
         }
     }
+
+    public void LoadInfoState()
+    {
+        
+        startUI.SetActive(false);
+        swipeUI.SetActive(false);
+        enterInfoUI.SetActive(true);
+    }
+
+    public void ReadUsernameInput(string s) {
+        username = s;
+    }
+    public void ReadUPasswordInput(string s)
+    {
+        password = s;
+    }
+
+    public void UsernameLogin()
+    {
+        // Here you would insert code to verify and pasasing username and password with the server
+        // then save neccesasary data to the game server
+        gameManager.LoadMultiSinglePlay();
+
+    }
+
+    public void SwipeLogin()
+    {
+        // Here you would insert code to verify and pasasing username and password onto the 
+        // then save neccesasary data to the game server
+        gameManager.LoadMultiSinglePlay();
+    }
+    public void AddSwipe()
+    {
+        // Here you would insert code to send swipe information to the
+
+    }
+    public void LoadSwipeState()
+    {
+        enterInfoUI.SetActive(false);
+        startUI.SetActive(false);
+        swipeUI.SetActive(true);
+    }
+
 
 }
