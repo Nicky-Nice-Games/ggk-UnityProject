@@ -22,6 +22,7 @@ public class GameHandeler : MonoBehaviour
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
+        tooBad.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -42,7 +43,7 @@ public class GameHandeler : MonoBehaviour
                     KartCheckpoint kartCheck = gameobj.GetComponentInChildren<KartCheckpoint>();
                     // if the finishTime is default, they didn't finish the race
                     // shows "Too Bad" on the screen
-                    if (kartCheck.finishTime == 0)
+                    if (kartCheck.finishTime == float.MaxValue)
                     {
                         tooBad.gameObject.SetActive(true);
                     }

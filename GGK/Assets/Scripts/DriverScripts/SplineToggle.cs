@@ -18,7 +18,7 @@ public class SplineToggle : MonoBehaviour
     [SerializeField] private GameObject sphereHolder;
 
     [SerializeField] private List<MeshRenderer> sphereRenderers = new List<MeshRenderer>();
-    private bool isVisible = true;
+    [SerializeField] private bool isVisible;
     void Start()
     {
         SplineExtrude[] foundSplines = splineHolder.GetComponentsInChildren<SplineExtrude>(true);
@@ -57,6 +57,21 @@ public class SplineToggle : MonoBehaviour
                 sphereRenderers.Add(null);
             }
         }
+
+        isVisible = false;
+        for (int i = 0; i < extrudeSplines.Count; i++)
+        {
+            SplineExtrude spline = extrudeSplines[i];
+            MeshFilter mf = spline.GetComponent<MeshFilter>();
+
+
+            mf.sharedMesh = isVisible ? originalMeshes[i] : null;
+
+
+
+            sphereRenderers[i].enabled = isVisible;
+
+        }
     }
 
     // Update is called once per frame
@@ -74,16 +89,13 @@ public class SplineToggle : MonoBehaviour
             SplineExtrude spline = extrudeSplines[i];
             MeshFilter mf = spline.GetComponent<MeshFilter>();
 
-            if (mf != null)
-            {
+            
                 mf.sharedMesh = isVisible ? originalMeshes[i] : null;
-            }
+            
 
-            // Toggle corresponding sphere renderer
-            if (i < sphereRenderers.Count && sphereRenderers[i] != null)
-            {
+            
                 sphereRenderers[i].enabled = isVisible;
-            }
+            
         }
     }
 }
