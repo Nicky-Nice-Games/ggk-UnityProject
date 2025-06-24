@@ -160,6 +160,18 @@
 					</ActiveSourceList>
 				</Sound>
 				<Sound Name="mapIntro" ID="{5AFE0049-E646-4997-858A-46442E15E1BB}" ShortID="211652723">
+					<PropertyList>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value>400</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
@@ -172,7 +184,6 @@
 						<AudioFileSource Name="mapIntro" ID="{1522828F-B75C-43B1-B695-3173F3B498CB}">
 							<PropertyList>
 								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-								<Property Name="TrimEnd" Type="Real64" Value="6.20588235294118"/>
 							</PropertyList>
 							<Language>SFX</Language>
 							<AudioFile>mapIntro.wav</AudioFile>
