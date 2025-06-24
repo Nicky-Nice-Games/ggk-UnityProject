@@ -17,10 +17,10 @@ public class LeaderboardController : MonoBehaviour
     {
         curTime += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ToggleLeaderBoard();
-        }
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    ToggleLeaderBoard();
+        //}
     }
 
     public void ToggleLeaderBoard()
@@ -51,5 +51,6 @@ public class LeaderboardController : MonoBehaviour
         tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60 , kart.finishTime % 60);
 
         tempItem.transform.SetParent(leaderboard.transform);
+        tempItem.transform.localScale = Vector3.one;
     }
 }
