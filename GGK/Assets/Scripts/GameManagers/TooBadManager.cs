@@ -4,15 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// OLD SCRIPT // REPLACED
-
-public class GameHandeler : MonoBehaviour
+public class TooBadManager : MonoBehaviour
 {
     //too bad
     private GameManager gamemanagerObj;
-    private float targetTime = 10.0f;
     [SerializeField]
-    private float curTime;
+    private float timer = 10.0f;
     [SerializeField]
     private TextMeshProUGUI tooBad;
 
@@ -35,15 +32,14 @@ public class GameHandeler : MonoBehaviour
         {
             NEWDriver[] karts = GameObject.FindObjectsOfType<NEWDriver>();
             // decrease time when the leaderboard appears, meaning someone finished the race
-            if (targetTime <= 0.0f)
+            if (timer <= 0.0f)
             {
                 targetReached = true;
             }
 
             if (!targetReached)
             {
-                curTime = targetTime -= Time.deltaTime;
-                targetTime -= Time.deltaTime;
+                timer -= Time.deltaTime;
             }
             else
             {
