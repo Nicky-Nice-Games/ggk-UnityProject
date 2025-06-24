@@ -92,6 +92,7 @@ public class DynamicRecovery : MonoBehaviour
 
 
         //face forward
+        transform.rotation = currentCheckpoint.rotation;
         kartModel.rotation = currentCheckpoint.rotation;
 
         rb.useGravity = false;
