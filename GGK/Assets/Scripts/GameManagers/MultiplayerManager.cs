@@ -30,7 +30,7 @@ public class MultiplayerManager : NetworkBehaviour
     private Dictionary<ulong,bool> playerKartSelectionChecks = new Dictionary<ulong, bool>();
     private Dictionary<ulong,bool> playerMapSelectionChecks = new Dictionary<ulong, bool>();
     private Dictionary<ulong, Map> playerMapSelections = new Dictionary<ulong, Map>();
-    private Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
+    public Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
 
 
     // timer variables for kart select and map select scenes
@@ -105,7 +105,7 @@ public class MultiplayerManager : NetworkBehaviour
         {
             playerKartSelectionChecks.Add(clientId, false);
             playerMapSelectionChecks.Add(clientId, false);
-            playerMapSelections.Add(clientId, Map.RITQuarterMile);
+            playerMapSelections.Add(clientId, Map.RITOuterLoop);
         }
     }
 
@@ -224,22 +224,21 @@ public class MultiplayerManager : NetworkBehaviour
             switch (votedMap)
             {
                 case Map.RITOuterLoop:
-                    GameManager.thisManagerInstance.LoadMapRpc("RIT Outer Loop Greybox");
+                    GameManager.thisManagerInstance.LoadMapRpc("Netcode RIT Outer Loop Greybox");
                     break;
-                case Map.RITQuarterMile:
-                    GameManager.thisManagerInstance.LoadMapRpc("1-2");
+                case Map.Golisano:
+                    GameManager.thisManagerInstance.LoadMapRpc("Golisano Greybox");
                     break;
                 case Map.RITDorm:
-                    GameManager.thisManagerInstance.LoadMapRpc("1-3");
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Dorm Greybox");
                     break;
-                case Map.FinalsBrickRoad:
-                    GameManager.thisManagerInstance.LoadMapRpc("1-4");
+                case Map.RITWoods:
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Woods Greybox");
                     break;
                 default:
                     break;
             }
         }
-
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -252,7 +251,7 @@ public class MultiplayerManager : NetworkBehaviour
     public void ForceVoteMapRpc()
     {
         // Auto picks the map they are hovering
-        VoteMapRpc(NetworkManager.Singleton.LocalClientId, (Map)random.Next((int)Map.FinalsBrickRoad)); // random pick for now
+        VoteMapRpc(NetworkManager.Singleton.LocalClientId, (Map)random.Next((int)Map.RITWoods)); // random pick for now
     }
 
     public bool AllPlayerMapVotesIn()

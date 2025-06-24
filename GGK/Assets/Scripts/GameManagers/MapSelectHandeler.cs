@@ -7,9 +7,9 @@ using Assets.Scripts;
 public enum Map
 {
     RITOuterLoop,
-    RITQuarterMile,
+    Golisano,
     RITDorm,
-    FinalsBrickRoad
+    RITWoods
 }
 
 public class MapSelectHandeler : MonoBehaviour
