@@ -104,6 +104,9 @@ public class NEWDriver : MonoBehaviour
 
     public bool isDriving;
 
+    private uint drivingSoundID;
+    private uint driftingSoundID;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -143,6 +146,54 @@ public class NEWDriver : MonoBehaviour
             new Vector3(spherePosTransform.transform.position.x, 
             spherePosTransform.transform.position.y - colliderOffset, 
             spherePosTransform.transform.position.z);
+
+        if (isDriving && drivingSoundID == 0)
+        {
+            drivingSoundID = AkUnitySoundEngine.PostEvent("Play_engine_high_full", this.gameObject);
+        }
+        else if (!isDriving && drivingSoundID != 0)
+        {
+            AkUnitySoundEngine.StopPlayingID(drivingSoundID, 500, AkCurveInterpolation.AkCurveInterpolation_Log1);
+            drivingSoundID = 0;
+        }
+
+
+        switch(isDrifting)
+        {
+            case (true):
+                {
+                    switch (driftingSoundID)
+                    {
+                        case 0:
+                            {
+                                if (isGrounded)
+                                {
+                                    driftingSoundID = AkUnitySoundEngine.PostEvent("Play_driftScreech", this.gameObject);
+                                }
+                                break;
+                            }
+
+                        default:
+                            {
+                                if (!isGrounded)
+                                {
+                                    AkUnitySoundEngine.StopPlayingID(driftingSoundID, 50, AkCurveInterpolation.AkCurveInterpolation_Log3);
+                                    driftingSoundID = 0;
+                                }
+                                break;
+                            }
+                    }
+                    break;
+                }
+
+            case (false):
+                {
+                    AkUnitySoundEngine.StopPlayingID(driftingSoundID, 250, AkCurveInterpolation.AkCurveInterpolation_Log3);
+                    driftingSoundID = 0;
+                    break;
+                }
+        }
+
 
 
 
@@ -360,7 +411,10 @@ public class NEWDriver : MonoBehaviour
     /// </summary>
     public void Drift()
     {
-        if (!isDrifting) return;
+
+        if (!isDrifting) { return; }
+        
+
 
         //driftTime += Time.deltaTime;
 
