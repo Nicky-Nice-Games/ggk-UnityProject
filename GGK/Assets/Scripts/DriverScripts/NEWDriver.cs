@@ -18,6 +18,7 @@ public class NEWDriver : MonoBehaviour
     public float accelerationRate, deccelerationRate, airDeccelerationRate;
     public float minSpeed = 5f;
     public float maxSpeed = 60f;
+    public float airTurnSpeed = 30f; //Turning speed in the air, to prevent kart from turning too fast in the air
     public float turnSpeed = 40;   
     public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
     public Transform kartNormal;
@@ -51,6 +52,16 @@ public class NEWDriver : MonoBehaviour
 
     //To determine drifting direction
     bool isDriftingLeft;
+
+
+
+    [Header("Air Tricks Settings")]
+    public float airTrickForce = 10f; //Force applied when performing an air trick
+    public float airTrickBoostForce = 5f; //Boost force applied after landing
+    int airTrickCount;
+    bool AirTricking;
+    bool airTrickInProgress;
+
 
     [Header("Wheel references")]
     //Front tires GO
@@ -194,7 +205,8 @@ public class NEWDriver : MonoBehaviour
         if (!(sphere.velocity == Vector3.zero))
         {
             //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
-            float turningDirection = movementDirection.x * driftTurnSpeed;
+            float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
+            //float turningDirection = movementDirection.x * driftTurnSpeed;
 
             //drifting
             if (driftMethodCaller)
@@ -260,6 +272,24 @@ public class NEWDriver : MonoBehaviour
             // Smoothly rotate the kart's visual and normal upright orientation back to upright
             kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+
+            if(AirTricking)
+            {
+
+            }
+            else
+            {
+                airTrickCount = 0; //Reset air trick count when not air tricking
+            }
+        }
+        else
+        {
+            if(AirTricking)
+            {
+                Boost(airTrickBoostForce, 0.5f * airTrickCount); //Apply boost when landing
+            }
+            AirTricking = false; //Reset air tricking state
+
         }
 
         // Apply extra downward force to fall faster
@@ -599,6 +629,55 @@ public class NEWDriver : MonoBehaviour
 
     }
 
+    public void AirTrick()
+    {
+        AirTricking = true;
+        
+        if(!airTrickInProgress)
+        {
+            if (movementDirection.x > 0.1f)
+            {
+                airTrickInProgress = true;
+                //Perform right air trick
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                {
+                    airTrickInProgress = false;
+                    airTrickCount++;
+                });
+
+                //Apply tiny directional force
+                Vector3 boostDirection = kartNormal.right * airTrickForce;
+                sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            }
+            else if (movementDirection.x < -0.1f)
+            {
+                airTrickInProgress = true;
+                //Perform left air trick
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                {
+                    airTrickInProgress = false;
+                    airTrickCount++;
+                });
+
+                //Apply tiny directional force
+                Vector3 boostDirection = -kartNormal.right * airTrickForce;
+                sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            }
+            else
+            {
+                airTrickInProgress = true;
+                //Perform default air trick
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 1.2f).SetEase(Ease.OutCubic).OnComplete(() =>
+                {
+                    airTrickInProgress = false;
+                    airTrickCount++;
+                });
+
+                
+            }
+        }
+    }
+
     IEnumerator Boost(float boostForce, float duration)
     {
         foreach(ParticleSystem ps in boostFlames)
@@ -806,7 +885,14 @@ public class NEWDriver : MonoBehaviour
     {
         if (context.started)
         {
-            AttemptDrift();
+            if(isGrounded)
+            {
+                AttemptDrift();
+            }
+            else
+            {
+                AirTrick();
+            }
         }
         else if (context.canceled)
         {
