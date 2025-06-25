@@ -20,12 +20,37 @@ public class TrapItem : BaseItem
     // Start is called before the first frame update
     void Start()
     {
+
+
         // starts the hazard slightly behind the player
-        Vector3 behindPos = transform.position - transform.forward * 6;
-        transform.position = behindPos;
+        if (itemTier == 1)
+        {
+            Vector3 behindPos = transform.position - transform.forward * 6;
+            transform.position = behindPos;
+        }
+        if (itemTier > 1)
+        {
+            Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
+            transform.position = behindPos;
+        }
+        
 
         // sends the hazard slightly up and behind the player before landing on the ground
-        rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
+        // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (itemTier > 1)
+        {
+            RotateBox();
+        }
+    }
+
+    public void RotateBox()
+    {
+        transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
     public void LevelUp()
