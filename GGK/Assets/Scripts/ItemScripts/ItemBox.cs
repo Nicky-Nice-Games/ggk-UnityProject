@@ -40,7 +40,7 @@ public class ItemBox : MonoBehaviour
     {
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
-        Debug.Log("Collided!");
+        //Debug.Log("Collided!");
         BaseItem bItem = Instantiate(items[Random.Range(0,4)]);
         itemScript.HeldItem = bItem;
         itemScript.HeldItem.ItemTier = 1;
