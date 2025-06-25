@@ -302,6 +302,7 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
+                ApplyIconSpin(gameObject, 3);
             }
         }
 
