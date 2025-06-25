@@ -87,6 +87,8 @@ public class NEWDriver : MonoBehaviour
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
+    [HideInInspector]
+    public bool doGroundCheck = true;
 
     //Tween stuff
     Tween driftRotationTween;
@@ -303,20 +305,22 @@ public class NEWDriver : MonoBehaviour
     {
         RaycastHit hitNear;
 
-
-        if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+        if (doGroundCheck)
         {
-            airTime = 0f; //Reset air time when grounded
-            isGrounded = true;
+            if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+            {
+                airTime = 0f; //Reset air time when grounded
+                isGrounded = true;
 
-            //Normal Rotation
-            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
-            kartNormal.Rotate(0, transform.eulerAngles.y, 0);
-        }
-        else
-        {
-            airTime += Time.deltaTime; //Keeping track of air time
-            isGrounded = false; 
+                //Normal Rotation
+                kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
+                kartNormal.Rotate(0, transform.eulerAngles.y, 0);
+            }
+            else
+            {
+                airTime += Time.deltaTime; //Keeping track of air time
+                isGrounded = false;
+            }
         }
     }
 

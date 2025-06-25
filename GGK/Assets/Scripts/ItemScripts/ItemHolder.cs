@@ -292,10 +292,10 @@ public class ItemHolder : MonoBehaviour
         {
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
-            float duration = 2.5f;
+            float duration;
             if (boost.ItemTier == 2 && npcDriver == null)
             {
-                thisDriver.sphere.velocity /= 8;
+                // thisDriver.sphere.velocity /= 8;
             }
             else if (npcDriver != null)
             {
@@ -305,26 +305,34 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.accelerationRate = 500;
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
-            boostMult = 1.5f;
-            
+
+            duration = 3.0f;
             if(thisDriver != null)
             {
+                // different values and functionality for different levels of boosts
                 switch (boost.ItemTier)
                 {
-                    default:
+                    default: // level 1
+                        boostMult = 1.25f;
                         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
                         break;
-                    case 3:
+                    case 2: // level 2
+                        boostMult = 1.5f;
+                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                        break;
+                    case 3: // level 3
+                        boostMult = 1.75f;
                         StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
                         break;
-                    case 4:
+                    case 4: // level 4
                         break;
 
                 }
                 Debug.Log("Applying Boost Item!");
             }
-            else if(npcDriver != null)
+            else if(npcDriver != null) // boost for npcs
             {
+                boostMult = 1.5f;
                 StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
                 Debug.Log("Applying Boost Item!");
             }
@@ -378,18 +386,39 @@ public class ItemHolder : MonoBehaviour
         float oldGravity = driver.gravity;
         driver.gravity = 5.0f;
 
-        driver.sphere.AddForce(transform.up * boostForce * 0.5f, ForceMode.VelocityChange);
+        float yPos = 0;
+
+        driver.doGroundCheck = false;
+
+        RaycastHit hitNear;
+        driver.sphere.AddForce(transform.up * boostForce, ForceMode.VelocityChange);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
+            // prevents driver from going too high off ground
+            if (Physics.Raycast(transform.position + (transform.up * .2f), -driver.kartNormal.up, out hitNear, 4.0f, driver.groundLayer))
+            {
+                if (hitNear.distance <= 3.0f)
+                {
+                    driver.sphere.AddForce(transform.up * boostForce, ForceMode.VelocityChange);
+                }
+                else
+                {
+                    Vector3 pos = hitNear.point;
+                    pos.y += 3.5f;
+                    transform.position = pos;
+                }
+                
+                yPos = transform.position.y;
+            }
+
             // gives boost effect
             Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
-
-            driver.sphere.AddForce(transform.up * 0.2f * boostForce, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        // reenable driver gravity 
+        // reenable driver gravity and ground check
         driver.gravity = oldGravity;
+        driver.doGroundCheck = true;
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
