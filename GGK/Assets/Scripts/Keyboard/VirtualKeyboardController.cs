@@ -11,6 +11,7 @@ public class VirtualKeyboardController : MonoBehaviour
     private int selectedIndex = 0;
     private int rowSize = 10;
     private string curText;
+    private bool toCapitol = false;
 
     void Start()
     {
@@ -63,6 +64,7 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="value"></param>
     public void KeyPressed(string value)
     {
+        // Backspace
         if (value == "Backspace")
         {
             // Making sure the text is not empty then taking the substring
@@ -77,9 +79,27 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             curText += " ";
         }
+
+        // Letters and shift
         else
         {
-            curText += value;
+            // Checking for shift key to handle capitalization
+            if (value == "Shift")
+            {
+                toCapitol = true;
+                return;
+            }
+
+            // Checking for next letter capitalization
+            if (toCapitol)
+            {
+                curText += value.ToUpper();
+                toCapitol = false;
+            }
+            else
+            {
+                curText += value;
+            }
         }
         inputField.text = curText;
     }
