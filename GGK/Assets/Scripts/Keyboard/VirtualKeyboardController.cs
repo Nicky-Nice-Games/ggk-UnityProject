@@ -10,6 +10,7 @@ public class VirtualKeyboardController : MonoBehaviour
     [SerializeField] private List<Button> keyButtons;
     private int selectedIndex = 0;
     private int rowSize = 10;
+    private string curText;
 
     void Start()
     {
@@ -62,21 +63,25 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="value"></param>
     public void KeyPressed(string value)
     {
-        if (value == "BACK")
+        if (value == "Backspace")
         {
-            if (inputField.text.Length > 0)
-                inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+            // Making sure the text is not empty then taking the substring
+            if (curText.Length > 0)
+            {
+                curText = curText.Substring(0, curText.Length - 1);
+            }
         }
 
         // Space will prob not be included
         else if (value == "SPACE")
         {
-            inputField.text += " ";
+            curText += " ";
         }
         else
         {
-            inputField.text += value;
+            curText += value;
         }
+        inputField.text = curText;
     }
 }
 
