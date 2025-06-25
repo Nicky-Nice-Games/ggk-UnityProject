@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] public TMP_InputField inputField;
     [SerializeField] private List<Button> keyButtons;
     private int selectedIndex = 0;
     private int rowSize = 10;

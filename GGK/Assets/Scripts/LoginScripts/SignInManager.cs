@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,8 @@ public class SignInManager : MonoBehaviour
     GameObject signUpUI;
     [SerializeField]
     GameObject loginOptions;
+    [SerializeField]
+    VirtualKeyboardController keyboard;
 
     // Start is called before the first frame update
     void Start()
@@ -69,5 +72,17 @@ public class SignInManager : MonoBehaviour
     public void ContinueAsGuest()
     {
         SceneManager.LoadScene("StartScene");
+    }
+
+    public void DisplayKeyboard(GameObject sender) 
+    {
+        TMP_InputField input = sender.GetComponent<TMP_InputField>();
+        keyboard.gameObject.SetActive(true);
+        keyboard.inputField = input;
+    }
+
+    public void HideKeyboard()
+    {
+        keyboard.gameObject.SetActive(false);
     }
 }
