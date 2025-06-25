@@ -37,7 +37,7 @@ public class PlayerKartHandeler : MonoBehaviour
 
             Button btn = characterButton.GetComponentInChildren<Button>();
 
-            btn.onClick.AddListener(() => ChangeCharacter(images[2], images[0], btn.name));
+            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], btn.name));
         }
 
         // Invoke default selection
@@ -58,14 +58,7 @@ public class PlayerKartHandeler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            RotateLeft();
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            RotateRight();
-        }
+
     }
 
     // Select this character button
@@ -74,7 +67,7 @@ public class PlayerKartHandeler : MonoBehaviour
         // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
         {
-            prevCharacterImageBorder.color = Color.gray;
+            prevCharacterImageBorder.enabled = false;
         }
 
         // Change selected character information to those on the button
@@ -82,7 +75,7 @@ public class PlayerKartHandeler : MonoBehaviour
         characterName.text = name;
 
         // Save selected button information to change back later and change border color to yellow
-        border.color = Color.yellow;
+        border.enabled = true;
         prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
@@ -143,18 +136,6 @@ public class PlayerKartHandeler : MonoBehaviour
 
         if (characterData != null)
             characterData.characterColor = middleColor;
-    }
-
-    // Kart Rotation
-    public void RotateLeft()
-    {
-        rotation--;
-        kartModel.transform.rotation = Quaternion.Euler(0, rotation, 0);
-    }
-    public void RotateRight()
-    {
-        rotation++;
-        kartModel.transform.rotation = Quaternion.Euler(0, rotation, 0);
     }
 
     /* Old Code

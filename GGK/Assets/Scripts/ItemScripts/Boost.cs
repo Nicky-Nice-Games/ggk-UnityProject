@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Boost : BaseItem
 {
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-
+        
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        DecreaseTimer();
+        // DecreaseTimer();
     }
 
     // the boost spawns on the user as an empty gameobject and applies a force to the kart
