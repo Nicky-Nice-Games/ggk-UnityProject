@@ -382,42 +382,49 @@ public class ItemHolder : MonoBehaviour
     /// <returns></returns>
     IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
     {
-        // disable driver gravity
-        float oldGravity = driver.gravity;
-        driver.gravity = 5.0f;
+        // smooth "jump" and smooth raycast while in the air
 
-        float yPos = 0;
+        List<Collider> ignoreColliders = new List<Collider>();
+        Collider[] allColliders = FindObjectsOfType<Collider>();
+
+        foreach (Collider collider in allColliders)
+        {
+            if (collider == driver.sphere.gameObject.GetComponent<Collider>())
+            {
+                continue;
+            }
+
+            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
+            {
+                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
+                ignoreColliders.Add(collider);
+            }
+        }
 
         driver.doGroundCheck = false;
-
-        RaycastHit hitNear;
-        driver.sphere.AddForce(transform.up * boostForce, ForceMode.VelocityChange);
+        float oldOffset = driver.colliderOffset;
+        driver.colliderOffset = -4.0f;
+        driver.canDrift = false;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            // prevents driver from going too high off ground
-            if (Physics.Raycast(transform.position + (transform.up * .2f), -driver.kartNormal.up, out hitNear, 4.0f, driver.groundLayer))
-            {
-                if (hitNear.distance <= 3.0f)
-                {
-                    driver.sphere.AddForce(transform.up * boostForce, ForceMode.VelocityChange);
-                }
-                else
-                {
-                    Vector3 pos = hitNear.point;
-                    pos.y += 3.5f;
-                    transform.position = pos;
-                }
-                
-                yPos = transform.position.y;
-            }
 
             // gives boost effect
             Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        // reenable driver gravity and ground check
-        driver.gravity = oldGravity;
+
+        foreach (Collider collider in ignoreColliders)
+        {
+            if (collider != null)
+            {
+                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, false);
+            }
+        }
+        ignoreColliders.Clear();
+        // reenable drift and ground check
+        driver.canDrift = true;
+        driver.colliderOffset = oldOffset;
         driver.doGroundCheck = true;
     }
 

@@ -48,6 +48,8 @@ public class NEWDriver : MonoBehaviour
     public float minDriftSteer = 40f;
     public float boostMaxSpeed = 55f;
     public float driftMaxSpeed = 34f; //Maximum speed when drifting
+    [HideInInspector]
+    public bool canDrift = true;
 
     //To determine drifting direction
     bool isDriftingLeft;
@@ -808,13 +810,16 @@ public class NEWDriver : MonoBehaviour
 
     public void OnDrift(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (canDrift)
         {
-            AttemptDrift();
-        }
-        else if (context.canceled)
-        {
-            EndDrift();
+            if (context.started)
+            {
+                AttemptDrift();
+            }
+            else if (context.canceled)
+            {
+                EndDrift();
+            }
         }
     }
 
