@@ -1316,7 +1316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
@@ -1568,6 +1568,10 @@ PrefabInstance:
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_Name
       value: Slow Down Obstacle (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
@@ -4176,6 +4180,10 @@ PrefabInstance:
       value: Slow Down Obstacle (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
       value: Obstacle
       objectReference: {fileID: 0}
@@ -5086,6 +5094,10 @@ PrefabInstance:
       value: Slow Down Obstacle (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
       value: Obstacle
       objectReference: {fileID: 0}
@@ -5795,6 +5807,10 @@ PrefabInstance:
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_Name
       value: Slow Down Obstacle (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
@@ -38318,6 +38334,11 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  avoidanceDuration: 1.5
 --- !u!54 &2013023915
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -44406,6 +44427,10 @@ PrefabInstance:
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_Name
       value: Slow Down Obstacle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4281037041957347976, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
       propertyPath: m_TagString
@@ -55456,6 +55481,11 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  avoidanceDuration: 1.5
 --- !u!65 &5954472818605481480
 BoxCollider:
   m_ObjectHideFlags: 0
