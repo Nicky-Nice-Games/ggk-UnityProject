@@ -118,10 +118,10 @@ public class GameManager : MonoBehaviour
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
             case "RIT Outer Loop Greybox":
-                sceneLoader.LoadScene("RIT Outer Loop Greybox");
+                sceneLoader.LoadScene("V2 RIT Outer Loop Greybox");
                 break;
             case "Golisano Greybox":
-                sceneLoader.LoadScene("Golisano Greybox");
+                sceneLoader.LoadScene("LevelDesign_GolisanoGreybox");
                 break;
             case "RIT Dorm Greybox":
                 sceneLoader.LoadScene("RIT Dorm Greybox");
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
                 sceneLoader.LoadScene("RIT Quarter Mile Greybox V2");
                 break;
             case "Finals Brick Road Greybox":
-                sceneLoader.LoadScene("Finals Brick Road Greybox");
+                sceneLoader.LoadScene("LevelDesign_Finals Brick Road");
                 break;
             default:
                 break;
