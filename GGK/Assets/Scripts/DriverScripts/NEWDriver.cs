@@ -941,7 +941,7 @@ public class NEWDriver : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {        
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, sphere.velocity);
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
