@@ -848,6 +848,7 @@ public class NEWDriver : MonoBehaviour
 
         }
 
+        yield return new WaitForSeconds(1.0f);
         turboTwisting = false; //Reset the turbo twisting state
     }
 
