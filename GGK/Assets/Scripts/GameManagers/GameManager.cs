@@ -179,16 +179,22 @@ public class GameManager : NetworkBehaviour
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
                 case "RIT Outer Loop Greybox":
-                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITOuterLoop);
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITOuterLoop);
                     break;
                 case "Golisano Greybox":
-                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.Golisano);
+                    MultiplayerManager.Instance.VoteMapRpc(Map.Golisano);
                     break;
                 case "RIT Dorm Greybox":
-                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITDorm);
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITDorm);
                     break;
                 case "RIT Woods Greybox":
-                    MultiplayerManager.Instance.VoteMapRpc(NetworkManager.Singleton.LocalClientId, Map.RITWoods);
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
+                    break;
+                case "RIT Quarter Mile Greybox":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
+                    break;
+                case "Finals Brick Road GreyBox":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
                     break;
                 default:
                     break;

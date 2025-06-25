@@ -64,7 +64,7 @@ public class MovingObstacle : MonoBehaviour
             if (collision.gameObject.CompareTag("Kart"))
             {
                 float slowFactor = 0.5f;
-                Debug.Log("Slowing Down!");
+                //Debug.Log("Slowing Down!");
 
                 // gets the parent of the larger collider to get the different child with the driver script
                 GameObject gameobj = null;

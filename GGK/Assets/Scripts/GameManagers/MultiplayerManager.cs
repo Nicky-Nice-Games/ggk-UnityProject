@@ -211,11 +211,12 @@ public class MultiplayerManager : NetworkBehaviour
     #region map votes
     // After a selection has been made show the Map Selection Scene to everyone (after a timer auto select their last hovered option)
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void VoteMapRpc(ulong clientId, Map map)
+    public void VoteMapRpc(Map map, RpcParams rpcParams = default)
     {
-        Debug.Log($"Rpc called by clientid: {clientId}");
-        playerMapSelectionChecks[clientId] = true;
-        playerMapSelections[clientId] = map;
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+        Debug.Log($"Rpc called by clientid: {senderClientId}");
+        playerMapSelectionChecks[senderClientId] = true;
+        playerMapSelections[senderClientId] = map;
         if (AllPlayerMapVotesIn())
         {
             // pick random map
@@ -235,6 +236,12 @@ public class MultiplayerManager : NetworkBehaviour
                 case Map.RITWoods:
                     GameManager.thisManagerInstance.LoadMapRpc("RIT Woods Greybox");
                     break;
+                case Map.RITQuarterMile:
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Quarter Mile Greybox V2");
+                    break;
+                case Map.FinalsBrickRoad:
+                    GameManager.thisManagerInstance.LoadMapRpc("Finals Brick Road Greybox");
+                    break;
                 default:
                     break;
             }
@@ -242,16 +249,16 @@ public class MultiplayerManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void RescindVoteMapRpc(ulong clientId)
+    public void RescindVoteMapRpc(RpcParams rpcParams = default)
     {
-
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = true)]
     public void ForceVoteMapRpc()
     {
         // Auto picks the map they are hovering
-        VoteMapRpc(NetworkManager.Singleton.LocalClientId, (Map)random.Next((int)Map.RITWoods)); // random pick for now
+        VoteMapRpc((Map)random.Next((int)Map.RITWoods)); // random pick for now
     }
 
     public bool AllPlayerMapVotesIn()

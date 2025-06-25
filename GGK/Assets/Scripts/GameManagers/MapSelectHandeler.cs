@@ -4,12 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts;
 
+/// <summary>
+/// Map Enum by Phillip Brown
+/// Used to keep track of map votes for multiplayer
+/// </summary>
 public enum Map
 {
     RITOuterLoop,
-    Golisano,
+    RITQuarterMile,
     RITDorm,
-    RITWoods
+    FinalsBrickRoad,
+    Golisano,
+    RITWoods,
 }
 
 public class MapSelectHandeler : MonoBehaviour

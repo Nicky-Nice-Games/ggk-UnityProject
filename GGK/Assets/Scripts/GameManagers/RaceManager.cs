@@ -51,4 +51,25 @@ public class RaceManager : NetworkBehaviour
             }
         }
     }
+
+    // public override void OnNetworkSpawn()
+    // {
+    //     SpawnPlayerRpc();
+    //     base.OnNetworkSpawn();
+    // }
+
+    [Rpc(SendTo.Server)]
+    public void SpawnPlayerRpc(RpcParams rpcParams = default)
+    {
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+        Debug.Log($"SpawnPlayerRpc - clientId: {senderClientId}");
+        SpawnPlayerOnClient(senderClientId);
+    }
+
+    private void SpawnPlayerOnClient(ulong clientId)
+    {
+        GameObject player = Instantiate(kartPrefab);
+        NetworkObject playerNetworkObject = player.GetComponent<NetworkObject>();
+        playerNetworkObject.SpawnAsPlayerObject(clientId);
+    }
 }
