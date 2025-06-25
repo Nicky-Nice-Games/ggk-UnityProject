@@ -93,8 +93,9 @@ public class MovingObstacle : MonoBehaviour
                 else if (npc != null)
                 {
                     // create a Vector3 for the NPC's Acceleration then apply a counter force to slow it down
-                    Vector3 NPCacc = npc.kartModel.forward * (npc.followTarget.position.z - npc.transform.position.z) * (npc.accelerationRate * Time.fixedDeltaTime);
-                    npc.rBody.AddForce(-NPCacc * slowFactor, ForceMode.Acceleration);
+                    //Vector3 NPCacc = npc.kartModel.forward * (npc.followTarget.position.z - npc.transform.position.z) * (npc.accelerationRate * Time.fixedDeltaTime);
+                    //npc.rBody.AddForce(-NPCacc * slowFactor, ForceMode.Acceleration);
+                    npc.maxSpeed = 10f;
                 }
             }
         }
