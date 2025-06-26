@@ -94984,7 +94984,7 @@ MonoBehaviour:
   rotationFactor: 10
   maxPitch: 10
   maxRoll: 15
-  leanSmoothing: 2
+  leanSmoothing: 1
   landingVelocityThreshold: -6
   squashAmount: 2
   squashSpeed: 11
@@ -109999,11 +109999,11 @@ MonoBehaviour:
   spherePosTransform: {fileID: 1192304704561040256}
   sphere: {fileID: 8245124639533166686}
   isDrifting: 0
-  turboTwistWindow: 40
+  turboTwistWindow: 50
   driftFactor: 1
   driftTurnMultiplier: 0.7
   driftFowardCompensation: 52
-  minDriftTime: 200
+  minDriftTime: 150
   driftBoostForce: 2
   hopForce: 8
   minDriftSteer: 40
@@ -110065,6 +110065,8 @@ MonoBehaviour:
   horizontalOffset: 0.21
   driveSound: {fileID: 0}
   isDriving: 0
+  isConfused: 0
+  confusedTimer: 0
 --- !u!114 &4107905189492007490
 MonoBehaviour:
   m_ObjectHideFlags: 0

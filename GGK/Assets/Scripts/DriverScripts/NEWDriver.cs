@@ -428,10 +428,10 @@ public class NEWDriver : MonoBehaviour
                     break;
                 //Turning left
                 case < -0.1f:
-                    driftTime += (Time.deltaTime + -movementDirection.x) * 5;
+                    driftTime += (Time.deltaTime + -movementDirection.x) * 3;
                     break;
                 default:
-                    driftTime += (Time.deltaTime + 1) * 2;
+                    driftTime += (Time.deltaTime + 1) * 1.5f;
                     break;
             }
 
@@ -442,14 +442,14 @@ public class NEWDriver : MonoBehaviour
             {
                 //Turning right
                 case > 0.1f:
-                    driftTime += (Time.deltaTime + movementDirection.x) * 5;
+                    driftTime += (Time.deltaTime + movementDirection.x) * 3;
                     break;
                 //Turning left
                 case < -0.1f:
                     driftTime += Time.deltaTime + -movementDirection.x;
                     break;
                 default:
-                    driftTime += (Time.deltaTime + 1) * 2;
+                    driftTime += (Time.deltaTime + 1) * 1.5f;
                     break;
             }
         }
@@ -668,7 +668,7 @@ public class NEWDriver : MonoBehaviour
                 main.flipRotation = 0; // Flip the rotation for left air trick
 
                 airTrickParticles.Play(); // Play air trick particles
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -688,7 +688,7 @@ public class NEWDriver : MonoBehaviour
                 main.flipRotation = 1; // Flip the rotation for left air trick
 
                 airTrickParticles.Play(); // Play air trick particles
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -705,7 +705,7 @@ public class NEWDriver : MonoBehaviour
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
                 
-                kartModel.DOLocalRotate(new Vector3(360f, 0f, 0f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(360f, 0f, 0f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -877,7 +877,7 @@ public class NEWDriver : MonoBehaviour
 
         }
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.6f);
         turboTwisting = false; //Reset the turbo twisting state
     }
 
