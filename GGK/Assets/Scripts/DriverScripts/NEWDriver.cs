@@ -49,6 +49,8 @@ public class NEWDriver : MonoBehaviour
     public float minDriftSteer = 40f;
     public float boostMaxSpeed = 55f;
     public float driftMaxSpeed = 34f; //Maximum speed when drifting
+    [HideInInspector]
+    public bool canDrift = true;
 
     //To determine drifting direction
     bool isDriftingLeft;
@@ -99,6 +101,8 @@ public class NEWDriver : MonoBehaviour
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
+    [HideInInspector]
+    public bool doGroundCheck = true;
 
     //Tween stuff
     Tween driftRotationTween;    
@@ -356,20 +360,22 @@ public class NEWDriver : MonoBehaviour
     {
         RaycastHit hitNear;
 
-
-        if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+        if (doGroundCheck)
         {
-            airTime = 0f; //Reset air time when grounded
-            isGrounded = true;
+            if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+            {
+                airTime = 0f; //Reset air time when grounded
+                isGrounded = true;
 
-            //Normal Rotation
-            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
-            kartNormal.Rotate(0, transform.eulerAngles.y, 0);
-        }
-        else
-        {
-            airTime += Time.deltaTime; //Keeping track of air time
-            isGrounded = false; 
+                //Normal Rotation
+                kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
+                kartNormal.Rotate(0, transform.eulerAngles.y, 0);
+            }
+            else
+            {
+                airTime += Time.deltaTime; //Keeping track of air time
+                isGrounded = false;
+            }
         }
     }
 
@@ -916,20 +922,23 @@ public class NEWDriver : MonoBehaviour
 
     public void OnDrift(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (canDrift)
         {
-            if(isGrounded)
+            if (context.started)
             {
-                AttemptDrift();
+                if (isGrounded)
+                {
+                    AttemptDrift();
+                }
+                else
+                {
+                    AirTrick();
+                }
             }
-            else
+            else if (context.canceled)
             {
-                AirTrick();
+                EndDrift();
             }
-        }
-        else if (context.canceled)
-        {
-            EndDrift();
         }
     }
 
