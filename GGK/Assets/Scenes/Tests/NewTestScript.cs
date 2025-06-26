@@ -13,6 +13,12 @@ public class NewTestScript
         // Use the Assert class to test conditions
     }
 
+    [Test]
+    public void FailTest()
+    {
+        Assert.AreEqual(1,2);
+    }
+
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
