@@ -345,6 +345,7 @@ public class ItemHolder : MonoBehaviour
                 {
                     thisDriver.confusedTimer = 10;
                     thisDriver.isConfused = true;
+                    thisDriver.movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
                 }
             }
             else if (npcDriver != null)

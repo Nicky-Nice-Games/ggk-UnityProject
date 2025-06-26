@@ -331,6 +331,7 @@ public class NEWDriver : MonoBehaviour
             if (confusedTimer <= 0)
             {
                 isConfused = false;
+                movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
             }
         }
     }
