@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class NEWDriver : MonoBehaviour
 {
@@ -86,6 +87,7 @@ public class NEWDriver : MonoBehaviour
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
     public List<ParticleSystem> boostFlames;
+    public VisualEffect driftSmoke;
     int driftTier;
     int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
@@ -94,7 +96,7 @@ public class NEWDriver : MonoBehaviour
     public LayerMask groundLayer;        
     // Ground snapping variables
     public bool isGrounded;
-    bool attemptingDrift;
+    public bool attemptingDrift;
     float airTime;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
@@ -142,6 +144,7 @@ public class NEWDriver : MonoBehaviour
             ps.Stop();
         }
 
+        driftSmoke.Stop();
         airTrickParticles.Stop();
     }
 
@@ -763,9 +766,29 @@ public class NEWDriver : MonoBehaviour
 
             //--------------Drift Animation-----------------
 
-            float yRot = isDriftingLeft ? -40f : 40f;
-            float zTilt = isDriftingLeft ? 2f : -2f;
-            float snapTilt = isDriftingLeft ? -20f : 20f;
+            float yRot;
+            float zTilt;
+            float snapTilt;
+
+            if (isDriftingLeft)
+            {
+                
+
+                yRot = -40f;
+                zTilt = 2f;
+                snapTilt = -20f;
+            }
+            else
+            {
+                driftSmoke.Play();
+
+                yRot = 40f;
+                zTilt = -2f;
+                snapTilt = 20f;
+            }
+            //float yRot = isDriftingLeft ? -40f : 40f;
+            //float zTilt = isDriftingLeft ? 2f : -2f;
+            //float snapTilt = isDriftingLeft ? -20f : 20f;
 
             driftRotationTween?.Kill();
 
@@ -775,6 +798,11 @@ public class NEWDriver : MonoBehaviour
                 .Join(kartModel.DOLocalRotate(new Vector3(0f, yRot, snapTilt), 0.7f).SetEase(Ease.OutQuart))            //tilt side mid drift
                 .Join(kartModel.DOLocalMoveY(0.5f, 0.7f).SetEase(Ease.OutQuart))                                     //subtle elevation                       
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot, zTilt), 0.15f).SetEase(Ease.InQuad))          //untilt
+                .OnComplete(() =>
+                {
+                    // Reset drift smoke after the drift animation completes
+                    driftSmoke.Stop();
+                })
                 .Join(kartModel.DOLocalMoveY(0f, 0.15f).SetEase(Ease.OutBack))                                    //sutble descend
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, yRot / 2f, zTilt), 2.0f).SetEase(Ease.OutSine));       //slide in slightly
         }

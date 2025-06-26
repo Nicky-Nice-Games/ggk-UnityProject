@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.VFX;
 
 public class KartVisual : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class KartVisual : MonoBehaviour
     public Transform visualRoot;      // Handles ground alignment and vertical compression
     public Transform leanContainer;   // Handles pitch/roll for acceleration leaning
     public Transform[] suspensionPoints;
-    
+    public NEWDriver driver; 
+
 
     [Header("Suspension Settings")]
     public float suspensionLength = 0.9f;
@@ -37,6 +39,9 @@ public class KartVisual : MonoBehaviour
     [Header("Wheel Rotation Settings")]
     public float wheelRadius = 0.3f; //Set based on tire mesh size
 
+    [Header("Visual Effects")]
+    public VisualEffect landingEffect; 
+
 
     private Vector3[] wheelVelocity;           //For SmoothDamp per wheel
 
@@ -44,11 +49,13 @@ public class KartVisual : MonoBehaviour
     private Vector3 visualVelocity;
     private Vector3 squashScaleVelocity;
     private bool isSquashing = false;
+    private bool wasFlying = false;
 
     void Start()
     {
         lastVelocity = sphereRigidbody.velocity;
         wheelVelocity = new Vector3[wheelMeshes.Length];
+        landingEffect.Stop();
     }
 
     void LateUpdate()
@@ -59,6 +66,7 @@ public class KartVisual : MonoBehaviour
         AnimateSquash();
         RotateWheels();
 
+        wasFlying = !driver.isGrounded;
     }
 
     void RotateWheels()
@@ -148,9 +156,10 @@ public class KartVisual : MonoBehaviour
         float verticalVel = sphereRigidbody.velocity.y;
         float lastYVel = lastVelocity.y;
 
-        if (!isSquashing && lastYVel < landingVelocityThreshold && Mathf.Abs(verticalVel) < 0.1f)
+        if (driver.isGrounded && wasFlying && !driver.attemptingDrift)
         {
             TriggerLandingSquash();
+            landingEffect.Play();
         }
     }
 
