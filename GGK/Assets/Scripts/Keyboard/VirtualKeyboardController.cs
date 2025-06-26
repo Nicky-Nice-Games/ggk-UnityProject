@@ -30,7 +30,8 @@ public class VirtualKeyboardController : MonoBehaviour
         // Nav controls
         if (Input.GetKeyDown(KeyCode.RightArrow)) selectedIndex++;
         else if (Input.GetKeyDown(KeyCode.LeftArrow)) selectedIndex--;
-        else if (Input.GetKeyDown(KeyCode.UpArrow)) selectedIndex -= rowSize;
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && selectedIndex != 40) selectedIndex -= rowSize;
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && selectedIndex == 40) selectedIndex -= rowSize + 1;
         else if (Input.GetKeyDown(KeyCode.DownArrow)) selectedIndex += rowSize;
         else if (Input.GetKeyDown(KeyCode.Return)) keyButtons[selectedIndex].onClick.Invoke();
 
