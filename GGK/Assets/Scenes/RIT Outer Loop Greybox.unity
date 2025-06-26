@@ -6146,23 +6146,6 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 8245124639533166686, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 1638308135}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &736235169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283176698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed4256f3c05af24449fec3d5c5f367e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverHeight: 3
-  hoverTime: 2
-  fadeTime: 1
-  fadeCanvas: {fileID: 1658915561}
-  kartModel: {fileID: 0}
 --- !u!1001 &739929204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34902,6 +34885,10 @@ PrefabInstance:
       propertyPath: placementDisplay
       value: 
       objectReference: {fileID: 1476159673}
+    - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: itemDisplay
+      value: 
+      objectReference: {fileID: 1080252267}
     - target: {fileID: 4828833863746977510, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_Name
       value: Kart 1
@@ -38307,6 +38294,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
 --- !u!54 &2013023915
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -55459,6 +55447,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
 --- !u!65 &5954472818605481480
 BoxCollider:
   m_ObjectHideFlags: 0

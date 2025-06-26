@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: aeee4897dee478c4bb51f521ce4c8a5a, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -10535,7 +10535,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -10555,7 +10555,7 @@ Transform:
   m_GameObject: {fileID: 705507993}
   serializedVersion: 2
   m_LocalRotation: {x: -0.109381504, y: -0.8754261, z: 0.40821815, w: -0.2345694}
-  m_LocalPosition: {x: -79.999985, y: 3, z: 320}
+  m_LocalPosition: {x: -169.9, y: 217.3, z: 475.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20603,6 +20603,12 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
 --- !u!54 &753621058
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -43852,6 +43858,12 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
 --- !u!54 &1706750362
 Rigidbody:
   m_ObjectHideFlags: 0
