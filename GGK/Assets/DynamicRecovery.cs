@@ -8,21 +8,27 @@ public class DynamicRecovery : MonoBehaviour
     //public Transform respawnPoint;
     public float hoverHeight = 1.4f;
     public float hoverTime = 2f;
-    public float fadeTime = 1f;
+    public float fadeTime = 2f;
     public CanvasGroup fadeCanvas;
 
+    public Transform kartModel;
     private Transform[] checkpoints;
     private Transform currentCheckpoint;
+    private Transform normalTransform;
 
     private Rigidbody rb;
     private bool isRecovering = false;
 
-    public Transform kartModel;
+    private ParticleSystem[] particleSystem;
+
+    private NEWDriver kartMovementScript;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
 
         GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
         List<Transform> checkpointList = new List<Transform>();
@@ -37,6 +43,18 @@ public class DynamicRecovery : MonoBehaviour
         // Optional: default to first
         if (checkpoints.Length > 0)
             currentCheckpoint = checkpoints[0];
+
+        Transform kartRoot = transform.parent; // "Kart 1"
+        Transform normal = kartRoot.Find("Kart");
+
+        if (normal != null)
+        {
+            normalTransform = normal;
+        }
+
+        kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
+        particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
+
     }
 
     void Update()
@@ -46,13 +64,24 @@ public class DynamicRecovery : MonoBehaviour
             Debug.DrawRay(currentCheckpoint.position, currentCheckpoint.forward * 5, Color.green); // the checkpoint
     }
 
+    private void ResetParticles()
+    {
+        foreach (ParticleSystem ps in particleSystem)
+        {
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+    }
+
+
 
     public void StartRecovery()
     {
         if (!isRecovering)
         {
             currentCheckpoint = FindClosestCheckpoint();
-            StartCoroutine(Recover());
+            //StartCoroutine(Recover());
+            StartCoroutine(Teleport(currentCheckpoint.position, currentCheckpoint.rotation));
+
         }
     }
 
@@ -108,8 +137,79 @@ public class DynamicRecovery : MonoBehaviour
 
         rb.useGravity = true;
         isRecovering = false;
+    }
 
+    private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
+    { 
 
+        if(kartMovementScript != null)
+        {
+            kartMovementScript.enabled = false;
+            
+        }
+        yield return new WaitForSeconds(1f);
+
+        isRecovering = true;
+
+        Transform kartVisual = kartModel;
+        Vector3 originalScale = kartVisual.localScale;
+        Vector3 stretchedScale = new Vector3(originalScale.x * 0.2f, originalScale.y * 2.5f, originalScale.z * 0.2f);
+
+        float duration = 0.3f;
+
+        // STRETCH UP & FADE TO BLACK
+        float t = 0f;
+        while (t < duration)
+        {
+            float lerp = t / duration;
+            kartVisual.localScale = Vector3.Lerp(originalScale, stretchedScale, lerp);
+            fadeCanvas.alpha = lerp; // screen fading to black
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        kartVisual.localScale = stretchedScale;
+        fadeCanvas.alpha = 1f;
+
+        // DISAPPEAR
+        kartVisual.gameObject.SetActive(false);
+
+        // TELEPORT TO NEW POSITION 
+        transform.position = targetPosition;
+        ResetParticles();
+        normalTransform.rotation = targetRotation;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.useGravity = false;
+
+        yield return new WaitForSeconds(1.3f); // hold black screen for effect
+
+        if (kartMovementScript != null)
+        {
+            kartMovementScript.enabled = true;
+        }
+
+        // REAPPEAR IN STRETCHED FORM
+        kartVisual.localScale = stretchedScale;
+        kartVisual.gameObject.SetActive(true);
+
+        // SQUASH BACK & FADE IN 
+        t = 0f;
+        while (t < duration)
+        {
+            float lerp = t / duration;
+            kartVisual.localScale = Vector3.Lerp(stretchedScale, originalScale, lerp);
+            fadeCanvas.alpha = 1f - lerp; // screen fading from black
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        kartMovementScript.StopParticles();
+        kartVisual.localScale = originalScale;
+        fadeCanvas.alpha = 0f;
+
+        rb.useGravity = true;
+        isRecovering = false;
     }
 
     private IEnumerator Fade(float targetAlpha)

@@ -109,6 +109,12 @@ public class NEWDriver : MonoBehaviour
     {
         sphere.drag = 0.5f;
 
+        StopParticles();
+    }
+
+    public void StopParticles()
+    {
+        Debug.Log("Particles stopped");
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {
