@@ -114,6 +114,11 @@ public class BaseItem : MonoBehaviour
             }
             useCount = 1;
         }
+        else if (itemCategory == "Hazard")
+        {
+            TrapItem temp = (TrapItem)this;
+            temp.LevelUp();
+        }
     }
 
 }
