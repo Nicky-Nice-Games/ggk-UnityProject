@@ -134,6 +134,14 @@ public class PlayerKartHandeler : MonoBehaviour
         Color middleColor = colors[3];
         characterSelectedImage.color = middleColor;
 
+        foreach (GameObject characterButton in characterButtons)
+        {
+            Button button = characterButton.GetComponentInChildren<Button>();
+            ColorBlock colorBlock = button.colors;
+            colorBlock.selectedColor = middleColor;
+            button.colors = colorBlock;
+        }
+
         if (characterData != null)
             characterData.characterColor = middleColor;
     }
