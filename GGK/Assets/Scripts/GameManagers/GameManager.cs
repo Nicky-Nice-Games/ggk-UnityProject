@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
                 sceneLoader.LoadScene("RIT Quarter Mile Greybox V2");
                 break;
             case "Finals Brick Road Greybox":
-                sceneLoader.LoadScene("LevelDesign_Finals Brick Road");
+                sceneLoader.LoadScene("LevelDesign_Finals Brick Road Greybox");
                 break;
             default:
                 break;
