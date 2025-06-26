@@ -107,12 +107,13 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
+                    Destroy(heldItem.gameObject);
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
@@ -133,12 +134,13 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
+                    Destroy(heldItem.gameObject);
                 }
             }
         }
@@ -334,11 +336,17 @@ public class ItemHolder : MonoBehaviour
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Hazard")
         {
-            Destroy(collision.gameObject);
             if (thisDriver != null)
             {
-
                 thisDriver.sphere.velocity /= 8000;
+
+                // Checks if hazard is Confused Ritchie
+                if (collision.gameObject.GetComponent<TrapItem>().ItemTier == 3)
+                {
+                    thisDriver.confusedTimer = 10;
+                    thisDriver.isConfused = true;
+                    thisDriver.movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
+                }
             }
             else if (npcDriver != null)
             {
@@ -350,6 +358,7 @@ public class ItemHolder : MonoBehaviour
 
                 npcDriver.StartRecovery();
             }
+            Destroy(collision.gameObject);
         }
 
     }
