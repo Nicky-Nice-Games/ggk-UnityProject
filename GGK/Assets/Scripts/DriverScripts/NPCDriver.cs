@@ -234,7 +234,7 @@ public class NPCDriver : MonoBehaviour
                 avoidanceTimer -= Time.deltaTime;
 
                 //velocity += avoidanceDirection.normalized * (accelerationRate * Time.fixedDeltaTime);
-                velocity = transform.forward * maxSpeed * 0.5f; // move forward in the direction it's facing
+                velocity = transform.forward * maxSpeed; // move forward in the direction it's facing
                 rBody.velocity = velocity;
                 Quaternion targetRot = Quaternion.LookRotation(avoidanceDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 3f);
@@ -258,7 +258,7 @@ public class NPCDriver : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 2f);
 
                 // Gradually reapply velocity in correct direction
-                velocity = Vector3.Lerp(velocity, blendBackTarget * maxSpeed * 0.5f, Time.deltaTime * 2f);
+                velocity = Vector3.Lerp(velocity, blendBackTarget * maxSpeed , Time.deltaTime * 2f);
                 rBody.velocity = velocity;
 
                 return; // still blending back to normal
@@ -267,7 +267,7 @@ public class NPCDriver : MonoBehaviour
             {
                 edgeCorrectTimer -= Time.deltaTime;
 
-                velocity = transform.forward * maxSpeed * 0.5f;
+                velocity = transform.forward * maxSpeed;
                 rBody.velocity = velocity;
 
                 Quaternion steerBack = Quaternion.LookRotation(avoidanceDirection);
