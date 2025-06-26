@@ -382,38 +382,76 @@ public class ItemHolder : MonoBehaviour
     /// <returns></returns>
     IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
     {
-        // smooth "jump" and smooth raycast while in the air
-
         List<Collider> ignoreColliders = new List<Collider>();
         Collider[] allColliders = FindObjectsOfType<Collider>();
 
+        // disable any colliders we don't want to hit
         foreach (Collider collider in allColliders)
         {
+            // ignore own collider
             if (collider == driver.sphere.gameObject.GetComponent<Collider>())
             {
                 continue;
             }
 
-            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
+            // ignore ground, rock, checkpoint, startpoint
+            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
+                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
             {
                 Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
                 ignoreColliders.Add(collider);
             }
         }
 
-        driver.doGroundCheck = false;
+        // keep reference to old offset
         float oldOffset = driver.colliderOffset;
-        driver.colliderOffset = -4.0f;
+        float oldGravity = driver.gravity;
+
+        // turn off drift and ground check in driver script
+        driver.doGroundCheck = false;
         driver.canDrift = false;
+
+        // get just model transform
+        Transform modelTransform = transform.Find("Normal/Parent/KartModel");
+        RaycastHit hit;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
+            // slightly change offset so change isn't instant
+            if (driver.colliderOffset >= -4.0f && t < duration - 0.5f)
+            {
+                driver.colliderOffset -= 0.25f;
+            }
 
-            // gives boost effect
+            // slowly drop kart towards end of boost
+            if (t >= duration - 0.15f)
+            {
+                driver.colliderOffset += 0.25f;
+            }
+
+            // perform raycast on model of the kart to give hover effect
+            if (Physics.Raycast(modelTransform.position + (modelTransform.up * .2f), -modelTransform.up, out hit, 50.0f, driver.groundLayer))
+            {
+                // rotates just the model to match the surface
+                modelTransform.up = Vector3.Lerp(modelTransform.up, hit.normal, Time.deltaTime * driver.rotationAlignSpeed);
+                modelTransform.Rotate(0, transform.eulerAngles.y, 0);
+
+                // if (hit.distance >= 5.0f && hit.distance < 30.0f)
+                // {
+                //     driver.gravity += 10000.0f;
+                // }
+                // else
+                // {
+                //     driver.gravity = oldGravity;
+                // }
+            }
+
+            // gives forward boost effect
             Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
 
+        // turn all colliders that were ignored back on
         foreach (Collider collider in ignoreColliders)
         {
             if (collider != null)
@@ -422,10 +460,16 @@ public class ItemHolder : MonoBehaviour
             }
         }
         ignoreColliders.Clear();
+
         // reenable drift and ground check
         driver.canDrift = true;
         driver.colliderOffset = oldOffset;
         driver.doGroundCheck = true;
+        driver.gravity = oldGravity;
+
+        // modelTransform.rotation = transform.rotation;
+        driver.AttemptDrift();
+        driver.EndDrift();
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
