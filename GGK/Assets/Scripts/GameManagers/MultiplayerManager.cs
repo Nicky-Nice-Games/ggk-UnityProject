@@ -227,9 +227,9 @@ public class MultiplayerManager : NetworkBehaviour
                 case Map.RITOuterLoop:
                     GameManager.thisManagerInstance.LoadMapRpc("Netcode RIT Outer Loop Greybox");
                     break;
-                case Map.Golisano:
-                    GameManager.thisManagerInstance.LoadMapRpc("Golisano Greybox");
-                    break;
+                // case Map.Golisano:
+                //     GameManager.thisManagerInstance.LoadMapRpc("Golisano Greybox");
+                //     break;
                 case Map.RITDorm:
                     GameManager.thisManagerInstance.LoadMapRpc("RIT Dorm Greybox");
                     break;
