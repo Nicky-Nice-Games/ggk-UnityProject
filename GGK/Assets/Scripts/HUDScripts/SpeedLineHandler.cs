@@ -63,11 +63,11 @@ public class SpeedLineHandler : MonoBehaviour
 
         
 
-        foreach(Image line in activeLines){
-            line.rectTransform.localScale -= new Vector3(1/expireTime * Time.deltaTime, 0, 0);
+        for(int i = 0; i < activeLines.Count; i++){
+            activeLines[i].rectTransform.localScale -= new Vector3(1/expireTime * Time.deltaTime, 0, 0);
 
-            if (line.rectTransform.localScale.x <= 0){
-                SetInactive(line);
+            if (activeLines[i].rectTransform.localScale.x <= 0){
+                SetInactive(activeLines[i]);
             }
         }
     }

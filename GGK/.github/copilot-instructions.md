@@ -2,13 +2,13 @@
 - Project name: GGK
 - Unity version: Unity 2022.3.38f1
 - Active scene:
-  - Name: Finals Brick Road Greybox
+  - Name: RIT Quarter Mile Greybox V2
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Ground, Checkpoint, Trigger, Startpoint, ItemBox, Kart, Projectile, Boost, Hazard, slowDown, GameManager, UpgradeBox, Options, DeathZone
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Ground, Checkpoint, Trigger, Startpoint, ItemBox, Kart, Projectile, Boost, Hazard, slowDown, GameManager, UpgradeBox, Options, DeathZone, Obstacle
   - Layers:
-    - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable
+    - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
 - Active game object:
-  - Name: ItemDisplay
+  - Name: SpeedLines
   - Tag: Untagged
   - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
