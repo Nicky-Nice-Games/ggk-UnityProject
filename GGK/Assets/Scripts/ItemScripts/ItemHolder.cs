@@ -325,6 +325,42 @@ public class ItemHolder : MonoBehaviour
                         StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
                         break;
                     case 4: // level 4
+                        // get the checkpoint from the kart's collider child to cross 3 checkpoints
+                        GameObject kartParent = transform.parent.gameObject;
+                        KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
+                        boostMult = 1.25f;
+
+                        int currentCheckpointId = kartCheck.checkpointId;
+                        int warpCheckpointId = currentCheckpointId + 3;
+
+                        // check if the checkpoint is past the count and adjust
+                        int checkpointMax = kartCheck.checkpointList.Count - 1;
+                        if (warpCheckpointId > checkpointMax)
+                        {
+                            // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
+                            if (checkpointMax + 1 == warpCheckpointId)
+                            {
+                                warpCheckpointId = 0;
+                            }
+                            else if (checkpointMax + 2 == warpCheckpointId)
+                            {
+                                warpCheckpointId = 1;
+                            }
+                            else if (checkpointMax + 3 == warpCheckpointId)
+                            {
+                                warpCheckpointId = 2;
+                            }
+                            kartCheck.lap++;
+                            kartCheck.PassedWithWarp = true;
+                        }
+
+                        GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
+                        // set the kart's position to 3 checkpoints ahead
+                        thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                        thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
+                        kartCheck.checkpointId = warpCheckpointId;
+                        // give the kart a boost after they warp
+                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
                         break;
 
                 }

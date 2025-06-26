@@ -13,7 +13,7 @@ public class KartCheckpoint : MonoBehaviour
     public float finishTime = float.MaxValue;
     public int placement;
     public string name;
-    [SerializeField] List<GameObject> checkpointList;
+    [SerializeField] public List<GameObject> checkpointList;
     [SerializeField]
     private GameObject checkPointParent;
     GameManager gameManager;
@@ -23,8 +23,17 @@ public class KartCheckpoint : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI lapDisplay;
 
+    [SerializeField]
+    private int totalLaps;
+
+    // check if the player finished the lap/race with the warp
+    private bool passedWithWarp = false;
+
+    public bool PassedWithWarp {  get { return passedWithWarp; } set { passedWithWarp = value; } }
+
     void Start()
     {
+        totalLaps = 1;
         checkpointId = 0;
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
         {
@@ -60,6 +69,19 @@ public class KartCheckpoint : MonoBehaviour
         {
             placementDisplay.text = "Placement: " + placement;
         }
+
+        if(passedWithWarp && lap == totalLaps)
+        {
+            LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+            finishTime = leaderboardController.curTime;
+            leaderboardController.Finished(this);
+            if (this.GetComponent<NPCDriver>() == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }
+            StartCoroutine(GameOverWait());
+            passedWithWarp = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -88,7 +110,7 @@ public class KartCheckpoint : MonoBehaviour
                 
 
                 // 3 laps finished assuming we start on lap 0
-                if (lap == 1)
+                if (lap == totalLaps)
                 {
                     LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
                     finishTime = leaderboardController.curTime;
