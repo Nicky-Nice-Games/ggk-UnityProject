@@ -23,19 +23,22 @@ public class UpgradeBox : ItemBox
     /// </summary>
     /// <param name="kart">The kart that hit it</param>
     /// <returns>An upgraded baseItem</returns>
-    public BaseItem UpgradeItem(ItemHolder kart)
+    public void UpgradeItem(GameObject kart)
     {
         //BaseItem itemUpgraded = new BaseItem();
+        ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
         // Gives driver a random item if they don't have one
-        if (kart.HeldItem == null)
+        if (itemScript.HeldItem == null)
         {
-            kart.HeldItem = RandomizeItem();
+            RandomizeItem(kart);
         }
 
         // Upgrades the item and returns it
-        kart.HeldItem.ItemTier = 2;
-        return kart.HeldItem;
+        if (itemScript.HeldItem.ItemTier < 4)
+        {
+            itemScript.HeldItem.ItemTier++;
+        }
     }
 
 }

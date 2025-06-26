@@ -102,7 +102,7 @@ public class KartCheckpoint : MonoBehaviour
     
     IEnumerator GameOverWait()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10.5f);
         gameManager.GameFinished();
     }
 }

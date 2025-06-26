@@ -5,6 +5,7 @@ using UnityEngine.Splines;
 using DG.Tweening;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using static UnityEngine.GraphicsBuffer;
 
 public class NPCDriver : MonoBehaviour
 {
@@ -49,16 +50,36 @@ public class NPCDriver : MonoBehaviour
     private float recoveryTimer = 0f;
     public float recoveryDuration = 2.5f; // Duration to recover full control
 
+    public float TopMaxSpeed { get { return topMaxSpeed; } }
+    private float bumpCooldown = 0f;
+
+    [Header("Obstacle Avoidance")]
+    public float obstacleCheckDistance = 20f;
+    public LayerMask obstacleLayer;
+    private bool avoidingObstacle = false;
+    private float avoidanceTimer = 0f;
+    private Vector3 avoidanceDirection;
+    public float avoidanceDuration = 1.5f;
+    private float avoidanceBlendTimer = 0f;
+    public float avoidanceBlendDuration = 0.5f;
+
     void Start()
     {
         rBody.drag = 0.5f;
         rBody.freezeRotation = true;
         topMaxSpeed = maxSpeed;
+        rBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        //rBody.interpolation = RigidbodyInterpolation.Interpolate;
         boosted = false;
     }
 
     void FixedUpdate()
     {
+        if (bumpCooldown > 0f)
+        {
+            bumpCooldown -= Time.fixedDeltaTime;
+        }
+
         RaycastHit hit;
         isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, groundCheckDistance, groundLayer);
 
@@ -72,6 +93,7 @@ public class NPCDriver : MonoBehaviour
                 Vector3 forwardDir = Vector3.ProjectOnPlane(velocity.normalized, hit.normal).normalized;
                 Quaternion groundAlignedRotation = Quaternion.LookRotation(forwardDir, hit.normal);
                 transform.rotation = Quaternion.Slerp(transform.rotation, groundAlignedRotation, rotationAlignSpeed * Time.deltaTime);
+
             }
             else
             {
@@ -108,12 +130,12 @@ public class NPCDriver : MonoBehaviour
 
         distanceSquaredToFollow = math.distancesq(transform.position, followTarget.position);
 
-        float maxDistance = boosted ? 24000f * boostDistanceMultiplier : 24000f;
+        float maxDistance = boosted ? 4000f * boostDistanceMultiplier : 4000f;
         if (distanceSquaredToFollow > maxDistance)
         {
             returningToTarget = true;
         }
-        else if (distanceSquaredToFollow < 1500)
+        else if (distanceSquaredToFollow < 1200)
         {
             returningToTarget = false;
         }
@@ -169,6 +191,67 @@ public class NPCDriver : MonoBehaviour
         }
         else
         {
+            Vector3 avoidForward = transform.forward;
+            Vector3 leftRay = Quaternion.AngleAxis(-45, Vector3.up) * avoidForward;
+            Vector3 rightRay = Quaternion.AngleAxis(45, Vector3.up) * avoidForward;
+
+            RaycastHit hitCenter, hitLeft, hitRight;
+
+            bool obstacleAhead = Physics.Raycast(transform.position, avoidForward, out hitCenter, obstacleCheckDistance, obstacleLayer);
+            bool obstacleLeft = Physics.Raycast(transform.position, leftRay, out hitLeft, obstacleCheckDistance, obstacleLayer);
+            bool obstacleRight = Physics.Raycast(transform.position, rightRay, out hitRight, obstacleCheckDistance, obstacleLayer);
+
+            if (obstacleAhead && !avoidingObstacle)
+            {
+                avoidingObstacle = true;
+                avoidanceTimer = avoidanceDuration;
+
+                // Pick a turn direction
+                if (!obstacleRight || (obstacleLeft && hitRight.distance > hitLeft.distance))
+                {
+                    avoidanceDirection = Quaternion.AngleAxis(45, Vector3.up) * avoidForward; // Turn right
+                }
+                else
+                {
+                    avoidanceDirection = Quaternion.AngleAxis(-45, Vector3.up) * avoidForward; // Turn left
+                }
+            }
+
+            if (avoidingObstacle)
+            {
+                avoidanceTimer -= Time.deltaTime;
+
+                //velocity += avoidanceDirection.normalized * (accelerationRate * Time.fixedDeltaTime);
+                velocity = transform.forward * maxSpeed * 0.5f; // move forward in the direction it's facing
+                rBody.velocity = velocity;
+                Quaternion targetRot = Quaternion.LookRotation(avoidanceDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 3f);
+
+                if (avoidanceTimer <= 0f)
+                {
+                    avoidingObstacle = false;
+                    avoidanceBlendTimer = avoidanceBlendDuration;
+                }
+
+                return; // Skip normal movement this frame
+            }
+            else if (avoidanceBlendTimer > 0f)
+            {
+                avoidanceBlendTimer -= Time.deltaTime;
+
+                Vector3 blendBackTarget = (followTarget.position - transform.position).normalized;
+                Quaternion targetRot = Quaternion.LookRotation(blendBackTarget);
+
+                // Smoother, slower rotation
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 2f);
+
+                // Gradually reapply velocity in correct direction
+                velocity = Vector3.Lerp(velocity, blendBackTarget * maxSpeed * 0.5f, Time.deltaTime * 2f);
+                rBody.velocity = velocity;
+
+                return; // still blending back to normal
+            }
+
             // Full spline following physics mode
             Vector3 toTarget = followTarget.position - transform.position;
             Vector3 moveDir = toTarget.normalized;
@@ -191,20 +274,18 @@ public class NPCDriver : MonoBehaviour
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         if (velocity.magnitude < minSpeed) velocity = Vector3.zero;
 
-        //// ROTATION TO MATCH TARGET
-        //Quaternion targetRotation = followTarget.rotation;
-        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationAlignSpeed * Time.fixedDeltaTime);
-        //
-        //// VELOCITY ALIGNMENT (optional, for smooth forward motion)
-        //Vector3 desiredForward = followTarget.forward;
-        //velocity = Vector3.Lerp(velocity, desiredForward * velocity.magnitude, Time.fixedDeltaTime * 5f);
+        
 
 
-        rBody.velocity = velocity;
+        if (bumpCooldown <= 0f)
+        {
+            rBody.velocity = velocity;
+        }
+
         rBody.MoveRotation(transform.rotation);
 
         // Fall faster if in air
-        if (!isGrounded)
+        if (!avoidingObstacle && !isGrounded)
         {
             rBody.AddForce(Vector3.down * 200f, ForceMode.Acceleration);
         }
@@ -233,6 +314,15 @@ public class NPCDriver : MonoBehaviour
                 Gizmos.DrawSphere(transform.position - transform.up * groundCheckDistance, 0.2f);
             }
         }
+
+        // Velocity Vector
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + velocity);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, transform.forward * obstacleCheckDistance);
+        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(-45, Vector3.up) * transform.forward * obstacleCheckDistance);
+        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(45, Vector3.up) * transform.forward * obstacleCheckDistance);
     }
 
     public void StartRecovery()
@@ -246,5 +336,21 @@ public class NPCDriver : MonoBehaviour
         // Limit acceleration and maxSpeed temporarily
         accelerationRate = 500f;
         maxSpeed = 10f;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            Vector3 bumpDirection = transform.position - collision.transform.position;
+            bumpDirection.y = 0f;
+            bumpDirection.Normalize();
+
+            float bumpForce = 8f;
+            rBody.AddForce(bumpDirection * bumpForce, ForceMode.Impulse);
+
+            bumpCooldown = 0.2f;
+            StartRecovery();
+        }
     }
 }
