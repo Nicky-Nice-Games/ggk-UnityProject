@@ -23,7 +23,7 @@ public class DeathZone : MonoBehaviour
             DynamicRecovery recovery = other.GetComponent<DynamicRecovery>();
             if (recovery != null)
             {
-                Debug.Log("Got here!!!!!!!!!!!!!!!!");
+                //Debug.Log("Got here!!!!!!!!!!!!!!!!");
                 recovery.StartRecovery();
 
             }

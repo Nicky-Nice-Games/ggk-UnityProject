@@ -34,15 +34,16 @@ public class RaceManager : NetworkBehaviour
     void Start()
     {
         //--------Server/Host----------
-        if (IsServer)
+        if (NetworkManager.Singleton.IsServer)
         {
             GameObject kartInstance = Instantiate(kartPrefab);
             NetworkObject kartNetworkObject = kartInstance.GetComponent<NetworkObject>();
+            Debug.Log($"Player count: {MultiplayerManager.Instance.players.Count}");
             foreach (KeyValuePair<ulong, PlayerData> player in MultiplayerManager.Instance.players)
             {
                 kartNetworkObject.SpawnWithOwnership(player.Key, true); // player key is the client id of each connected player (includes the host)
                 kartNetworkObject.transform.SetPositionAndRotation(gridPositions[0].transform.position, gridPositions[0].transform.rotation);
-                Debug.Log($"Spawnned Kart for clientId: {player.Key} at position {kartNetworkObject.transform}");
+                Debug.Log($"Spawnned Kart for clientId: {player.Key} at position {kartNetworkObject.transform.position}");
                 Karts.Add(kartNetworkObject.gameObject);
             }
             for (int index = 0; index < Karts.Count; index++)
