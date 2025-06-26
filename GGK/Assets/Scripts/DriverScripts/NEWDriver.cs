@@ -122,7 +122,6 @@ public class NEWDriver : MonoBehaviour
     // Player info for API
     // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
     // Any game related data will be filled in in the game scene handeler or manager
-    [Header("API Settings")]
     private PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
