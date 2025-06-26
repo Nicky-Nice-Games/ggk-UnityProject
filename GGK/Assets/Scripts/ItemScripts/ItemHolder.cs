@@ -459,7 +459,7 @@ public class ItemHolder : MonoBehaviour
             }
 
             // slowly drop kart towards end of boost
-            if (t >= duration - 0.15f)
+            if (t >= duration - 0.2f)
             {
                 driver.colliderOffset += 0.25f;
             }
@@ -471,14 +471,6 @@ public class ItemHolder : MonoBehaviour
                 modelTransform.up = Vector3.Lerp(modelTransform.up, hit.normal, Time.deltaTime * driver.rotationAlignSpeed);
                 modelTransform.Rotate(0, transform.eulerAngles.y, 0);
 
-                // if (hit.distance >= 5.0f && hit.distance < 30.0f)
-                // {
-                //     driver.gravity += 10000.0f;
-                // }
-                // else
-                // {
-                //     driver.gravity = oldGravity;
-                // }
             }
 
             // gives forward boost effect
@@ -486,6 +478,16 @@ public class ItemHolder : MonoBehaviour
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+
+        // reenable drift and ground check
+        driver.canDrift = true;
+        driver.colliderOffset = oldOffset;
+        driver.doGroundCheck = true;
+        driver.gravity = oldGravity;
+
+        // aligns the kart with the ground
+        driver.AttemptDrift();
+        driver.EndDrift();
 
         // turn all colliders that were ignored back on
         foreach (Collider collider in ignoreColliders)
@@ -496,16 +498,6 @@ public class ItemHolder : MonoBehaviour
             }
         }
         ignoreColliders.Clear();
-
-        // reenable drift and ground check
-        driver.canDrift = true;
-        driver.colliderOffset = oldOffset;
-        driver.doGroundCheck = true;
-        driver.gravity = oldGravity;
-
-        // modelTransform.rotation = transform.rotation;
-        driver.AttemptDrift();
-        driver.EndDrift();
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
