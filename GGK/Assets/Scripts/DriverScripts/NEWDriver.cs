@@ -926,7 +926,14 @@ public class NEWDriver : MonoBehaviour
         {
             if (context.started)
             {
-                AttemptDrift();
+                if (isGrounded)
+                {
+                    AttemptDrift();
+                }
+                else
+                {
+                    AirTrick();
+                }
             }
             else if (context.canceled)
             {
