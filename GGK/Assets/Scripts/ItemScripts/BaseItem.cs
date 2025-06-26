@@ -61,7 +61,63 @@ public class BaseItem : MonoBehaviour
         // Destroys the item
         else
         {
-            Destroy(this.gameObject);
+            if (itemCategory != "Shield")
+            {
+                Destroy(this.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// changes corresponding item functionality when upgraded
+    /// </summary>
+    /// <param name="level">current level of item</param>
+    public void OnLevelUp(int level)
+    {
+        if (itemCategory == "Boost") // changes the use count for different boost levels
+        {
+            Debug.Log("Boost Upgraded.");
+            switch (itemTier)
+            {
+                // use count should always be 1 change boost force
+                case 2:
+                    useCount = 2;
+                    break;
+                case 3:
+                    useCount = 1;
+                    break;
+                case 4:
+                    useCount = 1;
+                    break;
+                default:
+                    useCount = 1;
+                    break;
+            }
+        }
+        else if (itemCategory == "Shield") // changes timer on different shield levels
+        {
+            Debug.Log("Shield Upgraded.");
+            switch (itemTier)
+            {
+                case 2:
+                    timer = 6.0f;
+                    break;
+                case 3:
+                    timer = 8.0f;
+                    break;
+                case 4:
+                    timer = 10.0f;
+                    break;
+                default:
+                    timer = 4.0f;
+                    break;
+            }
+            useCount = 1;
+        }
+        else if (itemCategory == "Hazard")
+        {
+            TrapItem temp = (TrapItem)this;
+            temp.LevelUp();
         }
     }
 
