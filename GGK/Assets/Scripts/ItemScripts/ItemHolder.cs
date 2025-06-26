@@ -336,10 +336,16 @@ public class ItemHolder : MonoBehaviour
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Hazard")
         {
-            
             if (thisDriver != null)
             {
                 thisDriver.sphere.velocity /= 8000;
+
+                // Checks if hazard is Confused Ritchie
+                if (collision.gameObject.GetComponent<TrapItem>().ItemTier == 3)
+                {
+                    thisDriver.confusedTimer = 10;
+                    thisDriver.isConfused = true;
+                }
             }
             else if (npcDriver != null)
             {

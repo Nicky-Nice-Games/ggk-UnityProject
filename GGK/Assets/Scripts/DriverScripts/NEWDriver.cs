@@ -115,6 +115,10 @@ public class NEWDriver : MonoBehaviour
 
     public bool isDriving;
 
+    [Header("Confused Settings")]
+    public bool isConfused;
+    public float confusedTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -319,6 +323,16 @@ public class NEWDriver : MonoBehaviour
             sphere.AddForce(tractionForce, ForceMode.Acceleration);
         }
 
+        //------------Confused Timer---------------------
+        if (isConfused)
+        {
+            confusedTimer -= Time.deltaTime;
+
+            if (confusedTimer <= 0)
+            {
+                isConfused = false;
+            }
+        }
     }
 
 
@@ -854,7 +868,15 @@ public class NEWDriver : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        movementDirection = context.ReadValue<Vector2>();
+        Vector2 input = context.ReadValue<Vector2>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        movementDirection = input;
 
         movementDirection.z = movementDirection.y;
 
@@ -898,13 +920,29 @@ public class NEWDriver : MonoBehaviour
 
     public void OnTurn(InputAction.CallbackContext context)
     {
-        controllerX = context.ReadValue<float>();
+        float input = context.ReadValue<float>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        controllerX = input;
         UpdateControllerMovement(context);
     }
 
     public void OnAcceleration(InputAction.CallbackContext context)
     {
-        controllerZ = context.ReadValue<float>();
+        float input = context.ReadValue<float>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        controllerZ = input;
         UpdateControllerMovement(context);
 
         if (context.started)
