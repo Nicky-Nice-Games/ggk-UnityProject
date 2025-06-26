@@ -8,20 +8,18 @@ public class TrapItem : BaseItem
     public AudioClip hazardSound;
 
     // Different Items for Different Tiers
-    public GameObject tierOneBody;
-    public Texture tierOneIcon;
-    public GameObject tierTwoBody;
-    public Texture tierTwoIcon;
-    public GameObject tierThreeBody;
-    public Texture tierThreeIcon;
-    public GameObject tierFourBody;
-    public Texture tierFourIcon;
+    [SerializeField] private GameObject tierOneBody;
+    [SerializeField] private Texture tierOneIcon;
+    [SerializeField] private GameObject tierTwoBody;
+    [SerializeField] private Texture tierTwoIcon;
+    [SerializeField] private GameObject tierThreeBody;
+    [SerializeField] private Texture tierThreeIcon;
+    [SerializeField] private GameObject tierFourBody;
+    [SerializeField] private Texture tierFourIcon;
 
     // Start is called before the first frame update
     void Start()
     {
-
-
         // starts the hazard slightly behind the player
         if (itemTier == 1)
         {
@@ -34,7 +32,6 @@ public class TrapItem : BaseItem
             transform.position = behindPos;
         }
         
-
         // sends the hazard slightly up and behind the player before landing on the ground
         // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
     }
@@ -48,11 +45,13 @@ public class TrapItem : BaseItem
         }
     }
 
+    // Code for fake item box
     public void RotateBox()
     {
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
+    // Change trap item's shape and function
     public void LevelUp()
     {
         switch (itemTier)
@@ -72,7 +71,8 @@ public class TrapItem : BaseItem
         }
     }
 
-    public void UpdateComponents(GameObject body, Texture Icon)
+    // So I don't have to write this out 4 times in LevelUp(), just swap out the tier body and icon for different levels
+    public void UpdateComponents(GameObject body, Texture icon)
     {
         GameObject tempObject = Instantiate(body);
 
@@ -90,7 +90,7 @@ public class TrapItem : BaseItem
         transform.localScale = tempObject.transform.localScale;
 
         // Overwriting Icon
-        itemIcon = Icon;
+        itemIcon = icon;
 
         Destroy(tempObject);
     }
