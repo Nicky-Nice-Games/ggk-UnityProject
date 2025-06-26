@@ -65,6 +65,10 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="value"></param>
     public void KeyPressed(string value)
     {
+        // Temporary fix so that when switching text inputs
+        // the current text will be set to the input's text 
+        // when typing/using virtual keyboard
+        curText = inputField.text;
         // Backspace
         if (value == "Backspace")
         {
