@@ -119,9 +119,18 @@ public class NEWDriver : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
 
+    // Player info for API
+    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
+    // Any game related data will be filled in in the game scene handeler or manager
+    [Header("API Settings")]
+    private PlayerInfo playerInfo;
+    private GameManager gameManagerObj;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManagerObj = FindAnyObjectByType<GameManager>();
+
         sphere.drag = 0.5f;
 
         //-------------Particles----------------
