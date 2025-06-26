@@ -52,7 +52,6 @@ public class DynamicRecovery : MonoBehaviour
 
     public void StartRecovery()
     {
-        Debug.LogError(miniMap);
         if (miniMap)
         {
             //spins the player's icon if they need to be recovered

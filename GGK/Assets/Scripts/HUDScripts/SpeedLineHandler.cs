@@ -35,9 +35,19 @@ public class SpeedLineHandler : MonoBehaviour
     private float timer;
 
     private float minTimer, maxTimer;
+
+    [SerializeField]
+    private Vector3 playerPos;
+    [SerializeField]
+    private Canvas canvas;
     // Start is called before the first frame update
     void Start()
     {
+        if (canvas == null)
+        {
+            canvas = transform.parent.gameObject.GetComponent<Canvas>();
+        }
+
         inactiveLines.Add(speedlineReference);
         minTimer = frequency/variance;
         maxTimer = frequency*variance;
@@ -48,6 +58,10 @@ public class SpeedLineHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        playerPos = Camera.main.WorldToScreenPoint(trackingPlayer.sphere.transform.position);
+        playerPos.z = 0;
+
         //if the player is approaching max speed, begin spawning speed lines to
         //indicate
         if (trackingPlayer.sphere.velocity.magnitude > (trackingPlayer.maxSpeed * 0.95))
@@ -89,16 +103,20 @@ public class SpeedLineHandler : MonoBehaviour
             Image newImg = newline.GetComponent<Image>();
             SetActive(newImg);
             Reposition(newImg);
+            
         }
     }
 
-    public void Reposition(Image img){
+    public void Reposition(Image img)
+    {
         float randomRot = Random.Range(0, 360);
         float radians = randomRot * (Mathf.PI / 180);
         RectTransform tr = img.rectTransform;
         tr.rotation = Quaternion.Euler(0, 0, randomRot);
 
         tr.localPosition = new Vector3(radius * Mathf.Cos(radians) * oval.x, radius * Mathf.Sin(radians) * oval.y, 0);
+
+        tr.sizeDelta = new Vector2((tr.localPosition - playerPos).magnitude, tr.sizeDelta.y);
     }
 
     public void SetActive(Image img){
