@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
     gameMode,
     playerKart,
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
     void Awake()
@@ -54,12 +56,32 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Changes the game state to multi /single player select
+    /// Changes the game state to login scene
     /// </summary>
     public void StartGame()
     {
+        sceneLoader.LoadScene("Login");
+        curState = GameStates.login;
+    }
+
+    /// <summary>
+    /// Once the player is logged in the player will be moved to the multi / single player select scene
+    /// </summary>
+    public void LoggedIn()
+    {
+        // Turn guest mode on
+        if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
+        {
+            Debug.Log("Guest mode on");
+        }
+
+        // Set up player info
+        else
+        {
+
+        }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
-        curState = GameStates.multiSingle;
+        curState = GameStates.login;
     }
 
     /// <summary>
