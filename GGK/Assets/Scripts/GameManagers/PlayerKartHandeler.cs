@@ -86,14 +86,16 @@ public class PlayerKartHandeler : MonoBehaviour
     // Which direction for the color carousel?
     public void LeftColor()
     {
-        // Create a new list that shifts everything to the left
+        // Create a new list that shifts everything to the Right
+        // Moving the left color towards middle
         List<Color> temp = new List<Color>();
 
-        for (int i = 1; i < colorButtons.Count; i++)
+        temp.Add(colors[colors.Count - 1]);
+
+        for (int i = 0; i < colors.Count - 1; i++)
         {
             temp.Add(colors[i]);
         }
-        temp.Add(colors[0]);
 
         // New list overwrites old list
         colors = temp;
@@ -103,15 +105,15 @@ public class PlayerKartHandeler : MonoBehaviour
     }
     public void RightColor()
     {
-        // Create a new list that shifts everything to the Right
+        // Create a new list that shifts everything to the left
+        // Moving the right color towards middle
         List<Color> temp = new List<Color>();
 
-        temp.Add(colors[colors.Count - 1]);
-
-        for (int i = 0; i < colors.Count - 1; i++)
+        for (int i = 1; i < colorButtons.Count; i++)
         {
             temp.Add(colors[i]);
         }
+        temp.Add(colors[0]);
 
         // New list overwrites old list
         colors = temp;

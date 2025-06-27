@@ -20,6 +20,7 @@ public class PlayerKartModel : MonoBehaviour
     void Start()
     {
         Resolution = new Vector2 (Screen.width, Screen.height);
+        RePosition();
     }
 
     // Update is called once per frame
