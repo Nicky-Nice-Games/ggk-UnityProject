@@ -416,14 +416,15 @@ public class NEWDriver : MonoBehaviour
             StartCoroutine(DriftHopEnabler());
 
             // Animate visual jump
-            kartModel.DOLocalMoveY(0.8f, 0.2f)
+            driftRotationTween?.Kill(); // Kill any existing drift rotation tween
+            driftRotationTween = DOTween.Sequence()
+                .Append(kartModel.DOLocalMoveY(1f, 0.1f)
                 .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.OutQuad);
-            
-            // Optional squash/stretch
-            kartModel.parent.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.1f)
+                .SetEase(Ease.OutQuad))
+                .Append(kartModel.parent.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.05f)
                 .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.OutSine);            
+                .SetEase(Ease.OutSine));
+                      
         }
     }
 
@@ -612,7 +613,9 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween?.Kill();
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
-        
+        driftRotationTween = kartModel.DOLocalMoveY(0f, driftTweenDuration/3f)
+            .SetEase(Ease.InOutSine);
+
 
         particleSystemsBL.ForEach(ps => ps.Stop());
         particleSystemsBR.ForEach(ps => ps.Stop());
@@ -781,7 +784,7 @@ public class NEWDriver : MonoBehaviour
         int TurnCount = 0;
         bool isInputLeft = false;
 
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 20; i++)
         {
             
 
@@ -790,6 +793,11 @@ public class NEWDriver : MonoBehaviour
             {
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
+
+                if(TurnCount > 6)
+                {
+                    break;
+                }
             }
             else if(!isDrifting)
             {
@@ -822,6 +830,9 @@ public class NEWDriver : MonoBehaviour
             float snapTilt = isDriftingLeft ? -20f : 20f;
 
             driftRotationTween?.Kill();
+            kartModel.localPosition = Vector3.zero; // Reset kart model position before starting the drift animation
+            kartModel.localRotation = Quaternion.identity; // Reset kart model rotation before starting the drift animation
+            kartModel.localScale = new Vector3(56.31424f, 56.31424f, 56.31424f); // Reset kart model scale before starting the drift animation
 
             // Main drift lean
             driftRotationTween = DOTween.Sequence()
