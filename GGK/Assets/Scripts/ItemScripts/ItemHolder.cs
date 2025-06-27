@@ -35,9 +35,6 @@ public class ItemHolder : MonoBehaviour
     private int driverItemTier;
     private int uses;
 
-    // checks if the kart is boosting with the item to avoid stacking boosts
-    private bool isBoosting = false;
-
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -297,6 +294,7 @@ public class ItemHolder : MonoBehaviour
         {
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
+            float boostMaxSpeed;
             float duration;
             if (boost.ItemTier == 2 && npcDriver == null)
             {
@@ -312,8 +310,6 @@ public class ItemHolder : MonoBehaviour
             }
 
             duration = 3.0f;
-            if (!isBoosting)
-            {
                 if (thisDriver != null)
                 {
                     // different values and functionality for different levels of boosts
@@ -321,11 +317,13 @@ public class ItemHolder : MonoBehaviour
                     {
                         default: // level 1
                             boostMult = 1.25f;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
@@ -336,6 +334,7 @@ public class ItemHolder : MonoBehaviour
                             GameObject kartParent = transform.parent.gameObject;
                             KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
                             boostMult = 1.25f;
+                            boostMaxSpeed = boostMult * 60;
 
                             int currentCheckpointId = kartCheck.checkpointId;
                             int warpCheckpointId = currentCheckpointId + 3;
@@ -366,7 +365,7 @@ public class ItemHolder : MonoBehaviour
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
                             thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
                             kartCheck.checkpointId = warpCheckpointId;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                     }
                     Debug.Log("Applying Boost Item!");
@@ -378,9 +377,6 @@ public class ItemHolder : MonoBehaviour
                     Debug.Log("Applying Boost Item!");
                 }
                 Destroy(collision.gameObject);
-            }
-            // give the kart a boost after they warp
-            isBoosting = true;
         }
 
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
@@ -413,17 +409,18 @@ public class ItemHolder : MonoBehaviour
 
     }
 
-    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = driver.transform.forward * boostForce;
-
+            Vector3 boostDirection = Vector3.zero; 
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
+            {
+                boostDirection = driver.transform.forward * boostForce;
+            }
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        // set isBoosting to false after the boost ends
-        isBoosting = false;
     }
 
     /// <summary>
@@ -515,8 +512,6 @@ public class ItemHolder : MonoBehaviour
             }
         }
         ignoreColliders.Clear();
-        // set isBoosting to false after the boost ends
-        isBoosting = false;
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
@@ -543,7 +538,5 @@ public class ItemHolder : MonoBehaviour
         spline.NormalizedTime = spline.NormalizedTime;
 
         driver.boosted = false;
-        // set isBoosting to false after the boost ends
-        isBoosting = false;
     }
 }
