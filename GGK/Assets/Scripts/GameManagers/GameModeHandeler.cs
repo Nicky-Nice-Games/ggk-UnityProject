@@ -21,8 +21,21 @@ public class GameModeHandeler : MonoBehaviour
             Button button = obj.GetComponent<Button>();
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
-            button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
+            if(obj.name == "Race")
+            {
+                button.onClick.AddListener(() =>
+                gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
+            }
+            else if(obj.name == "Time Trial")
+            {
+                button.onClick.AddListener(() =>
+                gamemanagerObj.sceneLoader.LoadScene("TimeTrialStub"));
+            }
+            else if(obj.name == "Grand Prix")
+            {
+                button.onClick.AddListener(() =>
+                gamemanagerObj.sceneLoader.LoadScene("GrandPrixStub"));
+            }
         }
     }
 
