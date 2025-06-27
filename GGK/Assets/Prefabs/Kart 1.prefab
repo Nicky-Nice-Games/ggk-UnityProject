@@ -15754,6 +15754,7 @@ MonoBehaviour:
   checkPointParent: {fileID: 0}
   placementDisplay: {fileID: 0}
   lapDisplay: {fileID: 0}
+  totalLaps: 0
 --- !u!114 &5086460321401666445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74962,7 +74963,7 @@ Transform:
   m_GameObject: {fileID: 5542701787487389027}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.06, z: -0.17376}
+  m_LocalPosition: {x: 0, y: 0, z: -0.17376}
   m_LocalScale: {x: 56.314236, y: 56.314236, z: 56.314236}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -109995,6 +109996,8 @@ MonoBehaviour:
   kartNormal: {fileID: 2772615197910849762}
   gravity: 30
   tractionCoefficient: 6
+  tractionLerpSpeed: 2
+  currentTraction: 6
   colliderOffset: 1.28
   spherePosTransform: {fileID: 1192304704561040256}
   sphere: {fileID: 8245124639533166686}
@@ -110003,12 +110006,13 @@ MonoBehaviour:
   driftFactor: 1
   driftTurnMultiplier: 0.7
   driftFowardCompensation: 52
-  minDriftTime: 150
+  minDriftTime: 130
   driftBoostForce: 2
   hopForce: 8
   minDriftSteer: 40
   boostMaxSpeed: 60
   driftMaxSpeed: 36
+  canDrift: 1
   airTrickForce: 10
   airTrickBoostForce: 5
   airTrickParticles: {fileID: 7693987021511520043}
@@ -110063,6 +110067,7 @@ MonoBehaviour:
   groundCheckDistance: 1.04
   rotationAlignSpeed: 8
   horizontalOffset: 0.21
+  doGroundCheck: 1
   driveSound: {fileID: 0}
   isDriving: 0
   isConfused: 0
