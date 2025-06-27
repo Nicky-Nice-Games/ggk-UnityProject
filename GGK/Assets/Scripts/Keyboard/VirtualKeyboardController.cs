@@ -50,6 +50,9 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="index"></param>
     void HighlightButton(int index)
     {
+        // Clear Unity's automatic selection to avoid grey highlight
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+
         // This could be done differentally to better optimize but works for now
         for (int i = 0; i < keyButtons.Count; i++)
         {
