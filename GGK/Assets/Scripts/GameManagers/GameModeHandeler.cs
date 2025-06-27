@@ -21,6 +21,8 @@ public class GameModeHandeler : MonoBehaviour
             Button button = obj.GetComponent<Button>();
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
+            // checks for each mode's button
+            // likely to change when Grand Prix & Time Trial are actually implemented
             if(obj.name == "Race")
             {
                 button.onClick.AddListener(() =>
