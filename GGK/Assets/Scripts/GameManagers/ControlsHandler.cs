@@ -35,7 +35,6 @@ public class ControlsHandler : MonoBehaviour
     {
         // When this panel closes this is the first button to be hovered outside of the panel
         eventSystem.SetSelectedGameObject(buttonOut);
-
         gameObject.SetActive(false);
     }
 
