@@ -13,7 +13,7 @@ public class KartCheckpoint : MonoBehaviour
     public float finishTime = float.MaxValue;
     public int placement;
     public string name;
-    [SerializeField] List<GameObject> checkpointList;
+    [SerializeField] public List<GameObject> checkpointList;
     [SerializeField]
     private GameObject checkPointParent;
     GameManager gameManager;
@@ -23,8 +23,24 @@ public class KartCheckpoint : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI lapDisplay;
 
+    [SerializeField]
+    private int totalLaps;
+
+    // check if the player finished the lap/race with the warp
+    private bool passedWithWarp = false;
+
+    [SerializeField]
+    private int maxCheckpointReachedThisLap = -1;
+    private bool hasStartedLapProperly = false;
+    private bool hasCrossedStart = false;
+    private HashSet<int> checkpointsPassedThisLap = new HashSet<int>();
+
+
+    public bool PassedWithWarp {  get { return passedWithWarp; } set { passedWithWarp = value; } }
+
     void Start()
     {
+        totalLaps = 1;
         checkpointId = 0;
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
         {
@@ -60,46 +76,87 @@ public class KartCheckpoint : MonoBehaviour
         {
             placementDisplay.text = "Placement: " + placement;
         }
+
+        if(passedWithWarp && lap == totalLaps)
+        {
+            LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+            finishTime = leaderboardController.curTime;
+            leaderboardController.Finished(this);
+            if (this.GetComponent<NPCDriver>() == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }
+            StartCoroutine(GameOverWait());
+            passedWithWarp = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        bool canPass = false;
+        int checkpointIndex = checkpointList.IndexOf(other.gameObject);
+        bool isCheckpoint = other.CompareTag("Checkpoint");
+        bool isStartpoint = other.CompareTag("Startpoint");
 
-        if (other.gameObject == checkpointList[(checkpointId + 1) % checkpointList.Count])
+        if (isCheckpoint && checkpointIndex != -1)
         {
-            canPass = true;
-        }
-
-        if (other.CompareTag("Checkpoint") && canPass)
-        {
-            checkpointId++;
-        }
-        else if (other.CompareTag("Startpoint"))
-        {
-            if (checkpointId == checkpointList.Count - 1)
+            // If trying to pass a checkpoint we've already passed this lap, ignore it
+            if (checkpointsPassedThisLap.Contains(checkpointIndex))
             {
-                lap++;
-                checkpointId = 0;
-                if (this.GetComponent<NPCDriver>() == null)
-                {
-                    lapDisplay.text = "Lap: " + (lap + 1);
-                }
-                
+                Debug.Log($"{name}: Already passed checkpoint {checkpointIndex}, ignoring.");
+                return;
+            }
 
-                // 3 laps finished assuming we start on lap 0
-                if (lap == 1)
+            // Block backward-cheese: prevent hitting the *last checkpoint* before crossing start
+            if (!hasCrossedStart && checkpointIndex >= checkpointList.Count - 3)
+            {
+                Debug.Log($"{name}: Ignored checkpoint {checkpointIndex} — can't go backward before lap start.");
+                return;
+            }
+
+            // Valid forward checkpoint hit
+            checkpointsPassedThisLap.Add(checkpointIndex);
+            maxCheckpointReachedThisLap = Mathf.Max(maxCheckpointReachedThisLap, checkpointIndex);
+            checkpointId = checkpointIndex;
+        }
+        else if (isStartpoint)
+        {
+            if (!hasCrossedStart)
+            {
+                hasCrossedStart = true;
+                Debug.Log($"{name}: Lap started");
+            }
+            else
+            {
+                // Only count lap if you've reached the last checkpoint in this lap
+                if (maxCheckpointReachedThisLap >= checkpointList.Count - 1)
                 {
-                    LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
-                    finishTime = leaderboardController.curTime;
-                    leaderboardController.Finished(this);
-                    
-                    StartCoroutine(GameOverWait());
+                    lap++;
+                    checkpointId = 0;
+                    maxCheckpointReachedThisLap = -1;
+                    hasCrossedStart = false;
+                    checkpointsPassedThisLap.Clear();
+
+                    if (this.GetComponent<NPCDriver>() == null)
+                    {
+                        lapDisplay.text = "Lap: " + (lap + 1);
+                    }
+
+                    if (lap == totalLaps)
+                    {
+                        LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+                        finishTime = leaderboardController.curTime;
+                        leaderboardController.Finished(this);
+                        StartCoroutine(GameOverWait());
+                    }
+                }
+                else
+                {
+                    Debug.Log($"{name}: Crossed Start but didn’t finish lap properly. MaxCP={maxCheckpointReachedThisLap}");
                 }
             }
         }
-    }  
-    
+    }
+
     IEnumerator GameOverWait()
     {
         yield return new WaitForSeconds(10.5f);

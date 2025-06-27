@@ -49,6 +49,8 @@ public class NEWDriver : MonoBehaviour
     public float minDriftSteer = 40f;
     public float boostMaxSpeed = 55f;
     public float driftMaxSpeed = 34f; //Maximum speed when drifting
+    [HideInInspector]
+    public bool canDrift = true;
 
     //To determine drifting direction
     bool isDriftingLeft;
@@ -99,6 +101,8 @@ public class NEWDriver : MonoBehaviour
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
+    [HideInInspector]
+    public bool doGroundCheck = true;
 
     //Tween stuff
     Tween driftRotationTween;    
@@ -115,6 +119,10 @@ public class NEWDriver : MonoBehaviour
 
     public bool isDriving;
 
+    [Header("Confused Settings")]
+    public bool isConfused;
+    public float confusedTimer;
+
     // Player info for API
     // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
     // Any game related data will be filled in in the game scene handeler or manager
@@ -128,6 +136,12 @@ public class NEWDriver : MonoBehaviour
 
         sphere.drag = 0.5f;
 
+        StopParticles();
+    }
+
+    public void StopParticles()
+    {
+        Debug.Log("Particles stopped");
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {
@@ -327,6 +341,17 @@ public class NEWDriver : MonoBehaviour
             sphere.AddForce(tractionForce, ForceMode.Acceleration);
         }
 
+        //------------Confused Timer---------------------
+        if (isConfused)
+        {
+            confusedTimer -= Time.deltaTime;
+
+            if (confusedTimer <= 0)
+            {
+                isConfused = false;
+                movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
+            }
+        }
     }
 
 
@@ -335,20 +360,22 @@ public class NEWDriver : MonoBehaviour
     {
         RaycastHit hitNear;
 
-
-        if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+        if (doGroundCheck)
         {
-            airTime = 0f; //Reset air time when grounded
-            isGrounded = true;
+            if (Physics.Raycast(transform.position + (transform.up * .2f), -kartNormal.up, out hitNear, groundCheckDistance, groundLayer))
+            {
+                airTime = 0f; //Reset air time when grounded
+                isGrounded = true;
 
-            //Normal Rotation
-            kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
-            kartNormal.Rotate(0, transform.eulerAngles.y, 0);
-        }
-        else
-        {
-            airTime += Time.deltaTime; //Keeping track of air time
-            isGrounded = false; 
+                //Normal Rotation
+                kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
+                kartNormal.Rotate(0, transform.eulerAngles.y, 0);
+            }
+            else
+            {
+                airTime += Time.deltaTime; //Keeping track of air time
+                isGrounded = false;
+            }
         }
     }
 
@@ -407,10 +434,10 @@ public class NEWDriver : MonoBehaviour
                     break;
                 //Turning left
                 case < -0.1f:
-                    driftTime += (Time.deltaTime + -movementDirection.x) * 5;
+                    driftTime += (Time.deltaTime + -movementDirection.x) * 3;
                     break;
                 default:
-                    driftTime += (Time.deltaTime + 1) * 2;
+                    driftTime += (Time.deltaTime + 1) * 1.5f;
                     break;
             }
 
@@ -421,14 +448,14 @@ public class NEWDriver : MonoBehaviour
             {
                 //Turning right
                 case > 0.1f:
-                    driftTime += (Time.deltaTime + movementDirection.x) * 5;
+                    driftTime += (Time.deltaTime + movementDirection.x) * 3;
                     break;
                 //Turning left
                 case < -0.1f:
                     driftTime += Time.deltaTime + -movementDirection.x;
                     break;
                 default:
-                    driftTime += (Time.deltaTime + 1) * 2;
+                    driftTime += (Time.deltaTime + 1) * 1.5f;
                     break;
             }
         }
@@ -647,7 +674,7 @@ public class NEWDriver : MonoBehaviour
                 main.flipRotation = 0; // Flip the rotation for left air trick
 
                 airTrickParticles.Play(); // Play air trick particles
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -667,7 +694,7 @@ public class NEWDriver : MonoBehaviour
                 main.flipRotation = 1; // Flip the rotation for left air trick
 
                 airTrickParticles.Play(); // Play air trick particles
-                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -684,7 +711,7 @@ public class NEWDriver : MonoBehaviour
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
                 
-                kartModel.DOLocalRotate(new Vector3(360f, 0f, 0f), 0.8f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
+                kartModel.DOLocalRotate(new Vector3(360f, 0f, 0f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
                     airTrickCount++;
@@ -856,13 +883,21 @@ public class NEWDriver : MonoBehaviour
 
         }
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.6f);
         turboTwisting = false; //Reset the turbo twisting state
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        movementDirection = context.ReadValue<Vector2>();
+        Vector2 input = context.ReadValue<Vector2>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        movementDirection = input;
 
         movementDirection.z = movementDirection.y;
 
@@ -887,32 +922,51 @@ public class NEWDriver : MonoBehaviour
 
     public void OnDrift(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (canDrift)
         {
-            if(isGrounded)
+            if (context.started)
             {
-                AttemptDrift();
+                if (isGrounded)
+                {
+                    AttemptDrift();
+                }
+                else
+                {
+                    AirTrick();
+                }
             }
-            else
+            else if (context.canceled)
             {
-                AirTrick();
+                EndDrift();
             }
-        }
-        else if (context.canceled)
-        {
-            EndDrift();
         }
     }
 
     public void OnTurn(InputAction.CallbackContext context)
     {
-        controllerX = context.ReadValue<float>();
+        float input = context.ReadValue<float>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        controllerX = input;
         UpdateControllerMovement(context);
     }
 
     public void OnAcceleration(InputAction.CallbackContext context)
     {
-        controllerZ = context.ReadValue<float>();
+        float input = context.ReadValue<float>();
+
+        // Reverse Inputs
+        if (isConfused)
+        {
+            input *= -1;
+        }
+
+        controllerZ = input;
         UpdateControllerMovement(context);
 
         if (context.started)
