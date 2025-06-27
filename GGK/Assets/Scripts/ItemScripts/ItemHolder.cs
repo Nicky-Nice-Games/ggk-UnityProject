@@ -35,6 +35,9 @@ public class ItemHolder : MonoBehaviour
     private int driverItemTier;
     private int uses;
 
+    // checks if the kart is boosting with the item to avoid stacking boosts
+    private bool isBoosting = false;
+
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -309,72 +312,75 @@ public class ItemHolder : MonoBehaviour
             }
 
             duration = 3.0f;
-            if(thisDriver != null)
+            if (!isBoosting)
             {
-                // different values and functionality for different levels of boosts
-                switch (boost.ItemTier)
+                if (thisDriver != null)
                 {
-                    default: // level 1
-                        boostMult = 1.25f;
-                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-                        break;
-                    case 2: // level 2
-                        boostMult = 1.5f;
-                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-                        break;
-                    case 3: // level 3
-                        boostMult = 1.75f;
-                        StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
-                        break;
-                    case 4: // level 4
-                        // get the checkpoint from the kart's collider child to cross 3 checkpoints
-                        GameObject kartParent = transform.parent.gameObject;
-                        KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
-                        boostMult = 1.25f;
+                    // different values and functionality for different levels of boosts
+                    switch (boost.ItemTier)
+                    {
+                        default: // level 1
+                            boostMult = 1.25f;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            break;
+                        case 2: // level 2
+                            boostMult = 1.5f;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            break;
+                        case 3: // level 3
+                            boostMult = 1.75f;
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            break;
+                        case 4: // level 4
+                                // get the checkpoint from the kart's collider child to cross 3 checkpoints
+                            GameObject kartParent = transform.parent.gameObject;
+                            KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
+                            boostMult = 1.25f;
 
-                        int currentCheckpointId = kartCheck.checkpointId;
-                        int warpCheckpointId = currentCheckpointId + 3;
+                            int currentCheckpointId = kartCheck.checkpointId;
+                            int warpCheckpointId = currentCheckpointId + 3;
 
-                        // check if the checkpoint is past the count and adjust
-                        int checkpointMax = kartCheck.checkpointList.Count - 1;
-                        if (warpCheckpointId > checkpointMax)
-                        {
-                            // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
-                            if (checkpointMax + 1 == warpCheckpointId)
+                            // check if the checkpoint is past the count and adjust
+                            int checkpointMax = kartCheck.checkpointList.Count - 1;
+                            if (warpCheckpointId > checkpointMax)
                             {
-                                warpCheckpointId = 0;
+                                // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
+                                if (checkpointMax + 1 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 0;
+                                }
+                                else if (checkpointMax + 2 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 1;
+                                }
+                                else if (checkpointMax + 3 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 2;
+                                }
+                                kartCheck.lap++;
+                                kartCheck.PassedWithWarp = true;
                             }
-                            else if (checkpointMax + 2 == warpCheckpointId)
-                            {
-                                warpCheckpointId = 1;
-                            }
-                            else if (checkpointMax + 3 == warpCheckpointId)
-                            {
-                                warpCheckpointId = 2;
-                            }
-                            kartCheck.lap++;
-                            kartCheck.PassedWithWarp = true;
-                        }
 
-                        GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
-                        // set the kart's position to 3 checkpoints ahead
-                        thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                        thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
-                        kartCheck.checkpointId = warpCheckpointId;
-                        // give the kart a boost after they warp
-                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-                        break;
-
+                            GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
+                            // set the kart's position to 3 checkpoints ahead
+                            thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                            thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
+                            kartCheck.checkpointId = warpCheckpointId;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
+                            break;
+                    }
+                    Debug.Log("Applying Boost Item!");
                 }
-                Debug.Log("Applying Boost Item!");
+                else if (npcDriver != null) // boost for npcs
+                {
+                    boostMult = 1.5f;
+                    StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
+                    Debug.Log("Applying Boost Item!");
+                }
+                Destroy(collision.gameObject);
             }
-            else if(npcDriver != null) // boost for npcs
-            {
-                boostMult = 1.5f;
-                StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
-                Debug.Log("Applying Boost Item!");
-            }
-            Destroy(collision.gameObject);
+            // give the kart a boost after they warp
+            isBoosting = true;
         }
 
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
@@ -416,6 +422,8 @@ public class ItemHolder : MonoBehaviour
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+        // set isBoosting to false after the boost ends
+        isBoosting = false;
     }
 
     /// <summary>
@@ -507,6 +515,8 @@ public class ItemHolder : MonoBehaviour
             }
         }
         ignoreColliders.Clear();
+        // set isBoosting to false after the boost ends
+        isBoosting = false;
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
@@ -533,5 +543,7 @@ public class ItemHolder : MonoBehaviour
         spline.NormalizedTime = spline.NormalizedTime;
 
         driver.boosted = false;
+        // set isBoosting to false after the boost ends
+        isBoosting = false;
     }
 }
