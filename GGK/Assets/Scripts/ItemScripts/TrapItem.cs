@@ -39,13 +39,13 @@ public class TrapItem : BaseItem
     // Update is called once per frame
     void Update()
     {
-        if (itemTier > 1)
+        if (itemTier > 2)
         {
             RotateBox();
         }
     }
 
-    // Code for fake item box
+    // Code for fake item box & Confused Ritchie
     public void RotateBox()
     {
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
@@ -70,7 +70,7 @@ public class TrapItem : BaseItem
                 break;
         }
     }
-
+    
     // So I don't have to write this out 4 times in LevelUp(), just swap out the tier body and icon for different levels
     public void UpdateComponents(GameObject body, Texture icon)
     {

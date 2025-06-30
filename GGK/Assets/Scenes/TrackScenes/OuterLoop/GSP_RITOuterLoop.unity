@@ -950,6 +950,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ramp1
       objectReference: {fileID: 0}
+    - target: {fileID: 5104656805026143835, guid: 0427ef6df5e6e2a4db8d3754c75942a0, type: 3}
+      propertyPath: m_TagString
+      value: Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 5391293230314834900, guid: 0427ef6df5e6e2a4db8d3754c75942a0, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.4729595
@@ -1153,9 +1157,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7392088}
     m_Modifications:
+    - target: {fileID: 6984169919485976063, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 7467473770100363978, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
       propertyPath: m_Name
       value: ramp2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7467473770100363978, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7848115506192140400, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
       propertyPath: m_LocalScale.x
@@ -3512,6 +3524,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7392088}
     m_Modifications:
+    - target: {fileID: 6984169919485976063, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
+      propertyPath: m_TagString
+      value: Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 7467473770100363978, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
       propertyPath: m_Name
       value: ramp2 (2)
@@ -4640,6 +4656,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7392088}
     m_Modifications:
+    - target: {fileID: 6984169919485976063, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
+      propertyPath: m_TagString
+      value: Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 7467473770100363978, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
       propertyPath: m_Name
       value: ramp2
@@ -5328,7 +5348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemBoxes: []
-  itemBoxParent: {fileID: 0}
+  itemBoxParent: {fileID: 1919104349}
 --- !u!1 &643440572
 GameObject:
   m_ObjectHideFlags: 0
@@ -17025,6 +17045,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &839629506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839629499}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4256f3c05af24449fec3d5c5f367e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverHeight: 3
+  hoverTime: 2
+  fadeTime: 1
+  fadeCanvas: {fileID: 1658915561}
+  kartModel: {fileID: 1330903948}
 --- !u!4 &841155122 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8264439621377251441, guid: dda0392f5141c6c4b8f3cea894a5081b, type: 3}
@@ -30874,6 +30911,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -15.064
       objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: moving
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: paused
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: slowDown
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -31126,6 +31175,10 @@ PrefabInstance:
     - target: {fileID: 4427403191088228123, guid: ebeaf5e473801ec4da6f2de5951cdbc6, type: 3}
       propertyPath: yRange
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427403191088228123, guid: ebeaf5e473801ec4da6f2de5951cdbc6, type: 3}
+      propertyPath: slowDown
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4427403191088228123, guid: ebeaf5e473801ec4da6f2de5951cdbc6, type: 3}
       propertyPath: AudioClip
@@ -31620,6 +31673,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1671686728}
   m_LocalEulerAnglesHint: {x: 0, y: -31.908, z: 0}
+--- !u!4 &1330903948 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9189572482977137924, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 1638308135}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1331636328
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32340,6 +32398,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: moving
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: paused
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: slowDown
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -32486,6 +32556,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7392088}
     m_Modifications:
+    - target: {fileID: 6984169919485976063, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
+      propertyPath: m_TagString
+      value: Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 7467473770100363978, guid: e17d56bdbb60ac141af42acb50117408, type: 3}
       propertyPath: m_Name
       value: ramp2 (3)
@@ -34701,7 +34775,7 @@ GameObject:
   - component: {fileID: 1627497204}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34806,6 +34880,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 899457394358513549, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1662150045652356610, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: lapDisplay
       value: 
@@ -34829,7 +34907,7 @@ PrefabInstance:
     - target: {fileID: 5086460321401666445, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: kartModel
       value: 
-      objectReference: {fileID: 2092946181}
+      objectReference: {fileID: 1330903948}
     - target: {fileID: 5086460321401666445, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: fadeCanvas
       value: 
@@ -34877,7 +34955,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7937854632911162198, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 839629506}
   m_SourcePrefab: {fileID: 100100000, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
 --- !u!1 &1641040941
 GameObject:
@@ -35065,8 +35146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -0.0013428, y: -0.0011902}
+  m_SizeDelta: {x: 433.04, y: 479.46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1658915559
 MonoBehaviour:
@@ -38181,6 +38262,7 @@ MonoBehaviour:
   checkPointParent: {fileID: 180943480}
   placementDisplay: {fileID: 0}
   lapDisplay: {fileID: 0}
+  totalLaps: 0
 --- !u!114 &2013023914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38885,11 +38967,6 @@ MeshFilter:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1106090965097549554, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
   m_PrefabInstance: {fileID: 1662617044}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2092946181 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9189572482977137924, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
-  m_PrefabInstance: {fileID: 1638308135}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2095119550
 GameObject:
@@ -55440,6 +55517,7 @@ MonoBehaviour:
   checkPointParent: {fileID: 180943480}
   placementDisplay: {fileID: 0}
   lapDisplay: {fileID: 0}
+  totalLaps: 0
 --- !u!114 &5954472818605481482
 MonoBehaviour:
   m_ObjectHideFlags: 0

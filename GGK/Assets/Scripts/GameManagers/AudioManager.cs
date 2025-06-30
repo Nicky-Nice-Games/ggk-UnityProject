@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
     AudioSource musicPlayer;
 
     [SerializeField]
-    string stopSceneName = "(HUD)DrivingMyKartAround";
+    List<string> stopSceneNames;
 
     private void Awake()
     {
@@ -44,17 +44,19 @@ public class AudioManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // stops menu music when given scene starts
-        if (scene.name == stopSceneName)
+        for (int x = 0; x < stopSceneNames.Count; x++)
         {
-            musicPlayer.Stop();
-        }
-        else
-        {
-            // starts music in other scenes if it stops
-            if (!musicPlayer.isPlaying)
+            if (scene.name == stopSceneNames[x])
             {
-                musicPlayer.Play();
+                musicPlayer.Stop();
+                return;
             }
+        }
+
+        // starts music in other scenes if it stops
+        if (!musicPlayer.isPlaying)
+        {
+            musicPlayer.Play();
         }
     }
 
