@@ -4,6 +4,7 @@
 // needed in code for menu buttons.
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ButtonVisuals : MonoBehaviour
@@ -27,8 +28,11 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void OnHover(GameObject button)
     {
-        initialScale = button.transform.localScale;
-        button.transform.localScale = button.transform.localScale * 1.1f;
+        if (!Selection.Contains(button))
+        {
+            initialScale = button.transform.localScale;
+            button.transform.localScale = button.transform.localScale * 1.1f;
+        }
     }
 
     /// <summary>

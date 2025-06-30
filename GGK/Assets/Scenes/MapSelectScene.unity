@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 53265795}
   - component: {fileID: 53265794}
   - component: {fileID: 53265793}
+  - component: {fileID: 53265796}
   m_Layer: 5
   m_Name: RIT Dorm
   m_TagString: Untagged
@@ -190,7 +191,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -243,6 +244,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53265791}
   m_CullTransparentMesh: 1
+--- !u!114 &53265796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53265791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 53265791}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 53265791}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 53265791}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 53265791}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &271461822
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,6 +852,7 @@ GameObject:
   - component: {fileID: 823578334}
   - component: {fileID: 823578333}
   - component: {fileID: 823578332}
+  - component: {fileID: 823578335}
   m_Layer: 5
   m_Name: GoBack
   m_TagString: Untagged
@@ -830,7 +909,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -895,6 +974,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823578330}
   m_CullTransparentMesh: 1
+--- !u!114 &823578335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823578330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 823578330}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 823578330}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 823578330}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 823578330}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1027827095
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,6 +1063,7 @@ GameObject:
   - component: {fileID: 1027827099}
   - component: {fileID: 1027827098}
   - component: {fileID: 1027827097}
+  - component: {fileID: 1027827100}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -963,7 +1120,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -1028,6 +1185,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027827095}
   m_CullTransparentMesh: 1
+--- !u!114 &1027827100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027827095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1027827095}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1027827095}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1027827095}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1027827095}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1209150097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,6 +1273,7 @@ GameObject:
   - component: {fileID: 1209150100}
   - component: {fileID: 1209150099}
   - component: {fileID: 1209150101}
+  - component: {fileID: 1209150102}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1106,6 +1341,18 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!114 &1209150102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209150097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e3087fc217a9b49b54e4bd88ac455c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1361770738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1365,7 @@ GameObject:
   - component: {fileID: 1361770742}
   - component: {fileID: 1361770741}
   - component: {fileID: 1361770740}
+  - component: {fileID: 1361770743}
   m_Layer: 5
   m_Name: RIT Quarter Mile
   m_TagString: Untagged
@@ -1174,7 +1422,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -1227,6 +1475,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361770738}
   m_CullTransparentMesh: 1
+--- !u!114 &1361770743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361770738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1361770738}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1361770738}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1361770738}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1361770738}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1393034047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,6 +1564,7 @@ GameObject:
   - component: {fileID: 1393034051}
   - component: {fileID: 1393034050}
   - component: {fileID: 1393034049}
+  - component: {fileID: 1393034052}
   m_Layer: 5
   m_Name: RIT Outer Loop
   m_TagString: Untagged
@@ -1295,7 +1621,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -1348,6 +1674,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393034047}
   m_CullTransparentMesh: 1
+--- !u!114 &1393034052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393034047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1393034047}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1393034047}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1393034047}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1393034047}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1402205421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1588,6 +1991,7 @@ GameObject:
   - component: {fileID: 1471605301}
   - component: {fileID: 1471605300}
   - component: {fileID: 1471605299}
+  - component: {fileID: 1471605302}
   m_Layer: 5
   m_Name: Golisano
   m_TagString: Untagged
@@ -1644,7 +2048,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -1697,6 +2101,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1471605297}
   m_CullTransparentMesh: 1
+--- !u!114 &1471605302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471605297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1471605297}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1471605297}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1471605297}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1471605297}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1494736442
 GameObject:
   m_ObjectHideFlags: 0
@@ -2161,6 +2642,7 @@ GameObject:
   - component: {fileID: 1934279696}
   - component: {fileID: 1934279695}
   - component: {fileID: 1934279694}
+  - component: {fileID: 1934279697}
   m_Layer: 5
   m_Name: Finals Brick Road
   m_TagString: Untagged
@@ -2217,7 +2699,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 7400ea0fd50f6f647a9d7a686529de30, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: f08c2b8c815fc8b4a9fdf6e9406bbfc6, type: 3}
     m_DisabledSprite: {fileID: 0}
@@ -2270,6 +2752,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1934279692}
   m_CullTransparentMesh: 1
+--- !u!114 &1934279697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934279692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1934279692}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1934279692}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: OnHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1934279692}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1209150102}
+          m_TargetAssemblyTypeName: ButtonVisuals, Assembly-CSharp
+          m_MethodName: ExitHover
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1934279692}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1985585041
 GameObject:
   m_ObjectHideFlags: 0
