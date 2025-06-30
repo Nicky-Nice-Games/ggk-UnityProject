@@ -31,6 +31,8 @@ public class CharacterData : MonoBehaviour
 
     public Sprite characterSprite; // In the future replace with GameObject that holds character model or replace with an enum to fetch a reference to an array
     public PlayerKart character;
+    public GameObject characterModelSelected;
+    public string characterName;
     public Color characterColor;
 
 }

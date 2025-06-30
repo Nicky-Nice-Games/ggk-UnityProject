@@ -13,6 +13,7 @@ public class PlayerKartHandeler : MonoBehaviour
 
     public CharacterData characterData;
     public SpriteRenderer characterSelectedImage;
+    public List<GameObject> characterModels;
     public TextMeshProUGUI characterName;
     private Image prevCharacterImageBorder;
 
@@ -89,27 +90,44 @@ public class PlayerKartHandeler : MonoBehaviour
         // Change selected character information to those on the button
         characterSelectedImage.sprite = characterImage.sprite;
         characterName.text = name;
-
+        
+        foreach(GameObject characterModel in characterModels)
+        {
+            if (characterModel.name.ToLower() != name.ToLower())
+            {
+                characterModel.SetActive(false);
+            }
+            else
+            {
+                characterModel.SetActive(true);
+            }
+        }
         // Save selected button information to change back later and change border color to yellow
         border.enabled = true;
         prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
         if (characterData != null)
+        {
             characterData.characterSprite = characterImage.sprite;
+            characterData.characterName = name;
+        }
+            
     }
 
     // Which direction for the color carousel?
     public void LeftColor()
     {
-        // Create a new list that shifts everything to the left
+        // Create a new list that shifts everything to the Right
+        // Moving the left color towards middle
         List<Color> temp = new List<Color>();
 
-        for (int i = 1; i < colorButtons.Count; i++)
+        temp.Add(colors[colors.Count - 1]);
+
+        for (int i = 0; i < colors.Count - 1; i++)
         {
             temp.Add(colors[i]);
         }
-        temp.Add(colors[0]);
 
         // New list overwrites old list
         colors = temp;
@@ -119,15 +137,15 @@ public class PlayerKartHandeler : MonoBehaviour
     }
     public void RightColor()
     {
-        // Create a new list that shifts everything to the Right
+        // Create a new list that shifts everything to the left
+        // Moving the right color towards middle
         List<Color> temp = new List<Color>();
 
-        temp.Add(colors[colors.Count - 1]);
-
-        for (int i = 0; i < colors.Count - 1; i++)
+        for (int i = 1; i < colorButtons.Count; i++)
         {
             temp.Add(colors[i]);
         }
+        temp.Add(colors[0]);
 
         // New list overwrites old list
         colors = temp;
@@ -149,6 +167,14 @@ public class PlayerKartHandeler : MonoBehaviour
         // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
         Color middleColor = colors[3];
         characterSelectedImage.color = middleColor;
+
+        foreach (GameObject characterButton in characterButtons)
+        {
+            Button button = characterButton.GetComponentInChildren<Button>();
+            ColorBlock colorBlock = button.colors;
+            colorBlock.selectedColor = middleColor;
+            button.colors = colorBlock;
+        }
 
         if (characterData != null)
             characterData.characterColor = middleColor;
