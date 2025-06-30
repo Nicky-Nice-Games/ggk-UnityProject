@@ -23,17 +23,15 @@ public class ControlsHandler : MonoBehaviour
     private Vector3 initialScale;
     public void OnEnable()
     {
-        if(initialScale == Vector3.zero)
-        {
-            initialScale = buttonIn.transform.localScale;
-        }
-        else
-        {
-            buttonIn.transform.localScale = initialScale;
-        }
-            Keyboard();
+        initialScale = buttonIn.transform.localScale;
+        Keyboard();
         // When this panel opens this is the first button to be hovered
         eventSystem.SetSelectedGameObject(buttonIn); 
+    }
+
+    public void OnDisable()
+    {
+        buttonIn.transform.localScale = initialScale;
     }
 
     public void Open()
