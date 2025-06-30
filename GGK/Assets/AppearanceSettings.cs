@@ -17,7 +17,7 @@ public class AppearanceSettings : MonoBehaviour
         characterData = FindAnyObjectByType<CharacterData>();
         icon = characterData.characterSprite;
         color = characterData.characterColor;
-        name = characterData.characterName;
+        name = characterData.characterName.ToLower();
         
 
         // Set correct character model active
