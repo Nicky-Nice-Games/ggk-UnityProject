@@ -13,8 +13,14 @@ public class AppearanceSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Loading characterData
         characterData = FindAnyObjectByType<CharacterData>();
+        icon = characterData.characterSprite;
+        color = characterData.characterColor;
         name = characterData.characterName;
+        
+
+        // Set correct character model active
         if(characterData != null)
         {
             for (int i = 0; i < models.Count; i++)
