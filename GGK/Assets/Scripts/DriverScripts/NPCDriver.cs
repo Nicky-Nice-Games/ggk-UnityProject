@@ -126,7 +126,7 @@ public class NPCDriver : MonoBehaviour
             rBody.AddForce(transform.forward * 200f * Time.fixedDeltaTime, ForceMode.Acceleration);
 
             // Apply extra gravity
-            rBody.AddForce(Vector3.down * 200f, ForceMode.Acceleration);
+            rBody.AddForce(Vector3.down * 100f, ForceMode.Acceleration);
 
             // Skip the rest of movement updates
             return;
