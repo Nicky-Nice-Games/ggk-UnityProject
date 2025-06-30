@@ -117,23 +117,20 @@ public class GameManager : MonoBehaviour
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
-            case "RIT Outer Loop Greybox":
-                sceneLoader.LoadScene("RIT Outer Loop Greybox");
+            case "RIT Outer Loop":
+                sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
-            case "Golisano Greybox":
-                sceneLoader.LoadScene("Golisano Greybox");
+            case "Golisano":
+                sceneLoader.LoadScene("LD_GolisanoGreybox");
                 break;
-            case "RIT Dorm Greybox":
-                sceneLoader.LoadScene("RIT Dorm Greybox");
+            case "RIT Dorm":
+                sceneLoader.LoadScene("GSP_RITDorm");
                 break;
-            case "RIT Woods Greybox":
-                sceneLoader.LoadScene("RIT Woods Greybox");
+            case "RIT Quarter Mile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
-            case "RIT Quarter Mile Greybox":
-                sceneLoader.LoadScene("RIT Quarter Mile Greybox V2");
-                break;
-            case "Finals Brick Road Greybox":
-                sceneLoader.LoadScene("Finals Brick Road Greybox");
+            case "Finals Brick Road":
+                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
