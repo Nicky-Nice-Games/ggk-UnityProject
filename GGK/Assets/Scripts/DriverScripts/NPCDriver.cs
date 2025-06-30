@@ -290,7 +290,11 @@ public class NPCDriver : MonoBehaviour
             bool nearLeftEdge = !Physics.Raycast(leftCheck + Vector3.up, Vector3.down, out hitLeftEdge, groundCheckDistance, trackLayer);
             bool nearRightEdge = !Physics.Raycast(rightCheck + Vector3.up, Vector3.down, out hitRightEdge, groundCheckDistance, trackLayer);
 
-            if (isGrounded && !avoidingObstacle && !correctingEdge && (nearLeftEdge || nearRightEdge))
+            // New: center check — is there track underneath us?
+            bool trackUnderneath = Physics.Raycast(transform.position + Vector3.up, Vector3.down, groundCheckDistance, trackLayer);
+
+            // Only correct if grounded, not avoiding, not already correcting, and clearly drifting off-track
+            if (isGrounded && trackUnderneath && !avoidingObstacle && !correctingEdge && (nearLeftEdge ^ nearRightEdge)) // XOR: only one side missing
             {
                 correctingEdge = true;
                 edgeCorrectTimer = edgeCorrectDuration;
@@ -373,14 +377,19 @@ public class NPCDriver : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + velocity);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(transform.position, transform.forward * obstacleCheckDistance);
-        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(-45, Vector3.up) * transform.forward * obstacleCheckDistance);
-        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(45, Vector3.up) * transform.forward * obstacleCheckDistance);
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawRay(transform.position, transform.forward * obstacleCheckDistance);
+        //Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(-45, Vector3.up) * transform.forward * obstacleCheckDistance);
+        //Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(45, Vector3.up) * transform.forward * obstacleCheckDistance);
 
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position, transform.position - transform.right * edgeCheckDistance);
         Gizmos.DrawLine(transform.position, transform.position + transform.right * edgeCheckDistance);
+
+        // Center track check debug
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up - Vector3.up * groundCheckDistance);
+
     }
 
     public void StartRecovery()
