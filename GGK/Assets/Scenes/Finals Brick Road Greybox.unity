@@ -5472,6 +5472,8 @@ MonoBehaviour:
   checkPointParent: {fileID: 1593404240}
   placementDisplay: {fileID: 0}
   lapDisplay: {fileID: 0}
+  totalLaps: 0
+  maxCheckpointReachedThisLap: -1
 --- !u!114 &68159930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5513,6 +5515,20 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  avoidingObstacle: 0
+  avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
+  edgeCheckDistance: 3
+  steerBackStrength: 1.5
+  trackLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  correctingEdge: 0
+  edgeCorrectDuration: 1
 --- !u!54 &68159931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12332,6 +12348,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kart 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5086460321401666445, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: kartModel
+      value: 
+      objectReference: {fileID: 988107362}
     - target: {fileID: 5946905664927676741, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 137.097
@@ -20161,6 +20181,11 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.009452315, y: 0.0009514793, z: -0.00007049111}
     m_Extent: {x: 0.009460067, y: 0.0032959478, z: 0.0023443617}
   m_DirtyAABB: 0
+--- !u!4 &988107362 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9189572482977137924, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 381401790}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &993288911
 GameObject:
   m_ObjectHideFlags: 0
@@ -20445,6 +20470,8 @@ MonoBehaviour:
   checkPointParent: {fileID: 1593404240}
   placementDisplay: {fileID: 0}
   lapDisplay: {fileID: 0}
+  totalLaps: 0
+  maxCheckpointReachedThisLap: -1
 --- !u!114 &1026030478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20486,6 +20513,20 @@ MonoBehaviour:
   isRecoveringFromHit: 0
   recoveryTimer: 0
   recoveryDuration: 2.5
+  obstacleCheckDistance: 20
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  avoidingObstacle: 0
+  avoidanceDuration: 1.5
+  avoidanceBlendDuration: 0.5
+  edgeCheckDistance: 3
+  steerBackStrength: 1.5
+  trackLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  correctingEdge: 0
+  edgeCorrectDuration: 1
 --- !u!54 &1026030479
 Rigidbody:
   m_ObjectHideFlags: 0
