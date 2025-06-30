@@ -13,7 +13,7 @@ public class ButtonVisuals : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        initialScale = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -29,9 +29,9 @@ public class ButtonVisuals : MonoBehaviour
     public void OnHover(GameObject button)
     {
         if (!Selection.Contains(button))
-        {
+        { 
             initialScale = button.transform.localScale;
-            button.transform.localScale = button.transform.localScale * 1.1f;
+            button.transform.localScale = initialScale * 1.1f;
         }
     }
 
