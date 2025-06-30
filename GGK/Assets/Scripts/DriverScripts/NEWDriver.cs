@@ -124,6 +124,20 @@ public class NEWDriver : MonoBehaviour
 
     public bool isDriving;
 
+    [Header("Confused Settings")]
+    public bool isConfused;
+    public float confusedTimer;
+
+    // Player info for API
+    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
+    // Any game related data will be filled in in the game scene handeler or manager
+    private PlayerInfo playerInfo;
+    private GameManager gameManagerObj;
+
+    //@Jonathan Coyne: Following two lines are a MERGERESULT, unsure if they are neccessary/ going to be used
+    private uint drivingSoundID;
+    private uint driftingSoundID;
+
     // Start is called before the first frame update
     void Start()
     {
