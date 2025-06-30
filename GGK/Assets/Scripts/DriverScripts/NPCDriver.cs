@@ -29,6 +29,8 @@ public class NPCDriver : MonoBehaviour
     public float rotationAlignSpeed = 5.0f;
     public float airGravityMultiplier = 2f;
 
+
+
     [Header("Spline Transition")]
     public float returnSpeed = 200;
     public float arrivalThreshold = 0.5f;
@@ -91,7 +93,7 @@ public class NPCDriver : MonoBehaviour
         }
 
         RaycastHit hit;
-        isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, groundCheckDistance, groundLayer);
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.5f, -transform.up, out hit, groundCheckDistance * 0.9f, groundLayer);
 
         if (isGrounded)
         {
@@ -114,21 +116,20 @@ public class NPCDriver : MonoBehaviour
         }
         else
         {
-            // Mid air rotation
+            // Gently rotate toward flat facing
             float rotationSpeed = 2f;
-            Quaternion currentRotation = transform.rotation;
             Quaternion intendedRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            Quaternion targetRotation = Quaternion.Slerp(rBody.rotation, intendedRotation, rotationSpeed * Time.fixedDeltaTime);
+            rBody.MoveRotation(targetRotation);
 
+            // Apply forward movement if desired
+            rBody.AddForce(transform.forward * 200f * Time.fixedDeltaTime, ForceMode.Acceleration);
 
+            // Apply extra gravity
+            rBody.AddForce(Vector3.down * 200f, ForceMode.Acceleration);
 
-            if (Quaternion.Angle(transform.rotation, intendedRotation) < .5)
-            {
-                intendedRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-            }
-            else
-            {
-                transform.rotation = Quaternion.Slerp(currentRotation, intendedRotation, Time.deltaTime * rotationSpeed);
-            }
+            // Skip the rest of movement updates
+            return;
 
         }
 
@@ -284,17 +285,13 @@ public class NPCDriver : MonoBehaviour
 
             // ---- Edge Detection & Correction ----
             RaycastHit hitLeftEdge, hitRightEdge;
-            Vector3 leftCheck = transform.position - transform.right * edgeCheckDistance;
-            Vector3 rightCheck = transform.position + transform.right * edgeCheckDistance;
+            Vector3 leftCheck = transform.position - transform.right * edgeCheckDistance - Vector3.up * 0.3f;
+            Vector3 rightCheck = transform.position + transform.right * edgeCheckDistance - Vector3.up * 0.3f;
 
             bool nearLeftEdge = !Physics.Raycast(leftCheck + Vector3.up, Vector3.down, out hitLeftEdge, groundCheckDistance, trackLayer);
             bool nearRightEdge = !Physics.Raycast(rightCheck + Vector3.up, Vector3.down, out hitRightEdge, groundCheckDistance, trackLayer);
 
-            // New: center check — is there track underneath us?
-            bool trackUnderneath = Physics.Raycast(transform.position + Vector3.up, Vector3.down, groundCheckDistance, trackLayer);
-
-            // Only correct if grounded, not avoiding, not already correcting, and clearly drifting off-track
-            if (isGrounded && trackUnderneath && !avoidingObstacle && !correctingEdge && (nearLeftEdge ^ nearRightEdge)) // XOR: only one side missing
+            if (isGrounded && !avoidingObstacle && !correctingEdge && rBody.velocity.y < 0f && (nearLeftEdge ^ nearRightEdge))
             {
                 correctingEdge = true;
                 edgeCorrectTimer = edgeCorrectDuration;
@@ -343,10 +340,10 @@ public class NPCDriver : MonoBehaviour
         rBody.MoveRotation(transform.rotation);
 
         // Fall faster if in air
-        if (!avoidingObstacle && !isGrounded)
-        {
-            rBody.AddForce(Vector3.down * 200f, ForceMode.Acceleration);
-        }
+        //if (!avoidingObstacle && !isGrounded)
+        //{
+        //    rBody.AddForce(Vector3.down * 200f, ForceMode.Acceleration);
+        //}
 
         //Debug.Log(velocity.magnitude);
     }
@@ -377,19 +374,14 @@ public class NPCDriver : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + velocity);
 
-        //Gizmos.color = Color.yellow;
-        //Gizmos.DrawRay(transform.position, transform.forward * obstacleCheckDistance);
-        //Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(-45, Vector3.up) * transform.forward * obstacleCheckDistance);
-        //Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(45, Vector3.up) * transform.forward * obstacleCheckDistance);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, transform.forward * obstacleCheckDistance);
+        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(-45, Vector3.up) * transform.forward * obstacleCheckDistance);
+        Gizmos.DrawRay(transform.position, Quaternion.AngleAxis(45, Vector3.up) * transform.forward * obstacleCheckDistance);
 
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position, transform.position - transform.right * edgeCheckDistance);
         Gizmos.DrawLine(transform.position, transform.position + transform.right * edgeCheckDistance);
-
-        // Center track check debug
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up - Vector3.up * groundCheckDistance);
-
     }
 
     public void StartRecovery()
