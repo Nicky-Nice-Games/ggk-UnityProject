@@ -30,7 +30,7 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void OnHover(GameObject button)
     {
-        button.transform.localScale = new Vector3(3.3f, 3.3f, 3.3f);
+        button.transform.localScale = button.transform.localScale * 1.1f;
     }
 
     /// <summary>
@@ -39,6 +39,6 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void ExitHover(GameObject button)
     {
-        button.transform.localScale = new Vector3(3f, 3f, 3f);
+        button.transform.localScale = button.transform.localScale - button.transform.localScale *.1f;
     }
 }
