@@ -8,14 +8,11 @@ using UnityEngine;
 
 public class ButtonVisuals : MonoBehaviour
 {
-
-    private float initialScale;
-    private float initialXPos;
-    private float initialYPos;
+    private Vector3 initialScale;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,6 +27,7 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void OnHover(GameObject button)
     {
+        initialScale = button.transform.localScale;
         button.transform.localScale = button.transform.localScale * 1.1f;
     }
 
@@ -39,6 +37,6 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void ExitHover(GameObject button)
     {
-        button.transform.localScale = button.transform.localScale - button.transform.localScale *.1f;
+        button.transform.localScale = initialScale;
     }
 }
