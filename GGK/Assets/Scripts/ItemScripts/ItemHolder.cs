@@ -444,9 +444,10 @@ public class ItemHolder : MonoBehaviour
                 continue;
             }
 
-            // ignore ground, rock, checkpoint, startpoint
+            // ignore ground, rock, checkpoint, startpoint, road
             if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
-                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
+                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
+                && !collider.CompareTag("Road"))
             {
                 Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
                 ignoreColliders.Add(collider);
