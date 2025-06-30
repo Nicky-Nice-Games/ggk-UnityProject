@@ -16,7 +16,8 @@ public class NewTestScript
     [Test]
     public void FailTest()
     {
-        Assert.AreEqual(1,2);
+        Assert.AreEqual(1, 2);
+        //BaseItem baseItem;
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
