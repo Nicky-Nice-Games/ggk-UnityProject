@@ -384,6 +384,8 @@ public class NEWDriver : MonoBehaviour
                 //Normal Rotation
                 kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
                 kartNormal.Rotate(0, transform.eulerAngles.y, 0);
+                
+                HandleOffRoad(hitNear); // check for offroad and slow down the kart if needed
             }
             else
             {
@@ -1035,5 +1037,18 @@ public class NEWDriver : MonoBehaviour
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
     }
 
-    
+    /// <summary>
+    /// Checks if the kart is driving on the road or offroad
+    /// If they drive on the offroad they'll be slowed down as needed
+    /// </summary>
+    private void HandleOffRoad(RaycastHit hit)
+    {
+        float slowFactor = 0.35f;
+        // Checks if the driver isn't on the Road
+        if (!hit.collider.CompareTag("Road"))
+        {
+            sphere.AddForce(-acceleration * slowFactor, ForceMode.Acceleration);
+        }
+    }
+
 }
