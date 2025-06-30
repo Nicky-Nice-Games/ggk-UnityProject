@@ -2082,7 +2082,7 @@ Transform:
   m_GameObject: {fileID: 332117604}
   serializedVersion: 2
   m_LocalRotation: {x: 0.116945624, y: -0.1438514, z: 0.023259986, w: 0.98238975}
-  m_LocalPosition: {x: -188.69, y: -28.8, z: -45.56}
+  m_LocalPosition: {x: -180.8, y: -20.91, z: -41.21}
   m_LocalScale: {x: 0.06046906, y: 0.060469054, z: 0.06046906}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5287,6 +5287,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5420069048963548515, guid: 8f1d90a8b64cfaa4b85b2b0aec7fc3e3, type: 3}
   m_PrefabInstance: {fileID: 718561282}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &641012350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641012351}
+  m_Layer: 0
+  m_Name: GridPosition4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &641012351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641012350}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.015190278, y: -0.2936416, z: -0.13077256, w: 0.94680643}
+  m_LocalPosition: {x: -183.22, y: -34.43, z: -3.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1440590475}
+  m_LocalEulerAnglesHint: {x: -2.753, y: -34.102, z: -14.883}
 --- !u!1 &641269984
 GameObject:
   m_ObjectHideFlags: 0
@@ -32285,6 +32316,7 @@ Transform:
   - {fileID: 1198807962}
   - {fileID: 771969258}
   - {fileID: 1491965453}
+  - {fileID: 641012351}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1440590476
@@ -32320,11 +32352,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb5299f95b862e4a902cb714c4a54c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kartPrefab: {fileID: 3407770728951182035, guid: 813518c6d36da2f4b8bc8b69588fada8, type: 3}
+  speedBar: {fileID: 1663952578}
+  speedCamera: {fileID: 332117609}
   gridPositions:
   - {fileID: 1198807962}
   - {fileID: 771969258}
   - {fileID: 1491965453}
+  - {fileID: 641012351}
+  playerKartPrefab: {fileID: 6439410145543352196, guid: 813518c6d36da2f4b8bc8b69588fada8, type: 3}
+  npcKartPrefab: {fileID: 0}
 --- !u!1001 &1453352356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34969,6 +35005,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
+--- !u!114 &1663952578 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7309171448268164535, guid: fc7ecf1b625b2e546bc055f4d8f2b02e, type: 3}
+  m_PrefabInstance: {fileID: 967415971}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a659195545428b4e82b1d9e110fc30e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1671686727
 GameObject:
   m_ObjectHideFlags: 0

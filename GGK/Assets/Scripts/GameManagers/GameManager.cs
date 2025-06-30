@@ -90,6 +90,7 @@ public class GameManager : NetworkBehaviour
             // Will most likely be replaced when implimenting the comments above
             SceneManager.LoadScene("MultiplayerMenus");
             curState = GameStates.lobby;
+            //NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerMenus", LoadSceneMode.Single);
         }
     }
 
