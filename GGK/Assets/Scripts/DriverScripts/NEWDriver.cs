@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.U2D;
 
 public class NEWDriver : MonoBehaviour
 {
@@ -20,7 +21,8 @@ public class NEWDriver : MonoBehaviour
     public float maxSpeed = 60f;
     public float airTurnSpeed = 30f; //Turning speed in the air, to prevent kart from turning too fast in the air
     public float turnSpeed = 40;   
-    public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
+    public float maxSteerAngleTires = 20f; //Multiplier for wheel turning speed    
+    public float maxSteeringAngle = 10f; //Maximum steering angle for the steering wheel
     public Transform kartNormal;
     public float gravity = 20;    
     float controllerX;
@@ -72,11 +74,11 @@ public class NEWDriver : MonoBehaviour
 
     [Header("Wheel references")]
     //Front tires GO
-    public GameObject frontTireR;
-    
+    public GameObject frontTireR;    
     public GameObject frontTireL;
     public GameObject steeringWheel;
-    
+    Quaternion baseRotation; //Base rotation of the steering wheel for resetting
+
 
     [Header("Reference to the kartModel transform for Animation")]
     public Transform kartModel;
@@ -128,6 +130,8 @@ public class NEWDriver : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
 
+
+
     // Player info for API
     // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
     // Any game related data will be filled in in the game scene handeler or manager
@@ -142,6 +146,8 @@ public class NEWDriver : MonoBehaviour
         sphere.drag = 0.5f;
 
         StopParticles();
+
+        baseRotation = steeringWheel.transform.localRotation;
     }
 
     public void StopParticles()
@@ -395,10 +401,22 @@ public class NEWDriver : MonoBehaviour
 
     void ApplyWheelVisuals()
     {
-        float steerAngle = movementDirection.x * maxSteerAngle;
+        float steerAngle = movementDirection.x * maxSteerAngleTires;
         frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
         frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
-        steeringWheel.transform.Rotate(0, steerAngle * 2f, 0f);
+        // Steering Wheel Rotation
+        float targetAngle = movementDirection.x * maxSteeringAngle;
+        //Quaternion targetRot = Quaternion.Euler(0, targetAngle, 0);
+        //steeringWheel.transform.localRotation = Quaternion.Slerp(steeringWheel.transform.localRotation, targetRot, Time.deltaTime * turnSpeed);
+
+        //Vector3 currentEuler = steeringWheel.transform.localEulerAngles;
+        //steeringWheel.transform.localEulerAngles = new Vector3(
+        //    currentEuler.x,
+        //    targetAngle,
+        //    currentEuler.z
+        //);
+
+        steeringWheel.transform.localRotation = baseRotation * Quaternion.AngleAxis(-targetAngle, Vector3.up);
     }
 
     /// <summary>
