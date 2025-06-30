@@ -140,9 +140,11 @@ public class DynamicRecovery : MonoBehaviour
     }
 
     private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
-    { 
+    {
 
-        if(kartMovementScript != null)
+        Quaternion finalRot = Quaternion.Euler(0, targetRotation.eulerAngles.y - 90, 0);
+
+        if (kartMovementScript != null)
         {
             kartMovementScript.enabled = false;
             
@@ -177,7 +179,7 @@ public class DynamicRecovery : MonoBehaviour
         // TELEPORT TO NEW POSITION 
         transform.position = targetPosition;
         ResetParticles();
-        normalTransform.rotation = targetRotation;
+        normalTransform.rotation = finalRot;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;
