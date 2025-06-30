@@ -95,6 +95,16 @@ public class MiniMapHud : MonoBehaviour
     private LineRenderer boundsMaker;
     private LineRenderer pointsMaker;
 
+    //----------test changes for multiplayer----------
+    public static MiniMapHud Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -157,8 +167,8 @@ public class MiniMapHud : MonoBehaviour
             float xLerp = Mathf.InverseLerp(xBoundMin, xBoundMax, objPos.x);
             float yLerp = Mathf.InverseLerp(yBoundMin, yBoundMax, objPos.z);
 
-            float xPos = Mathf.Lerp(-miniMapSize.x/2, miniMapSize.x/2, xLerp);
-            float yPos = Mathf.Lerp(-miniMapSize.y/2, miniMapSize.y/2, yLerp);
+            float xPos = Mathf.Lerp(-miniMapSize.x / 2, miniMapSize.x / 2, xLerp);
+            float yPos = Mathf.Lerp(-miniMapSize.y / 2, miniMapSize.y / 2, yLerp);
 
             //set new icon position
             mapIcons[i].transform.localPosition = new Vector3(xPos, yPos, 0);
@@ -209,7 +219,7 @@ public class MiniMapHud : MonoBehaviour
             pointsMaker.SetPosition(4, tLeft);
         }
 
-        List<Vector3> pointList = new List<Vector3>{ tLeft, tRight, bLeft, bRight };
+        List<Vector3> pointList = new List<Vector3> { tLeft, tRight, bLeft, bRight };
 
         EstablishBounds(pointList);
     }
@@ -315,6 +325,10 @@ public class MiniMapHud : MonoBehaviour
             img.sprite = settings.icon;
             img.color = settings.color;
         }
+    }
+
+    public void AddToObjectList(GameObject gameObject) {
+        objects.Add(gameObject);
     }
 }
 

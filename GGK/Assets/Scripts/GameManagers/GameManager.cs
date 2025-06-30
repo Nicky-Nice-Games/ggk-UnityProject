@@ -1,6 +1,8 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,6 +14,7 @@ public enum GameStates
 {
     start,
     multiSingle,
+    lobby,
     gameMode,
     playerKart,
     map,
@@ -19,7 +22,7 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public GameStates curState;
     public static GameManager thisManagerInstance;
@@ -27,11 +30,17 @@ public class GameManager : MonoBehaviour
     public SceneLoader sceneLoader;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
     void Awake()
     {
-        thisManagerInstance = this;
-        thisManagerObjInstance = gameObject;
-        DontDestroyOnLoad(thisManagerObjInstance);
+        if (thisManagerInstance == null)
+        {
+            thisManagerInstance = this;
+            thisManagerObjInstance = gameObject;
+            DontDestroyOnLoad(thisManagerObjInstance);
+        } else if(thisManagerInstance != this){
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
@@ -42,15 +51,10 @@ public class GameManager : MonoBehaviour
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
-
+        RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
+        RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -84,9 +88,32 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            sceneLoader.LoadScene("GameModeSelectScene");
-            curState = GameStates.gameMode;
+            SceneManager.LoadScene("MultiplayerMenus");
+            curState = GameStates.lobby;
         }
+    }
+
+    /// <summary>
+    /// RelayManager OnRelayStarted EventHandler
+    /// written by Phillip Brown
+    /// </summary>
+    public void RelayManager_OnRelayStarted(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
+    }
+
+    public void RelayManager_OnRelayJoined(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
+    }
+    
+    /// <summary>
+    /// changes game state to the game mode selection scene
+    /// </summary>
+    public void ToGameModeSelectScene()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
     }
 
     /// <summary>
@@ -96,16 +123,49 @@ public class GameManager : MonoBehaviour
     {
         sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.Reset();
+            if (IsHost)
+            {
+                LoadedGameModeRpc();
+            }
+        }
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void LoadedGameModeRpc()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
     }
 
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
-    /// multyplayer is added
+    /// multiplayer is added
     /// </summary>
     public void PlayerSelected()
     {
-        sceneLoader.LoadScene("MapSelectScene");
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId, CharacterData.Instance.character, CharacterData.Instance.characterColor);
+        }
+        else
+        {
+            ToMapSelectScreen();
+        }
+    }
+
+    public void ToMapSelectScreen() {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToMapSelectScreenRpc()
+    {
+        SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
 
@@ -114,10 +174,38 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MapSelected()
     {
-        // Loads the race based on the name of the button clicked
-        switch (GetComponent<ButtonBehavior>().buttonClickedName)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            case "RIT Outer Loop":
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "RIT Outer Loop":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITOuterLoop);
+                    break;
+                case "Golisano":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.Golisano);
+                    break;
+                case "RIT Dorm":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITDorm);
+                    break;
+                case "RIT Woods Greybox":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
+                    break;
+                case "RIT Quarter Mile ":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
+                    break;
+                case "Finals Brick Road ":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
+                    break;
+                default:
+                    break;
+            }      
+        }
+        else
+        {
+           // Loads the race based on the name of the button clicked
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "RIT Outer Loop":
                 sceneLoader.LoadScene("V2 RIT Outer Loop Greybox");
                 break;
             case "Golisano":
@@ -134,10 +222,18 @@ public class GameManager : MonoBehaviour
                 break;
             default:
                 break;
+            }
+            curState = GameStates.game; 
         }
-        curState = GameStates.game;
+        
+
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    public void LoadMapRpc(string mapName)
+    {
+        SceneManager.LoadScene(mapName);
+    }
     /// <summary>
     /// Triggers when the game finishes
     /// </summary>
