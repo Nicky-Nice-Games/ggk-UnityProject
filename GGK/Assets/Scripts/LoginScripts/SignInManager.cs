@@ -2,11 +2,14 @@
 // 6/25/25
 // Basic button functions for signing in
 
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class SignInManager : MonoBehaviour
 {
@@ -20,11 +23,23 @@ public class SignInManager : MonoBehaviour
     GameObject loginOptions;
     [SerializeField]
     VirtualKeyboardController keyboard;
+    private GameManager gameManager;
+    [SerializeField] private List<GameObject> continueButtons;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = FindAnyObjectByType<GameManager>();
+
+        // Assigning the buttons their listeners
+        foreach (GameObject obj in continueButtons)
+        {
+            Button button = obj.GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            gameManager.GetComponent<ButtonBehavior>().OnClick());
+            button.onClick.AddListener(() =>
+            gameManager.GetComponentInChildren<GameManager>().LoggedIn());
+        }
     }
 
     // Update is called once per frame
@@ -59,19 +74,6 @@ public class SignInManager : MonoBehaviour
         loginOptions.SetActive(true);
         signUpUI.SetActive(false);
         loginUI.SetActive(false);
-    }
-
-    /// <summary>
-    /// Brings user to start scene as a guest
-    /// 
-    /// NOTE:
-    /// 
-    /// It should be the multisingle scene, but I don't know
-    /// how GameManager works so this is temporary.
-    /// </summary>
-    public void ContinueAsGuest()
-    {
-        SceneManager.LoadScene("StartScene");
     }
 
     public void DisplayKeyboard(GameObject sender) 

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-// Script relies on the data.json being in the same directory as API
-
 public class APIManager : MonoBehaviour
 {
 

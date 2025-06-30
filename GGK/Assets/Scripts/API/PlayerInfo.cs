@@ -8,13 +8,17 @@ using UnityEngine.UIElements;
 /// It is used to retain basic functionality for C# Dictionaries
 /// </summary>
 [System.Serializable]
-public class PlayerInfo : ScriptableObject
+public class PlayerInfo : MonoBehaviour
 {
     // Basic player and match stats
+    [Header("Do not Change")]
     public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
+
+    // NOT SENT TO BACKEND
+    public bool isGuest;
 
     //Default constructor
     public PlayerInfo() 
@@ -31,6 +35,8 @@ public class PlayerInfo : ScriptableObject
         boostUsage = new Dictionary<string, int>();
         offenceUsage = new Dictionary<string, int>();
         trapUsage = new Dictionary<string, int>();
+
+        isGuest = false;
     }
 
     // Copy constructor

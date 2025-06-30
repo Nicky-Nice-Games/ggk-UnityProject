@@ -127,6 +127,12 @@ public class VirtualKeyboardController : MonoBehaviour
             curText += " ";
         }
 
+        // Swapping input fields
+        else if(value == "Enter")
+        {
+
+        }
+
         // Letters and shift
         else
         {
