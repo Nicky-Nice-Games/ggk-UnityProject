@@ -233,7 +233,7 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
                 npcDriver.StartRecovery();
             }
-            ApplyIconSpin(gameObject, 3);
+            ApplyIconSpin(gameObject, 1);
         }
 
     }
@@ -282,7 +282,7 @@ public class ItemHolder : MonoBehaviour
             // displays item in the HUD
             if (thisDriver)
             {
-                itemDisplay.texture = heldItem.itemIcon;
+                ApplyItemTween(heldItem.itemIcon);
             }
 
             // Disables the upgrade box
@@ -296,7 +296,7 @@ public class ItemHolder : MonoBehaviour
             if (thisDriver != null)
                 thisDriver.sphere.velocity /= 8;
             Destroy(collision.gameObject);
-            ApplyIconSpin(gameObject, 3);
+            ApplyIconSpin(gameObject, 1);
         }
 
         // kart uses a boost and is given the boost through a force
@@ -403,7 +403,6 @@ public class ItemHolder : MonoBehaviour
                     thisDriver.isConfused = true;
                     thisDriver.movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
                 }
-                ApplyIconSpin(gameObject, 3);
             }
             else if (npcDriver != null)
             {
@@ -414,8 +413,9 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
-                ApplyIconSpin(gameObject, 3);
+                
             }
+            ApplyIconSpin(gameObject, 1);
             Destroy(collision.gameObject);
         }
 
