@@ -13,6 +13,7 @@ public class PlayerKartHandeler : MonoBehaviour
 
     public CharacterData characterData;
     public SpriteRenderer characterSelectedImage;
+    public List<GameObject> characterModels;
     public TextMeshProUGUI characterName;
     private Image prevCharacterImageBorder;
 
@@ -73,14 +74,29 @@ public class PlayerKartHandeler : MonoBehaviour
         // Change selected character information to those on the button
         characterSelectedImage.sprite = characterImage.sprite;
         characterName.text = name;
-
+        
+        foreach(GameObject characterModel in characterModels)
+        {
+            if (characterModel.name.ToLower() != name.ToLower())
+            {
+                characterModel.SetActive(false);
+            }
+            else
+            {
+                characterModel.SetActive(true);
+            }
+        }
         // Save selected button information to change back later and change border color to yellow
         border.enabled = true;
         prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
         if (characterData != null)
+        {
             characterData.characterSprite = characterImage.sprite;
+            characterData.characterName = name;
+        }
+            
     }
 
     // Which direction for the color carousel?
