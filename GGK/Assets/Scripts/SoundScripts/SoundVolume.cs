@@ -9,17 +9,30 @@ public class SoundVolume : MonoBehaviour
     public OptionsData optionsData;
 
     // Volume Methods
-    public void PlayDialouge(AudioSource audioSource, AudioClip audioClip)
+    public void PlayDialouge(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.dialougeVolume / 100);
+        audioSource.Play();
+    }
+    public void PlayDialougeOneShot(AudioSource audioSource, AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.dialougeVolume / 100));
     }
-
-    public void PlaySFX(AudioSource audioSource, AudioClip audioClip)
+    public void PlaySFX(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.sfxVolume / 100);
+        audioSource.Play();
+    }
+    public void PlaySFXOneShot(AudioSource audioSource, AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.sfxVolume / 100));
     }
-
-    public void PlayMusic(AudioSource audioSource, AudioClip audioClip)
+    public void PlayMusic(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.musicVolume / 100);
+        audioSource.Play();
+    }
+    public void PlayMusicOneShot(AudioSource audioSource, AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.musicVolume / 100));
     }
