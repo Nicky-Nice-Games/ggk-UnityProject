@@ -61,6 +61,20 @@ namespace AK
             } // namespace STATE
         } // namespace MUSIC_STATES
 
+        namespace RESULTS
+        {
+            static const AkUniqueID GROUP = 3780578133U;
+
+            namespace STATE
+            {
+                static const AkUniqueID INPROGRESS = 3195609653U;
+                static const AkUniqueID LOSS = 221232704U;
+                static const AkUniqueID NONE = 748895195U;
+                static const AkUniqueID STARTING = 399468041U;
+                static const AkUniqueID WIN = 979765101U;
+            } // namespace STATE
+        } // namespace RESULTS
+
     } // namespace STATES
 
     namespace BANKS
