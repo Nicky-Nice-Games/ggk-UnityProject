@@ -530,7 +530,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 525906087}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1258776825}
+        m_TargetAssemblyTypeName: UIClickSound, Assembly-CSharp
+        m_MethodName: onClickConfirm
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &525906087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,6 +815,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDefaultListener: 1
+  bOverrideScalingFactor: 0
+  scalingFactor: -1
   listenerId: 0
 --- !u!114 &587259506
 MonoBehaviour:
@@ -821,9 +835,11 @@ MonoBehaviour:
     useDefaultListeners: 1
   isEnvironmentAware: 0
   isStaticObject: 0
+  usePositionOffsetData: 0
   m_positionOffsetData:
     KeepMe: 0
     positionOffset: {x: 0, y: 0, z: 0}
+  scalingFactor: 1
   m_posOffsetData: {fileID: 0}
   listenerMask: 1
 --- !u!1 &877042839
@@ -1021,6 +1037,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1330649417}
         m_TargetAssemblyTypeName: BackButtonHandler, Assembly-CSharp
         m_MethodName: GoBack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1258776825}
+        m_TargetAssemblyTypeName: UIClickSound, Assembly-CSharp
+        m_MethodName: onClickBack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1430,6 +1458,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058842302}
   m_CullTransparentMesh: 1
+--- !u!1001 &1258776824
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1333019745767042347, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8278203771429621956, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+      propertyPath: m_Name
+      value: WwiseGlobal
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 807595300111600823, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+--- !u!114 &1258776825 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8540174729649039812, guid: 01d97e648a4b9e24baed8bb09f50437c, type: 3}
+  m_PrefabInstance: {fileID: 1258776824}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f0b160ae12f5040bd1d3ca4ff21b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1330649416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,7 +1703,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1865766195}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1258776825}
+        m_TargetAssemblyTypeName: UIClickSound, Assembly-CSharp
+        m_MethodName: onClickConfirm
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1865766195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1728,9 +1837,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1258776825}
+        m_TargetAssemblyTypeName: UIClickSound, Assembly-CSharp
+        m_MethodName: onClickConfirm
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1935,7 +2044,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1979477078}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1258776825}
+        m_TargetAssemblyTypeName: UIClickSound, Assembly-CSharp
+        m_MethodName: onClickConfirm
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1979477078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2252,3 +2373,4 @@ SceneRoots:
   - {fileID: 877042843}
   - {fileID: 143501371}
   - {fileID: 1330649418}
+  - {fileID: 1258776824}
