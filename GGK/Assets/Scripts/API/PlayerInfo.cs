@@ -17,8 +17,12 @@ public class PlayerInfo : MonoBehaviour
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
 
-    // NOT SENT TO BACKEND
+    // NOT SENT TO BACKEND / Used unity side
     public bool isGuest;
+    public string playerName;
+    public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
+    public Color PlayerColor;
+    public int clientID;
 
     //Default constructor
     public PlayerInfo() 
@@ -37,6 +41,31 @@ public class PlayerInfo : MonoBehaviour
         trapUsage = new Dictionary<string, int>();
 
         isGuest = false;
+    }
+
+    // Param constructor
+    public PlayerInfo(int pid = 0, int startTime = 0, int racePos = 0, int map = 0, int collisionWPlayers = 0, 
+        int collisionWWals = 0, int character = 0, int offMap = 0, string name = null, int clientID = -1)
+    {
+        this.clientID = clientID;
+        playerID = pid;
+        raceStartTime = startTime;
+        racePosition = racePos;
+        mapRaced = map;
+        collisionsWithPlayers = collisionWPlayers;
+        collisionWithWalls = collisionWWals;
+        characterUsed = character;
+        fellOffMap = offMap;
+        playerName = name;
+        PlayerCharacter = PlayerKart.Freddie;
+        PlayerColor = Color.white;
+
+        boostUsage = new Dictionary<string, int>();
+        offenceUsage = new Dictionary<string, int>();
+        trapUsage = new Dictionary<string, int>();
+
+        isGuest = false;
+
     }
 
     // Copy constructor
