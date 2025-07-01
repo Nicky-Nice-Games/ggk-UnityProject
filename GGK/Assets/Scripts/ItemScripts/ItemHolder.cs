@@ -363,7 +363,7 @@ public class ItemHolder : MonoBehaviour
                             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
                             // set the kart's position to 3 checkpoints ahead
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
+                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
                             kartCheck.checkpointId = warpCheckpointId;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
