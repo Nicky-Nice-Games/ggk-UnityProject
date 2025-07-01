@@ -53,7 +53,6 @@ public class Puck : BaseItem
                 break;
             default:
                 useCount = 1;
-                isTrackingFirst = true;
                 break;
         }
     }
