@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
             case "Golisano":
-                sceneLoader.LoadScene("LD_GolisanoGreybox");
+                sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
                 sceneLoader.LoadScene("GSP_RITDorm");
