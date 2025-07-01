@@ -2,7 +2,7 @@
 - Project name: GGK
 - Unity version: Unity 2022.3.38f1
 - Active game object:
-  - Name: OptionsPanel
-  - Tag: Options
-  - Layer: UI
+  - Name: EventSystem
+  - Tag: Untagged
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

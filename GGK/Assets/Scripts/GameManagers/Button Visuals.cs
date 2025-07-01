@@ -19,7 +19,7 @@ public class ButtonVisuals : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        initialScale = new Vector3(3, 3, 0);
     }
 
     /// <summary>
