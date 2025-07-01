@@ -28,8 +28,7 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void OnHover(GameObject button)
     {
-        initialScale = button.transform.localScale;
-        button.transform.localScale = initialScale * 1.1f;
+        button.transform.localScale = button.transform.localScale * 1.1f;
     }
 
     /// <summary>
@@ -38,6 +37,6 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void ExitHover(GameObject button)
     {
-        button.transform.localScale = initialScale;
+        button.transform.localScale = button.transform.localScale / 1.1f;
     }
 }
