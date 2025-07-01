@@ -22,7 +22,7 @@ public class PlayerInfo : MonoBehaviour
     public string playerName;
     public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
     public Color PlayerColor;
-    public int clientID;
+    public ulong clientID;
 
     //Default constructor
     public PlayerInfo() 
@@ -35,6 +35,9 @@ public class PlayerInfo : MonoBehaviour
         collisionWithWalls = 0;
         characterUsed = 0;
         fellOffMap = 0;
+        playerName = "Default";
+        PlayerCharacter = PlayerKart.Freddie;
+        PlayerColor = Color.white;
 
         boostUsage = new Dictionary<string, int>();
         offenceUsage = new Dictionary<string, int>();
@@ -44,19 +47,18 @@ public class PlayerInfo : MonoBehaviour
     }
 
     // Param constructor
-    public PlayerInfo(int pid = 0, int startTime = 0, int racePos = 0, int map = 0, int collisionWPlayers = 0, 
-        int collisionWWals = 0, int character = 0, int offMap = 0, string name = null, int clientID = -1)
+    public PlayerInfo(ulong clientID)
     {
         this.clientID = clientID;
-        playerID = pid;
-        raceStartTime = startTime;
-        racePosition = racePos;
-        mapRaced = map;
-        collisionsWithPlayers = collisionWPlayers;
-        collisionWithWalls = collisionWWals;
-        characterUsed = character;
-        fellOffMap = offMap;
-        playerName = name;
+        playerID = 0;
+        raceStartTime = 0;
+        racePosition = 0;
+        mapRaced = 0;
+        collisionsWithPlayers = 0;
+        collisionWithWalls = 0;
+        characterUsed = 0;
+        fellOffMap = 0;
+        playerName = "Default";
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 

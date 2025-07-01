@@ -6,12 +6,13 @@ using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class SignInManager : MonoBehaviour
+public class SignInManager : NetworkBehaviour
 {
 
     // UI elements for different parts of sign in scene
@@ -25,6 +26,7 @@ public class SignInManager : MonoBehaviour
     VirtualKeyboardController keyboard;
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
+    private string logInOption;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,9 @@ public class SignInManager : MonoBehaviour
             button.onClick.AddListener(() =>
             gameManager.GetComponentInChildren<GameManager>().LoggedIn());
         }
+
+        // Getting Client ID / creating player info
+        gameManager.playerList.Add(new PlayerInfo(NetworkManager.LocalClientId));
     }
 
     // Update is called once per frame
@@ -49,12 +54,46 @@ public class SignInManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fieldName">input field name</param>
+    /// <param name="data">data from user input</param>
+    public void SetPlayerLoginData(string fieldName, string data)
+    {
+        if(logInOption == "Login")
+        {
+            // Checking imput fields to assign correct player data
+            switch (fieldName)
+            {
+                case "Username Login":
+                    break;
+
+                case "Password Login":
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else if(logInOption == "SignUp")
+        {
+            // Checking imput fields to assign correct player data
+            switch (fieldName)
+            {
+                default:
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
     /// Sets login ui as active and disables login options
     /// </summary>
     public void ChoseLogin()
     {
         loginOptions.SetActive(false);
         loginUI.SetActive(true);
+        logInOption = "Login";
     }
 
     /// <summary>
@@ -64,6 +103,7 @@ public class SignInManager : MonoBehaviour
     {
         loginOptions.SetActive(false);
         signUpUI.SetActive(true);
+        logInOption = "SignUp";
     }
 
     /// <summary>

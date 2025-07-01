@@ -29,6 +29,8 @@ public class GameManager : NetworkBehaviour
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+    public List<PlayerInfo> playerList;
+    private APIManager apiManager;
 
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
@@ -57,6 +59,8 @@ public class GameManager : NetworkBehaviour
         RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
+
+        apiManager = GetComponent<APIManager>();
     }
 
     /// <summary>
@@ -66,6 +70,7 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("Login");
         curState = GameStates.login;
+        playerList = new List<PlayerInfo>();
     }
 
     /// <summary>
@@ -79,10 +84,10 @@ public class GameManager : NetworkBehaviour
             Debug.Log("Guest mode on");
         }
 
-        // Set up player info
+        // Set validate player info
         else
         {
-
+            
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.login;
