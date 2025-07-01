@@ -4,7 +4,7 @@ using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StartHandler : MonoBehaviour
+public class StartSceneHandler : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
