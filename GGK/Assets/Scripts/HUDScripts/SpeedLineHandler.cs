@@ -137,7 +137,7 @@ public class SpeedLineHandler : MonoBehaviour
         tr.localPosition = new Vector3(radius * Mathf.Cos(radians) * oval.x, radius * Mathf.Sin(radians) * oval.y, 0);
 
         float speedLineModifier = Mathf.Min(1.25f, speedDiff);
-        tr.sizeDelta = new Vector2(Screen.width * speedLineModifier, tr.sizeDelta.y);
+        tr.sizeDelta = new Vector2(Screen.width * 0.75f * speedLineModifier, tr.sizeDelta.y);
 
         img.color = new Color (255, 255, 255, 0.05f * (speedLineModifier * 5));
     }

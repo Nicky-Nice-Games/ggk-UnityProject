@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +27,7 @@ using UnityEngine.UI;
 //----------------ADDING OBJECTS-----------------
 //
 // 1. Add objects to track by adding their GameObjects to the "objects" GameObject list. Ensure these objects
-//    have an "AppearanceSettings" component if you wish to depcify their appearance on the map. 
+//    have an "AppearanceSettings" component if you wish to specify their appearance on the map. 
 // 2. Do NOT add anything to the "mapIcons" list. This will populate itself automatically. 
 //
 //----------------TRACKING DEPTH-----------------
@@ -129,6 +128,7 @@ public class MiniMapHud : MonoBehaviour
             mapIcons.Add(refImage);
 
             EstablishAppearance(objects[0], refImage);
+
             //create more icons as more are needed
             for (int i = 1; i < objects.Count; i++)
             {
