@@ -73,9 +73,9 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""UseItem"",
-                    ""type"": ""Button"",
-                    ""id"": ""99d5725f-c325-48c2-8943-59aebc2db633"",
+                    ""name"": ""LookBackController"",
+                    ""type"": ""Value"",
+                    ""id"": ""fb70dff4-f86d-4092-8d38-81d9818a9d3d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -323,17 +323,6 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""57ace4c6-979d-40ab-9d03-1e30773cdbd8"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Drift Hop"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7ee17544-e0e1-44ad-9d3d-59efeae0a50c"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": ""Hold(duration=0.4,pressPoint=0.5)"",
@@ -345,7 +334,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f153e1a8-937b-4a73-b16a-bf75fdfabc55"",
+                    ""id"": ""325e72ef-b195-4913-883d-b9b87055231a"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
