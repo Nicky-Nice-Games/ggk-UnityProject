@@ -28,11 +28,8 @@ public class ButtonVisuals : MonoBehaviour
     /// <param name="button"></param>
     public void OnHover(GameObject button)
     {
-        if (!Selection.Contains(button))
-        { 
-            initialScale = button.transform.localScale;
-            button.transform.localScale = initialScale * 1.1f;
-        }
+        initialScale = button.transform.localScale;
+        button.transform.localScale = initialScale * 1.1f;
     }
 
     /// <summary>
