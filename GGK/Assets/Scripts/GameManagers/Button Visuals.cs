@@ -13,7 +13,7 @@ public class ButtonVisuals : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initialScale = Vector3.zero;
+        initialScale = new Vector3(3, 3, 0);
     }
 
     // Update is called once per frame
