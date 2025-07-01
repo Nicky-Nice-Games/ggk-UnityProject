@@ -62,7 +62,7 @@ public class AudioManager : MonoBehaviour
             curMasterVolume = optionsData.masterVolume;
             curMusicVolume = optionsData.musicVolume;
 
-            soundVolume.PlayMusic(musicPlayer);
+            soundVolume.ChangeMusicVolume(musicPlayer);
         }
     }
 

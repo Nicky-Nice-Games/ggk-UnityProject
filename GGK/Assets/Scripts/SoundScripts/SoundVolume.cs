@@ -18,6 +18,10 @@ public class SoundVolume : MonoBehaviour
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.dialougeVolume / 100));
     }
+    public void ChangeDialougeVolume(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.dialougeVolume / 100);
+    }
     public void PlaySFX(AudioSource audioSource)
     {
         audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.sfxVolume / 100);
@@ -27,6 +31,10 @@ public class SoundVolume : MonoBehaviour
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.sfxVolume / 100));
     }
+    public void ChangeSFXVolume(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.sfxVolume / 100);
+    }
     public void PlayMusic(AudioSource audioSource)
     {
         audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.musicVolume / 100);
@@ -35,5 +43,9 @@ public class SoundVolume : MonoBehaviour
     public void PlayMusicOneShot(AudioSource audioSource, AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip, (optionsData.masterVolume / 100) * (optionsData.musicVolume / 100));
+    }
+    public void ChangeMusicVolume(AudioSource audioSource)
+    {
+        audioSource.volume = (optionsData.masterVolume / 100) * (optionsData.musicVolume / 100);
     }
 }
