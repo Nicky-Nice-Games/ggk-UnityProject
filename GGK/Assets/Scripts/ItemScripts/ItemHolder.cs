@@ -208,24 +208,24 @@ public class ItemHolder : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
-        if (collision.gameObject.transform.tag == "Projectile")
-        {
-            Destroy(collision.gameObject);
-            if (thisDriver != null)
-            {
-                thisDriver.sphere.velocity /= 8000;
-            }
-            else if (npcDriver != null)
-            {
-                //npcDriver.DisableDriving();
-                //npcDriver.velocity /= 8000;
-                //npcDriver.maxSpeed = 100;
-                //npcDriver.accelerationRate = 500;
-                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
-                npcDriver.StartRecovery();
-            }
-        }
+        //// checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
+        //if (collision.gameObject.transform.tag == "Projectile")
+        //{
+        //    Destroy(collision.gameObject);
+        //    if (thisDriver != null)
+        //    {
+        //        thisDriver.sphere.velocity /= 8000;
+        //    }
+        //    else if (npcDriver != null)
+        //    {
+        //        //npcDriver.DisableDriving();
+        //        //npcDriver.velocity /= 8000;
+        //        //npcDriver.maxSpeed = 100;
+        //        //npcDriver.accelerationRate = 500;
+        //        //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+        //        npcDriver.StartRecovery();
+        //    }
+        //}
 
     }
 
@@ -281,14 +281,17 @@ public class ItemHolder : MonoBehaviour
             //heldItemText.text = $"Held Item: {baseItem}+";
         }
 
-        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
-        if (collision.gameObject.transform.tag == "Projectile")
+        if (collision.gameObject.CompareTag("Projectile"))
         {
-            if (thisDriver != null)
-            thisDriver.sphere.velocity /= 8;
-            Destroy(collision.gameObject);
+            if (thisDriver)
+            {
+                Debug.Log("hit player");
+            }
+            else if (npcDriver)
+            {
+                Debug.Log("hit npc");
+            }
         }
-
         // kart uses a boost and is given the boost through a force
         if (collision.gameObject.CompareTag("Boost"))
         {
