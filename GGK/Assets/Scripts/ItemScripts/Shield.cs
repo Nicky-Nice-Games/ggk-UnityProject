@@ -17,7 +17,10 @@ public class Shield : BaseItem
         DecreaseTimer();
 
         // Sets shield position to the karts position
-        transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
+        if (kart)
+        {
+            transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
+        }
     }
 
     private void OnTriggerEnter(Collider collision)

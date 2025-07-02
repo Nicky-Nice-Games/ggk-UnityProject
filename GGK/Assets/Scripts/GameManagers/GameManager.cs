@@ -11,7 +11,6 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
-    signin,
     multiSingle,
     gameMode,
     playerKart,
@@ -20,21 +19,27 @@ public enum GameStates
     gameOver
 }
 
-
-
 public class GameManager : MonoBehaviour
 {
-    private GameStates curState;
+    public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
+    public SceneLoader sceneLoader;
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
-    bool isArcade = false; // Set to true if the game is running in arcade mode
     void Awake()
     {
-        thisManagerInstance = this;
-        thisManagerObjInstance = gameObject;
-        DontDestroyOnLoad(thisManagerObjInstance);
+        if (thisManagerInstance == null)
+        {
+            thisManagerInstance = this;
+            thisManagerObjInstance = gameObject;
+            sceneLoader = thisManagerInstance.GetComponent<SceneLoader>();
+            DontDestroyOnLoad(this);
+        }
+        else if (thisManagerInstance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
@@ -61,34 +66,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene("SignInScene");
-        curState = GameStates.signin;
-    }
-
-
-    public void Login()
-    {
-        if (isArcade) { 
-            SceneManager.LoadScene("ArcadeLogin");
-
-        }
-        else
-        {
-            SceneManager.LoadScene("Login");
-        }
-
-    }
-
-    public void SignUp()
-    {
-        SceneManager.LoadScene("SignUpScene");
-    }
-
-    
-    public void LoadMultiSinglePlay()
-    {
-        SceneManager.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
+        SafeLoad("MultiSinglePlayerScene");
     }
 
     /// <summary>
@@ -104,8 +83,8 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
+            sceneLoader.LoadScene("GameModeSelectScene");
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
         {
@@ -113,8 +92,8 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
+            sceneLoader.LoadScene("GameModeSelectScene");
         }
     }
 
@@ -123,8 +102,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        SceneManager.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
+        sceneLoader.LoadScene("PlayerKartScene");
     }
 
     /// <summary>
@@ -134,8 +113,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerSelected()
     {
-        SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
+        sceneLoader.LoadScene("MapSelectScene");
     }
 
     /// <summary>
@@ -143,25 +122,28 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MapSelected()
     {
+        curState = GameStates.game;
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
-            case "1-1":
-                SceneManager.LoadScene("RIT Outer Loop Greybox");
+            case "RIT Outer Loop":
+                sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
-            case "1-2":
-                SceneManager.LoadScene("1-2");
+            case "Golisano":
+                sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "1-3":
-                SceneManager.LoadScene("1-3");
+            case "RIT Dorm":
+                sceneLoader.LoadScene("GSP_RITDorm");
                 break;
-            case "1-4":
-                SceneManager.LoadScene("1-4");
+            case "RIT Quarter Mile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                break;
+            case "Finals Brick Road":
+                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
         }
-        curState = GameStates.game;
     }
 
     /// <summary>
@@ -169,14 +151,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameFinished()
     {
-        SceneManager.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
+        sceneLoader.LoadScene("GameOverScene");
     }
 
     public void LoadStartMenu()
     {
-        SceneManager.LoadScene("StartScene");
         curState = GameStates.start;
+        SafeLoad("StartScene");
     }
 
 
@@ -227,4 +209,24 @@ public class GameManager : MonoBehaviour
         RefreshSelected();
     }
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
+    /// Loads the selected scene, re-referencing the SceneLoader variable if it is null.
+    /// </summary>
+    /// <param name="sceneToLoad"> The scene to load.</param>
+    public void SafeLoad(string sceneToLoad)
+    {
+        //protects against loading the scene if it's null
+        if (sceneLoader == null)
+        {
+            sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
+        }
+        sceneLoader.LoadScene(sceneToLoad);
+    }
 }
+
+

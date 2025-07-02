@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 2338861670027739328}
   - component: {fileID: 4933240598457412470}
   - component: {fileID: 3251909550354428211}
-  m_Layer: 0
+  - component: {fileID: -6921992662838867039}
+  m_Layer: 3
   m_Name: UpgradeBox
   m_TagString: UpgradeBox
   m_Icon: {fileID: 0}
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -87.19, y: 6.97, z: -49.64578}
-  m_LocalScale: {x: 6.3393064, y: 6.3393064, z: 6.3393064}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -118,5 +119,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb50d21a8970b6f438b1d457ea30d354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items: []
-  itemBoxSound: {fileID: 0}
+  items:
+  - {fileID: 4452591039646941683, guid: e4bfa60d79acc0b448a2b48e96843039, type: 3}
+  - {fileID: 2055685921588137374, guid: 2d9ffd843713ab44ea7ca3210ee15e1d, type: 3}
+  - {fileID: 4323936219153965337, guid: 3eace89b8f2c3f1458a5f078ec42c750, type: 3}
+  - {fileID: 5201143229639170716, guid: 7d505bd21db4d624d85fae305326ab5c, type: 3}
+--- !u!54 &-6921992662838867039
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5005219055690552868}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0

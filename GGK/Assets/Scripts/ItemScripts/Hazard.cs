@@ -12,10 +12,12 @@ public class Hazard : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y + 15, transform.position.z);
-
+        // starts the hazard slightly behind the player
+        Vector3 behindPos = transform.position - transform.forward * 6;
+        transform.position = behindPos;
+        
         // sends the hazard slightly up and behind the player before landing on the ground
-        if (isUpgraded)
+        if (itemTier > 1)
         {
             this.gameObject.transform.localScale += new Vector3(8.5f, 0.0f, 8.5f);
             rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);

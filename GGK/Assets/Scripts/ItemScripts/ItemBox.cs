@@ -11,8 +11,8 @@ public class ItemBox : MonoBehaviour
 
     protected float respawnTimer = 5.0f;  // The seconds the box respawns after
 
-    [SerializeField]
-    AudioClip itemBoxSound;
+    // [SerializeField]
+    // AudioClip itemBoxSound;
 
 
     /// <summary>
@@ -36,13 +36,15 @@ public class ItemBox : MonoBehaviour
     /// <summary>
     /// Gives the driver a random item
     /// </summary>
-    /// <returns>A random baseItem</returns>
-    public BaseItem RandomizeItem()
+    public void RandomizeItem(GameObject kart)
     {
+        ItemHolder itemScript = kart.GetComponent<ItemHolder>();
+
         Debug.Log("Collided!");
-        BaseItem bItem = items[Random.Range(0, items.Count)];
-        bItem.IsUpgraded = false;
-        return bItem;
+        BaseItem bItem = Instantiate(items[Random.Range(0, items.Count)]);
+        itemScript.HeldItem = bItem;
+        itemScript.HeldItem.ItemTier = 1;
+        bItem.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -57,10 +59,10 @@ public class ItemBox : MonoBehaviour
     private void OnDisable()
     {
         // makes sure scene is loaded to not cause error
-        if (gameObject.scene.isLoaded)
-        {
-            AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
-        }
+        // if (gameObject.scene.isLoaded)
+        // {
+        //     AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
+        // }
     }
 
 }

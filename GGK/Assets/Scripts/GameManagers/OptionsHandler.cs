@@ -10,26 +10,70 @@ public class OptionsHandler : MonoBehaviour
     // References
     public OptionsData optionsData;
 
-    public Slider volumeSlider;
-    public TextMeshProUGUI volumeValue;
+    public Slider masterVolumeSlider;
+    public TextMeshProUGUI masterVolumeValue;
+
+    public Slider dialougeVolumeSlider;
+    public TextMeshProUGUI dialougeVolumeValue;
+
+    public Slider sfxVolumeSlider;
+    public TextMeshProUGUI sfxVolumeValue;
+
+    public Slider musicVolumeSlider;
+    public TextMeshProUGUI musicVolumeValue;
+
+    public GameObject closeBtn;
+    private Vector3 initialScale;
 
     void OnEnable()
     {
+        if (initialScale == Vector3.zero)
+        {
+            initialScale = closeBtn.transform.localScale;
+        }
+        else
+        {
+            closeBtn.transform.localScale = initialScale;
+        }
         SetOptions();
     }
 
     // Initialize saved values from OptionsData
     public void SetOptions()
     {
-        volumeSlider.value = optionsData.volume;
-        volumeValue.text = optionsData.volume.ToString();
+        masterVolumeSlider.value = optionsData.masterVolume;
+        masterVolumeValue.text = optionsData.masterVolume.ToString();
+
+        dialougeVolumeSlider.value = optionsData.dialougeVolume;
+        dialougeVolumeValue.text = optionsData.dialougeVolume.ToString();
+
+        sfxVolumeSlider.value = optionsData.sfxVolume;
+        sfxVolumeValue.text = optionsData.sfxVolume.ToString();
+
+        musicVolumeSlider.value = optionsData.musicVolume;
+        musicVolumeValue.text = optionsData.musicVolume.ToString();
     }
 
     // Methods to attach to options panel interactables
-    public void VolumeChange()
+    public void MasterVolumeChange()
     {
-        optionsData.volume = (int)volumeSlider.value;
-        volumeValue.text = optionsData.volume.ToString();
+        optionsData.masterVolume = (int)masterVolumeSlider.value;
+        masterVolumeValue.text = optionsData.masterVolume.ToString();
+    }
+    public void DialougeVolumeChange()
+    {
+        optionsData.dialougeVolume = (int)dialougeVolumeSlider.value;
+        dialougeVolumeValue.text = optionsData.dialougeVolume.ToString();
+    }
+    public void SFXVolumeChange()
+    {
+        optionsData.sfxVolume = (int)sfxVolumeSlider.value;
+        sfxVolumeValue.text = optionsData.sfxVolume.ToString();
+    }
+    public void MusicVolumeChange()
+    {
+        optionsData.musicVolume = (int)musicVolumeSlider.value;
+        musicVolumeValue.text = optionsData.musicVolume.ToString();
     }
 
     // Close Options
