@@ -37,8 +37,11 @@ public class GameManager : NetworkBehaviour
         {
             thisManagerInstance = this;
             thisManagerObjInstance = gameObject;
-            DontDestroyOnLoad(thisManagerObjInstance);
-        } else if(thisManagerInstance != this){
+            sceneLoader = thisManagerInstance.GetComponent<SceneLoader>();
+            DontDestroyOnLoad(this);
+        }
+        else if (thisManagerInstance != this)
+        {
             Destroy(gameObject);
         }
     }
@@ -62,8 +65,8 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void StartGame()
     {
-        sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
+        SafeLoad("MultiSinglePlayerScene");
     }
 
     /// <summary>
@@ -79,8 +82,8 @@ public class GameManager : NetworkBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            sceneLoader.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
+            sceneLoader.LoadScene("GameModeSelectScene");
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
         {
@@ -122,7 +125,6 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
@@ -168,6 +170,7 @@ public class GameManager : NetworkBehaviour
     {
         SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
+        sceneLoader.LoadScene("MapSelectScene");
     }
 
     /// <summary>
@@ -226,8 +229,6 @@ public class GameManager : NetworkBehaviour
             }
             curState = GameStates.game; 
         }
-        
-
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -240,14 +241,14 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
-        sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
+        sceneLoader.LoadScene("GameOverScene");
     }
 
     public void LoadStartMenu()
     {
-        sceneLoader.LoadScene("StartScene");
         curState = GameStates.start;
+        SafeLoad("StartScene");
     }
 
 
@@ -303,4 +304,19 @@ public class GameManager : NetworkBehaviour
         Application.Quit();
     }
 
+    /// <summary>
+    /// Loads the selected scene, re-referencing the SceneLoader variable if it is null.
+    /// </summary>
+    /// <param name="sceneToLoad"> The scene to load.</param>
+    public void SafeLoad(string sceneToLoad)
+    {
+        //protects against loading the scene if it's null
+        if (sceneLoader == null)
+        {
+            sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
+        }
+        sceneLoader.LoadScene(sceneToLoad);
+    }
 }
+
+
