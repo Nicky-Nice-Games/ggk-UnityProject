@@ -7,6 +7,7 @@ using UnityEngine.U2D;
 
 public class NEWDriver : MonoBehaviour
 {
+    public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
     [Header("Do not Change")]
     public Vector3 acceleration; //How fast karts velocity changes        
@@ -116,9 +117,10 @@ public class NEWDriver : MonoBehaviour
     float driftVisualAngle = 10f;
     float driftTweenDuration = 0.4f;
 
+    //Stun Settings
+    bool isStunned;
 
     [Header("Sound Settings")]
-
     AudioSource soundPlayer;
 
     [SerializeField]
@@ -151,8 +153,7 @@ public class NEWDriver : MonoBehaviour
     }
 
     public void StopParticles()
-    {
-        Debug.Log("Particles stopped");
+    {        
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {
@@ -190,9 +191,12 @@ public class NEWDriver : MonoBehaviour
             spherePosTransform.transform.position.y - colliderOffset, 
             spherePosTransform.transform.position.z);
 
-
+        
 
         //------------Movement stuff---------------------
+
+        //Stunned
+        if(isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -372,6 +376,13 @@ public class NEWDriver : MonoBehaviour
                 movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
             }
         }
+
+        ////DELETE AFTER HAVING STUN WORKING
+        //if(STUNBUTTON)
+        //{
+        //    Stun(2f);
+        //    STUNBUTTON = false; // Reset stun button state
+        //}
     }
 
 
@@ -804,7 +815,7 @@ public class NEWDriver : MonoBehaviour
         int TurnCount = 0;
         bool isInputLeft = false;
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 22; i++)
         {
             
 
@@ -814,7 +825,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 6)
+                if(TurnCount > 10)
                 {
                     break;
                 }
@@ -824,7 +835,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 6)
+            else if(TurnCount !> 10)
             {
                 TurnCount--;
             }
@@ -832,7 +843,7 @@ public class NEWDriver : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         //Check if player wants to drift either direction
-        if (TurnCount > 6)
+        if (TurnCount > 10)
         {
             driftMethodCaller = true;
 
@@ -1067,5 +1078,39 @@ public class NEWDriver : MonoBehaviour
         {
             sphere.AddForce(-acceleration * slowFactor, ForceMode.Acceleration);
         }
+    }
+
+    public void Stun(float duration)
+    {
+        StopCoroutine(DriftHopEnabler());
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+
+        StartCoroutine(StunCoroutine(duration));
+
+
+
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+            
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
+        isStunned = false;
     }
 }
