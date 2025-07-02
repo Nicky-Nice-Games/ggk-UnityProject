@@ -12,7 +12,8 @@ public class DynamicRecovery : MonoBehaviour
     public CanvasGroup fadeCanvas;
 
     public Transform kartModel;
-    private Transform[] checkpoints;
+    private GameObject[] checkpoints;
+    public KartCheckpoint kartCheckpointScript;
     private Transform currentCheckpoint;
     private Transform normalTransform;
 
@@ -31,21 +32,23 @@ public class DynamicRecovery : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
+        
+        //GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
+        //List<Transform> checkpointList = new List<Transform>();
+        //
+        //foreach (GameObject obj in checkpointObjects)
+        //{
+        //    checkpointList.Add(obj.transform);
+        //}
+        //
+        //checkpoints = checkpointList.ToArray();
 
-        GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
-        List<Transform> checkpointList = new List<Transform>();
-
-        foreach (GameObject obj in checkpointObjects)
-        {
-            checkpointList.Add(obj.transform);
-        }
-
-        checkpoints = checkpointList.ToArray();
-
-        // Optional: default to first
-        if (checkpoints.Length > 0)
-            currentCheckpoint = checkpoints[0];
-
+        //checkpoints = kartCheckpointScript.checkpointList.ToArray();
+        //
+        //// Optional: default to first
+        //if (checkpoints.Length > 0)
+        //    currentCheckpoint = checkpoints[0].transform;
+        
         Transform kartRoot = transform.parent; // "Kart 1"
         Transform normal = kartRoot.Find("Kart");
 
@@ -61,6 +64,11 @@ public class DynamicRecovery : MonoBehaviour
 
     void Update()
     {
+        if(checkpoints == null || checkpoints.Length == 0)
+        {
+            checkpoints = kartCheckpointScript.checkpointList.ToArray();            
+        }
+
         Debug.DrawRay(transform.position, transform.forward * 5, Color.red); // your kart
         if (currentCheckpoint != null)
             Debug.DrawRay(currentCheckpoint.position, currentCheckpoint.forward * 5, Color.green); // the checkpoint
@@ -96,18 +104,22 @@ public class DynamicRecovery : MonoBehaviour
     private Transform FindClosestCheckpoint()
     {
         Transform closest = null;
-        float closestDistSqr = Mathf.Infinity;
-        Vector3 currentPosition = transform.position;
+        //float closestDistSqr = Mathf.Infinity;
+        //Vector3 currentPosition = transform.position;
+        //
+        //foreach (GameObject checkpoint in checkpoints)
+        //{
+        //    //float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
+        //    //if (distSqr < closestDistSqr)
+        //    //{
+        //    //    closestDistSqr = distSqr;
+        //    //    closest = checkpoint;
+        //    //}
+        //
+        //    
+        //}
 
-        foreach (Transform checkpoint in checkpoints)
-        {
-            float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
-            if (distSqr < closestDistSqr)
-            {
-                closestDistSqr = distSqr;
-                closest = checkpoint;
-            }
-        }
+        closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
 
         return closest;
 
