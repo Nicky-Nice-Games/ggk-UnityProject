@@ -36,14 +36,22 @@ public class Speedometer : MonoBehaviour
         maxRotations = maxSpeedAngle - minSpeedAngle;
         labelNum = (maxSpeed / 10) + 1;
 
+        // Create labels for soeeds
         for (int i = 0; i < labelNum; i++)
         {
+            // Instatiate the label
             GameObject label = Instantiate(numTextDisplay, gameObject.transform);
             float labelSpeedNormalized = (float)i / labelNum;
+
+            // Rotate it according to speed
             label.transform.eulerAngles = new Vector3(0, 0, maxSpeedAngle - labelSpeedNormalized * maxRotations - 5);
+
+            // Get text, assign values for speed and set rotation to Vector3.zero
             TextMeshProUGUI myText = label.GetComponentInChildren<TextMeshProUGUI>();
             myText.text = (i * 10).ToString();
             myText.gameObject.transform.eulerAngles = Vector3.zero;
+
+            // Set label to active
             label.SetActive(true);
         }
     }
