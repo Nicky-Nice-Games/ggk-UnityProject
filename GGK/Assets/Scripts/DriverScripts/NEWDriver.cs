@@ -416,7 +416,7 @@ public class NEWDriver : MonoBehaviour
         //    currentEuler.z
         //);
 
-        steeringWheel.transform.localRotation = baseRotation * Quaternion.AngleAxis(-targetAngle, Vector3.up);
+        steeringWheel.transform.localRotation = baseRotation * Quaternion.AngleAxis(targetAngle, Vector3.up);
     }
 
     /// <summary>
