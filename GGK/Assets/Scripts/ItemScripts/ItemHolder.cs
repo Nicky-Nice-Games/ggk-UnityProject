@@ -366,7 +366,7 @@ public class ItemHolder : MonoBehaviour
                             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
                             // set the kart's position to 3 checkpoints ahead
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
+                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
                             kartCheck.checkpointId = warpCheckpointId;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
@@ -447,9 +447,10 @@ public class ItemHolder : MonoBehaviour
                 continue;
             }
 
-            // ignore ground, rock, checkpoint, startpoint
+            // ignore ground, rock, checkpoint, startpoint, road
             if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
-                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
+                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
+                && !collider.CompareTag("Road"))
             {
                 Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
                 ignoreColliders.Add(collider);
