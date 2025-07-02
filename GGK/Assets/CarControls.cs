@@ -69,7 +69,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""id"": ""55dc9f75-441f-4df3-abd2-eb86b1ac889e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Hold(duration=0.2)"",
                     ""initialStateCheck"": true
                 },
                 {
@@ -203,7 +203,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""1c3403cb-cae9-4a47-ada1-5c4f767beeb0"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -214,7 +214,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""441c2581-3e2e-47ef-8174-b74fbbd81254"",
-                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
