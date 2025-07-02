@@ -159,8 +159,15 @@ public class NPCDriver : MonoBehaviour
             Quaternion targetRot = Quaternion.LookRotation(toTarget);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 180f * Time.deltaTime);
             //accelerationRate = 2000f;
-            rBody.velocity = toTarget.normalized * returnSpeed;
+            Vector3 desiredVelocity = toTarget.normalized * returnSpeed;
+
+            if (!isGrounded)
+            {
+                desiredVelocity += Vector3.down * 9.81f * airGravityMultiplier * Time.fixedDeltaTime;
+            }
+            rBody.velocity = desiredVelocity;
             //velocity += toTarget.normalized * (accelerationRate * Time.fixedDeltaTime);
+
 
 
             if (toTarget.magnitude < arrivalThreshold)
