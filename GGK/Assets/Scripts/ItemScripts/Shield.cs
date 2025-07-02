@@ -16,7 +16,7 @@ public class Shield : BaseItem
     private float blinkInterval = 0.5f;
 
     // the time when the shield should indicate it's ending
-    private float indicatorTime = 3.0f;
+    private float indicatorTime = 2.0f;
 
     // Start is called before the first frame update
     void Start()
