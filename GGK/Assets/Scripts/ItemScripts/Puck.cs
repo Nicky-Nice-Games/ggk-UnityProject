@@ -147,12 +147,15 @@ public class Puck : BaseItem
             {
                 playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                 playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                Debug.Log(collision.transform.root.GetChild(0).gameObject);
             }
             // Stops NPC and starts recovery
             else if (npcKart)
             {
-                collision.gameObject.GetComponent<NPCDriver>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                collision.gameObject.GetComponent<NPCDriver>().StartRecovery();
+                npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                npcKart.StartRecovery();
+                collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
             }
 
             // Destroys puck only if it is tier 4 and it hits the first
