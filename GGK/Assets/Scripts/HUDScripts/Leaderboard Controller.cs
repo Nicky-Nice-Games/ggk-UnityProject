@@ -38,7 +38,7 @@ public class LeaderboardController : MonoBehaviour
     public void Finished(KartCheckpoint kart)
     {
         // if player kart finishes opens up leaderboard (how will this work in multiplayer?)
-        if (this.GetComponent<NPCDriver>() == null)
+        if (kart.GetComponent<NPCDriver>() == null)
         {
             leaderboard.gameObject.SetActive(true);
         }
