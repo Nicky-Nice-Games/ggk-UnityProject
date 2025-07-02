@@ -86,7 +86,7 @@ public class MultiplayerManager : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        // IsMultiplayer = false;
+        IsMultiplayer = false;
     }
 
     #region initalization functions

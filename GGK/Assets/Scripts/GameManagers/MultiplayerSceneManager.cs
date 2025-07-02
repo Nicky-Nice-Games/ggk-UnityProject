@@ -75,7 +75,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
     // Specific track load functions
     public void ToRITOuterLoop()
     {
-        LoadScene("NetworkRITOuterLoop");
+        LoadScene("GSP_RITOuterLoop");
     }
     public void ToGolisano()
     {

@@ -6,24 +6,40 @@ using UnityEngine;
 public class PlayerSpawner : NetworkBehaviour
 {
     // prefab to be spawned
-    [SerializeField] private Transform spawnedKartObjectPrefab;
+    [SerializeField] private Transform playerKartPrefab;
+    //[SerializeField] private Transform npcKartPrefab;
 
-    private void Update()
+    [SerializeField] private Transform spawnPoint;
+    private int spawnedKartCount = 0;
+
+    private void Start()
     {
-        SpawnKart();
+        spawnedKartCount = 0;
+        FillGrid();
     }
 
-    private void SpawnKart(){
-        // server/host only authority
-        if(!IsOwner) return;
+    /// <summary>
+    /// kart spawn order will be host, then first to last connected clients, then if there are left over grid slots then fill the rest with npc karts
+    /// </summary>
+    private void FillGrid()
+    {
+        // only the server can spawn karts
+        if (!IsServer) return;
 
-        if (Input.GetKeyDown(KeyCode.T))
+        // spawn a kart for each player
+        foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
         {
-            // instantiating the object on the server/host 
-            Transform spawnedKartObjectTransform = Instantiate(spawnedKartObjectPrefab);
-            // spawning the object on the clients (syncs the object to the clients)
-            spawnedKartObjectTransform.GetComponent<NetworkObject>().Spawn();
-            Debug.Log("Spawned In Kart");
+            Transform kartObject = Instantiate(playerKartPrefab);
+            kartObject.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
+            spawnedKartCount++;
         }
+        // while(spawnedKartCount < 8){
+        //     Transform kartObject = Instantiate(npcKartPrefab);
+        //     NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+        //     kartNetworkObject.Spawn();
+        //     spawnedKartCount++;
+        // }
     }
 }

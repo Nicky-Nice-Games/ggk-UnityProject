@@ -103,12 +103,13 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
+        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
     }
     
     /// <summary>
@@ -129,9 +130,9 @@ public class GameManager : NetworkBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
-            if (IsHost)
+            if (NetworkManager.IsServer)
             {
-                LoadedGameModeRpc();
+                MultiplayerSceneManager.Instance.ToPlayerKartScene();
             }
         }
         else
