@@ -25,6 +25,8 @@ public class DynamicRecovery : MonoBehaviour
     private NEWDriver kartMovementScript;
 
 
+    public MiniMapHud miniMap;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +86,12 @@ public class DynamicRecovery : MonoBehaviour
 
     public void StartRecovery()
     {
+        if (miniMap)
+        {
+            //spins the player's icon if they need to be recovered
+            StartCoroutine(miniMap.SpinIcon(transform.parent.GetComponentInChildren<ItemHolder>().gameObject, 5));
+        }
+
         if (!isRecovering)
         {
             currentCheckpoint = FindClosestCheckpoint();
