@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseItem : MonoBehaviour
 {
     protected bool isUpgraded;                 // If the item is upgraded (tier 2)
-    [SerializeField] protected float timer;    // Seconds until the item disappears
+    [SerializeField] public float timer;    // Seconds until the item disappears
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
     protected ItemHolder kart;                 // The kart holding the item
 
@@ -33,18 +33,18 @@ public class BaseItem : MonoBehaviour
     /// <summary>
     /// Counts down 1 second until the item disappears
     /// </summary>
-    public void DecreaseTimer()
-    {
-        // Subtracts the timer by 1 second
-        if (timer >= 0)
+        public void DecreaseTimer()
         {
-            timer -= 1.0f * Time.deltaTime;
+            // Subtracts the timer by 1 second
+            if (timer >= 0)
+            {
+                timer -= 1.0f * Time.deltaTime;
+            }
+            // Destroys the item
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
-        // Destroys the item
-        else
-        {
-            Destroy(this.gameObject);
-        }
-    }
 
 }
