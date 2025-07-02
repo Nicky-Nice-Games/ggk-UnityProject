@@ -97,6 +97,7 @@ public class SignInManager : NetworkBehaviour
                     break;
 
                 case "Confirm Password":
+                    // TODO: Add functionality to validate password
                     break;
 
                 default:
