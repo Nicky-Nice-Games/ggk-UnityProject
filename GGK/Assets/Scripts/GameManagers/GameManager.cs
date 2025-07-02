@@ -334,4 +334,24 @@ public class GameManager : NetworkBehaviour
         // Getting the players data
         apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
+
+    /// <summary>
+    /// Searches the playerList for a matching player data via client ID
+    /// </summary>
+    /// <param name="thisClientID"></param>
+    /// <returns></returns>
+    public PlayerInfo AssignDataToDriver(ulong thisClientID)
+    {
+        // Finding a player info sheet with the same client ID
+        foreach(PlayerInfo player in playerList)
+        {
+            if(player.clientID == thisClientID)
+            {
+                return player;
+            }
+        }
+
+        // None are found
+        return null;
+    }
 }

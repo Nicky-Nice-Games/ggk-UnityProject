@@ -1,10 +1,11 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class NEWDriver : MonoBehaviour
+public class NEWDriver : NetworkBehaviour
 {
     // Keep
     [Header("Do not Change")]
@@ -138,7 +139,9 @@ public class NEWDriver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        thisClientID = NetworkManager.LocalClientId;
         gameManagerObj = FindAnyObjectByType<GameManager>();
+        thisPlayerInfo = gameManagerObj.AssignDataToDriver(thisClientID);
 
         sphere.drag = 0.5f;
 
