@@ -4,7 +4,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Speedometer : MonoBehaviour
 {
@@ -21,6 +23,10 @@ public class Speedometer : MonoBehaviour
     private int maxRotations;
     private int maxSpeed;
 
+    [SerializeField]
+    private GameObject numTextDisplay;
+    int labelNum;
+
     // Set initial values
     void Start()
     {
@@ -28,6 +34,18 @@ public class Speedometer : MonoBehaviour
         minSpeedAngle = -20;
         maxSpeed = 80;
         maxRotations = maxSpeedAngle - minSpeedAngle;
+        labelNum = (maxSpeed / 10) + 1;
+
+        for (int i = 0; i < labelNum; i++)
+        {
+            GameObject label = Instantiate(numTextDisplay, gameObject.transform);
+            float labelSpeedNormalized = (float)i / labelNum;
+            label.transform.eulerAngles = new Vector3(0, 0, maxSpeedAngle - labelSpeedNormalized * maxRotations - 5);
+            TextMeshProUGUI myText = label.GetComponentInChildren<TextMeshProUGUI>();
+            myText.text = (i * 10).ToString();
+            myText.gameObject.transform.eulerAngles = Vector3.zero;
+            label.SetActive(true);
+        }
     }
 
     // Update is called once per frame
