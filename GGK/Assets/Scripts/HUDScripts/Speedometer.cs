@@ -32,7 +32,7 @@ public class Speedometer : MonoBehaviour
     {
         maxSpeedAngle = 210;
         minSpeedAngle = -20;
-        maxSpeed = 80;
+        maxSpeed = 100;
         maxRotations = maxSpeedAngle - minSpeedAngle;
         labelNum = (maxSpeed / 10) + 1;
 
@@ -40,7 +40,7 @@ public class Speedometer : MonoBehaviour
         for (int i = 0; i < labelNum; i++)
         {
             // Instatiate the label
-            GameObject label = Instantiate(numTextDisplay, gameObject.transform);
+            GameObject label = Instantiate(numTextDisplay, gameObject.transform.GetChild(1).transform);
             float labelSpeedNormalized = (float)i / labelNum;
 
             // Rotate it according to speed
