@@ -35,6 +35,10 @@ public class ItemHolder : MonoBehaviour
     private int driverItemTier;
     private int uses;
 
+    //the current coroutine animating spinning, to prevent double-ups
+    private IEnumerator currentSpinCoroutine;
+    public MiniMapHud miniMap;
+
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -50,6 +54,7 @@ public class ItemHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DOTween.Init();
         holdingItem = IsHoldingItem();
 
         timer = Random.Range(5, 8);
@@ -166,6 +171,8 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
+
             item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
@@ -178,6 +185,7 @@ public class ItemHolder : MonoBehaviour
             }
 
             uses--; // Decrease after successful use
+            
         }
     }
 
@@ -225,6 +233,7 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
                 npcDriver.StartRecovery();
             }
+            ApplyIconSpin(gameObject, 1);
         }
 
     }
@@ -250,7 +259,7 @@ public class ItemHolder : MonoBehaviour
                 Debug.Log(uses);
                 if (thisDriver)
                 {
-                    itemDisplay.texture = heldItem.itemIcon;
+                    ApplyItemTween(heldItem.itemIcon);
                 }
             }
             // Disables the item box
@@ -273,7 +282,7 @@ public class ItemHolder : MonoBehaviour
             // displays item in the HUD
             if (thisDriver)
             {
-                itemDisplay.texture = heldItem.itemIcon;
+                ApplyItemTween(heldItem.itemIcon);
             }
 
             // Disables the upgrade box
@@ -285,8 +294,9 @@ public class ItemHolder : MonoBehaviour
         if (collision.gameObject.transform.tag == "Projectile")
         {
             if (thisDriver != null)
-            thisDriver.sphere.velocity /= 8;
+                thisDriver.sphere.velocity /= 8;
             Destroy(collision.gameObject);
+            ApplyIconSpin(gameObject, 1);
         }
 
         // kart uses a boost and is given the boost through a force
@@ -403,10 +413,31 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
+                
             }
+            ApplyIconSpin(gameObject, 1);
             Destroy(collision.gameObject);
         }
 
+    }
+    public void ApplyItemTween(Texture item)
+    {
+        itemDisplay.texture = item;
+        itemDisplay.rectTransform.DOShakeScale(0.5f);
+    }
+
+    public void ApplyIconSpin(GameObject obj, int times)
+    {
+        if (miniMap.spinInstances.Contains(currentSpinCoroutine) && currentSpinCoroutine != null)
+        {
+            miniMap.spinInstances.Remove(currentSpinCoroutine);
+            StopCoroutine(currentSpinCoroutine);
+            currentSpinCoroutine = null;
+        }
+
+        currentSpinCoroutine = miniMap.SpinIcon(obj, times);
+        miniMap.spinInstances.Add(currentSpinCoroutine);
+        StartCoroutine(currentSpinCoroutine);
     }
 
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
