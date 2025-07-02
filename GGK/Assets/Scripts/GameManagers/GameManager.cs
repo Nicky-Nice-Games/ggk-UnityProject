@@ -81,13 +81,14 @@ public class GameManager : NetworkBehaviour
         // Turn guest mode on
         if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
         {
+            playerList[playerList.Count - 1].isGuest = true;
             Debug.Log("Guest mode on");
         }
 
         // Set validate player info
         else
         {
-            
+            ValidatePlayer(playerList[playerList.Count - 1]);
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.login;
@@ -317,7 +318,6 @@ public class GameManager : NetworkBehaviour
         RefreshSelected();
     }
 
-
     //refresh selected should a device confirguration be changed
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
@@ -329,4 +329,9 @@ public class GameManager : NetworkBehaviour
         Application.Quit();
     }
 
+    private void ValidatePlayer(PlayerInfo player)
+    {
+        // Getting the players data
+        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
+    }
 }

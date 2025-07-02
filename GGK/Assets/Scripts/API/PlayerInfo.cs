@@ -20,6 +20,8 @@ public class PlayerInfo : MonoBehaviour
     // NOT SENT TO BACKEND / Used unity side
     public bool isGuest;
     public string playerName;
+    public string playerPassword;
+    public string playerEmail;
     public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
     public Color PlayerColor;
     public ulong clientID;
@@ -36,6 +38,7 @@ public class PlayerInfo : MonoBehaviour
         characterUsed = 0;
         fellOffMap = 0;
         playerName = "Default";
+        playerPassword = "";
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 

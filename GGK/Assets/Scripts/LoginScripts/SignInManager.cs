@@ -27,6 +27,7 @@ public class SignInManager : NetworkBehaviour
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
+    PlayerInfo playerInfo;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +45,8 @@ public class SignInManager : NetworkBehaviour
         }
 
         // Getting Client ID / creating player info
-        gameManager.playerList.Add(new PlayerInfo(NetworkManager.LocalClientId));
+        playerInfo = new PlayerInfo(NetworkManager.LocalClientId);
+        gameManager.playerList.Add(playerInfo);
     }
 
     // Update is called once per frame
@@ -66,9 +68,11 @@ public class SignInManager : NetworkBehaviour
             switch (fieldName)
             {
                 case "Username Login":
+                    playerInfo.playerName = data;
                     break;
 
                 case "Password Login":
+                    playerInfo.playerPassword = data;
                     break;
 
                 default:
@@ -80,6 +84,21 @@ public class SignInManager : NetworkBehaviour
             // Checking imput fields to assign correct player data
             switch (fieldName)
             {
+                case "Email Sign Up":
+                    playerInfo.playerEmail = data;
+                    break;
+
+                case "Username Sign Up":
+                    playerInfo.playerName = data;
+                    break;
+
+                case "Password Sign Up":
+                    playerInfo.playerPassword = data;
+                    break;
+
+                case "Confirm Password":
+                    break;
+
                 default:
                     break;
             }
