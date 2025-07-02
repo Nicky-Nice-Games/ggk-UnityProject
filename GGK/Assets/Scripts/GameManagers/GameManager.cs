@@ -134,6 +134,10 @@ public class GameManager : NetworkBehaviour
                 LoadedGameModeRpc();
             }
         }
+        else
+        { 
+            SceneManager.LoadScene("PlayerKartScene");
+        }
     }
 
     [Rpc(SendTo.NotServer)]
