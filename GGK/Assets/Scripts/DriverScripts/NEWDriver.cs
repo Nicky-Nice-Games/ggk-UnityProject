@@ -766,7 +766,7 @@ public class NEWDriver : MonoBehaviour
         }
     }
 
-    IEnumerator Boost(float boostForce, float duration)
+    public IEnumerator Boost(float boostForce, float duration)
     {
         foreach(ParticleSystem ps in boostFlames)
         {
