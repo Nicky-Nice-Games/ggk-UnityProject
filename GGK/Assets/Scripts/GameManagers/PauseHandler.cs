@@ -33,15 +33,17 @@ public class PauseHandler : MonoBehaviour
     // Add this to player input
     public void TogglePause(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if(context.started && !FindAnyObjectByType<Countdown>().counting)
         {
             if (gameObject.activeSelf)
             {
                 gameObject.SetActive(false);
+                Time.timeScale = 1;
             }
             else
             {
                 gameObject.SetActive(true);
+                Time.timeScale = 0;
             }
         }
     }
@@ -49,15 +51,18 @@ public class PauseHandler : MonoBehaviour
     public void Restart()
     {
         sceneLoader.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1;
     }
 
     public void ReturnToStart()
     {
         gameManager.LoadStartMenu();
+        Time.timeScale = 1;
     }
 
     public void ReturnToMapSelect()
     {
         gameManager.PlayerSelected();
+        Time.timeScale = 1;
     }
 }

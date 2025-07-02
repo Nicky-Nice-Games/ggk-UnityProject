@@ -48,12 +48,12 @@ public class PlayerKartModel : MonoBehaviour
         }
 
         // Get screen resolution changes and more appropriately move with it?
-        if (Resolution.x != Screen.width || Resolution.y != Screen.height)
-        {
-            Resolution.x = Screen.width;
-            Resolution.y = Screen.height;
-            RePosition();
-        }
+        //if (Resolution.x != Screen.width || Resolution.y != Screen.height)
+        //{
+        //    Resolution.x = Screen.width;
+        //    Resolution.y = Screen.height;
+        //    RePosition();
+        //}
     }
 
     // Kart Rotation
