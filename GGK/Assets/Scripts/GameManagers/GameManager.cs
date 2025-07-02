@@ -267,6 +267,12 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
+        // Posting data to server
+        foreach(PlayerInfo player in playerList)
+        {
+            apiManager.PostPlayerData(player);
+        }
+
         sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
     }
