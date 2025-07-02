@@ -12,8 +12,11 @@ public class KeyboardHandler : MonoBehaviour
     [SerializeField]
     private Selectable elementToSelect;
 
+    [SerializeField]
+    GameObject UIPanel;
 
-    private void Reset()
+
+    private void Start()
     {
         eventSystem = FindObjectOfType<EventSystem>();
 
@@ -44,12 +47,12 @@ public class KeyboardHandler : MonoBehaviour
     // opens controller or keyboard binds
     public void Open()
     {
-        gameObject.SetActive(true);
+        UIPanel.SetActive(true);
     }
 
     // close controller or keyboard binds
     public void Close()
     {
-        gameObject.SetActive(false);
+        UIPanel.SetActive(false);
     }
 }
