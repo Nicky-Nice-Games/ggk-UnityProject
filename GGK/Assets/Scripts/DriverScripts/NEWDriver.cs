@@ -8,6 +8,9 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+     // root reference of the prefab
+    public Transform rootTransform;
+    
     [Header("Input System Settings")]
     public PlayerInput playerInput;
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
@@ -143,6 +146,8 @@ public class NEWDriver : NetworkBehaviour
     private PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
+   
+
     // Start is called before the first frame update
     void Start()
     {
@@ -165,6 +170,7 @@ public class NEWDriver : NetworkBehaviour
         if (IsOwner)
         {
             playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
         }
     }
 
