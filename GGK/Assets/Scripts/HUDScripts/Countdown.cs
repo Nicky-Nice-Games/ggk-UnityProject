@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class Countdown : MonoBehaviour
 {
-    // List of karts to stop moving while countdown is occuring
-    List<KartCheckpoint> karts;
+    //// List of karts to stop moving while countdown is occuring
+    //List<KartCheckpoint> karts;
 
     // Referneces
     public TextMeshProUGUI countdownText;
@@ -21,23 +21,23 @@ public class Countdown : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //// Pause stuff using scaled time
-        //Time.timeScale = 0;
+        // Pause stuff using scaled time
+        Time.timeScale = 0;
 
-        // Find karts and turn off their ability to drive
-        karts = FindObjectsByType<KartCheckpoint>(FindObjectsSortMode.None).ToList();
+        //// Find karts and turn off their ability to drive
+        //karts = FindObjectsByType<KartCheckpoint>(FindObjectsSortMode.None).ToList();
 
-        foreach (KartCheckpoint kart in karts)
-        {
-            if (kart.gameObject.GetComponent<NPCDriver>() != null)
-            {
-                kart.gameObject.GetComponent<NPCDriver>().enabled = false;
-            }
-            else
-            {
-                kart.transform.parent.GetChild(0).GetComponent<NEWDriver>().enabled = false;
-            }
-        }
+        //foreach (KartCheckpoint kart in karts)
+        //{
+        //    if (kart.gameObject.GetComponent<NPCDriver>() != null)
+        //    {
+        //        kart.gameObject.GetComponent<NPCDriver>().enabled = false;
+        //    }
+        //    else
+        //    {
+        //        kart.transform.parent.GetChild(0).GetComponent<NEWDriver>().enabled = false;
+        //    }
+        //}
 
         // Start Countdown
         StartCoroutine(CountDown());
@@ -60,30 +60,17 @@ public class Countdown : MonoBehaviour
         {
             // if countdownCount is 0 or less then start race!
             countdownText.text = "GO!";
-            //Time.timeScale = 1;
-            //finished = true;
-
-            // turn ability to drive back on
-            foreach (KartCheckpoint kart in karts)
-            {
-                if (kart.gameObject.GetComponent<NPCDriver>() != null)
-                {
-                    kart.gameObject.GetComponent<NPCDriver>().enabled = true;
-                }
-                else
-                {
-                    kart.transform.parent.GetChild(0).GetComponent<NEWDriver>().enabled = true;
-                }
-            }
+            Time.timeScale = 1;
+            finished = true;
         }
 
         // Expand and shrink text
-        countdownText.rectTransform.DOScale(Vector3.one, countdownSpeed / 3).OnComplete(() =>
+        countdownText.rectTransform.DOScale(Vector3.one, countdownSpeed / 3).SetUpdate(true).OnComplete(() =>
         {
-            countdownText.rectTransform.DOScale(Vector3.zero, countdownSpeed/3).SetDelay(countdownSpeed/3);
+            countdownText.rectTransform.DOScale(Vector3.zero, countdownSpeed/3).SetUpdate(true).SetDelay(countdownSpeed/3);
         });
         
-        yield return new WaitForSeconds(countdownSpeed);
+        yield return new WaitForSecondsRealtime(countdownSpeed);
 
         // if countdownCount is greater than 0 then decrement it and call CountDown again
         if (countdownCount > 0)
@@ -91,6 +78,19 @@ public class Countdown : MonoBehaviour
             countdownCount -= 1;
             StartCoroutine(CountDown());
         }
+
+        //// turn ability to drive back on
+        //foreach (KartCheckpoint kart in karts)
+        //{
+        //    if (kart.gameObject.GetComponent<NPCDriver>() != null)
+        //    {
+        //        kart.gameObject.GetComponent<NPCDriver>().enabled = true;
+        //    }
+        //    else
+        //    {
+        //        kart.transform.parent.GetChild(0).GetComponent<NEWDriver>().enabled = true;
+        //    }
+        //}
     }
 }
     
