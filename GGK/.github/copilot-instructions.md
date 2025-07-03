@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
 - Active game object:
-  - Name: Spiral_Outer
-  - Tag: Untagged
-  - Layer: Default
+  - Name: PausePanel
+  - Tag: Options
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
