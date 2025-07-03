@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
 - Active game object:
-  - Name: Canvas
-  - Tag: Untagged
+  - Name: PausePanel
+  - Tag: Options
   - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
