@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
     lobby,
     gameMode,
@@ -28,6 +29,9 @@ public class GameManager : NetworkBehaviour
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+    public List<PlayerInfo> playerList;
+    private APIManager apiManager;
+
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
 
@@ -58,15 +62,39 @@ public class GameManager : NetworkBehaviour
         RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
+
+        apiManager = GetComponent<APIManager>();
     }
 
     /// <summary>
-    /// Changes the game state to multi /single player select
+    /// Changes the game state to login scene
     /// </summary>
     public void StartGame()
     {
-        curState = GameStates.multiSingle;
-        SafeLoad("MultiSinglePlayerScene");
+        SafeLoad("Login");
+        curState = GameStates.login;
+        playerList = new List<PlayerInfo>();
+    }
+
+    /// <summary>
+    /// Once the player is logged in the player will be moved to the multi / single player select scene
+    /// </summary>
+    public void LoggedIn()
+    {
+        // Turn guest mode on
+        if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
+        {
+            playerList[playerList.Count - 1].isGuest = true;
+            Debug.Log("Guest mode on");
+        }
+
+        // Set validate player info
+        else
+        {
+            ValidatePlayer(playerList[playerList.Count - 1]);
+        }
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
+        curState = GameStates.login;
     }
 
     /// <summary>
@@ -246,6 +274,12 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
+        // Posting data to server
+        foreach(PlayerInfo player in playerList)
+        {
+            apiManager.PostPlayerData(player);
+        }
+
         curState = GameStates.gameOver;
         sceneLoader.LoadScene("GameOverScene");
     }
@@ -297,7 +331,6 @@ public class GameManager : NetworkBehaviour
         RefreshSelected();
     }
 
-
     //refresh selected should a device confirguration be changed
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
@@ -322,6 +355,30 @@ public class GameManager : NetworkBehaviour
         }
         sceneLoader.LoadScene(sceneToLoad);
     }
+
+    private void ValidatePlayer(PlayerInfo player)
+    {
+        // Getting the players data
+        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
+    }
+
+    /// <summary>
+    /// Searches the playerList for a matching player data via client ID
+    /// </summary>
+    /// <param name="thisClientID"></param>
+    /// <returns></returns>
+    public PlayerInfo AssignDataToDriver(ulong thisClientID)
+    {
+        // Finding a player info sheet with the same client ID
+        foreach(PlayerInfo player in playerList)
+        {
+            if(player.clientID == thisClientID)
+            {
+                return player;
+            }
+        }
+
+        // None are found
+        return null;
+    }
 }
-
-

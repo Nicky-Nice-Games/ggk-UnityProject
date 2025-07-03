@@ -14,7 +14,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
 
     // public fields
     //public ulong ClientId;
-    public int PlayerNumber;
+    public int clientID;
 
     // Properties
     public string PlayerName { get; private set; }
@@ -26,7 +26,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     public PlayerData(/*ulong clientId,*/ string name, int playerNumber = -1)
     {
         //ClientId = clientId;
-        PlayerNumber = playerNumber;
+        clientID = playerNumber;
         playerName = name;
         PlayerName = playerName;
         PlayerCharacter = PlayerKart.Freddie;
@@ -37,7 +37,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     {
         //serializer.SerializeValue(ref ClientId);
         serializer.SerializeValue(ref playerName);
-        serializer.SerializeValue(ref PlayerNumber);
+        serializer.SerializeValue(ref clientID);
         serializer.SerializeValue(ref PlayerCharacter);
         serializer.SerializeValue(ref PlayerColor);
     }
@@ -46,7 +46,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     {
         return  /*ClientId == other.ClientId &&*/
                 playerName.Equals(other.playerName) &&
-                PlayerNumber == other.PlayerNumber &&
+                clientID == other.clientID &&
                 PlayerCharacter == other.PlayerCharacter &&
                 PlayerColor == other.PlayerColor;
     }

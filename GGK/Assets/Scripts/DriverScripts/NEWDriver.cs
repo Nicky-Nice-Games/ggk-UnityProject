@@ -141,17 +141,20 @@ public class NEWDriver : NetworkBehaviour
 
 
     // Player info for API
-    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
+    // The player info should be created in the Login handeler and player data filled out in here  
     // Any game related data will be filled in in the game scene handeler or manager
-    private PlayerInfo playerInfo;
+    private PlayerInfo thisPlayerInfo;
     private GameManager gameManagerObj;
+    private ulong thisClientID;
 
    
 
     // Start is called before the first frame update
     void Start()
     {
+        thisClientID = NetworkManager.LocalClientId;
         gameManagerObj = FindAnyObjectByType<GameManager>();
+        thisPlayerInfo = gameManagerObj.AssignDataToDriver(thisClientID);
 
         sphere.drag = 0.5f;
 
