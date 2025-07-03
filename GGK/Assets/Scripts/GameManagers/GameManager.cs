@@ -41,8 +41,11 @@ public class GameManager : NetworkBehaviour
         {
             thisManagerInstance = this;
             thisManagerObjInstance = gameObject;
-            DontDestroyOnLoad(thisManagerObjInstance);
-        } else if(thisManagerInstance != this){
+            sceneLoader = thisManagerInstance.GetComponent<SceneLoader>();
+            DontDestroyOnLoad(this);
+        }
+        else if (thisManagerInstance != this)
+        {
             Destroy(gameObject);
         }
     }
@@ -68,7 +71,7 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void StartGame()
     {
-        sceneLoader.LoadScene("Login");
+        SafeLoad("Login");
         curState = GameStates.login;
         playerList = new List<PlayerInfo>();
     }
@@ -107,8 +110,8 @@ public class GameManager : NetworkBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            sceneLoader.LoadScene("GameModeSelectScene");
             curState = GameStates.gameMode;
+            sceneLoader.LoadScene("GameModeSelectScene");
         }
         else if (GetComponent<ButtonBehavior>().buttonClickedName == "Multi")
         {
@@ -118,6 +121,7 @@ public class GameManager : NetworkBehaviour
             // Will most likely be replaced when implimenting the comments above
             SceneManager.LoadScene("MultiplayerMenus");
             curState = GameStates.lobby;
+            //NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerMenus", LoadSceneMode.Single);
         }
     }
 
@@ -127,12 +131,13 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
+        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
     }
     
     /// <summary>
@@ -149,15 +154,18 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        sceneLoader.LoadScene("PlayerKartScene");
         curState = GameStates.playerKart;
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
-            if (IsHost)
+            if (NetworkManager.IsServer)
             {
-                LoadedGameModeRpc();
+                MultiplayerSceneManager.Instance.ToPlayerKartScene();
             }
+        }
+        else
+        { 
+            SceneManager.LoadScene("PlayerKartScene");
         }
     }
 
@@ -195,6 +203,7 @@ public class GameManager : NetworkBehaviour
     {
         SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
+        sceneLoader.LoadScene("MapSelectScene");
     }
 
     /// <summary>
@@ -233,28 +242,26 @@ public class GameManager : NetworkBehaviour
            // Loads the race based on the name of the button clicked
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
-                case "RIT Outer Loop":
-                sceneLoader.LoadScene("V2 RIT Outer Loop Greybox");
+            case "RIT Outer Loop":
+                sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
             case "Golisano":
-                sceneLoader.LoadScene("LevelDesign_GolisanoGreybox");
+                sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
-                sceneLoader.LoadScene("Dorm_LevelDesign");
+                sceneLoader.LoadScene("GSP_RITDorm");
                 break;
             case "RIT Quarter Mile":
-                sceneLoader.LoadScene("RIT Quarter Mile Greybox V2");
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
             case "Finals Brick Road":
-                sceneLoader.LoadScene("LevelDesign_Finals Brick Road Greybox");
+                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
             }
             curState = GameStates.game; 
         }
-        
-
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -273,14 +280,14 @@ public class GameManager : NetworkBehaviour
             apiManager.PostPlayerData(player);
         }
 
-        sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
+        sceneLoader.LoadScene("GameOverScene");
     }
 
     public void LoadStartMenu()
     {
-        sceneLoader.LoadScene("StartScene");
         curState = GameStates.start;
+        SafeLoad("StartScene");
     }
 
 
@@ -333,6 +340,20 @@ public class GameManager : NetworkBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    /// <summary>
+    /// Loads the selected scene, re-referencing the SceneLoader variable if it is null.
+    /// </summary>
+    /// <param name="sceneToLoad"> The scene to load.</param>
+    public void SafeLoad(string sceneToLoad)
+    {
+        //protects against loading the scene if it's null
+        if (sceneLoader == null)
+        {
+            sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
+        }
+        sceneLoader.LoadScene(sceneToLoad);
     }
 
     private void ValidatePlayer(PlayerInfo player)

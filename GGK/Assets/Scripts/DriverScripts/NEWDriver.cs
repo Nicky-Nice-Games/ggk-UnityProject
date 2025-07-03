@@ -4,9 +4,16 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+     // root reference of the prefab
+    public Transform rootTransform;
+    
+    [Header("Input System Settings")]
+    public PlayerInput playerInput;
+    public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
     [Header("Do not Change")]
     public Vector3 acceleration; //How fast karts velocity changes        
@@ -21,7 +28,8 @@ public class NEWDriver : NetworkBehaviour
     public float maxSpeed = 60f;
     public float airTurnSpeed = 30f; //Turning speed in the air, to prevent kart from turning too fast in the air
     public float turnSpeed = 40;   
-    public float maxSteerAngle = 20f; //Multiplier for wheel turning speed    
+    public float maxSteerAngleTires = 20f; //Multiplier for wheel turning speed    
+    public float maxSteeringAngle = 10f; //Maximum steering angle for the steering wheel
     public Transform kartNormal;
     public float gravity = 20;    
     float controllerX;
@@ -73,11 +81,11 @@ public class NEWDriver : NetworkBehaviour
 
     [Header("Wheel references")]
     //Front tires GO
-    public GameObject frontTireR;
-    
+    public GameObject frontTireR;    
     public GameObject frontTireL;
     public GameObject steeringWheel;
-    
+    Quaternion baseRotation; //Base rotation of the steering wheel for resetting
+
 
     [Header("Reference to the kartModel transform for Animation")]
     public Transform kartModel;
@@ -115,9 +123,10 @@ public class NEWDriver : NetworkBehaviour
     float driftVisualAngle = 10f;
     float driftTweenDuration = 0.4f;
 
+    //Stun Settings
+    bool isStunned;
 
     [Header("Sound Settings")]
-
     AudioSource soundPlayer;
 
     [SerializeField]
@@ -129,12 +138,16 @@ public class NEWDriver : NetworkBehaviour
     public bool isConfused;
     public float confusedTimer;
 
+
+
     // Player info for API
     // The player info should be created in the Login handeler and player data filled out in here  
     // Any game related data will be filled in in the game scene handeler or manager
     private PlayerInfo thisPlayerInfo;
     private GameManager gameManagerObj;
     private ulong thisClientID;
+
+   
 
     // Start is called before the first frame update
     void Start()
@@ -146,11 +159,26 @@ public class NEWDriver : NetworkBehaviour
         sphere.drag = 0.5f;
 
         StopParticles();
+
+        baseRotation = steeringWheel.transform.localRotation;
+
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            playerInput.enabled = true;
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+        }
     }
 
     public void StopParticles()
     {
-        Debug.Log("Particles stopped");
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {
@@ -188,9 +216,12 @@ public class NEWDriver : NetworkBehaviour
             spherePosTransform.transform.position.y - colliderOffset, 
             spherePosTransform.transform.position.z);
 
-
+        
 
         //------------Movement stuff---------------------
+
+        //Stunned
+        if(isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -370,6 +401,13 @@ public class NEWDriver : NetworkBehaviour
                 movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
             }
         }
+
+        ////DELETE AFTER HAVING STUN WORKING
+        //if(STUNBUTTON)
+        //{
+        //    Stun(2f);
+        //    STUNBUTTON = false; // Reset stun button state
+        //}
     }
 
 
@@ -388,6 +426,8 @@ public class NEWDriver : NetworkBehaviour
                 //Normal Rotation
                 kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * rotationAlignSpeed);
                 kartNormal.Rotate(0, transform.eulerAngles.y, 0);
+
+                HandleOffRoad(hitNear);
             }
             else
             {
@@ -399,10 +439,22 @@ public class NEWDriver : NetworkBehaviour
 
     void ApplyWheelVisuals()
     {
-        float steerAngle = movementDirection.x * maxSteerAngle;
+        float steerAngle = movementDirection.x * maxSteerAngleTires;
         frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
         frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
-        steeringWheel.transform.Rotate(0, steerAngle * 2f, 0f);
+        // Steering Wheel Rotation
+        float targetAngle = movementDirection.x * maxSteeringAngle;
+        //Quaternion targetRot = Quaternion.Euler(0, targetAngle, 0);
+        //steeringWheel.transform.localRotation = Quaternion.Slerp(steeringWheel.transform.localRotation, targetRot, Time.deltaTime * turnSpeed);
+
+        //Vector3 currentEuler = steeringWheel.transform.localEulerAngles;
+        //steeringWheel.transform.localEulerAngles = new Vector3(
+        //    currentEuler.x,
+        //    targetAngle,
+        //    currentEuler.z
+        //);
+
+        steeringWheel.transform.localRotation = baseRotation * Quaternion.AngleAxis(targetAngle, Vector3.up);
     }
 
     /// <summary>
@@ -750,7 +802,7 @@ public class NEWDriver : NetworkBehaviour
         }
     }
 
-    IEnumerator Boost(float boostForce, float duration)
+    public IEnumerator Boost(float boostForce, float duration)
     {
         foreach(ParticleSystem ps in boostFlames)
         {
@@ -788,7 +840,7 @@ public class NEWDriver : NetworkBehaviour
         int TurnCount = 0;
         bool isInputLeft = false;
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 22; i++)
         {
             
 
@@ -798,7 +850,7 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 6)
+                if(TurnCount > 10)
                 {
                     break;
                 }
@@ -808,7 +860,7 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 6)
+            else if(TurnCount !> 10)
             {
                 TurnCount--;
             }
@@ -816,7 +868,7 @@ public class NEWDriver : NetworkBehaviour
             yield return new WaitForFixedUpdate();
         }
         //Check if player wants to drift either direction
-        if (TurnCount > 6)
+        if (TurnCount > 10)
         {
             driftMethodCaller = true;
 
@@ -1039,5 +1091,51 @@ public class NEWDriver : NetworkBehaviour
         Gizmos.DrawRay(transform.position + (transform.up * 0.2f), -kartNormal.up * groundCheckDistance);
     }
 
-    
+    /// <summary>
+    /// Checks if the kart is driving on the road or offroad
+    /// If they drive on the offroad they'll be slowed down as needed
+    /// </summary>
+    private void HandleOffRoad(RaycastHit hit)
+    {
+        float slowFactor = 0.35f;
+        // Checks if the driver isn't on the Road
+        if (!hit.collider.CompareTag("Road"))
+        {
+            sphere.AddForce(-acceleration * slowFactor, ForceMode.Acceleration);
+        }
+    }
+
+    public void Stun(float duration)
+    {
+        StopCoroutine(DriftHopEnabler());
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+
+        StartCoroutine(StunCoroutine(duration));
+
+
+
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+            
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
+        isStunned = false;
+    }
 }

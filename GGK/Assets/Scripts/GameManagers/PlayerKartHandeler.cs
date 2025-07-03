@@ -12,9 +12,11 @@ public class PlayerKartHandeler : MonoBehaviour
     public List<GameObject> playerOptions;
 
     public CharacterData characterData;
-    public SpriteRenderer characterSelectedImage;
+
     public List<GameObject> characterModels;
     public TextMeshProUGUI characterName;
+
+    public Image characterSelectedImage;
     private Image prevCharacterImageBorder;
 
     public GameObject kartModel;
@@ -48,7 +50,6 @@ public class PlayerKartHandeler : MonoBehaviour
 
         // Invoke default selection
         characterButtons[0].GetComponentInChildren<Button>().onClick.Invoke();
-        ColorChange();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in playerOptions)
@@ -86,11 +87,17 @@ public class PlayerKartHandeler : MonoBehaviour
         {
             prevCharacterImageBorder.enabled = false;
         }
+        if (characterSelectedImage != null)
+        {
+            characterSelectedImage.color = Color.white;
+        }
 
         // Change selected character information to those on the button
-        characterSelectedImage.sprite = characterImage.sprite;
+        characterSelectedImage = characterImage;
+        ColorChange(); // Change color of selected character image
         characterName.text = name;
         
+        // Set active the correct character model
         foreach(GameObject characterModel in characterModels)
         {
             if (characterModel.name.ToLower() != name.ToLower())
@@ -168,6 +175,7 @@ public class PlayerKartHandeler : MonoBehaviour
         Color middleColor = colors[3];
         characterSelectedImage.color = middleColor;
 
+        /*
         foreach (GameObject characterButton in characterButtons)
         {
             Button button = characterButton.GetComponentInChildren<Button>();
@@ -175,30 +183,9 @@ public class PlayerKartHandeler : MonoBehaviour
             colorBlock.selectedColor = middleColor;
             button.colors = colorBlock;
         }
+        */
 
         if (characterData != null)
             characterData.characterColor = middleColor;
     }
-
-    /* Old Code
-    // Select this color button
-    public void ChangeColor(Image color, Image border)
-    {
-        // Reset previous color button's border color to black
-        if (prevColorImageBorder != null)
-        {
-            prevColorImageBorder.color = Color.black;
-        }
-
-        // Change selected character information to those on the button
-        characterSelectedImage.color = color.color;
-
-        // Save selected button information to change back later and change border color to yellow
-        prevColorImageBorder = border;
-
-        // Save information to characterData script if it exist
-        if (characterData != null)
-            characterData.characterColor = color.color;
-    }
-    */
 }
