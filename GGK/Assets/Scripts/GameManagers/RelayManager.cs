@@ -90,12 +90,14 @@ public class RelayManager : MonoBehaviour
 
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
+        Debug.Log("Relay started");
         Player lobbyPlayer = LobbyManager.Instance.GetPlayer();
         PlayerData player = new PlayerData(lobbyPlayer.Data["PlayerName"].Value);
         MultiplayerManager.Instance.playerData = player;
     }
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
     {
+        Debug.Log("Relay joined");
         Player lobbyPlayer = LobbyManager.Instance.GetPlayer();
         PlayerData player = new PlayerData(lobbyPlayer.Data["PlayerName"].Value);
         MultiplayerManager.Instance.playerData = player;
