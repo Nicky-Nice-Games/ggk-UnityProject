@@ -7,6 +7,7 @@ public class DevTools : MonoBehaviour
 {
 
     public static DevTools Instance;
+
     private List<GameObject> listeners = new List<GameObject>();   
 
 
@@ -23,7 +24,9 @@ public class DevTools : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Singleton functionality for promt to remain across scenes.
+    /// </summary>
     private void Awake()
     {
         if (Instance == null)
@@ -38,7 +41,10 @@ public class DevTools : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Adds a game object as a listner if it is not already in the list.
+    /// </summary>
+    /// <param name="listener"></param>
     public void AddListener(GameObject listener)
     {
 
@@ -55,6 +61,5 @@ public class DevTools : MonoBehaviour
         //string[] parts = input.Split(new char[] {
 
     }
-
 
 }
