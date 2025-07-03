@@ -61,12 +61,19 @@ public class Shield : BaseItem
     IEnumerator ColorBlink()
     {
         float elapsed = 0f;
-        bool toggleColor = false;
+        Color nextColor = timerColor;
 
-        while(elapsed < indicatorTime)
+        while (elapsed < indicatorTime)
         {
-            material.color = toggleColor ? defaultColor : timerColor;
-            toggleColor = !toggleColor;
+            material.color = nextColor;
+            if (nextColor == defaultColor)
+            {
+                nextColor = timerColor;
+            }
+            else if (nextColor == timerColor)
+            {
+                nextColor = defaultColor;
+            }
 
             yield return new WaitForSeconds(blinkInterval);
             elapsed += blinkInterval;
