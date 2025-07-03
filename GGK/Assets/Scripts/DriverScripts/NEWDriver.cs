@@ -1,12 +1,15 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D;
 
-public class NEWDriver : MonoBehaviour
+public class NEWDriver : NetworkBehaviour
 {
+    [Header("Input System Settings")]
+    public PlayerInput playerInput;
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
     [Header("Do not Change")]
@@ -150,10 +153,23 @@ public class NEWDriver : MonoBehaviour
         StopParticles();
 
         baseRotation = steeringWheel.transform.localRotation;
+
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            playerInput.enabled = true;
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            playerInput.enabled = true;
+        }
     }
 
     public void StopParticles()
-    {        
+    {
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {
