@@ -67,24 +67,15 @@ public class MultiplayerManager : NetworkBehaviour
     {
         gamemode.OnValueChanged += OnGamemodeChanged;
         selectedMap.OnValueChanged += OnMapSelected;
-        // RelayManager.Instance.OnRelayStarted += MultiplayerStarted;
-        // RelayManager.Instance.OnRelayJoined += MultiplayerStarted;
+        RelayManager.Instance.OnRelayStarted += MultiplayerStarted;
+        RelayManager.Instance.OnRelayJoined += MultiplayerStarted;
     }
 
-    // private void MultiplayerStarted(object sender, EventArgs e)
-    // {
-    //     IsMultiplayer = true;
-    // }
-    // private void MultiplayerEnded(object sender, EventArgs e)
-    // {
-    //     IsMultiplayer = false;
-    // }
-
-    public override void OnNetworkSpawn()
+    private void MultiplayerStarted(object sender, EventArgs e)
     {
         IsMultiplayer = true;
     }
-    public override void OnNetworkDespawn()
+    private void MultiplayerEnded(object sender, EventArgs e)
     {
         IsMultiplayer = false;
     }
@@ -202,8 +193,7 @@ public class MultiplayerManager : NetworkBehaviour
         Debug.Log($"Client {clientId} chose {playerCharacter} in color {playerColor}");
         if (AllPlayerKartsSelected())
         {
-            //GameManager.thisManagerInstance.ToMapSelectScreenRpc();
-            MultiplayerSceneManager.Instance.ToMapSelectScene();
+            GameManager.thisManagerInstance.ToMapSelectScreenRpc();
         }
     }
 
@@ -235,27 +225,22 @@ public class MultiplayerManager : NetworkBehaviour
             switch (votedMap)
             {
                 case Map.RITOuterLoop:
-                    //GameManager.thisManagerInstance.LoadMapRpc("Netcode RIT Outer Loop Greybox");
-                    MultiplayerSceneManager.Instance.ToRITOuterLoop();
+                    GameManager.thisManagerInstance.LoadMapRpc("Netcode RIT Outer Loop Greybox");
                     break;
-                case Map.Golisano:
-                    //GameManager.thisManagerInstance.LoadMapRpc("Golisano Greybox");
-                    MultiplayerSceneManager.Instance.ToGolisano();
-                    break;
+                // case Map.Golisano:
+                //     GameManager.thisManagerInstance.LoadMapRpc("Golisano Greybox");
+                //     break;
                 case Map.RITDorm:
-                    //GameManager.thisManagerInstance.LoadMapRpc("RIT Dorm Greybox");
-                    MultiplayerSceneManager.Instance.ToRITDorm();
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Dorm Greybox");
                     break;
                 case Map.RITWoods:
-                    //GameManager.thisManagerInstance.LoadMapRpc("RIT Woods Greybox");
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Woods Greybox");
                     break;
                 case Map.RITQuarterMile:
-                    //GameManager.thisManagerInstance.LoadMapRpc("RIT Quarter Mile Greybox V2");
-                    MultiplayerSceneManager.Instance.ToRITQuarterMile();
+                    GameManager.thisManagerInstance.LoadMapRpc("RIT Quarter Mile Greybox V2");
                     break;
                 case Map.FinalsBrickRoad:
-                    //GameManager.thisManagerInstance.LoadMapRpc("Finals Brick Road Greybox");
-                    MultiplayerSceneManager.Instance.ToFinalsBrickRoad();
+                    GameManager.thisManagerInstance.LoadMapRpc("Finals Brick Road Greybox");
                     break;
                 default:
                     break;
@@ -267,7 +252,6 @@ public class MultiplayerManager : NetworkBehaviour
     public void RescindVoteMapRpc(RpcParams rpcParams = default)
     {
         ulong senderClientId = rpcParams.Receive.SenderClientId;
-        playerMapSelectionChecks[senderClientId] = false;
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = true)]

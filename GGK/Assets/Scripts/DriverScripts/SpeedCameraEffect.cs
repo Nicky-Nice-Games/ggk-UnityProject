@@ -76,7 +76,6 @@ public class SpeedCameraEffect : MonoBehaviour
     //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPoint - transform.position), Time.deltaTime * 8f);
     //    
     //}
-    public static SpeedCameraEffect instance;
 
     public Transform target;               // The kart
     public Rigidbody targetRigidbody;      // Rigidbody of the kart
@@ -97,22 +96,9 @@ public class SpeedCameraEffect : MonoBehaviour
 
     private bool isHoldingTab;
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
     void Start()
     {
         cam = GetComponent<Camera>();
-    }
-
-    public void FollowKart(Transform kart)
-    {
-        Transform driverScriptObject = kart.GetComponentInChildren<NEWDriver>().transform;
-        target = driverScriptObject.Find("CameraFollowFront");
-        lookBackTarget = driverScriptObject.Find("CameraFollowBack");
-        targetRigidbody = kart.GetComponentInChildren<Rigidbody>();
     }
 
     void FixedUpdate()

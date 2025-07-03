@@ -7,16 +7,10 @@ public class AudioManager : MonoBehaviour
 {
     private static AudioManager instance;
 
-    private AudioSource musicPlayer;
+    AudioSource musicPlayer;
 
     [SerializeField]
-    List<string> stopSceneNames;
-
-    // Reference to other scripts
-    private SoundVolume soundVolume;
-    private OptionsData optionsData;
-    private float curMasterVolume;
-    private float curMusicVolume;
+    string stopSceneName = "(HUD)DrivingMyKartAround";
 
     private void Awake()
     {
@@ -28,7 +22,14 @@ public class AudioManager : MonoBehaviour
             // persists across scenes
             DontDestroyOnLoad(gameObject);
 
+
             musicPlayer = GetComponent<AudioSource>();
+
+            // play menu music is audio source exists and isnt playing
+            if (musicPlayer != null && !musicPlayer.isPlaying)
+            {
+                musicPlayer.Play();
+            }
 
             // subscribes to OnSceneLoaded method to check when a scene is started
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -40,48 +41,20 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        soundVolume = FindAnyObjectByType<SoundVolume>();
-        optionsData = soundVolume.optionsData;
-        curMasterVolume = optionsData.masterVolume;
-        curMusicVolume = optionsData.musicVolume;
-
-        // play menu music is audio source exists and isnt playing
-        if (musicPlayer != null && !musicPlayer.isPlaying)
-        {
-            soundVolume.PlayMusic(musicPlayer);
-        }
-    }
-
-    private void Update()
-    {
-        // change volume if master or music volume is changed
-        if (curMasterVolume != optionsData.masterVolume || curMusicVolume != optionsData.musicVolume)
-        {
-            curMasterVolume = optionsData.masterVolume;
-            curMusicVolume = optionsData.musicVolume;
-
-            soundVolume.ChangeMusicVolume(musicPlayer);
-        }
-    }
-
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // stops menu music when given scene starts
-        for (int x = 0; x < stopSceneNames.Count; x++)
+        if (scene.name == stopSceneName)
         {
-            if (scene.name == stopSceneNames[x])
-            {
-                musicPlayer.Stop();
-                return;
-            }
+            musicPlayer.Stop();
         }
-
-        // starts music in other scenes if it stops
-        if (!musicPlayer.isPlaying)
+        else
         {
-            soundVolume.PlayMusic(musicPlayer);
+            // starts music in other scenes if it stops
+            if (!musicPlayer.isPlaying)
+            {
+                musicPlayer.Play();
+            }
         }
     }
 

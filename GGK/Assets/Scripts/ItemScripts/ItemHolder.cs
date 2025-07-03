@@ -35,10 +35,6 @@ public class ItemHolder : MonoBehaviour
     private int driverItemTier;
     private int uses;
 
-    //the current coroutine animating spinning, to prevent double-ups
-    private IEnumerator currentSpinCoroutine;
-    public MiniMapHud miniMap;
-
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -54,7 +50,6 @@ public class ItemHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DOTween.Init();
         holdingItem = IsHoldingItem();
 
         timer = Random.Range(5, 8);
@@ -171,8 +166,6 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
-            itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
-
             item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
@@ -185,7 +178,6 @@ public class ItemHolder : MonoBehaviour
             }
 
             uses--; // Decrease after successful use
-            
         }
     }
 
@@ -214,6 +206,29 @@ public class ItemHolder : MonoBehaviour
 
     }
 
+    public void OnCollisionEnter(Collision collision)
+    {
+        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
+        if (collision.gameObject.transform.tag == "Projectile")
+        {
+            Destroy(collision.gameObject);
+            if (thisDriver != null)
+            {
+                thisDriver.sphere.velocity /= 8000;
+            }
+            else if (npcDriver != null)
+            {
+                //npcDriver.DisableDriving();
+                //npcDriver.velocity /= 8000;
+                //npcDriver.maxSpeed = 100;
+                //npcDriver.accelerationRate = 500;
+                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
+                npcDriver.StartRecovery();
+            }
+        }
+
+    }
+
     public void OnTriggerEnter(Collider collision)
     {
         //Debug.Log("Collided");
@@ -235,7 +250,7 @@ public class ItemHolder : MonoBehaviour
                 Debug.Log(uses);
                 if (thisDriver)
                 {
-                    ApplyItemTween(heldItem.itemIcon);
+                    itemDisplay.texture = heldItem.itemIcon;
                 }
             }
             // Disables the item box
@@ -258,7 +273,7 @@ public class ItemHolder : MonoBehaviour
             // displays item in the HUD
             if (thisDriver)
             {
-                ApplyItemTween(heldItem.itemIcon);
+                itemDisplay.texture = heldItem.itemIcon;
             }
 
             // Disables the upgrade box
@@ -266,13 +281,14 @@ public class ItemHolder : MonoBehaviour
             //heldItemText.text = $"Held Item: {baseItem}+";
         }
 
-        if (collision.gameObject.CompareTag("Projectile"))
+        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
+        if (collision.gameObject.transform.tag == "Projectile")
         {
             if (thisDriver != null)
-                thisDriver.sphere.velocity /= 8;
+            thisDriver.sphere.velocity /= 8;
             Destroy(collision.gameObject);
-            ApplyIconSpin(gameObject, 1);
         }
+
         // kart uses a boost and is given the boost through a force
         if (collision.gameObject.CompareTag("Boost"))
         {
@@ -347,7 +363,7 @@ public class ItemHolder : MonoBehaviour
                             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
                             // set the kart's position to 3 checkpoints ahead
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+                            thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
                             kartCheck.checkpointId = warpCheckpointId;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
@@ -387,31 +403,10 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
-                
             }
-            ApplyIconSpin(gameObject, 1);
             Destroy(collision.gameObject);
         }
 
-    }
-    public void ApplyItemTween(Texture item)
-    {
-        itemDisplay.texture = item;
-        itemDisplay.rectTransform.DOShakeScale(0.5f);
-    }
-
-    public void ApplyIconSpin(GameObject obj, int times)
-    {
-        if (miniMap.spinInstances.Contains(currentSpinCoroutine) && currentSpinCoroutine != null)
-        {
-            miniMap.spinInstances.Remove(currentSpinCoroutine);
-            StopCoroutine(currentSpinCoroutine);
-            currentSpinCoroutine = null;
-        }
-
-        currentSpinCoroutine = miniMap.SpinIcon(obj, times);
-        miniMap.spinInstances.Add(currentSpinCoroutine);
-        StartCoroutine(currentSpinCoroutine);
     }
 
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
@@ -449,10 +444,9 @@ public class ItemHolder : MonoBehaviour
                 continue;
             }
 
-            // ignore ground, rock, checkpoint, startpoint, road
+            // ignore ground, rock, checkpoint, startpoint
             if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
-                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
-                && !collider.CompareTag("Road"))
+                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint"))
             {
                 Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
                 ignoreColliders.Add(collider);

@@ -12,8 +12,7 @@ public class DynamicRecovery : MonoBehaviour
     public CanvasGroup fadeCanvas;
 
     public Transform kartModel;
-    private GameObject[] checkpoints;
-    public KartCheckpoint kartCheckpointScript;
+    private Transform[] checkpoints;
     private Transform currentCheckpoint;
     private Transform normalTransform;
 
@@ -25,30 +24,26 @@ public class DynamicRecovery : MonoBehaviour
     private NEWDriver kartMovementScript;
 
 
-    public MiniMapHud miniMap;
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        
-        //GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
-        //List<Transform> checkpointList = new List<Transform>();
-        //
-        //foreach (GameObject obj in checkpointObjects)
-        //{
-        //    checkpointList.Add(obj.transform);
-        //}
-        //
-        //checkpoints = checkpointList.ToArray();
 
-        //checkpoints = kartCheckpointScript.checkpointList.ToArray();
-        //
-        //// Optional: default to first
-        //if (checkpoints.Length > 0)
-        //    currentCheckpoint = checkpoints[0].transform;
-        
+        GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
+        List<Transform> checkpointList = new List<Transform>();
+
+        foreach (GameObject obj in checkpointObjects)
+        {
+            checkpointList.Add(obj.transform);
+        }
+
+        checkpoints = checkpointList.ToArray();
+
+        // Optional: default to first
+        if (checkpoints.Length > 0)
+            currentCheckpoint = checkpoints[0];
+
         Transform kartRoot = transform.parent; // "Kart 1"
         Transform normal = kartRoot.Find("Kart");
 
@@ -64,11 +59,6 @@ public class DynamicRecovery : MonoBehaviour
 
     void Update()
     {
-        if(checkpoints == null || checkpoints.Length == 0)
-        {
-            checkpoints = kartCheckpointScript.checkpointList.ToArray();            
-        }
-
         Debug.DrawRay(transform.position, transform.forward * 5, Color.red); // your kart
         if (currentCheckpoint != null)
             Debug.DrawRay(currentCheckpoint.position, currentCheckpoint.forward * 5, Color.green); // the checkpoint
@@ -86,12 +76,6 @@ public class DynamicRecovery : MonoBehaviour
 
     public void StartRecovery()
     {
-        if (miniMap)
-        {
-            //spins the player's icon if they need to be recovered
-            StartCoroutine(miniMap.SpinIcon(transform.parent.GetComponentInChildren<ItemHolder>().gameObject, 5));
-        }
-
         if (!isRecovering)
         {
             currentCheckpoint = FindClosestCheckpoint();
@@ -104,22 +88,18 @@ public class DynamicRecovery : MonoBehaviour
     private Transform FindClosestCheckpoint()
     {
         Transform closest = null;
-        //float closestDistSqr = Mathf.Infinity;
-        //Vector3 currentPosition = transform.position;
-        //
-        //foreach (GameObject checkpoint in checkpoints)
-        //{
-        //    //float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
-        //    //if (distSqr < closestDistSqr)
-        //    //{
-        //    //    closestDistSqr = distSqr;
-        //    //    closest = checkpoint;
-        //    //}
-        //
-        //    
-        //}
+        float closestDistSqr = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
 
-        closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
+        foreach (Transform checkpoint in checkpoints)
+        {
+            float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
+            if (distSqr < closestDistSqr)
+            {
+                closestDistSqr = distSqr;
+                closest = checkpoint;
+            }
+        }
 
         return closest;
 
@@ -160,11 +140,9 @@ public class DynamicRecovery : MonoBehaviour
     }
 
     private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
-    {
+    { 
 
-        Quaternion finalRot = Quaternion.Euler(0, targetRotation.eulerAngles.y - 90, 0);
-
-        if (kartMovementScript != null)
+        if(kartMovementScript != null)
         {
             kartMovementScript.enabled = false;
             
@@ -199,7 +177,7 @@ public class DynamicRecovery : MonoBehaviour
         // TELEPORT TO NEW POSITION 
         transform.position = targetPosition;
         ResetParticles();
-        normalTransform.rotation = finalRot;
+        normalTransform.rotation = targetRotation;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;

@@ -125,7 +125,7 @@ public class NetcodeNEWDriver : NetworkBehaviour
             ps.Stop();
         }
 
-        //MiniMapHud.Instance.AddToObjectList(gameObject);
+        MiniMapHud.Instance.AddToObjectList(gameObject);
 
         //-------------Multiplayer---------------
         if (!MultiplayerManager.Instance.IsMultiplayer) return;

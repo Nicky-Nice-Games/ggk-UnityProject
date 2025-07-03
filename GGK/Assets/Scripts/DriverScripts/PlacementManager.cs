@@ -9,11 +9,10 @@ public class PlacementManager : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] List<KartCheckpoint> checkpointList = new List<KartCheckpoint>();
     public List<KartCheckpoint> sortedList;
-    public List<GameObject> kartsList;
     void Start()
     {
         GameObject[] karts = GameObject.FindGameObjectsWithTag("Kart");
-        
+
         checkpointList.Clear();
 
         foreach (GameObject kart in karts)
@@ -21,7 +20,6 @@ public class PlacementManager : MonoBehaviour
             KartCheckpoint cp = kart.GetComponent<KartCheckpoint>();
             if (cp != null)
             {
-                kartsList.Add(kart);
                 checkpointList.Add(cp);
             }
         }

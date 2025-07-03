@@ -8,9 +8,6 @@ public class BoostPanel : MonoBehaviour
     [SerializeField]
     private float boostForce;
 
-    [SerializeField]
-    private float boostTime;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -27,9 +24,20 @@ public class BoostPanel : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Kart"))
         {
-            GameObject parent = other.gameObject.transform.parent.gameObject;
-            NEWDriver kart = parent.transform.GetChild(0).GetComponent<NEWDriver>();
-            StartCoroutine(kart.Boost(boostForce, boostTime));
+            StartCoroutine(Boost(boostForce, 1.5f, other));
+        }
+    }
+
+
+    IEnumerator Boost(float boostForce, float duration, Collider rBody)
+    {
+        Rigidbody kart = rBody.gameObject.GetComponent<Rigidbody>();
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = kart.gameObject.transform.forward * boostForce;
+
+            kart.AddForce(boostDirection, ForceMode.VelocityChange);
+            yield return new WaitForFixedUpdate();
         }
     }
 }

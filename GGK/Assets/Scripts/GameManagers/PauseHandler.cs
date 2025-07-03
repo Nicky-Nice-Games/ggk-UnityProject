@@ -9,25 +9,12 @@ public class PauseHandler : MonoBehaviour
     // References
     public GameManager gameManager;
     public SceneLoader sceneLoader;
-    public GameObject restartBtn;
-    public GameObject startButton;
-    public GameObject mapBtn;
-
-    public Vector3 initalScale;
 
     // Start is called before the first frame update
     void Start()
     {
-        initalScale = restartBtn.transform.localScale;
         gameManager = FindAnyObjectByType<GameManager>();
         sceneLoader = FindAnyObjectByType<SceneLoader>();
-    }
-
-    public void OnDisable()
-    {
-        restartBtn.transform.localScale = initalScale;
-        startButton.transform.localScale = initalScale;
-        mapBtn.transform.localScale = initalScale;
     }
 
     // Add this to player input
