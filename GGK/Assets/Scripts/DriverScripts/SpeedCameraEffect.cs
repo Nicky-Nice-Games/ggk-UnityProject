@@ -101,6 +101,13 @@ public class SpeedCameraEffect : MonoBehaviour
         cam = GetComponent<Camera>();
     }
 
+    public void FollowKart(Transform kart)
+    {
+        target = kart.Find("CameraFollowFront");
+        targetRigidbody = kart.GetComponentInChildren<Rigidbody>();
+        lookBackTarget = kart.Find("CameraFollowBack");
+    }
+
     void FixedUpdate()
     {
         if (!target || !targetRigidbody) return;

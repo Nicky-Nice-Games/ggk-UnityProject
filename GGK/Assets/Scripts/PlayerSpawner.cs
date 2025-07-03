@@ -10,6 +10,8 @@ public class PlayerSpawner : NetworkBehaviour
     //[SerializeField] private Transform npcKartPrefab;
 
     [SerializeField] private List<Transform> spawnPoints;
+
+    [SerializeField] private SpeedCameraEffect followCamera;
     private int spawnedKartCount = 0;
 
     private void Start()
@@ -33,6 +35,7 @@ public class PlayerSpawner : NetworkBehaviour
             {
                 Transform kartObject = Instantiate(playerKartPrefab);
                 kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                followCamera.FollowKart(kartObject);
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
