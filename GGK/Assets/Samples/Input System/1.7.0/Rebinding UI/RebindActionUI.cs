@@ -220,12 +220,12 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
             ResetBinding(action, bindingIndex);
 
-            //if (action.bindings[bindingIndex].isComposite)
-            //{
-            //    // It's a composite. Remove overrides from part bindings.
-            //    for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
-            //        action.RemoveBindingOverride(i);
-            //}
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                // It's a composite. Remove overrides from part bindings.
+                for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                    action.RemoveBindingOverride(i);
+            }
             //else
             //{
             //    action.RemoveBindingOverride(bindingIndex);
@@ -246,6 +246,21 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 {
                     continue;
                 }
+
+                //if (newBinding.isComposite)
+                //{
+                //    // It's a composite. Remove overrides from part bindings.
+                //    for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                //    {
+                //        InputBinding binding = otherAction.bindings[i];
+                //        if (binding.overridePath == newBinding.path)
+                //        {
+                //            otherAction.ApplyBindingOverride(i, oldOverridePath);
+                //        }
+                //        action.RemoveBindingOverride(i);
+                //    }
+                //    return;
+                //}
 
                 for (int i = 0; i < otherAction.bindings.Count; i++)
                 {
