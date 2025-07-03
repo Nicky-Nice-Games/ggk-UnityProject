@@ -72,16 +72,15 @@ public class KartCheckpoint : MonoBehaviour
 
         if (passedWithWarp && lap == totalLaps)
         {
-            LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
-            finishTime = leaderboardController.curTime;
-            leaderboardController.Finished(this);
+            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null)
             {
                 lapDisplay.text = "Lap: " + (lap + 1);
             }
-            StartCoroutine(GameOverWait());
             passedWithWarp = false;
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -108,7 +107,7 @@ public class KartCheckpoint : MonoBehaviour
         }
         else if (other.CompareTag("Startpoint"))
         {
-            if (checkpointId == checkpointList.Count - 1)
+            if (checkpointId >= checkpointList.Count - 10 && checkpointId < checkpointList.Count)
             {
                 lap++;
                 checkpointId = 0;
@@ -119,10 +118,8 @@ public class KartCheckpoint : MonoBehaviour
 
                 if (lap == totalLaps)
                 {
-                    LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
-                    finishTime = leaderboardController.curTime;
-                    leaderboardController.Finished(this);
-                    StartCoroutine(GameOverWait());
+                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                    StartCoroutine(FinalizeFinish());
                 }
             }
         }
@@ -132,5 +129,14 @@ public class KartCheckpoint : MonoBehaviour
     {
         yield return new WaitForSeconds(10.5f);
         gameManager.GameFinished();
+    }
+
+    IEnumerator FinalizeFinish()
+    {
+        yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
+
+        LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+        leaderboardController.Finished(this);
+        StartCoroutine(GameOverWait());
     }
 }

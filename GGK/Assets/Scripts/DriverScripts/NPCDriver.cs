@@ -140,7 +140,7 @@ public class NPCDriver : MonoBehaviour
 
         distanceSquaredToFollow = math.distancesq(transform.position, followTarget.position);
 
-        float maxDistance = boosted ? 4000f * boostDistanceMultiplier : 4000f;
+        float maxDistance = boosted ? 3000f * boostDistanceMultiplier : 3000f;
         if (distanceSquaredToFollow > maxDistance && !avoidingObstacle && !correctingEdge && !isRecoveringFromHit)
         {
             returningToTarget = true;
@@ -159,8 +159,15 @@ public class NPCDriver : MonoBehaviour
             Quaternion targetRot = Quaternion.LookRotation(toTarget);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 180f * Time.deltaTime);
             //accelerationRate = 2000f;
-            rBody.velocity = toTarget.normalized * returnSpeed;
+            Vector3 desiredVelocity = toTarget.normalized * returnSpeed;
+
+            if (!isGrounded)
+            {
+                desiredVelocity += Vector3.down * 9.81f * airGravityMultiplier * Time.fixedDeltaTime;
+            }
+            rBody.velocity = desiredVelocity;
             //velocity += toTarget.normalized * (accelerationRate * Time.fixedDeltaTime);
+
 
 
             if (toTarget.magnitude < arrivalThreshold)
@@ -263,23 +270,23 @@ public class NPCDriver : MonoBehaviour
 
                 return; // still blending back to normal
             }
-            else if (correctingEdge)
-            {
-                edgeCorrectTimer -= Time.deltaTime;
-
-                velocity = transform.forward * maxSpeed;
-                rBody.velocity = velocity;
-
-                Quaternion steerBack = Quaternion.LookRotation(avoidanceDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, steerBack, Time.deltaTime * steerBackStrength);
-
-                if (edgeCorrectTimer <= 0f)
-                {
-                    correctingEdge = false;
-                }
-
-                return;
-            }
+            //else if (correctingEdge)
+            //{
+            //    edgeCorrectTimer -= Time.deltaTime;
+            //
+            //    velocity = transform.forward * maxSpeed;
+            //    rBody.velocity = velocity;
+            //
+            //    Quaternion steerBack = Quaternion.LookRotation(avoidanceDirection);
+            //    transform.rotation = Quaternion.Slerp(transform.rotation, steerBack, Time.deltaTime * steerBackStrength);
+            //
+            //    if (edgeCorrectTimer <= 0f)
+            //    {
+            //        correctingEdge = false;
+            //    }
+            //
+            //    return;
+            //}
 
 
             // ---- Edge Detection & Correction ----
