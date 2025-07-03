@@ -29,6 +29,8 @@ public class SignInManager : NetworkBehaviour
     private string logInOption;
     PlayerInfo playerInfo;
 
+    private ulong tempCID = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +47,7 @@ public class SignInManager : NetworkBehaviour
         }
 
         // Getting Client ID / creating player info
-        playerInfo = new PlayerInfo(NetworkManager.LocalClientId);
+        playerInfo = new PlayerInfo(tempCID);
         gameManager.playerList.Add(playerInfo);
     }
 
