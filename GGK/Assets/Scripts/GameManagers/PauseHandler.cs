@@ -35,8 +35,8 @@ public class PauseHandler : MonoBehaviour
     // Add this to player input
     public void TogglePause(InputAction.CallbackContext context)
     {
-        // Checks if function is called and that countdown has finished
-        if(context.started && FindAnyObjectByType<Countdown>().finished)
+        // Checks if function is called
+        if(context.started)
         {
             if (gameObject.activeSelf)
             {
