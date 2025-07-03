@@ -1,20 +1,18 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using JetBrains.Annotations;
 using UnityEngine.Networking;
 
-// If using Python server nav to the server location and use command: python server.py to start
-
-// OUTDATED - Impliment new logis to connect to server. This will NOR work as of current file setup
+// Script relies on the data.json being in the same directory as API
 
 public class APIManager : MonoBehaviour
 {
-    private int PID = 0;
 
     void Start()
     {
-        StartCoroutine(RunAPIFlow());
+        
     }
 
     /// <summary>
@@ -23,7 +21,7 @@ public class APIManager : MonoBehaviour
     /// <param name="url">where to send the data</param>
     /// <param name="jsonData">json data</param>
     /// <returns></returns>
-    IEnumerator PostJson(string url, string jsonData)
+    private IEnumerator PostJson(string url, string jsonData)
     {
         // Sets up the unity request
         UnityWebRequest request = new UnityWebRequest(url, "POST");
@@ -35,7 +33,7 @@ public class APIManager : MonoBehaviour
         // Sends back each data at a time
         yield return request.SendWebRequest();
 
-        // Checks the result of teh request 
+        // Checks the result of the request 
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("Data posted successfully!");
@@ -46,7 +44,7 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    IEnumerator GetRequest(string uri)
+    private IEnumerator GetRequest(string uri, PlayerInfo thisPlayer)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -56,58 +54,74 @@ public class APIManager : MonoBehaviour
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
+                // Getting the data from the json get request and setting the player data
                 string data = webRequest.downloadHandler.text;
-                PID = int.Parse(data);
+                PlayerInfo userData = JsonUtility.FromJson<PlayerInfo>(data);
+                thisPlayer = userData;
             }
             else
             {
-                Debug.LogError("Failed to get data" + webRequest.error);
+                Debug.Log("Failed to get data" + webRequest.error);
             }
         }
     }
 
-    IEnumerator RunAPIFlow()
+    /// <summary>
+    /// Starts the corutine for sending json data
+    /// </summary>
+    /// <param name="thisPlayer">the player whos data will be set</param>
+    /// <returns></returns>
+    public void SendPost(PlayerInfo thisPlayer)
     {
-        // Sending the request for the PID
-        // Currentally getting data from local
-        // Swap URI and some logic when remote server is up
-        string path = System.IO.Path.Combine(Application.streamingAssetsPath, "testData.txt");
-        Debug.Log("Path: " + path);
-
-        // Chaining the Coroutines so this one finishes before the main one
-        yield return StartCoroutine(GetRequest(path));
-
-        PlayerInfo testPlayer = new PlayerInfo
-        {
-            playerID = PID,
-            raceStartTime = 0330,   // 3:30
-            racePosition = 1,
-            mapRaced = 2,
-            collisionsWithPlayers = 3,
-            collisionWithWalls = 4,
-            characterUsed = 1,
-            boostUsage =
-            {
-                ["Speed Boost 1"] = 5,
-                ["Speed Boost 2"] = 6,
-                ["Speed Boost 3"] = 2
-            },
-            offenceUsage =
-            {
-                ["Puck 1"] = 4,
-                ["Puck 2"] = 2,
-            },
-            trapUsage =
-            {
-                ["Oil spill 1"] = 3,
-                ["Oil spill 2"] = 1
-            }
-        };
-
+        // Serializing data to send back
         SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
-        serializable.ConvertToSerializable(testPlayer);
+        serializable.ConvertToSerializable(thisPlayer);   
         string json = JsonUtility.ToJson(serializable);
 
-        StartCoroutine(PostJson("http://127.0.0.1:5000/postdata", json));
+        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));    
+    }
+
+    /// <summary>
+    /// Starts the corutine for getting json data
+    /// </summary>
+    /// <param name="pid">the player ID</param>
+    /// <param name="thisPlayer">the player whos data will be set</param>
+    /// <returns></returns>
+    public IEnumerator SendGet(string pid, PlayerInfo thisPlayer)
+    {
+        // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog/player/" + pid;
+        Debug.Log("Path: " + getPath);
+        yield return StartCoroutine(GetRequest(getPath, thisPlayer));
+    }
+
+    /// <summary>
+    /// Using email to check if player exists in online database
+    /// </summary>
+    /// <param name="email">email</param>
+    /// <param name="callback">the bool that will be returned as a callback</param>
+    /// <returns></returns>
+    public IEnumerator CheckForPlayerInData(string email, Action<bool> callback)
+    {
+        // uri = gameservice/playerlog/{email} when checking with email
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(
+            "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email))
+        {
+            yield return webRequest.SendWebRequest();
+
+            // Checking good request
+            if(webRequest.result == UnityWebRequest.Result.Success)
+            {
+                string json = webRequest.downloadHandler.text;
+
+                // Getting the bool out of the returned data
+                callback(bool.Parse(json.ToLower()));
+            }
+            else
+            {
+                Debug.Log("GET ERROR FOR PLAYER CHECK: " + webRequest.error);
+                callback(false);
+            }
+        }
     }
 }

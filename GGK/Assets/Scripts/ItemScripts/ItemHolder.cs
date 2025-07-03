@@ -35,6 +35,10 @@ public class ItemHolder : MonoBehaviour
     private int driverItemTier;
     private int uses;
 
+    //the current coroutine animating spinning, to prevent double-ups
+    private IEnumerator currentSpinCoroutine;
+    public MiniMapHud miniMap;
+
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -50,6 +54,7 @@ public class ItemHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DOTween.Init();
         holdingItem = IsHoldingItem();
 
         timer = Random.Range(5, 8);
@@ -107,12 +112,13 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
+                    Destroy(heldItem.gameObject);
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
@@ -133,12 +139,13 @@ public class ItemHolder : MonoBehaviour
             {
                 if (uses == 0)
                 {
-                    heldItem = null;
+                    // heldItem = null;
                     holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
                     }
+                    Destroy(heldItem.gameObject);
                 }
             }
         }
@@ -164,6 +171,8 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
+
             item = Instantiate(heldItem, transform.position, transform.rotation);
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
@@ -176,6 +185,7 @@ public class ItemHolder : MonoBehaviour
             }
 
             uses--; // Decrease after successful use
+            
         }
     }
 
@@ -204,29 +214,6 @@ public class ItemHolder : MonoBehaviour
 
     }
 
-    public void OnCollisionEnter(Collision collision)
-    {
-        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
-        if (collision.gameObject.transform.tag == "Projectile")
-        {
-            Destroy(collision.gameObject);
-            if (thisDriver != null)
-            {
-                thisDriver.sphere.velocity /= 8000;
-            }
-            else if (npcDriver != null)
-            {
-                //npcDriver.DisableDriving();
-                //npcDriver.velocity /= 8000;
-                //npcDriver.maxSpeed = 100;
-                //npcDriver.accelerationRate = 500;
-                //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
-                npcDriver.StartRecovery();
-            }
-        }
-
-    }
-
     public void OnTriggerEnter(Collider collision)
     {
         Debug.Log("Collided");
@@ -248,7 +235,7 @@ public class ItemHolder : MonoBehaviour
                 Debug.Log(uses);
                 if (thisDriver)
                 {
-                    itemDisplay.texture = heldItem.itemIcon;
+                    ApplyItemTween(heldItem.itemIcon);
                 }
             }
             // Disables the item box
@@ -271,7 +258,7 @@ public class ItemHolder : MonoBehaviour
             // displays item in the HUD
             if (thisDriver)
             {
-                itemDisplay.texture = heldItem.itemIcon;
+                ApplyItemTween(heldItem.itemIcon);
             }
 
             // Disables the upgrade box
@@ -279,23 +266,23 @@ public class ItemHolder : MonoBehaviour
             //heldItemText.text = $"Held Item: {baseItem}+";
         }
 
-        // checks if the kart hits a projectile and drops the velocity to 1/8th of the previous value
-        if (collision.gameObject.transform.tag == "Projectile")
+        if (collision.gameObject.CompareTag("Projectile"))
         {
             if (thisDriver != null)
-            thisDriver.sphere.velocity /= 8;
+                thisDriver.sphere.velocity /= 8;
             Destroy(collision.gameObject);
+            ApplyIconSpin(gameObject, 1);
         }
-
         // kart uses a boost and is given the boost through a force
         if (collision.gameObject.CompareTag("Boost"))
         {
             Boost boost = collision.gameObject.GetComponent<Boost>();
             float boostMult;
-            float duration = 2.5f;
+            float boostMaxSpeed;
+            float duration;
             if (boost.ItemTier == 2 && npcDriver == null)
             {
-                thisDriver.sphere.velocity /= 8;
+                // thisDriver.sphere.velocity /= 8;
             }
             else if (npcDriver != null)
             {
@@ -305,40 +292,91 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.accelerationRate = 500;
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
-            boostMult = 1.5f;
-            
-            if(thisDriver != null)
-            {
-                switch (boost.ItemTier)
-                {
-                    default:
-                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration));
-                        break;
-                    case 3:
-                        StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
-                        break;
-                    case 4:
-                        break;
 
+            duration = 3.0f;
+                if (thisDriver != null)
+                {
+                    // different values and functionality for different levels of boosts
+                    switch (boost.ItemTier)
+                    {
+                        default: // level 1
+                            boostMult = 1.25f;
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            break;
+                        case 2: // level 2
+                            boostMult = 1.5f;
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            break;
+                        case 3: // level 3
+                            boostMult = 1.75f;
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            break;
+                        case 4: // level 4
+                                // get the checkpoint from the kart's collider child to cross 3 checkpoints
+                            GameObject kartParent = transform.parent.gameObject;
+                            KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
+                            boostMult = 1.25f;
+                            boostMaxSpeed = boostMult * 60;
+
+                            int currentCheckpointId = kartCheck.checkpointId;
+                            int warpCheckpointId = currentCheckpointId + 3;
+
+                            // check if the checkpoint is past the count and adjust
+                            int checkpointMax = kartCheck.checkpointList.Count - 1;
+                            if (warpCheckpointId > checkpointMax)
+                            {
+                                // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
+                                if (checkpointMax + 1 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 0;
+                                }
+                                else if (checkpointMax + 2 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 1;
+                                }
+                                else if (checkpointMax + 3 == warpCheckpointId)
+                                {
+                                    warpCheckpointId = 2;
+                                }
+                                kartCheck.lap++;
+                                kartCheck.PassedWithWarp = true;
+                            }
+
+                            GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
+                            // set the kart's position to 3 checkpoints ahead
+                            thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+                            kartCheck.checkpointId = warpCheckpointId;
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            break;
+                    }
+                    Debug.Log("Applying Boost Item!");
                 }
-                Debug.Log("Applying Boost Item!");
-            }
-            else if(npcDriver != null)
-            {
-                StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
-                Debug.Log("Applying Boost Item!");
-            }
-            Destroy(collision.gameObject);
+                else if (npcDriver != null) // boost for npcs
+                {
+                    boostMult = 1.5f;
+                    StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
+                    Debug.Log("Applying Boost Item!");
+                }
+                Destroy(collision.gameObject);
         }
 
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
         if (collision.gameObject.transform.tag == "Hazard")
         {
-            Destroy(collision.gameObject);
             if (thisDriver != null)
             {
-
                 thisDriver.sphere.velocity /= 8000;
+
+                // Checks if hazard is Confused Ritchie
+                if (collision.gameObject.GetComponent<TrapItem>().ItemTier == 3)
+                {
+                    thisDriver.confusedTimer = 10;
+                    thisDriver.isConfused = true;
+                    thisDriver.movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
+                }
             }
             else if (npcDriver != null)
             {
@@ -349,17 +387,42 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
+                
             }
+            ApplyIconSpin(gameObject, 1);
+            Destroy(collision.gameObject);
         }
 
     }
+    public void ApplyItemTween(Texture item)
+    {
+        itemDisplay.texture = item;
+        itemDisplay.rectTransform.DOShakeScale(0.5f);
+    }
 
-    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
+    public void ApplyIconSpin(GameObject obj, int times)
+    {
+        if (miniMap.spinInstances.Contains(currentSpinCoroutine) && currentSpinCoroutine != null)
+        {
+            miniMap.spinInstances.Remove(currentSpinCoroutine);
+            StopCoroutine(currentSpinCoroutine);
+            currentSpinCoroutine = null;
+        }
+
+        currentSpinCoroutine = miniMap.SpinIcon(obj, times);
+        miniMap.spinInstances.Add(currentSpinCoroutine);
+        StartCoroutine(currentSpinCoroutine);
+    }
+
+    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = driver.transform.forward * boostForce;
-
+            Vector3 boostDirection = Vector3.zero; 
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
+            {
+                boostDirection = driver.transform.forward * boostForce;
+            }
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
@@ -374,14 +437,87 @@ public class ItemHolder : MonoBehaviour
     /// <returns></returns>
     IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
     {
+        List<Collider> ignoreColliders = new List<Collider>();
+        Collider[] allColliders = FindObjectsOfType<Collider>();
+
+        // disable any colliders we don't want to hit
+        foreach (Collider collider in allColliders)
+        {
+            // ignore own collider
+            if (collider == driver.sphere.gameObject.GetComponent<Collider>())
+            {
+                continue;
+            }
+
+            // ignore ground, rock, checkpoint, startpoint, road
+            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
+                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
+                && !collider.CompareTag("Road"))
+            {
+                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
+                ignoreColliders.Add(collider);
+            }
+        }
+
+        // keep reference to old offset
+        float oldOffset = driver.colliderOffset;
+        float oldGravity = driver.gravity;
+
+        // turn off drift and ground check in driver script
+        driver.doGroundCheck = false;
+        driver.canDrift = false;
+
+        // get just model transform
+        Transform modelTransform = transform.Find("Normal/Parent/KartModel");
+        RaycastHit hit;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = driver.transform.forward * boostForce;
-            boostDirection.y = boostForce;
+            // slightly change offset so change isn't instant
+            if (driver.colliderOffset >= -4.0f && t < duration - 0.5f)
+            {
+                driver.colliderOffset -= 0.25f;
+            }
 
+            // slowly drop kart towards end of boost
+            if (t >= duration - 0.2f)
+            {
+                driver.colliderOffset += 0.25f;
+            }
+
+            // perform raycast on model of the kart to give hover effect
+            if (Physics.Raycast(modelTransform.position + (modelTransform.up * .2f), -modelTransform.up, out hit, 50.0f, driver.groundLayer))
+            {
+                // rotates just the model to match the surface
+                modelTransform.up = Vector3.Lerp(modelTransform.up, hit.normal, Time.deltaTime * driver.rotationAlignSpeed);
+                modelTransform.Rotate(0, transform.eulerAngles.y, 0);
+
+            }
+
+            // gives forward boost effect
+            Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+
+        // reenable drift and ground check
+        driver.canDrift = true;
+        driver.colliderOffset = oldOffset;
+        driver.doGroundCheck = true;
+        driver.gravity = oldGravity;
+
+        // aligns the kart with the ground
+        driver.AttemptDrift();
+        driver.EndDrift();
+
+        // turn all colliders that were ignored back on
+        foreach (Collider collider in ignoreColliders)
+        {
+            if (collider != null)
+            {
+                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, false);
+            }
+        }
+        ignoreColliders.Clear();
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)

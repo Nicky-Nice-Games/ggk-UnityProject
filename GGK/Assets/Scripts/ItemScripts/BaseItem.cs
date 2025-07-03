@@ -81,7 +81,7 @@ public class BaseItem : MonoBehaviour
             {
                 // use count should always be 1 change boost force
                 case 2:
-                    useCount = 2;
+                    useCount = 1;
                     break;
                 case 3:
                     useCount = 1;
@@ -113,6 +113,11 @@ public class BaseItem : MonoBehaviour
                     break;
             }
             useCount = 1;
+        }
+        else if (itemCategory == "Hazard")
+        {
+            TrapItem temp = (TrapItem)this;
+            temp.LevelUp();
         }
     }
 
