@@ -9,7 +9,7 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private Transform playerKartPrefab;
     //[SerializeField] private Transform npcKartPrefab;
 
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private List<Transform> spawnPoints;
     private int spawnedKartCount = 0;
 
     private void Start()
@@ -27,14 +27,18 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsServer) return;
 
         // spawn a kart for each player
-        foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
+        if(spawnPoints != null && spawnPoints.Count > 0)
         {
-            Transform kartObject = Instantiate(playerKartPrefab);
-            kartObject.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
-            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
-            kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
-            spawnedKartCount++;
+            foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
+            {
+                Transform kartObject = Instantiate(playerKartPrefab);
+                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+                kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
+                spawnedKartCount++;
+            }
         }
+        
         // while(spawnedKartCount < 8){
         //     Transform kartObject = Instantiate(npcKartPrefab);
         //     NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
