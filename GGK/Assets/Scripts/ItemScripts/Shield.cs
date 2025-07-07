@@ -13,7 +13,7 @@ public class Shield : BaseItem
     private Color timerColor;
 
     // the interval between color switches on the shield
-    private float blinkInterval = 0.5f;
+    private float blinkInterval = 0.15f;
 
     // the time when the shield should indicate it's ending
     private float indicatorTime = 2.0f;
@@ -61,19 +61,13 @@ public class Shield : BaseItem
     IEnumerator ColorBlink()
     {
         float elapsed = 0f;
-        Color nextColor = timerColor;
+        bool toggle = false;
 
         while (elapsed < indicatorTime)
         {
-            material.color = nextColor;
-            if (nextColor == defaultColor)
-            {
-                nextColor = timerColor;
-            }
-            else if (nextColor == timerColor)
-            {
-                nextColor = defaultColor;
-            }
+
+            material.color = toggle ? defaultColor : timerColor;
+            toggle = !toggle;
 
             yield return new WaitForSeconds(blinkInterval);
             elapsed += blinkInterval;
