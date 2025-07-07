@@ -57,9 +57,19 @@ public class DevTools : MonoBehaviour
 
     public void Command(string input)
     {
+        //Splits input into substrings with a space as the delimiter
+        string[] parts = input.Split(new char[] { ' ' });
 
-        //string[] parts = input.Split(new char[] {
+        //Format: methodName space param 
 
+
+
+        ////For the game object that the method is called on
+        //GameObject go = listeners.Where(obj => obj.name == parts[0]).SingleOrDefault();
+        //if (go != null)
+        //{
+        //    go.SendMessage(parts[1], parts[2]);
+        //}
     }
 
 }
