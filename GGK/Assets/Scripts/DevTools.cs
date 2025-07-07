@@ -108,6 +108,7 @@ public class DevTools : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
 
 
@@ -201,18 +202,24 @@ public class DevTools : MonoBehaviour
                     break;
             case "OuterLoop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
+                //Can be removed if prefered, maybe when in certain modes?
+                commandPromptCanvas.enabled = false;    
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");
+                commandPromptCanvas.enabled = false;
                 break;
             case "Dorm":
                 sceneLoader.LoadScene("GSP_RITDorm");
+                commandPromptCanvas.enabled = false;
                 break;
             case "FinalsBrickRoad":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                commandPromptCanvas.enabled = false;
                 break;
             case "QuarterMile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
+                commandPromptCanvas.enabled = false;
                 break;
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
