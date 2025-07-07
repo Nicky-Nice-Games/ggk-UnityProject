@@ -66,30 +66,29 @@ public class ModelVisual : MonoBehaviour
         //Quaternion targetRot = Quaternion.Euler(0, -targetAngle, 0);
         //steeringWheel.localRotation = Quaternion.Slerp(steeringWheel.localRotation, targetRot, Time.deltaTime * turnSpeed);
 
-        // Hand Targets (rotate around wheel pivot)
+        //// Hand Targets
         //UpdateHandTarget(leftHandTarget, -gripAngle);
         //UpdateHandTarget(rightHandTarget, gripAngle);
 
-        // Elbow Hints (offsets from shoulder toward back)
-        UpdateElbowHint(leftHandTarget, leftElbowHint, Vector3.left);
-        UpdateElbowHint(rightHandTarget, rightElbowHint, Vector3.right);
+        //// Elbow Hints (offsets from shoulder toward back)
+        //UpdateElbowHint(leftHandTarget, leftElbowHint, Vector3.left);
+        //UpdateElbowHint(rightHandTarget, rightElbowHint, Vector3.right);
         
         // Torso Lean
         float leanAmount = driverScript.movementDirection.x * maxLeanAngle;
         Debug.Log("Lean Amount: " + leanAmount);
         Vector3 currentEuler = spineBone.localEulerAngles;
-        spineBone.localEulerAngles = new Vector3(
-            -leanAmount,
+        spineBone.eulerAngles = new Vector3(
+            currentEuler.x,
             currentEuler.y,
-            currentEuler.z
+            -leanAmount
         );
     }
 
     void UpdateHandTarget(Transform handTarget, float angleOffset)
     {
         Quaternion handRot = Quaternion.Euler(0, 0, angleOffset);
-        handTarget.position = steeringWheel.position + (steeringWheel.rotation * handRot * Vector3.up * 0.2f); // adjust radius
-        handTarget.rotation = steeringWheel.rotation * Quaternion.Euler(90, 0, 0); // tweak this
+        
     }
 
     void UpdateElbowHint(Transform hand, Transform hint, Vector3 sideDir)
