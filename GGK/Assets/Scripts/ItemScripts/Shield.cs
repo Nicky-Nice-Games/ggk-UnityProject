@@ -13,10 +13,10 @@ public class Shield : BaseItem
     private Color timerColor;
 
     // the interval between color switches on the shield
-    private float blinkInterval = 0.15f;
+    private float blinkInterval = 1.0f;
 
     // the time when the shield should indicate it's ending
-    private float indicatorTime = 2.0f;
+    private float indicatorTime = 1.0f;
 
     // Start is called before the first frame update
     void Start()
