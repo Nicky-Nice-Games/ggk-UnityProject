@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Multiplayer Scene Manager by Phillip Brown
@@ -32,33 +30,11 @@ public class MultiplayerSceneManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         multiplayerActive = true;
-        NetworkManager.SceneManager.OnSynchronizeComplete += SceneSynchronized;
-        NetworkManager.SceneManager.OnLoad += SceneLoadStarted;
-        NetworkManager.SceneManager.OnLoadComplete += SceneLoadCompleted;
-
-    }
-
-    private void SceneLoadCompleted(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
-    {
-        Debug.Log($"Client {clientId} has completed loading the scene");
-    }
-
-    private void SceneLoadStarted(ulong clientId, string sceneName, LoadSceneMode loadSceneMode, AsyncOperation asyncOperation)
-    {
-        Debug.Log($"Client {clientId} has started loading the scene");
-    }
-
-    private void SceneSynchronized(ulong clientId)
-    {
-        Debug.Log($"Client {clientId} has synced to the scene");
     }
 
     public override void OnNetworkDespawn()
     {
         multiplayerActive = false;
-        NetworkManager.SceneManager.OnSynchronizeComplete -= SceneSynchronized;
-        NetworkManager.SceneManager.OnLoad -= SceneLoadStarted;
-        NetworkManager.SceneManager.OnLoadComplete -= SceneLoadCompleted;
     }
 
     // General Scene Load function

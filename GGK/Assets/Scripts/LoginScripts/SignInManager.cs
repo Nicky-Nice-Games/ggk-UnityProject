@@ -2,17 +2,13 @@
 // 6/25/25
 // Basic button functions for signing in
 
-using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class SignInManager : NetworkBehaviour
+public class SignInManager : MonoBehaviour
 {
 
     // UI elements for different parts of sign in scene
@@ -24,31 +20,11 @@ public class SignInManager : NetworkBehaviour
     GameObject loginOptions;
     [SerializeField]
     VirtualKeyboardController keyboard;
-    private GameManager gameManager;
-    [SerializeField] private List<GameObject> continueButtons;
-    private string logInOption;
-    PlayerInfo playerInfo;
-
-    private ulong tempCID = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in continueButtons)
-        {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gameManager.GetComponent<ButtonBehavior>().OnClick());
-            button.onClick.AddListener(() =>
-            gameManager.GetComponentInChildren<GameManager>().LoggedIn());
-        }
-
-        // Getting Client ID / creating player info
-        playerInfo = new PlayerInfo(tempCID);
-        gameManager.playerList.Add(playerInfo);
+        
     }
 
     // Update is called once per frame
@@ -58,64 +34,12 @@ public class SignInManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="fieldName">input field name</param>
-    /// <param name="data">data from user input</param>
-    public void SetPlayerLoginData(string fieldName, string data)
-    {
-        if(logInOption == "Login")
-        {
-            // Checking imput fields to assign correct player data
-            switch (fieldName)
-            {
-                case "Username Login":
-                    playerInfo.playerName = data;
-                    break;
-
-                case "Password Login":
-                    playerInfo.playerPassword = data;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-        else if(logInOption == "SignUp")
-        {
-            // Checking imput fields to assign correct player data
-            switch (fieldName)
-            {
-                case "Email Sign Up":
-                    playerInfo.playerEmail = data;
-                    break;
-
-                case "Username Sign Up":
-                    playerInfo.playerName = data;
-                    break;
-
-                case "Password Sign Up":
-                    playerInfo.playerPassword = data;
-                    break;
-
-                case "Confirm Password":
-                    // TODO: Add functionality to validate password
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
     /// Sets login ui as active and disables login options
     /// </summary>
     public void ChoseLogin()
     {
         loginOptions.SetActive(false);
         loginUI.SetActive(true);
-        logInOption = "Login";
     }
 
     /// <summary>
@@ -125,7 +49,6 @@ public class SignInManager : NetworkBehaviour
     {
         loginOptions.SetActive(false);
         signUpUI.SetActive(true);
-        logInOption = "SignUp";
     }
 
     /// <summary>
@@ -136,6 +59,19 @@ public class SignInManager : NetworkBehaviour
         loginOptions.SetActive(true);
         signUpUI.SetActive(false);
         loginUI.SetActive(false);
+    }
+
+    /// <summary>
+    /// Brings user to start scene as a guest
+    /// 
+    /// NOTE:
+    /// 
+    /// It should be the multisingle scene, but I don't know
+    /// how GameManager works so this is temporary.
+    /// </summary>
+    public void ContinueAsGuest()
+    {
+        SceneManager.LoadScene("StartScene");
     }
 
     public void DisplayKeyboard(GameObject sender) 
