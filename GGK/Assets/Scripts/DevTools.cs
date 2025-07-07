@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,9 @@ public class DevTools : MonoBehaviour
 
     private List<GameObject> listeners = new List<GameObject>();
 
-    private string textLog = "Welcome to Command Prompt";
+    private string textLog = "Welcome to Command Prompt\nType ShowMethods for options";
+    [SerializeField] private Canvas commandPromptCanvas;
+    [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
 
 
@@ -43,13 +46,39 @@ public class DevTools : MonoBehaviour
     void Start()
     {
         AddListener(gameObject);
+        commandPromptCanvas.enabled = false;
         //gameManager = SceneLoader.GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        textBox.text = textLog;
+        
+        //Shows and hides the canvas (prompt) when ~ is pressed (KeyCode.Tilda not working) !!
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            //Debug.Log("Pressed");
+            if (commandPromptCanvas.enabled == false)
+            {
+                //Debug.Log("false");
+                commandPromptCanvas.enabled = true;
+            }
+            else
+            {
+                //Debug.Log("true");
+                commandPromptCanvas.enabled = false;
+            }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            inputField.text = "";
+
+        }
+
+
+            textBox.text = textLog;
     }
 
 
@@ -96,16 +125,8 @@ public class DevTools : MonoBehaviour
         //  parts[1] = param 1 (map name)
         //  parts[2] = param 2 (game mode)
 
-        //check if all parts are correct values
 
-        ////For the game object that the method is called on
-        //GameObject go = listeners.Where(obj => obj.name == parts[0]).SingleOrDefault();
-        //if (go != null)
-        //{
-        //    go.SendMessage(parts[1], parts[2]);
-        //}
-
-
+        //TODO Implement GameMode Commands
         //if (parts[2] != null)
         //{
         //    //case parts[2] check each enum mode and then load that scene
@@ -114,7 +135,16 @@ public class DevTools : MonoBehaviour
 
         switch (parts[0])
         {
+            case "ShowMethods":
+                textLog += "\nMethod Options:\nShowMethods\nLoadMap\nGameModeChange\nClearLog";
+                break;
+
             case "LoadMap":
+                //textLog +=  "\nOptions: ";
+                //foreach (MapName mapName in Enum.GetValues(typeof(MapName)))
+                //{
+                //    textLog += "\n" + mapName;
+                //}
                 switch (parts[1])
                 {
                     case "OuterLoop":
@@ -132,16 +162,33 @@ public class DevTools : MonoBehaviour
                     case "QuarterMile":
                         sceneLoader.LoadScene("GSP_RITQuarterMile");
                         break;
+                    case "":
+                        textLog += "\nError: No Param 1 [MapName] was Entered.";
+                        break;
+                    case null:
+                        textLog += "\nError: No Param 1 [MapName] was Entered.";
+                        break;
                     default:
-                        textLog += "\nError: Param 1 Command Not Found.";
+                        textLog += "\nError: Param 1 [MapName] Command Not Found.";
                         break;
                 }
                 break;
+
+            case "GameModeChange":
+                //TODO set up gamemode method command to change game mode without changing map
+                textLog += "\nMethod not yet set up :)";
+                break;
+
+            case "ClearLog":
+                textLog = "Welcome to Command Prompt\nType ShowMethods for options";
+                break;
+
             default:
                 textLog += "\nError: Method Command Not Found.";
                 break;
 
         }
+
 
     }
 
