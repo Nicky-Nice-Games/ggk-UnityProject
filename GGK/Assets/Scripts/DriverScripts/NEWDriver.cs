@@ -172,6 +172,7 @@ public class NEWDriver : NetworkBehaviour
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
         }
+        MiniMapHud.instance.AddKart(gameObject);
     }
 
     public void StopParticles()

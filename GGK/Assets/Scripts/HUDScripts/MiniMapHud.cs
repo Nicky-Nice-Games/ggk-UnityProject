@@ -47,6 +47,7 @@ using UnityEngine.UI;
 //
 public class MiniMapHud : MonoBehaviour
 {
+    public static MiniMapHud instance;
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
     // list of points
@@ -97,6 +98,12 @@ public class MiniMapHud : MonoBehaviour
 
     public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
+    // Awake is called before start wether or not the object is active
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -144,19 +151,19 @@ public class MiniMapHud : MonoBehaviour
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
                 if (obj.transform.parent != null)
                 {
-                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>(); 
+                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>();
                     if (recovery.Length > 0)
                     {
-                        foreach(DynamicRecovery r in recovery)
-                        r.miniMap = this;
+                        foreach (DynamicRecovery r in recovery)
+                            r.miniMap = this;
                     }
                 }
-                
+
                 if (holder)
                 {
                     holder.miniMap = this;
                 }
-                
+
             }
         }
     }
@@ -361,6 +368,20 @@ public class MiniMapHud : MonoBehaviour
 
             yield return new WaitForSeconds(dt);
         }
+    }
+
+    /// <summary>
+    /// Allows adding of karts post start
+    /// </summary>
+    /// <param name="kart"></param>
+    public void AddKart(GameObject kart)
+    {
+        objects.Add(kart);
+        GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
+        Image refImage = newIcon.GetComponent<Image>();
+        mapIcons.Add(refImage);
+
+        EstablishAppearance(kart, refImage);
     }
 }
 
