@@ -37,11 +37,13 @@ public class DevTools : MonoBehaviour
 
     private List<GameObject> listeners = new List<GameObject>();
 
-    private string textLog = "Welcome to Command Prompt\nType ShowMethods for methods or [methodName] options for param options";
+    private string textLog;
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
+
+    private bool isScrolling;
 
 
     // Start is called before the first frame update
@@ -49,6 +51,8 @@ public class DevTools : MonoBehaviour
     {
         AddListener(gameObject);
         commandPromptCanvas.enabled = false;
+        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
+        "or [methodName] options for param options (Note: currently only for LoadMap)";
         //gameManager = SceneLoader.GetComponent<GameManager>();
     }
 
@@ -78,10 +82,14 @@ public class DevTools : MonoBehaviour
         {
             inputField.text = "";
             inputField.ActivateInputField();
+            isScrolling = false;
         }
 
-       scrollRect.verticalNormalizedPosition = 0;
-
+        if(!isScrolling)
+        {
+            AutoScroll(scrollRect);
+        }
+        
         textBox.text = textLog;
     }
 
@@ -218,6 +226,25 @@ public class DevTools : MonoBehaviour
         }
     }
 
+
+    public void AutoScroll(ScrollRect scrollRect)
+    {
+        //Keeps scroll bar at bottom to show most recent text
+        scrollRect.verticalNormalizedPosition = 0;
+    }
+
+    public void StopAutoScroll()
+    {
+        isScrolling = true;
+        //Keeps scroll bar at bottom to show most recent text
+        scrollRect.verticalNormalizedPosition = scrollRect.verticalNormalizedPosition;
+
+        if(scrollRect.verticalNormalizedPosition == 0)
+        {
+            isScrolling = false;
+        }
+
+    }
 
 
 }
