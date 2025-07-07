@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ControlSchemeHandler : MonoBehaviour
 {
@@ -9,6 +11,11 @@ public class ControlSchemeHandler : MonoBehaviour
     private InputActionAsset actions;
 
     InputAction accelerate;
+
+    private TMP_Dropdown presetDropdown;
+
+    private bool LTNegative = false;
+    private bool RTPositive = false;
 
     private void Awake()
     {
@@ -21,6 +28,51 @@ public class ControlSchemeHandler : MonoBehaviour
         accelerate.Enable();
     }
 
+    private void OnEnable()
+    {
+        // get a reference to the dropdown
+        presetDropdown = GetComponent<TMP_Dropdown>();
+    }
+
+    private void Update()
+    {
+        if (presetDropdown != null)
+        {
+            // checks if the accelerate and decelerate bindings are binded to the triggers
+            for (int i = 0; i < accelerate.bindings.Count; i++)
+            {
+                InputBinding binding = accelerate.bindings[i];
+
+                if (binding.effectivePath == "<Gamepad>/leftTrigger" && binding.name.ToLowerInvariant() == "negative")
+                {
+                    LTNegative = true;
+                }
+                else if (binding.effectivePath != "<Gamepad>/leftTrigger" && binding.name.ToLowerInvariant() == "negative")
+                {
+                    LTNegative = false;
+                }
+
+                if (binding.effectivePath == "<Gamepad>/rightTrigger" && binding.name.ToLowerInvariant() == "positive")
+                {
+                    RTPositive = true;
+                }
+                else if (binding.effectivePath != "<Gamepad>/rightTrigger" && binding.name.ToLowerInvariant() == "positive")
+                {
+                    RTPositive = false;
+                }
+            }
+
+            // displays preset dropdown across screens and makes sure right preset is corresponding with controls
+            if (LTNegative && RTPositive)
+            {
+                presetDropdown.value = 1;
+            }
+            else
+            {
+                presetDropdown.value = 0;
+            }
+        }
+    }
 
     /// <summary>
     /// changes controller bindings when player chooses different scheme
