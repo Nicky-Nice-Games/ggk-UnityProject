@@ -49,6 +49,7 @@ public class MultiplayerManager : NetworkBehaviour
         Race
     }
 
+    #region initalization functions
     private void Awake()
     {
         IsMultiplayer = false;
@@ -67,29 +68,18 @@ public class MultiplayerManager : NetworkBehaviour
     {
         gamemode.OnValueChanged += OnGamemodeChanged;
         selectedMap.OnValueChanged += OnMapSelected;
-        // RelayManager.Instance.OnRelayStarted += MultiplayerStarted;
-        // RelayManager.Instance.OnRelayJoined += MultiplayerStarted;
     }
-
-    // private void MultiplayerStarted(object sender, EventArgs e)
-    // {
-    //     IsMultiplayer = true;
-    // }
-    // private void MultiplayerEnded(object sender, EventArgs e)
-    // {
-    //     IsMultiplayer = false;
-    // }
 
     public override void OnNetworkSpawn()
     {
         IsMultiplayer = true;
     }
+
     public override void OnNetworkDespawn()
     {
         IsMultiplayer = false;
     }
 
-    #region initalization functions
     /// <summary>
     /// Call this going into a new multiplayer game (from lobby to game mode select)
     /// </summary>
@@ -174,35 +164,25 @@ public class MultiplayerManager : NetworkBehaviour
         // if the client doesnt have a map vote casted
         // force pick the map they are hovering
     }
-    #endregion 
+    #endregion
 
     #region kart selection
     // Once the game mode is selected, Show Player Kart Selection Scene to everyone (after a timer auto select their last hovered option)
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void SetPlayerKartRpc(ulong clientId)
+    public void PlayerKartSelectedRpc(String characterName, UnityEngine.Color characterColor, RpcParams rpcParams = default) // colors are being sent correctly, just need to change how the player character is written to the character data script
     {
-        
-    }
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+        Debug.Log($"Rpc called by clientid: {senderClientId}");
+        playerKartSelectionChecks[senderClientId] = true;
+        PlayerData player = players[senderClientId];
+        //player.PlayerCharacter = playerCharacter;
+        player.CharacterColor = characterColor;
+        players[senderClientId] = player;
+        Debug.Log($"Client {senderClientId} chose {characterName} in color {characterColor}");
 
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = true)]
-    public void ForcePlayerKartSelectRpc()
-    {
-        // Auto picks the kart they are hovering
-    }
-
-    [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void PlayerKartSelectedRpc(ulong clientId, PlayerKart playerCharacter, UnityEngine.Color playerColor) // colors are being sent correctly, just need to change how the player character is written to the character data script
-    {
-        Debug.Log($"Rpc called by clientid: {clientId}");
-        playerKartSelectionChecks[clientId] = true;
-        PlayerData player = players[clientId];
-        player.PlayerCharacter = playerCharacter;
-        player.PlayerColor = playerColor;
-        players[clientId] = player;
-        Debug.Log($"Client {clientId} chose {playerCharacter} in color {playerColor}");
+        //checking if all players have made a selection
         if (AllPlayerKartsSelected())
         {
-            //GameManager.thisManagerInstance.ToMapSelectScreenRpc();
             MultiplayerSceneManager.Instance.ToMapSelectScene();
         }
     }
@@ -215,6 +195,12 @@ public class MultiplayerManager : NetworkBehaviour
             if (!playerChoice.Value) allSelected = false;
         }
         return allSelected;
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = true)]
+    public void ForcePlayerKartSelectRpc()
+    {
+        // Auto picks the kart they are hovering
     }
     #endregion
 

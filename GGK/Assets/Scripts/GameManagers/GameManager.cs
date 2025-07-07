@@ -141,13 +141,6 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.NotServer)]
-    public void LoadedGameModeRpc()
-    {
-        SceneManager.LoadScene("PlayerKartScene");
-        curState = GameStates.playerKart;
-    }
-
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
@@ -157,7 +150,7 @@ public class GameManager : NetworkBehaviour
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId, CharacterData.Instance.character, CharacterData.Instance.characterColor);
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
         }
         else
         {
@@ -168,14 +161,6 @@ public class GameManager : NetworkBehaviour
     public void ToMapSelectScreen() {
         SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    public void ToMapSelectScreenRpc()
-    {
-        SceneManager.LoadScene("MapSelectScene");
-        curState = GameStates.map;
-        sceneLoader.LoadScene("MapSelectScene");
     }
 
     /// <summary>
@@ -236,11 +221,6 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    public void LoadMapRpc(string mapName)
-    {
-        SceneManager.LoadScene(mapName);
-    }
     /// <summary>
     /// Triggers when the game finishes
     /// </summary>
