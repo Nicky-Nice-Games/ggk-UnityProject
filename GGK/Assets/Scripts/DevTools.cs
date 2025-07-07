@@ -145,33 +145,7 @@ public class DevTools : MonoBehaviour
                 //{
                 //    textLog += "\n" + mapName;
                 //}
-                switch (parts[1])
-                {
-                    case "OuterLoop":
-                        sceneLoader.LoadScene("GSP_RITOuterLoop");
-                        break;
-                    case "Golisano":
-                        sceneLoader.LoadScene("GSP_Golisano");
-                        break;
-                    case "Dorm":
-                        sceneLoader.LoadScene("GSP_RITDorm");
-                        break;
-                    case "FinalsBrickRoad":
-                        sceneLoader.LoadScene("GSP_FinalsBrickRoad");
-                        break;
-                    case "QuarterMile":
-                        sceneLoader.LoadScene("GSP_RITQuarterMile");
-                        break;
-                    case "":
-                        textLog += "\nError: No Param 1 [MapName] was Entered.";
-                        break;
-                    case null:
-                        textLog += "\nError: No Param 1 [MapName] was Entered.";
-                        break;
-                    default:
-                        textLog += "\nError: Param 1 [MapName] Command Not Found.";
-                        break;
-                }
+                LoadMap(parts[1]);
                 break;
 
             case "GameModeChange":
@@ -194,10 +168,36 @@ public class DevTools : MonoBehaviour
 
 
 
-    //public void LoadMap(/* MapName mapName? */)
-    //{
-        
-    //}
+    public void LoadMap(string mapName)
+    {
+        switch (mapName)
+        {
+            case "OuterLoop":
+                sceneLoader.LoadScene("GSP_RITOuterLoop");
+                break;
+            case "Golisano":
+                sceneLoader.LoadScene("GSP_Golisano");
+                break;
+            case "Dorm":
+                sceneLoader.LoadScene("GSP_RITDorm");
+                break;
+            case "FinalsBrickRoad":
+                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                break;
+            case "QuarterMile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                break;
+            case "":
+                textLog += "\nError: No Param 1 [MapName] was Entered.";
+                break;
+            case null:
+                textLog += "\nError: No Param 1 [MapName] was Entered.";
+                break;
+            default:
+                textLog += "\nError: Param 1 [MapName] Command Not Found.";
+                break;
+        }
+    }
 
 
 
