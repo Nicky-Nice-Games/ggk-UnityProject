@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
@@ -22,12 +23,12 @@ public class VirtualKeyboardController : MonoBehaviour
 
     void Start()
     {
-        HighlightButton(selectedIndex);
+        // HighlightButton(selectedIndex);
     }
 
     void Update()
     {
-        HandleNavigation();
+        // HandleNavigation();
     }
 
     void HandleNavigation()
@@ -149,6 +150,14 @@ public class VirtualKeyboardController : MonoBehaviour
             }
         }
         inputField.text = curText;
+    }
+
+    public void OnBackSpace(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            KeyPressed("Backspace");
+        }
     }
 }
 
