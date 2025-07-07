@@ -33,7 +33,7 @@ public class ItemHolder : MonoBehaviour
 
     private BaseItem item;
     private int driverItemTier;
-    private int uses;
+    public int uses;
 
     //the current coroutine animating spinning, to prevent double-ups
     private IEnumerator currentSpinCoroutine;
