@@ -47,6 +47,7 @@ using UnityEngine.UI;
 //
 public class MiniMapHud : MonoBehaviour
 {
+    public static MiniMapHud instance;
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
     // list of points
@@ -97,6 +98,12 @@ public class MiniMapHud : MonoBehaviour
 
     public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
+    // Awake is called before start wether or not the object is active
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -144,19 +151,19 @@ public class MiniMapHud : MonoBehaviour
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
                 if (obj.transform.parent != null)
                 {
-                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>(); 
+                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>();
                     if (recovery.Length > 0)
                     {
-                        foreach(DynamicRecovery r in recovery)
-                        r.miniMap = this;
+                        foreach (DynamicRecovery r in recovery)
+                            r.miniMap = this;
                     }
                 }
-                
+
                 if (holder)
                 {
                     holder.miniMap = this;
                 }
-                
+
             }
         }
     }
@@ -179,8 +186,8 @@ public class MiniMapHud : MonoBehaviour
             float xLerp = Mathf.InverseLerp(xBoundMin, xBoundMax, objPos.x);
             float yLerp = Mathf.InverseLerp(yBoundMin, yBoundMax, objPos.z);
 
-            float xPos = Mathf.Lerp(-miniMapSize.x/2, miniMapSize.x/2, xLerp);
-            float yPos = Mathf.Lerp(-miniMapSize.y/2, miniMapSize.y/2, yLerp);
+            float xPos = Mathf.Lerp(-miniMapSize.x / 2, miniMapSize.x / 2, xLerp);
+            float yPos = Mathf.Lerp(-miniMapSize.y / 2, miniMapSize.y / 2, yLerp);
 
             //set new icon position
             mapIcons[i].transform.localPosition = new Vector3(xPos, yPos, 0);
@@ -231,7 +238,7 @@ public class MiniMapHud : MonoBehaviour
             pointsMaker.SetPosition(4, tLeft);
         }
 
-        List<Vector3> pointList = new List<Vector3>{ tLeft, tRight, bLeft, bRight };
+        List<Vector3> pointList = new List<Vector3> { tLeft, tRight, bLeft, bRight };
 
         EstablishBounds(pointList);
     }
@@ -361,6 +368,20 @@ public class MiniMapHud : MonoBehaviour
 
             yield return new WaitForSeconds(dt);
         }
+    }
+
+    /// <summary>
+    /// Allows adding of karts post start
+    /// </summary>
+    /// <param name="kart"></param>
+    public void AddKart(GameObject kart)
+    {
+        objects.Add(kart);
+        GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
+        Image refImage = newIcon.GetComponent<Image>();
+        mapIcons.Add(refImage);
+
+        EstablishAppearance(kart, refImage);
     }
 }
 

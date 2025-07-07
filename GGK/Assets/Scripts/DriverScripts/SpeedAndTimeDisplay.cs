@@ -12,7 +12,7 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     TextMeshProUGUI timeDisplay;
 
     [SerializeField]
-    NEWDriver kart;
+    public NetcodeNEWDriver kart;
 
     [SerializeField]
     SpeedBar speedBar;

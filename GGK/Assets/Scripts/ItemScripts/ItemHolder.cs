@@ -216,7 +216,7 @@ public class ItemHolder : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Collided");
+        //Debug.Log("Collided");
         // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
         {

@@ -45,6 +45,31 @@ public class AppearanceSettings : MonoBehaviour
         // Else NPCDriver code when NPCDrivers get a new prefab?
     }
 
+    public void SetKartAppearance(CharacterData characterData)
+    {
+        // Loading characterData
+        characterData = FindAnyObjectByType<CharacterData>();
+        icon = characterData.characterSprite;
+        color = characterData.characterColor;
+        name = characterData.characterName.ToLower();
+        
+        // Set correct character model active
+        if (characterData != null)
+        {
+            for (int i = 0; i < models.Count; i++)
+            {
+                //Setting active correct model
+                if (name == models[i].name)
+                {
+                    models[i].SetActive(true);
+                    break;
+                }
+
+                //deleting the models that are not supposed to be active
+                Destroy(models[i]);
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
