@@ -6,6 +6,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 
 enum MapName 
@@ -36,10 +37,11 @@ public class DevTools : MonoBehaviour
 
     private List<GameObject> listeners = new List<GameObject>();
 
-    private string textLog = "Welcome to Command Prompt\nType ShowMethods for options";
+    private string textLog = "Welcome to Command Prompt\nType ShowMethods for methods or [methodName] options for param options";
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
+    [SerializeField] private ScrollRect scrollRect;
 
 
     // Start is called before the first frame update
@@ -62,6 +64,7 @@ public class DevTools : MonoBehaviour
             {
                 //Debug.Log("false");
                 commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
             }
             else
             {
@@ -74,11 +77,12 @@ public class DevTools : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             inputField.text = "";
-
+            inputField.ActivateInputField();
         }
 
+       scrollRect.verticalNormalizedPosition = 0;
 
-            textBox.text = textLog;
+        textBox.text = textLog;
     }
 
 
@@ -115,7 +119,7 @@ public class DevTools : MonoBehaviour
 
     public void Command(string input)
     {
-        textLog += "\n" + input;
+        textLog += "\n\t>_ " + input;
 
         //Splits input into substrings with a space as the delimiter
         string[] parts = input.Split(new char[] { ' ' });
@@ -140,12 +144,16 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "LoadMap":
-                //textLog +=  "\nOptions: ";
-                //foreach (MapName mapName in Enum.GetValues(typeof(MapName)))
-                //{
-                //    textLog += "\n" + mapName;
-                //}
-                LoadMap(parts[1]);
+                
+                if (parts.Length > 1)
+                {
+                    LoadMap(parts[1]);
+                }
+                else
+                {
+                    textLog += "\nError: No Param 1 [MapName] was Entered.";
+                }
+                
                 break;
 
             case "GameModeChange":
@@ -166,12 +174,23 @@ public class DevTools : MonoBehaviour
 
     }
 
-
+    //textLog +=  "\nOptions: ";
+    //foreach (MapName mapName in Enum.GetValues(typeof(MapName)))
+    //{
+    //    textLog += "\n" + mapName;
+    //}
 
     public void LoadMap(string mapName)
     {
         switch (mapName)
         {
+            case "options":
+                textLog += "\nOptions for param 1 [mapName]: ";
+                foreach (MapName name in Enum.GetValues(typeof(MapName)))
+                    {
+                        textLog += "\n" + name;
+                    }
+                    break;
             case "OuterLoop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
