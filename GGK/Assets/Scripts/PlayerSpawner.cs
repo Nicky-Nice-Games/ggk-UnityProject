@@ -16,7 +16,17 @@ public class PlayerSpawner : NetworkBehaviour
     private void Start()
     {
         spawnedKartCount = 0;
-        FillGrid();
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            Transform kartObject = Instantiate(playerKartPrefab);
+            kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+            spawnedKartCount++;
+        }
+        else
+        {
+            FillGrid();
+        }
+
     }
 
     /// <summary>

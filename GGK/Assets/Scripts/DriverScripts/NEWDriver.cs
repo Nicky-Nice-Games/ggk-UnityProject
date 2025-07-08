@@ -10,6 +10,7 @@ public class NEWDriver : NetworkBehaviour
 {
      // root reference of the prefab
     public Transform rootTransform;
+    public KartCheckpoint kartCheckpoint;
     
     [Header("Input System Settings")]
     public PlayerInput playerInput;
@@ -162,6 +163,11 @@ public class NEWDriver : NetworkBehaviour
         if (!MultiplayerManager.Instance.IsMultiplayer)
         {
             playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
         }
     }
 
@@ -171,6 +177,13 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
+
+        }
+        if (IsServer)
+        {
+            PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
         }
         MiniMapHud.instance.AddKart(gameObject);
     }

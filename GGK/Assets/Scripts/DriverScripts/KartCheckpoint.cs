@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
-public class KartCheckpoint : MonoBehaviour
+public class KartCheckpoint : NetworkBehaviour
 {
     // Start is called before the first frame update
     public int lap = 0;
@@ -14,8 +14,7 @@ public class KartCheckpoint : MonoBehaviour
     public int placement;
     public string name;
     [SerializeField] public List<GameObject> checkpointList;
-    [SerializeField]
-    private GameObject checkPointParent;
+    [SerializeField] private GameObject checkPointParent;
     GameManager gameManager;
 
     [SerializeField]
@@ -35,6 +34,7 @@ public class KartCheckpoint : MonoBehaviour
     {
         totalLaps = 1;
         checkpointId = 0;
+        checkPointParent = PlacementManager.instance.checkpointManager;
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
         {
             if (child != checkPointParent.transform) // Avoid adding the parent itself
@@ -60,6 +60,7 @@ public class KartCheckpoint : MonoBehaviour
         }
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -67,7 +68,7 @@ public class KartCheckpoint : MonoBehaviour
             Mathf.Pow(transform.position.z - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.z, 2);
         if (this.GetComponent<NPCDriver>() == null)
         {
-            placementDisplay.text = "Placement: " + placement;
+            //placementDisplay.text = "Placement: " + placement;
         }
 
         if (passedWithWarp && lap == totalLaps)
@@ -76,7 +77,7 @@ public class KartCheckpoint : MonoBehaviour
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null)
             {
-                lapDisplay.text = "Lap: " + (lap + 1);
+                //lapDisplay.text = "Lap: " + (lap + 1);
             }
             passedWithWarp = false;
         }
@@ -113,7 +114,7 @@ public class KartCheckpoint : MonoBehaviour
                 checkpointId = 0;
                 if (this.GetComponent<NPCDriver>() == null)
                 {
-                    lapDisplay.text = "Lap: " + (lap + 1);
+                    //lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
                 if (lap == totalLaps)

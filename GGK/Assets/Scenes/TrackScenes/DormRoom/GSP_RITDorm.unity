@@ -58394,6 +58394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 651914706}
+  - component: {fileID: 651914708}
   - component: {fileID: 651914707}
   m_Layer: 0
   m_Name: PlacementManager
@@ -58429,9 +58430,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df3a3039c1512448af2e3101d88cec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointList: []
+  maxSkip: 10
+  checkpointManager: {fileID: 461314127}
+  placementDisplay: {fileID: 615840611}
+  lapDisplay: {fileID: 1454471051}
+  trackedKart: {fileID: 0}
+  kartCheckpointList: []
   sortedList: []
   kartsList: []
+--- !u!114 &651914708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651914705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3200788785
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &653159192
 GameObject:
   m_ObjectHideFlags: 0
@@ -69514,6 +69541,7 @@ GameObject:
   - component: {fileID: 753621059}
   - component: {fileID: 753621058}
   - component: {fileID: 753621057}
+  - component: {fileID: 753621060}
   - component: {fileID: 753621056}
   - component: {fileID: 753621055}
   - component: {fileID: 753621054}
@@ -69709,6 +69737,27 @@ Transform:
   - {fileID: 386926129}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 92.072, z: 0}
+--- !u!114 &753621060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753621052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1235309795
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &755811109
 GameObject:
   m_ObjectHideFlags: 0

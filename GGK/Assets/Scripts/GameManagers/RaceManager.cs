@@ -95,7 +95,7 @@ public class RaceManager : NetworkBehaviour
     {
         Debug.Log("attaching kart to speed bar");
         Debug.Log(kart.Find("Kart"));
-        speedBar.kart = kart.Find("Kart").GetComponentInChildren<NetcodeNEWDriver>();
+        speedBar.kart = kart.Find("Kart").GetComponentInChildren<NEWDriver>();
     }
     // void Start()
     // {
