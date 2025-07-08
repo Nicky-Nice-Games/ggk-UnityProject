@@ -15,7 +15,9 @@ enum MapName
     Golisano,
     Dorm,
     FinalsBrickRoad,
-    QuarterMile //Remove?
+    QuarterMile, //Remove?
+    TestGrid,
+    TestTube
 }
 
 enum GameMode
@@ -219,6 +221,14 @@ public class DevTools : MonoBehaviour
                 break;
             case "QuarterMile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
+                commandPromptCanvas.enabled = false;
+                break;
+            case "TestGrid":
+                sceneLoader.LoadScene("Testing_Grid");
+                commandPromptCanvas.enabled = false;
+                break;
+            case "TestTube":
+                sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 break;
             case "":
