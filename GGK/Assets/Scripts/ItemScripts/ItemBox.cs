@@ -8,6 +8,7 @@ public class ItemBox : MonoBehaviour
 
     [SerializeField]
     protected List<BaseItem> items;   // List of items the box can give
+    [SerializeField] protected string itemBoxType;
 
     protected float respawnTimer = 5.0f;  // The seconds the box respawns after
 
@@ -19,6 +20,7 @@ public class ItemBox : MonoBehaviour
     /// Read and write property for the respawn timer
     /// </summary>
     public float RespawnTimer { get { return respawnTimer; } set { respawnTimer = value; } }
+    public string ItemBoxType { get { return itemBoxType; } set { itemBoxType = value; } }
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +70,28 @@ public class ItemBox : MonoBehaviour
         // {
         //     AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
         // }
+    }
+
+    /// <summary>
+    /// Upgrades item one tier.
+    /// </summary>
+    /// <param name="kart">The kart that hit it</param>
+    public void UpgradeItem(GameObject kart)
+    {
+        //BaseItem itemUpgraded = new BaseItem();
+        ItemHolder itemScript = kart.GetComponent<ItemHolder>();
+
+        // Gives driver a random item if they don't have one
+        //if (itemScript.HeldItem == null)
+        //{
+        //    RandomizeItem(kart);
+        //}
+
+        // Upgrades the item and returns it
+        if (itemScript.HeldItem.ItemTier < 4)
+        {
+            itemScript.HeldItem.ItemTier++;
+        }
     }
 
 }
