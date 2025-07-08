@@ -8,7 +8,7 @@ public class AppearanceSettings : NetworkBehaviour
 {
     public Sprite icon;
     public Color color;
-    public string name;
+    public string kartName;
 
     public List<GameObject> models; // List of GameObjects representing different character models
     CharacterData characterData; // Reference to CharacterData script
@@ -23,7 +23,7 @@ public class AppearanceSettings : NetworkBehaviour
             characterData = FindAnyObjectByType<CharacterData>();
             icon = characterData.characterSprite;
             color = characterData.characterColor;
-            name = characterData.characterName.ToLower();
+            kartName = characterData.characterName.ToLower();
 
             // Set correct character model active
             if (characterData != null)
@@ -31,7 +31,7 @@ public class AppearanceSettings : NetworkBehaviour
                 for (int i = 0; i < models.Count; i++)
                 {
                     //Setting active correct model
-                    if (name == models[i].name)
+                    if (kartName == models[i].name)
                     {
                         models[i].SetActive(true);
                         break;
@@ -63,8 +63,9 @@ public class AppearanceSettings : NetworkBehaviour
         // Loading characterData
         characterData = FindAnyObjectByType<CharacterData>();
         icon = characterData.characterSprite;
-        color = characterData.characterColor;
-        name = characterData.characterName.ToLower();
+        color = characterColor;
+        kartName = characterName.ToLower();
+        Debug.Log($"Setting {OwnerClientId}'s kart color to {color} and name/model to {kartName}");
 
         // Set correct character model active
         if (characterData != null)
@@ -72,7 +73,7 @@ public class AppearanceSettings : NetworkBehaviour
             for (int i = 0; i < models.Count; i++)
             {
                 //Setting active correct model
-                if (name == models[i].name)
+                if (kartName == models[i].name)
                 {
                     models[i].SetActive(true);
                     break;

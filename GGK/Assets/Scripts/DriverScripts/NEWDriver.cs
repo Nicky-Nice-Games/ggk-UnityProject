@@ -179,13 +179,13 @@ public class NEWDriver : NetworkBehaviour
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
-
         }
         if (IsServer)
         {
-            PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+            // PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
         }
         MiniMapHud.instance.AddKart(gameObject);
+        PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
     }
 
     public void StopParticles()
