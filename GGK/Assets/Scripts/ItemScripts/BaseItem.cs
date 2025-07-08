@@ -63,10 +63,10 @@ public class BaseItem : MonoBehaviour
         // Destroys the item
         else
         {
-            if (itemCategory != "Shield")
-            {
+            //if (itemCategory != "Shield")
+            //{
                 Destroy(this.gameObject);
-            }
+            //}
         }
     }
 
@@ -121,6 +121,8 @@ public class BaseItem : MonoBehaviour
                     useCount = 1;
                     break;
             }
+            Boost boost = (Boost)this;
+            boost.LevelUp();
         }
         else if (itemCategory == "Shield") // changes timer on different shield levels
         {
@@ -140,6 +142,8 @@ public class BaseItem : MonoBehaviour
                     timer = 4.0f;
                     break;
             }
+            Shield shield = (Shield)this;
+            shield.LevelUp();
             useCount = 1;
         }
         else if (itemCategory == "Hazard")

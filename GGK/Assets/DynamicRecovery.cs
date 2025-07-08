@@ -24,6 +24,8 @@ public class DynamicRecovery : MonoBehaviour
 
     private NEWDriver kartMovementScript;
 
+    [SerializeField]
+    private NPCPhysics kartPhysicsNPC;
 
     public MiniMapHud miniMap;
 
@@ -58,6 +60,7 @@ public class DynamicRecovery : MonoBehaviour
         }
 
         kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
+        kartPhysicsNPC = kartRoot.GetComponentInChildren<NPCPhysics>();
         particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
 
     }
@@ -169,6 +172,11 @@ public class DynamicRecovery : MonoBehaviour
             kartMovementScript.enabled = false;
             
         }
+
+        if (kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.enabled = false;
+        }
         yield return new WaitForSeconds(1f);
 
         isRecovering = true;
@@ -211,6 +219,11 @@ public class DynamicRecovery : MonoBehaviour
             kartMovementScript.enabled = true;
         }
 
+        if (kartPhysicsNPC != null) 
+        {
+            kartPhysicsNPC.enabled = true;
+        }
+
         // REAPPEAR IN STRETCHED FORM
         kartVisual.localScale = stretchedScale;
         kartVisual.gameObject.SetActive(true);
@@ -226,7 +239,14 @@ public class DynamicRecovery : MonoBehaviour
             yield return null;
         }
 
-        kartMovementScript.StopParticles();
+        if (kartMovementScript != null)
+        {
+            kartMovementScript.StopParticles();
+        }
+        else if(kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.StopParticles();
+        }
         kartVisual.localScale = originalScale;
         fadeCanvas.alpha = 0f;
 

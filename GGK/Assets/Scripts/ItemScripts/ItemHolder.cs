@@ -222,30 +222,30 @@ public class ItemHolder : MonoBehaviour
     {
         Debug.Log("Collided");
         // Checks if kart hits an item box
-        //if (collision.gameObject.CompareTag("ItemBox"))
-        //{
-        //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+        if (collision.gameObject.CompareTag("ItemBox"))
+        {
+            ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
 
-        //    // Gives kart an item if they don't already have one
-        //    if (!holdingItem)
-        //    {
-        //        itemBox.RandomizeItem(this.gameObject);
-                
-        //        // Initialize use count if first use
-        //        if (uses == 0)
-        //        {
-        //            uses = heldItem.UseCount;
-        //        }
-        //        Debug.Log(uses);
-        //        if (thisDriver)
-        //        {
-        //            ApplyItemTween(heldItem.itemIcon);
-        //        }
-        //    }
-        //    // Disables the item box
-        //    itemBox.gameObject.SetActive(false);
-        //    //heldItemText.text = $"Held Item: {baseItem}";
-        //}
+            // Gives kart an item if they don't already have one
+            if (!holdingItem)
+            {
+                itemBox.RandomizeItem(this.gameObject);
+              
+                // Initialize use count if first use
+                if (uses == 0)
+                {
+                    uses = heldItem.UseCount;
+                }
+                Debug.Log(uses);
+                if (thisDriver)
+                {
+                    ApplyItemTween(heldItem.itemIcon);
+                }
+            }
+            // Disables the item box
+            itemBox.gameObject.SetActive(false);
+            //heldItemText.text = $"Held Item: {baseItem}";
+        }
         //else if (collision.gameObject.CompareTag("UpgradeBox"))
         //{
         //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
