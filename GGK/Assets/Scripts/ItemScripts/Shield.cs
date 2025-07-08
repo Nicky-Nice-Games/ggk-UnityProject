@@ -12,11 +12,21 @@ public class Shield : BaseItem
     // the color the shield flashes the last few seconds of it's duration
     private Color timerColor;
 
+    // item icons for each tier
+    [SerializeField]
+    public Texture tierOneItemIcon;
+    [SerializeField]
+    public Texture tierTwoItemIcon;
+    [SerializeField]
+    public Texture tierThreeItemIcon;
+    [SerializeField]
+    public Texture tierFourItemIcon;
+
     // the interval between color switches on the shield
-    private float blinkInterval = 0.15f;
+    private float blinkInterval = 1.0f;
 
     // the time when the shield should indicate it's ending
-    private float indicatorTime = 2.0f;
+    private float indicatorTime = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +65,28 @@ public class Shield : BaseItem
         if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Hazard"))
         {
             Destroy(collision.gameObject);
+        }
+    }
+
+    // Should be moved to BaseItem to be overridable
+    // Added separately for now so there aren't big conflicts with the Puck when that's pushed
+    public void LevelUp()
+    {
+        // update the icon based on the item tier
+        switch (itemTier)
+        {
+            case 2:
+                itemIcon = tierTwoItemIcon;
+                break;
+            case 3:
+                itemIcon = tierThreeItemIcon;
+                break;
+            case 4:
+                itemIcon = tierFourItemIcon;
+                break;
+            default:
+                itemIcon = tierOneItemIcon;
+                break;
         }
     }
 
