@@ -10,7 +10,7 @@ public class DevShortcutsManager : MonoBehaviour
     public bool allowDevShortcuts;
     [Tooltip("If true, the script will accept shortcuts")]
     public bool devEnabled;
-
+    [Header("Auto-Assignees")]
     [SerializeField, Tooltip("Will set itself to the first GameManager component in the scene if null on startup")]
     private GameManager manager;
     [SerializeField, Tooltip("Will set itself to the CharacterData component attatched to the GameManager object if null on startup")]
@@ -23,11 +23,12 @@ public class DevShortcutsManager : MonoBehaviour
     private GameObject trackingObject;
 
     private DynamicRecovery trackingRecovery;
-    [SerializeField] private ItemBox itemBoxReference;
+    [Header("References"), SerializeField]
+    private ItemBox itemBoxReference;
     [SerializeField] private UpgradeBox upgradeBoxReference;
 
     [SerializeField] private GameManager managerPrefabReference;
-
+    [Header("Misc.")]
     [SerializeField] private TMP_Text shortcutText;
     // Start is called before the first frame update
     void Start()
@@ -47,7 +48,7 @@ public class DevShortcutsManager : MonoBehaviour
     void Update()
     {
         //press backspace to turn dev mode on
-        if (Input.GetKeyDown(KeyCode.Backspace) && allowDevShortcuts)
+        if (Input.GetKeyDown(KeyCode.F1) && allowDevShortcuts)
         {
             devEnabled = !devEnabled;
 
