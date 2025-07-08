@@ -95,6 +95,7 @@ public class SpeedCameraEffect : MonoBehaviour
     private Camera cam;
 
     private bool isHoldingTab;
+    public bool IsHoldingTab { get { return isHoldingTab; } }
 
     void Start()
     {

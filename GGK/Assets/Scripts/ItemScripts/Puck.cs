@@ -22,15 +22,29 @@ public class Puck : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        // The puck spawns 15 units in front of the kart
-        transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                        transform.position.y,
-                        transform.position.z + transform.forward.z * 5f);
+        cameraScript = FindObjectOfType<SpeedCameraEffect>();
+        
+        // Is the driver looking forward or backwards?
+        if (!cameraScript.IsHoldingTab)
+        {
+            // The puck spawns 15 units in front of the kart
+            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+                            transform.position.y + transform.up.y * 1f,
+                            transform.position.z + transform.forward.z * 5f);
 
-        // The speed of the puck times 200
-        // Keeps the player from hitting it during use regardless of speed
+            // The speed of the puck times 200
+            // Keeps the player from hitting it during use regardless of speed
+            direction = transform.forward * 200.0f;
+        }
+        else
+        {
+            // The puck spawns behind of the kart
+            transform.position = new Vector3(transform.position.x - transform.forward.x * 5f,
+                            transform.position.y + transform.up.y * 1f,
+                            transform.position.z - transform.forward.z * 5f);
 
-        direction = transform.forward * 200.0f;
+            direction = transform.forward * -200.0f;
+        }
 
         karts = GameObject.FindGameObjectsWithTag("Kart");
 
@@ -136,8 +150,6 @@ public class Puck : BaseItem
             }
         }
 
-
-
         // Counts down to despawn
         DecreaseTimer();
     }
@@ -198,6 +210,13 @@ public class Puck : BaseItem
             {
                 Destroy(this.gameObject);
             }
+        }
+
+        // If puck hits puck
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
         }
     }
 
