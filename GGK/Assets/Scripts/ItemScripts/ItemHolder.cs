@@ -185,7 +185,9 @@ public class ItemHolder : MonoBehaviour
             }
 
             uses--; // Decrease after successful use
-            
+
+            Debug.Log(item.ItemTier);
+
         }
     }
 
@@ -212,58 +214,104 @@ public class ItemHolder : MonoBehaviour
         }
         timer = Random.Range(5, 8);
 
+        Debug.Log(item.ItemTier);
+
     }
 
     public void OnTriggerEnter(Collider collision)
     {
         Debug.Log("Collided");
         // Checks if kart hits an item box
+        //if (collision.gameObject.CompareTag("ItemBox"))
+        //{
+        //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+
+        //    // Gives kart an item if they don't already have one
+        //    if (!holdingItem)
+        //    {
+        //        itemBox.RandomizeItem(this.gameObject);
+                
+        //        // Initialize use count if first use
+        //        if (uses == 0)
+        //        {
+        //            uses = heldItem.UseCount;
+        //        }
+        //        Debug.Log(uses);
+        //        if (thisDriver)
+        //        {
+        //            ApplyItemTween(heldItem.itemIcon);
+        //        }
+        //    }
+        //    // Disables the item box
+        //    itemBox.gameObject.SetActive(false);
+        //    //heldItemText.text = $"Held Item: {baseItem}";
+        //}
+        //else if (collision.gameObject.CompareTag("UpgradeBox"))
+        //{
+        //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
+        //    // itemDisplay.texture = heldItem.itemIcon;
+
+        //    // if player missing item, gives random level 2 item or upgrades current item
+        //    upgradeBox.UpgradeItem(this.gameObject);
+        //    heldItem.OnLevelUp(heldItem.ItemTier);
+        //    uses = heldItem.UseCount;
+
+        //    // Either upgrades the current item or gives the kart a random upgraded item
+        //    //baseItem = upgradeBox.UpgradeItem(this);
+
+        //    // displays item in the HUD
+        //    if (thisDriver)
+        //    {
+        //        ApplyItemTween(heldItem.itemIcon);
+        //    }
+
+        //    // Disables the upgrade box
+        //    upgradeBox.gameObject.SetActive(false);
+        //    //heldItemText.text = $"Held Item: {baseItem}+";
+        //}
         if (collision.gameObject.CompareTag("ItemBox"))
         {
+            Debug.Log("Collided with ItemBox");
             ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
-
-            // Gives kart an item if they don't already have one
-            if (!holdingItem)
+            Debug.Log(itemBox.ItemBoxType);
+            switch (itemBox.ItemBoxType)
             {
-                itemBox.RandomizeItem(this.gameObject);
-                
-                // Initialize use count if first use
-                if (uses == 0)
-                {
-                    uses = heldItem.UseCount;
-                }
-                Debug.Log(uses);
-                if (thisDriver)
-                {
-                    ApplyItemTween(heldItem.itemIcon);
-                }
+                case "Projectile":
+                    ProjectileBrick projBrick = collision.gameObject.GetComponent<ProjectileBrick>();
+                    if (!holdingItem)
+                    {
+                        projBrick.GiveProjectile(this.gameObject);
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Puck")
+                    {
+                        // if player missing item, gives random level 2 item or upgrades current item
+                        projBrick.UpgradeItem(this.gameObject);
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // displays item in the HUD
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+
+                        // Disables the upgrade box
+                        projBrick.gameObject.SetActive(false);
+                    }
+                    break;
+                default:
+                    break;
             }
-            // Disables the item box
             itemBox.gameObject.SetActive(false);
-            //heldItemText.text = $"Held Item: {baseItem}";
-        }
-        else if (collision.gameObject.CompareTag("UpgradeBox"))
-        {
-            UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
-            // itemDisplay.texture = heldItem.itemIcon;
-
-            // if player missing item, gives random level 2 item or upgrades current item
-            upgradeBox.UpgradeItem(this.gameObject);
-            heldItem.OnLevelUp(heldItem.ItemTier);
-            uses = heldItem.UseCount;
-
-            // Either upgrades the current item or gives the kart a random upgraded item
-            //baseItem = upgradeBox.UpgradeItem(this);
-
-            // displays item in the HUD
-            if (thisDriver)
-            {
-                ApplyItemTween(heldItem.itemIcon);
-            }
-
-            // Disables the upgrade box
-            upgradeBox.gameObject.SetActive(false);
-            //heldItemText.text = $"Held Item: {baseItem}+";
         }
 
         if (collision.gameObject.CompareTag("Projectile"))

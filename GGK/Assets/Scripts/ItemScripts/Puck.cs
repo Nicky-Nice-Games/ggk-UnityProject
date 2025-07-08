@@ -14,6 +14,7 @@ public class Puck : BaseItem
     private bool isTracking;                       // If the puck should track
     private bool goStraight;                       // If the puck goes straight
     private bool isTrackingFirst;                  // If the puck should track to first
+    public GameObject[] karts;
 
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
@@ -29,9 +30,30 @@ public class Puck : BaseItem
         // The speed of the puck times 200
         // Keeps the player from hitting it during use regardless of speed
 
-        direction = transform.forward * 120.0f;
+        direction = transform.forward * 200.0f;
 
-        GameObject[] karts = GameObject.FindGameObjectsWithTag("Kart");
+        karts = GameObject.FindGameObjectsWithTag("Kart");
+
+        // Tracks the item tier
+        switch (itemTier)
+        {
+            // Multi-puck (3 uses)
+            case 2:
+                FindClosestKart(karts);
+                break;
+            // Puck tracks to the closest player and lasts longer
+            case 3:
+                FindClosestKart(karts);
+                break;
+            // Puck tracks to first place
+            case 4:
+                isTrackingFirst = true;
+                break;
+            // Normal puck, one use
+            default:
+                useCount = 1;
+                break;
+        }
 
         // Starts the puck with 0 bounces
         bounceCount = 0;
@@ -42,10 +64,12 @@ public class Puck : BaseItem
             // Multi-puck (3 uses)
             case 2:
                 useCount = 3;
+                timer = 50;
+                FindClosestKart(karts);
                 break;
             // Puck tracks to the closest player and lasts longer
             case 3:
-                useCount = 1;
+                useCount = 3;
                 timer = 50;
                 FindClosestKart(karts);
                 break;
@@ -92,6 +116,8 @@ public class Puck : BaseItem
             // {
             //     direction= -1;
             // }
+
+            agent.enabled = false;
 
             // Moves the kart forward at its normal speed
             if (itemTier > 1)
