@@ -137,10 +137,20 @@ public class NPCPhysics : MonoBehaviour
     public GameObject destination;
     [SerializeField]
     private int destinationAhead;
+    private Vector3 checkpointOffset;
+    [SerializeField]
+    Vector3 randomizedTarget;
 
     // Start is called before the first frame update
     void Start()
     {
+        float offsetRadius = 15f; 
+        checkpointOffset = new Vector3(
+            Random.Range(-offsetRadius, offsetRadius),
+            0f,
+            Random.Range(-offsetRadius, offsetRadius)
+        );
+
         sphere.drag = 0.5f;
 
         StopParticles();
@@ -368,7 +378,8 @@ public class NPCPhysics : MonoBehaviour
             destinationID = 0;
         }
         destination = KC.checkpointList[destinationID];
-        agent.SetDestination(destination.transform.position);
+        randomizedTarget = destination.transform.position + checkpointOffset;
+        agent.SetDestination(randomizedTarget);
 
         Vector3 dirToTarget = destination.transform.position - transform.position;
         dirToTarget.y = 0f; // Flatten vertical influence
