@@ -29,10 +29,10 @@ public class UpgradeBox : ItemBox
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
         // Gives driver a random item if they don't have one
-        if (itemScript.HeldItem == null)
-        {
-            RandomizeItem(kart);
-        }
+        //if (itemScript.HeldItem == null)
+        //{
+        //    RandomizeItem(kart);
+        //}
 
         // Upgrades the item and returns it
         if (itemScript.HeldItem.ItemTier < 4)
