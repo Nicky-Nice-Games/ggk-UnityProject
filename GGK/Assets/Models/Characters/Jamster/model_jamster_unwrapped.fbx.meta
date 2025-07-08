@@ -24,7 +24,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -82,7 +82,122 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: model_jamster_unwrapped(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SM_Jamster
+      parentName: model_jamster_unwrapped(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SM_Face
+      parentName: SM_Jamster
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SM_Glasses
+      parentName: SM_Jamster
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_Pelvis
+      parentName: model_jamster_unwrapped(Clone)
+      position: {x: -0, y: 0.010772123, z: 0}
+      rotation: {x: 0.5, y: -0.5, z: 0.5, w: -0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_UpperLegR
+      parentName: B_Pelvis
+      position: {x: -0.00097319786, y: -1.9378263e-19, z: 0.0032969532}
+      rotation: {x: 2.7751446e-17, y: -0.004784525, z: -9.295989e-19, w: 0.99998856}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_KneeR
+      parentName: B_UpperLegR
+      position: {x: 0.006454865, y: 0.0005655914, z: -0.00080065016}
+      rotation: {x: 0.99999183, y: 6.065646e-17, z: -0.004041855, w: -6.098567e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_AnkleR
+      parentName: B_KneeR
+      position: {x: 0.0042400267, y: -0.0008191867, z: 0.00059547584}
+      rotation: {x: -0.47597602, y: 0.5229275, z: -0.5228547, w: 0.47604272}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_FootR
+      parentName: B_AnkleR
+      position: {x: -0.002302525, y: -0.00000055076157, z: 0.0003692628}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_UpperLegL
+      parentName: B_Pelvis
+      position: {x: -0.00097317266, y: 1.0765758e-18, z: -0.0033}
+      rotation: {x: 0.004784525, y: -5.522009e-17, z: 0.99998856, w: -6.096603e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_KneeL
+      parentName: B_UpperLegL
+      position: {x: -0.0064499998, y: -0.0005655914, z: 0.0008}
+      rotation: {x: 0.99999183, y: -6.0821366e-17, z: -0.004041855, w: 6.098501e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_AnkleL
+      parentName: B_KneeL
+      position: {x: -0.0042409506, y: 0.00067342893, z: -0.00059999997}
+      rotation: {x: -0.47597602, y: 0.5229275, z: -0.5228547, w: 0.47604272}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_FootL
+      parentName: B_AnkleL
+      position: {x: 0.0023025277, y: 0.000000550761, z: -0.00036926242}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_CollarBone
+      parentName: B_Pelvis
+      position: {x: -0.011384999, y: 0.0010920259, z: 2.4247846e-19}
+      rotation: {x: 0, y: -0.6989654, z: -0, w: 0.7151555}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_ShoulderR
+      parentName: B_CollarBone
+      position: {x: 0.0045627146, y: -1.0036761e-18, z: -0.0018066673}
+      rotation: {x: 0.70706046, y: -0.008095051, z: 0.008095051, w: 0.70706046}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_ElbowR
+      parentName: B_ShoulderR
+      position: {x: 0.007364948, y: 0.0000424, z: 5.8568515e-18}
+      rotation: {x: -0.70709896, y: -0.0033352983, z: 0.0033352983, w: 0.70709896}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_WristR
+      parentName: B_ElbowR
+      position: {x: 0.0042, y: -3.4470593e-18, z: -0.00014479666}
+      rotation: {x: 0.9997591, y: -5.262975e-18, z: -0.021949628, w: -6.1303626e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_HandR
+      parentName: B_WristR
+      position: {x: 0.0020959578, y: 9.355864e-19, z: -0.00014471743}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_ShoulderL
+      parentName: B_CollarBone
+      position: {x: -0.00456, y: 6.599562e-19, z: -0.0018099999}
+      rotation: {x: 0.70706046, y: -0.008095051, z: 0.008095051, w: 0.70706046}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_ElbowL
+      parentName: B_ShoulderL
+      position: {x: -0.0073599997, y: 0.0000424, z: 5.67407e-18}
+      rotation: {x: -0.70709896, y: -0.0033352983, z: 0.0033352983, w: 0.70709896}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_WristL
+      parentName: B_ElbowL
+      position: {x: -0.004203337, y: -4.170356e-18, z: -0.0000327491}
+      rotation: {x: 0.9997591, y: 1.6353748e-10, z: -0.021949628, w: 0.0000000074487856}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_HandL
+      parentName: B_WristL
+      position: {x: -0.0021009478, y: -5.041627e-17, z: 0.0000000034462273}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: B_Head
+      parentName: B_CollarBone
+      position: {x: -0.0001601501, y: -0.001347608, z: 0.006993221}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -93,7 +208,7 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: B_Pelvis
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
