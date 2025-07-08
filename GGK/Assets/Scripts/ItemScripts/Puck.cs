@@ -175,6 +175,16 @@ public class Puck : BaseItem
         }
     }
 
+    // If colliding with cracked brick wall
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
+        {
+            Destroy(other.gameObject);
+            Destroy(this.gameObject);
+        }
+    }
+
     /// <summary>
     /// Finds the kart closest to the player using the puck.
     /// Ignores the player who used it.
