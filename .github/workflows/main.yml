@@ -5,7 +5,6 @@ on:
     push:
         branches:
             - main
-            - creating-mac-build
 permissions: write-all
 
 jobs:
@@ -109,6 +108,7 @@ jobs:
           allowDirtyBuild: true
           projectPath: GGK/
           targetPlatform: StandaloneOSX
+          buildName: GGK
 
       # Output
       - uses: actions/upload-artifact@v4
