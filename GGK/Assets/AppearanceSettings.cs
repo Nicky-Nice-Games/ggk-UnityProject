@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AppearanceSettings : MonoBehaviour
+public class AppearanceSettings : NetworkBehaviour
 {
     public Sprite icon;
     public Color color;
@@ -16,7 +17,7 @@ public class AppearanceSettings : MonoBehaviour
     void Start()
     {
         // If player (will need to be changed for multiplayer)
-        if (GetComponent<NEWDriver>())
+        if (GetComponent<NEWDriver>() && !MultiplayerManager.Instance.IsMultiplayer)
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
@@ -45,14 +46,26 @@ public class AppearanceSettings : MonoBehaviour
         // Else NPCDriver code when NPCDrivers get a new prefab?
     }
 
-    public void SetKartAppearance(CharacterData characterData)
+    // OnNetworkSpawn is called when the GameObject is synced to all clients
+    public override void OnNetworkSpawn()
+    {
+        if (!GetComponent<NEWDriver>()) return;
+        if (!IsServer) return;
+        string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
+        Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
+        SetKartAppearanceRpc(characterName, characterColor);
+        
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    public void SetKartAppearanceRpc(/*CharacterData characterData, */ string characterName, Color characterColor) // should use a struct or a simpler keyword that fully represents the look of the kart
     {
         // Loading characterData
         characterData = FindAnyObjectByType<CharacterData>();
         icon = characterData.characterSprite;
         color = characterData.characterColor;
         name = characterData.characterName.ToLower();
-        
+
         // Set correct character model active
         if (characterData != null)
         {
