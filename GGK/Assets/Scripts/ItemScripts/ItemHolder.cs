@@ -247,21 +247,10 @@ public class ItemHolder : MonoBehaviour
             UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
             // itemDisplay.texture = heldItem.itemIcon;
 
-            // Checks if the heldItem is anything but a shield
-            if (heldItem == null || !heldItem.gameObject.CompareTag("Shield"))
-            {
-                // if player missing item, gives random level 2 item or upgrades current item
-                upgradeBox.UpgradeItem(this.gameObject);
-                heldItem.OnLevelUp(heldItem.ItemTier);
-                uses = heldItem.UseCount;
-            }
-            else if (uses == 1) // if the shield isn't being used, uses will be 1
-            {
-                // if player missing item, gives random level 2 item or upgrades current item
-                upgradeBox.UpgradeItem(this.gameObject);
-                heldItem.OnLevelUp(heldItem.ItemTier);
-                uses = heldItem.UseCount;
-            }
+            // if player missing item, gives random level 2 item or upgrades current item
+            upgradeBox.UpgradeItem(this.gameObject);
+            heldItem.OnLevelUp(heldItem.ItemTier);
+            uses = heldItem.UseCount;
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);

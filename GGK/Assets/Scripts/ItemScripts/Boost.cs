@@ -5,15 +5,6 @@ using UnityEngine;
 
 public class Boost : BaseItem
 {
-    // item icons for each tier
-    [SerializeField]
-    public Texture tierOneItemIcon;
-    [SerializeField]
-    public Texture tierTwoItemIcon;
-    [SerializeField]
-    public Texture tierThreeItemIcon;
-    [SerializeField]
-    public Texture tierFourItemIcon;
 
     private void Awake()
     {
@@ -24,26 +15,6 @@ public class Boost : BaseItem
     void FixedUpdate()
     {
         // DecreaseTimer();
-    }
-
-    public void LevelUp()
-    {
-        // update the icon based on the item tier
-        switch (itemTier)
-        {
-            case 2:
-                itemIcon = tierTwoItemIcon;
-                break;
-            case 3:
-                itemIcon = tierThreeItemIcon;
-                break;
-            case 4:
-                itemIcon = tierFourItemIcon;
-                break;
-            default:
-                itemIcon = tierOneItemIcon;
-                break;
-        }
     }
 
     // the boost spawns on the user as an empty gameobject and applies a force to the kart
