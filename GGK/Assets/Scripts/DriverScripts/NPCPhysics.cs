@@ -135,6 +135,8 @@ public class NPCPhysics : MonoBehaviour
     public GameObject parent;
     public KartCheckpoint KC;
     public GameObject destination;
+    [SerializeField]
+    private int destinationAhead;
 
     // Start is called before the first frame update
     void Start()
@@ -360,7 +362,12 @@ public class NPCPhysics : MonoBehaviour
 
 
         //------------NavMesh---------------------
-        destination = KC.checkpointList[KC.checkpointId + 1];
+        int destinationID = KC.checkpointId + destinationAhead;
+        if (destinationID >= KC.checkpointList.Count)
+        {
+            destinationID = 0;
+        }
+        destination = KC.checkpointList[destinationID];
         agent.SetDestination(destination.transform.position);
 
         Vector3 dirToTarget = destination.transform.position - transform.position;
