@@ -15,6 +15,7 @@ public class DevShortcutsManager : MonoBehaviour
     private GameManager manager;
     [SerializeField, Tooltip("Will set itself to the CharacterData component attatched to the GameManager object if null on startup")]
     private CharacterData charData;
+    [SerializeField]
     private Sprite devIcon;
     private Color devColor = Color.magenta;
 
@@ -31,7 +32,6 @@ public class DevShortcutsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        devIcon = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Images/Player Kart Scene Images/ggk-temp-icon-gim.png");
         if (manager == null)
         {
             manager = FindAnyObjectByType<GameManager>();
@@ -68,15 +68,16 @@ public class DevShortcutsManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     StartCoroutine(AnimateText("Input: B-Slash + S - Skip to map select"));
-                    //Backslash + S: skip to map select, make character iconic PINK GIM 🗣🗣️‍🔥️️
+                    //Backslash + S: skip to map select, make character JAMSTER because there's no gim model yet :(
                     if (charData)
                     {
                         charData.characterColor = devColor;
                         charData.characterSprite = devIcon;
+                        charData.characterName = "jamster";
                     }
                     manager.PlayerSelected();
                 }
-                if (Input.GetKeyDown(KeyCode.G))
+                else if (Input.GetKeyDown(KeyCode.G))
                 {
                     //Backslash + G: instantiate a GameManager object here, if there isn't one already
                     if (managerPrefabReference && manager == null)
@@ -96,7 +97,7 @@ public class DevShortcutsManager : MonoBehaviour
 
                 }
                 //INGAME
-                if (Input.GetKeyDown(KeyCode.R))
+                else if (Input.GetKeyDown(KeyCode.R))
                 {
                     StartCoroutine(AnimateText("Input: B-Slash + R - Force Respawn"));
                     //Backslash + R: force respawn
@@ -105,35 +106,35 @@ public class DevShortcutsManager : MonoBehaviour
                         trackingRecovery.StartRecovery();
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                else if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     StartCoroutine(AnimateText("Input: B-Slash + 1 - Give Boost"));
                     //Backslash + 1: give user a Puck
                     DevGiveItem(0);
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
+                    StartCoroutine(AnimateText("Input: B-Slash + 2 - Give Shield"));
                     //Backslash + 2: give user a Shield
                     DevGiveItem(1);
-                    StartCoroutine(AnimateText("Input: B-Slash + 2 - Give Shield"));
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha3))
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
+                    StartCoroutine(AnimateText("Input: B-Slash + 3 - Give Puck"));
                     //Backslash + 2: give user a Boost
                     DevGiveItem(2);
-                    StartCoroutine(AnimateText("Input: B-Slash + 3 - Give Puck"));
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha4))
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
                 {
+                    StartCoroutine(AnimateText("Input: B-Slash + 4 - Give Trap"));
                     //Backslash + 2: give user a Hazard
                     DevGiveItem(3);
-                    StartCoroutine(AnimateText("Input: B-Slash + 4 - Give Trap"));
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha0))
+                else if (Input.GetKeyDown(KeyCode.Alpha0))
                 {
+                    StartCoroutine(AnimateText("Input: B-Slash + 0 - Upgrade Item"));
                     //Backslash + 0: upgrade held item
                     DevUpgradeItem();
-                    StartCoroutine(AnimateText("Input: B-Slash + 0 - Upgrade Item"));
                 }
             }
         }
@@ -211,8 +212,8 @@ public class DevShortcutsManager : MonoBehaviour
     }
 
 
-    //IMPLIMENT LATER W/DEVTOOLS CANVAS
-    //SHOULDNT BREAK ANYTHING
+    //IMPLEMENT LATER W/DEVTOOLS CANVAS
+    //SHOULDNT BREAK ANYTHING ATM
     private IEnumerator AnimateText(string txt)
     {
         if (shortcutText != null)
