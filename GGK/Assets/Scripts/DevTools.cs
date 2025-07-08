@@ -34,8 +34,8 @@ public class DevTools : MonoBehaviour
 
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
-    //[SerializeField] public static GameObject gameManagerObj;
-    //public static GameManager gameManager;
+    //[SerializeField] public GameObject gameManagerObj;
+    //[SerializeField] public GameManager gameManager;
 
     private List<GameObject> listeners = new List<GameObject>();
 
@@ -52,7 +52,16 @@ public class DevTools : MonoBehaviour
     void Start()
     {
         AddListener(gameObject);
-        commandPromptCanvas.enabled = false;
+        //gameManager = gameManagerObj.GetComponent<GameManager>();
+       // Debug.Log(gameManager.curState);
+        //if(gameManager.curState == GameStates.start || commandPromptCanvas.enabled == false)
+        //{
+            commandPromptCanvas.enabled = false;
+        //}
+        //else
+        //{
+            //commandPromptCanvas.enabled = true;
+        //}
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
         "or [methodName] options for param options (Note: currently only for LoadMap)";
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -76,6 +85,7 @@ public class DevTools : MonoBehaviour
             {
                 //Debug.Log("true");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
             }
             
         }
@@ -205,31 +215,38 @@ public class DevTools : MonoBehaviour
             case "OuterLoop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 //Can be removed if prefered, maybe when in certain modes?
-                commandPromptCanvas.enabled = false;    
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "Dorm":
                 sceneLoader.LoadScene("GSP_RITDorm");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "FinalsBrickRoad":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "QuarterMile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "TestGrid":
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "TestTube":
                 sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
                 break;
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
