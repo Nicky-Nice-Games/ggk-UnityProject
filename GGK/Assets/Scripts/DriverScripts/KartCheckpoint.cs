@@ -93,7 +93,7 @@ public class KartCheckpoint : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         bool canPass = false;
-        int maxSkip = 10; // how many checkpoints can be skipped ahead
+        int maxSkip = 15; // how many checkpoints can be skipped ahead
         int nextValidCheckpointIndex = -1;
 
         // Loop through the next `maxSkip` checkpoints

@@ -69,6 +69,7 @@ jobs:
           allowDirtyBuild: true
           projectPath: GGK/
           targetPlatform: StandaloneWindows
+          buildName: GGK
 
       # Output
       - uses: actions/upload-artifact@v4
@@ -86,18 +87,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          lfs: true
-
+          lfs: true 
+ 
       # Cache
-      - uses: actions/cache@v3
+      - uses: actions/cache@v3 
         with:
           path: GGK/Library
           key: GGK/Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
+          restore-keys: | 
             GGK/Library-
 
       # Build
-      - name: Build project for macOS
+      - name: Build project for macOS 
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -107,6 +108,7 @@ jobs:
           allowDirtyBuild: true
           projectPath: GGK/
           targetPlatform: StandaloneOSX
+          buildName: GGK
 
       # Output
       - uses: actions/upload-artifact@v4
