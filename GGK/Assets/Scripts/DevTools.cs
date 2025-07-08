@@ -52,25 +52,38 @@ public class DevTools : MonoBehaviour
     void Start()
     {
         AddListener(gameObject);
-        //gameManager = gameManagerObj.GetComponent<GameManager>();
-       // Debug.Log(gameManager.curState);
-        //if(gameManager.curState == GameStates.start || commandPromptCanvas.enabled == false)
-        //{
-            commandPromptCanvas.enabled = false;
-        //}
-        //else
-        //{
-            //commandPromptCanvas.enabled = true;
-        //}
+        commandPromptCanvas.enabled = false;
+
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-        "or [methodName] options for param options (Note: currently only for LoadMap)";
+                "or [methodName] options for param options (Note: currently only for LoadMap)";
+
+        //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log("loading " + sceneLoader.loading);
+        if (sceneLoader.loading)
+        {
+            //Debug.Log("enabled " + commandPromptCanvas.enabled);
+            //Debug.Log("Length " + textLog.Length);
+            if (textLog.Length > 131)
+            {
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+
+            }
+            //else
+            //{
+                //commandPromptCanvas.enabled = false;
+            //}
+            sceneLoader.loading = false;
+            //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        }
+      
+
         //Shows and hides the canvas (prompt) when ~ is pressed (KeyCode.Tilda not working) !!
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
@@ -111,6 +124,7 @@ public class DevTools : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+
         if (Instance == null)
         {
             Instance = this;
@@ -120,7 +134,7 @@ public class DevTools : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+                
     }
 
 
@@ -242,11 +256,13 @@ public class DevTools : MonoBehaviour
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
+
                 break;
             case "TestTube":
                 sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
+
                 break;
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
