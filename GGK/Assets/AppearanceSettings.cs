@@ -47,7 +47,7 @@ public class AppearanceSettings : MonoBehaviour
                     if (name == models[i].name)
                     {
                         models[i].SetActive(true);
-                        break;
+                        continue;
                     }
 
                     //deleting the models that are not supposed to be active
