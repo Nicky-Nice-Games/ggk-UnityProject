@@ -77,7 +77,7 @@ public class ItemHolder : MonoBehaviour
         }
 
         //soundPlayer = GetComponent<AudioSource>();
-
+        driverItemTier = 1;
     }
 
     // Update is called once per frame
@@ -116,6 +116,7 @@ public class ItemHolder : MonoBehaviour
                     }
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount == 1 && !item.isTimed)
@@ -129,6 +130,7 @@ public class ItemHolder : MonoBehaviour
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
@@ -143,6 +145,7 @@ public class ItemHolder : MonoBehaviour
                     }
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount >= 1 && !item.isTimed)
@@ -156,6 +159,7 @@ public class ItemHolder : MonoBehaviour
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
         }
@@ -230,32 +234,31 @@ public class ItemHolder : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Collided");
-        // Checks if kart hits an item box
-        if (collision.gameObject.CompareTag("ItemBox"))
-        {
-            ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+        //// Checks if kart hits an item box
+        //if (collision.gameObject.CompareTag("ItemBox"))
+        //{
+        //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
 
-            // Gives kart an item if they don't already have one
-            if (!holdingItem)
-            {
-                itemBox.RandomizeItem(this.gameObject);
-              
-                // Initialize use count if first use
-                if (uses == 0)
-                {
-                    uses = heldItem.UseCount;
-                }
-                Debug.Log(uses);
-                if (thisDriver)
-                {
-                    ApplyItemTween(heldItem.itemIcon);
-                }
-            }
-            // Disables the item box
-            itemBox.gameObject.SetActive(false);
-            //heldItemText.text = $"Held Item: {baseItem}";
-        }
+        //    // Gives kart an item if they don't already have one
+        //    if (!holdingItem)
+        //    {
+        //        itemBox.RandomizeItem(this.gameObject);
+
+        //        // Initialize use count if first use
+        //        if (uses == 0)
+        //        {
+        //            uses = heldItem.UseCount;
+        //        }
+        //        Debug.Log(uses);
+        //        if (thisDriver)
+        //        {
+        //            ApplyItemTween(heldItem.itemIcon);
+        //        }
+        //    }
+        //    // Disables the item box
+        //    itemBox.gameObject.SetActive(false);
+        //    //heldItemText.text = $"Held Item: {baseItem}";
+        //}
         //else if (collision.gameObject.CompareTag("UpgradeBox"))
         //{
         //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
@@ -279,6 +282,8 @@ public class ItemHolder : MonoBehaviour
         //    upgradeBox.gameObject.SetActive(false);
         //    //heldItemText.text = $"Held Item: {baseItem}+";
         //}
+
+        // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
         {
             Debug.Log("Collided with ItemBox");
@@ -290,12 +295,13 @@ public class ItemHolder : MonoBehaviour
                     ProjectileBrick projBrick = collision.gameObject.GetComponent<ProjectileBrick>();
                     if (!holdingItem)
                     {
+                        // Get projectile and intialize level
                         projBrick.GiveProjectile(this.gameObject);
-                        // Initialize use count if first use
-                        if (uses == 0)
-                        {
-                            uses = heldItem.UseCount;
-                        }
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
@@ -303,31 +309,32 @@ public class ItemHolder : MonoBehaviour
                     }
                     else if (heldItem.ItemCategory == "Puck")
                     {
-                        // if player missing item, gives random level 2 item or upgrades current item
-                        projBrick.UpgradeItem(this.gameObject);
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
-
-                        // displays item in the HUD
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
-
-                        // Disables the upgrade box
-                        projBrick.gameObject.SetActive(false);
                     }
                     break;
                 case "Boost":
                     BoostBrick boostBrick = collision.gameObject.GetComponent<BoostBrick>();
                     if (!holdingItem)
                     {
+                        // Get boost and intialize level
                         boostBrick.GiveBoost(this.gameObject);
-                        // Initialize use count if first use
-                        if (uses == 0)
-                        {
-                            uses = heldItem.UseCount;
-                        }
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
@@ -335,31 +342,32 @@ public class ItemHolder : MonoBehaviour
                     }
                     else if (heldItem.ItemCategory == "Boost")
                     {
-                        // if player missing item, gives random level 2 item or upgrades current item
-                        boostBrick.UpgradeItem(this.gameObject);
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
-
-                        // displays item in the HUD
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
-
-                        // Disables the upgrade box
-                        boostBrick.gameObject.SetActive(false);
                     }
                     break;
                 case "Defense":
                     DefenseBrick defBrick = collision.gameObject.GetComponent<DefenseBrick>();
                     if (!holdingItem)
                     {
+                        // Get shield and intialize level
                         defBrick.GiveShield(this.gameObject);
-                        // Initialize use count if first use
-                        if (uses == 0)
-                        {
-                            uses = heldItem.UseCount;
-                        }
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
@@ -367,31 +375,36 @@ public class ItemHolder : MonoBehaviour
                     }
                     else if (heldItem.ItemCategory == "Shield")
                     {
-                        // if player missing item, gives random level 2 item or upgrades current item
-                        defBrick.UpgradeItem(this.gameObject);
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
-
-                        // displays item in the HUD
-                        if (thisDriver)
+                        // Do not upgrade if shield is being used
+                        if (uses > 0)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            // Increase item tier & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
                         }
-
-                        // Disables the upgrade box
-                        defBrick.gameObject.SetActive(false);
                     }
                     break;
                 case "Hazard":
                     HazardBrick hazBrick = collision.gameObject.GetComponent<HazardBrick>();
                     if (!holdingItem)
                     {
+                        // Get hazard and intialize level
                         hazBrick.GiveHazard(this.gameObject);
-                        // Initialize use count if first use
-                        if (uses == 0)
-                        {
-                            uses = heldItem.UseCount;
-                        }
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
@@ -399,27 +412,69 @@ public class ItemHolder : MonoBehaviour
                     }
                     else if (heldItem.ItemCategory == "Hazard")
                     {
-                        // if player missing item, gives random level 2 item or upgrades current item
-                        hazBrick.UpgradeItem(this.gameObject);
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
-
-                        // displays item in the HUD
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
-
-                        // Disables the upgrade box
-                        hazBrick.gameObject.SetActive(false);
+                    }
+                    break;
+                case "Upgrade":
+                    if (!holdingItem)
+                    {
+                        // Increase item tier if not max
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                        }
+                    }
+                    else
+                    {
+                        // Increase item tier if not max & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
                     }
                     break;
                 default:
+                    // Gives kart an item if they don't already have one
+                    if (!holdingItem)
+                    {
+                        itemBox.RandomizeItem(this.gameObject);
+
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        Debug.Log(uses);
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
                     break;
             }
+            // Disables the item box
             itemBox.gameObject.SetActive(false);
         }
-
         if (collision.gameObject.CompareTag("Projectile"))
         {
             if (thisDriver != null)
