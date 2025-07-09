@@ -33,7 +33,9 @@ public class ItemHolder : MonoBehaviour
 
     private BaseItem item;
     private int driverItemTier;
-    private int uses;
+    public int uses;
+
+    public float gravityForce;
 
     //the current coroutine animating spinning, to prevent double-ups
     private IEnumerator currentSpinCoroutine;
@@ -45,8 +47,16 @@ public class ItemHolder : MonoBehaviour
     // audio variables
     //private AudioSource soundPlayer;
 
-    [SerializeField]
+    // [SerializeField]
     //AudioClip throwSound;
+
+    // tier 3 boost variables
+    [Header("Tier 3 Boost Settings")]
+    public float length = 4.0f;
+    private float lastHitDistance;
+    public float strength = 5.0f;
+    public float dampening = 20.0f;
+
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
@@ -455,7 +465,8 @@ public class ItemHolder : MonoBehaviour
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 4: // level 4
                                 // get the checkpoint from the kart's collider child to cross 3 checkpoints
@@ -573,95 +584,79 @@ public class ItemHolder : MonoBehaviour
     }
 
     /// <summary>
-    /// for level 3 boost, adds an speed boost forwards and upwards
+    /// for level 3 boost, adds a speed boost forwards and upwards
     /// </summary>
     /// <param name="driver">the player</param>
     /// <param name="boostForce">amount of force to boost character</param>
     /// <param name="duration">how long boost should last</param>
     /// <returns></returns>
-    IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        List<Collider> ignoreColliders = new List<Collider>();
-        Collider[] allColliders = FindObjectsOfType<Collider>();
-
-        // disable any colliders we don't want to hit
-        foreach (Collider collider in allColliders)
-        {
-            // ignore own collider
-            if (collider == driver.sphere.gameObject.GetComponent<Collider>())
-            {
-                continue;
-            }
-
-            // ignore ground, rock, checkpoint, startpoint, road
-            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
-                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
-                && !collider.CompareTag("Road"))
-            {
-                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
-                ignoreColliders.Add(collider);
-            }
-        }
-
-        // keep reference to old offset
-        float oldOffset = driver.colliderOffset;
-        float oldGravity = driver.gravity;
-
         // turn off drift and ground check in driver script
         driver.doGroundCheck = false;
         driver.canDrift = false;
 
-        // get just model transform
-        Transform modelTransform = transform.Find("Normal/Parent/KartModel");
+        // get a list of the player's wheels for raycasting
+        List<GameObject> wheels = new List<GameObject>();
+        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotBL"));
+        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotFL"));
+        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotFR"));
+        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotBR"));
+
+
+        // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);
         RaycastHit hit;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            // slightly change offset so change isn't instant
-            if (driver.colliderOffset >= -4.0f && t < duration - 0.5f)
+            // perform a raycast at each wheel on the player's kart
+            foreach (GameObject wheel in wheels)
             {
-                driver.colliderOffset -= 0.25f;
+                if (Physics.Raycast(wheel.transform.position, wheel.transform.TransformDirection(-Vector3.up), 
+                    out hit, length))
+                {
+                    // determine spring force
+                    float forceAmount = HooksLawDampen(hit.distance);
+
+                    // add force at each wheel position
+                    driver.sphere.AddForceAtPosition(wheel.transform.up * forceAmount, wheel.transform.position);
+                }
+                else
+                {
+                    lastHitDistance = length * 1.1f;
+                }
             }
 
-            // slowly drop kart towards end of boost
-            if (t >= duration - 0.2f)
+            // gives forward boost
+            Vector3 boostDirection = Vector3.zero;
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
             {
-                driver.colliderOffset += 0.25f;
+                boostDirection = driver.transform.forward * boostForce;
             }
-
-            // perform raycast on model of the kart to give hover effect
-            if (Physics.Raycast(modelTransform.position + (modelTransform.up * .2f), -modelTransform.up, out hit, 50.0f, driver.groundLayer))
-            {
-                // rotates just the model to match the surface
-                modelTransform.up = Vector3.Lerp(modelTransform.up, hit.normal, Time.deltaTime * driver.rotationAlignSpeed);
-                modelTransform.Rotate(0, transform.eulerAngles.y, 0);
-
-            }
-
-            // gives forward boost effect
-            Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
 
         // reenable drift and ground check
         driver.canDrift = true;
-        driver.colliderOffset = oldOffset;
         driver.doGroundCheck = true;
-        driver.gravity = oldGravity;
 
         // aligns the kart with the ground
         driver.AttemptDrift();
         driver.EndDrift();
+    }
 
-        // turn all colliders that were ignored back on
-        foreach (Collider collider in ignoreColliders)
-        {
-            if (collider != null)
-            {
-                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, false);
-            }
-        }
-        ignoreColliders.Clear();
+    /// <summary>
+    /// determines a spring force for tier three boost to create hover effect
+    /// </summary>
+    /// <param name="hitDistance">distance raycast is from ground</param>
+    /// <returns>spring force</returns>
+    private float HooksLawDampen(float hitDistance)
+    {
+        float forceAmount = strength * (length - hitDistance) + (dampening * (lastHitDistance - hitDistance));
+        forceAmount = Mathf.Max(0f, forceAmount);
+        lastHitDistance = hitDistance;
+
+        return forceAmount;
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
