@@ -8,7 +8,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
+//Gina Piccirilli
 
+//OTHER TODOs (not listed elsewhere)
+//Need to put karts in dev maps and fix lighting for driving and fix pause menu
+//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
+//  Update: can type if you close and reopen prompt but not initially even though cursor is there
+//Fix issue where when clicking a button with the mouse it thinks input has been
+//  entered (likely something to do with On End Edit)
+//If seen as an issue (which I think it probably is), make it so that the command
+//  prompt is hidden when entering a map which happens when the prompt was already open
+//  and you go into a track not using a command 
+//  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
+//Add other commands (see dev keyboard shortcuts; restart command? return to menu commands/other
+//  pause menu commands?)
+
+
+/// <summary>
+/// Enum for each map name keyword/command
+/// </summary>
 enum MapName 
 { 
     OuterLoop,
@@ -20,6 +38,9 @@ enum MapName
     TestTube
 }
 
+/// <summary>
+/// Enum for each game mode keyword/command
+/// </summary>
 enum GameMode
 {
     Race,
@@ -67,21 +88,21 @@ public class DevTools : MonoBehaviour
         //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
 
-        //Debug.Log("loading " + sceneLoader.loading);
+        Debug.Log("loading " + sceneLoader.loading);
         if (sceneLoader.loading)
         {
+            //inputField.ActivateInputField();
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
             //Debug.Log("Length " + textLog.Length);
-            //if (textLog.Length > 131)
-            //{
-            //    commandPromptCanvas.enabled = true;
-            //    inputField.ActivateInputField();
-
-            //}
-            //else
-            //{
-                //commandPromptCanvas.enabled = false;
-            //}
+            if (textLog.Length > 131)   //TODO FIX! won't work if log has been cleared, run secondary check?
+            {
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+            }
+            else
+            {
+                commandPromptCanvas.enabled = false;
+            }
             sceneLoader.loading = false;
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
         }
@@ -165,19 +186,22 @@ public class DevTools : MonoBehaviour
         //Splits input into substrings with a space as the delimiter
         string[] parts = input.Split(new char[] { ' ' });
 
+
+        //TODO Set up split to also check for multiple methods
+
+        //string[] parts = input.Split(new char[] { ' ', ':' });
+        //  for method strings, check if there is a parts[2]
+        //  what to do if first method has no params?
+        //  make separate split array? for each part in this second array, run the method switch
+        //      for the first part of it
+        //  second param in split method for max parts?
+
         //Format: MethodName space MapParam space ModeParam?
         //or MethodName param : MethodName param
         //  parts[0] = methodName
         //  parts[1] = param 1 (map name)
-        //  parts[2] = param 2 (game mode)
+        //  parts[2] = param 2 (game mode)?
 
-
-        //TODO Implement GameMode Commands
-        //if (parts[2] != null)
-        //{
-        //    //case parts[2] check each enum mode and then load that scene
-        //    //gameManager.SafeLoad()
-        //}
 
         switch (parts[0])
         {
