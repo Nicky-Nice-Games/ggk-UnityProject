@@ -33,13 +33,14 @@ public class AppearanceSettings : MonoBehaviour
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
-            icon = characterData.characterSprite;
-            color = characterData.characterColor;
-            name = characterData.characterName.ToLower();
 
             // Set correct character model active
             if (characterData != null)
             {
+                icon = characterData.characterSprite;
+                color = characterData.characterColor;
+                name = characterData.characterName.ToLower();
+
                 for (int i = 0; i < models.Count; i++)
                 {
                     //Setting active correct model
