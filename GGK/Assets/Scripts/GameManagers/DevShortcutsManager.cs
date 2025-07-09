@@ -72,11 +72,11 @@ public class DevShortcutsManager : MonoBehaviour
                     //Backslash + S: skip to map select, make character JAMSTER because there's no gim model yet :(
                     if (charData)
                     {
-                        if (charData.characterColor == null)
+                        if (charData.characterColor == Color.clear)
                         {
                             charData.characterColor = devColor;
                         }
-                        if (charData.characterSprite == null && charData.characterName == null)
+                        if (charData.characterSprite == null && charData.characterName == "")
                         {
                             charData.characterSprite = devIcon;
                             charData.characterName = "jamster";
