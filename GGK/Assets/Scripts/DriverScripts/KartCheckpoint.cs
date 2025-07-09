@@ -16,6 +16,8 @@ public class KartCheckpoint : NetworkBehaviour
     [SerializeField] public List<GameObject> checkpointList;
     [SerializeField] private GameObject checkPointParent;
     GameManager gameManager;
+    public GameObject parent;
+    public NPCPhysics physicsNPC;
 
     [SerializeField]
     TextMeshProUGUI placementDisplay;
@@ -35,12 +37,14 @@ public class KartCheckpoint : NetworkBehaviour
         totalLaps = 1;
         checkpointId = 0;
         checkPointParent = PlacementManager.instance.checkpointManager;
+        Transform childTransform = parent.transform.GetChild(0);
+        physicsNPC = childTransform.GetComponent<NPCPhysics>();
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
         {
             if (child != checkPointParent.transform) // Avoid adding the parent itself
                 checkpointList.Add(child.gameObject);
         }
-        if (this.GetComponent<NPCDriver>() == null)
+        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
         }
@@ -58,6 +62,9 @@ public class KartCheckpoint : NetworkBehaviour
 
 
         }
+
+
+        
     }
 
 
@@ -66,7 +73,7 @@ public class KartCheckpoint : NetworkBehaviour
     {
         distanceSquaredToNextCP = Mathf.Pow(transform.position.x - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.x, 2) +
             Mathf.Pow(transform.position.z - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.z, 2);
-        if (this.GetComponent<NPCDriver>() == null)
+        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             //placementDisplay.text = "Placement: " + placement;
         }
@@ -75,7 +82,7 @@ public class KartCheckpoint : NetworkBehaviour
         {
             finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
             StartCoroutine(FinalizeFinish());
-            if (this.GetComponent<NPCDriver>() == null)
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
                 //lapDisplay.text = "Lap: " + (lap + 1);
             }
@@ -87,7 +94,7 @@ public class KartCheckpoint : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         bool canPass = false;
-        int maxSkip = 10; // how many checkpoints can be skipped ahead
+        int maxSkip = 15; // how many checkpoints can be skipped ahead
         int nextValidCheckpointIndex = -1;
 
         // Loop through the next `maxSkip` checkpoints
@@ -112,7 +119,7 @@ public class KartCheckpoint : NetworkBehaviour
             {
                 lap++;
                 checkpointId = 0;
-                if (this.GetComponent<NPCDriver>() == null)
+                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
                     //lapDisplay.text = "Lap: " + (lap + 1);
                 }

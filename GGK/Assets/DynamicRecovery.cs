@@ -24,6 +24,8 @@ public class DynamicRecovery : MonoBehaviour
 
     private NEWDriver kartMovementScript;
 
+    [SerializeField]
+    private NPCPhysics kartPhysicsNPC;
 
     public MiniMapHud miniMap;
 
@@ -58,6 +60,7 @@ public class DynamicRecovery : MonoBehaviour
         }
 
         kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
+        kartPhysicsNPC = kartRoot.GetComponentInChildren<NPCPhysics>();
         particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
 
     }
@@ -169,6 +172,11 @@ public class DynamicRecovery : MonoBehaviour
             kartMovementScript.enabled = false;
             
         }
+
+        if (kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.enabled = false;
+        }
         yield return new WaitForSeconds(1f);
 
         isRecovering = true;
@@ -185,13 +193,21 @@ public class DynamicRecovery : MonoBehaviour
         {
             float lerp = t / duration;
             kartVisual.localScale = Vector3.Lerp(originalScale, stretchedScale, lerp);
-            fadeCanvas.alpha = lerp; // screen fading to black
+            if (fadeCanvas != null)
+            {
+                fadeCanvas.alpha = lerp; // screen fading to black
+            }
             t += Time.deltaTime;
             yield return null;
         }
 
         kartVisual.localScale = stretchedScale;
-        fadeCanvas.alpha = 1f;
+
+        if (fadeCanvas != null)
+        {
+
+            fadeCanvas.alpha = 1f;
+        }
 
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
@@ -211,6 +227,11 @@ public class DynamicRecovery : MonoBehaviour
             kartMovementScript.enabled = true;
         }
 
+        if (kartPhysicsNPC != null) 
+        {
+            kartPhysicsNPC.enabled = true;
+        }
+
         // REAPPEAR IN STRETCHED FORM
         kartVisual.localScale = stretchedScale;
         kartVisual.gameObject.SetActive(true);
@@ -221,14 +242,29 @@ public class DynamicRecovery : MonoBehaviour
         {
             float lerp = t / duration;
             kartVisual.localScale = Vector3.Lerp(stretchedScale, originalScale, lerp);
-            fadeCanvas.alpha = 1f - lerp; // screen fading from black
+            if(fadeCanvas != null)
+            {
+
+                fadeCanvas.alpha = 1f - lerp; // screen fading from black
+            }
             t += Time.deltaTime;
             yield return null;
         }
 
-        kartMovementScript.StopParticles();
+        if (kartMovementScript != null)
+        {
+            kartMovementScript.StopParticles();
+        }
+        else if(kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.StopParticles();
+        }
         kartVisual.localScale = originalScale;
-        fadeCanvas.alpha = 0f;
+
+        if (fadeCanvas != null)
+        {
+            fadeCanvas.alpha = 0f;
+        }
 
         rb.useGravity = true;
         isRecovering = false;
@@ -236,16 +272,20 @@ public class DynamicRecovery : MonoBehaviour
 
     private IEnumerator Fade(float targetAlpha)
     {
-        float initialAlpha = fadeCanvas.alpha;
-        float elapsed = 0f;
-
-        while(elapsed < fadeTime)
+        if (fadeCanvas != null) 
         {
-            fadeCanvas.alpha = Mathf.Lerp(initialAlpha, targetAlpha, elapsed/fadeTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+            float initialAlpha = fadeCanvas.alpha;
+            float elapsed = 0f;
 
-        fadeCanvas.alpha = targetAlpha;
+            while (elapsed < fadeTime)
+            {
+                fadeCanvas.alpha = Mathf.Lerp(initialAlpha, targetAlpha, elapsed / fadeTime);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            fadeCanvas.alpha = targetAlpha;
+        }
+        
     }
 }
