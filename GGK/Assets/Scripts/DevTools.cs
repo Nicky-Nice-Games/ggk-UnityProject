@@ -69,12 +69,12 @@ public class DevTools : MonoBehaviour
         {
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
             //Debug.Log("Length " + textLog.Length);
-            if (textLog.Length > 131)
-            {
-                commandPromptCanvas.enabled = true;
-                inputField.ActivateInputField();
+            //if (textLog.Length > 131)
+            //{
+            //    commandPromptCanvas.enabled = true;
+            //    inputField.ActivateInputField();
 
-            }
+            //}
             //else
             //{
                 //commandPromptCanvas.enabled = false;
@@ -197,7 +197,8 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "ClearLog":
-                textLog = "Welcome to Command Prompt\nType ShowMethods for options";
+                textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
+                "or [methodName] options for param options (Note: currently only for LoadMap)";
                 break;
 
             default:
