@@ -55,7 +55,7 @@ public class DevTools : MonoBehaviour
         commandPromptCanvas.enabled = false;
 
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] options for param options (Note: currently only for LoadMap)";
+                "or [methodName] Options for param options (Note: currently only for LoadMap)";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -198,7 +198,7 @@ public class DevTools : MonoBehaviour
 
             case "ClearLog":
                 textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] options for param options (Note: currently only for LoadMap)";
+                "or [methodName] Options for param options (Note: currently only for LoadMap)";
                 break;
 
             default:
@@ -220,7 +220,7 @@ public class DevTools : MonoBehaviour
     {
         switch (mapName)
         {
-            case "options":
+            case "Options":
                 textLog += "\nOptions for param 1 [mapName]: ";
                 foreach (MapName name in Enum.GetValues(typeof(MapName)))
                     {
