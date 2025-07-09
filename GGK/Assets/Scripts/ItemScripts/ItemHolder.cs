@@ -318,6 +318,102 @@ public class ItemHolder : MonoBehaviour
                         projBrick.gameObject.SetActive(false);
                     }
                     break;
+                case "Boost":
+                    BoostBrick boostBrick = collision.gameObject.GetComponent<BoostBrick>();
+                    if (!holdingItem)
+                    {
+                        boostBrick.GiveBoost(this.gameObject);
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Boost")
+                    {
+                        // if player missing item, gives random level 2 item or upgrades current item
+                        boostBrick.UpgradeItem(this.gameObject);
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // displays item in the HUD
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+
+                        // Disables the upgrade box
+                        boostBrick.gameObject.SetActive(false);
+                    }
+                    break;
+                case "Defense":
+                    DefenseBrick defBrick = collision.gameObject.GetComponent<DefenseBrick>();
+                    if (!holdingItem)
+                    {
+                        defBrick.GiveShield(this.gameObject);
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Shield")
+                    {
+                        // if player missing item, gives random level 2 item or upgrades current item
+                        defBrick.UpgradeItem(this.gameObject);
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // displays item in the HUD
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+
+                        // Disables the upgrade box
+                        defBrick.gameObject.SetActive(false);
+                    }
+                    break;
+                case "Hazard":
+                    HazardBrick hazBrick = collision.gameObject.GetComponent<HazardBrick>();
+                    if (!holdingItem)
+                    {
+                        hazBrick.GiveHazard(this.gameObject);
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Hazard")
+                    {
+                        // if player missing item, gives random level 2 item or upgrades current item
+                        hazBrick.UpgradeItem(this.gameObject);
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // displays item in the HUD
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+
+                        // Disables the upgrade box
+                        hazBrick.gameObject.SetActive(false);
+                    }
+                    break;
                 default:
                     break;
             }
