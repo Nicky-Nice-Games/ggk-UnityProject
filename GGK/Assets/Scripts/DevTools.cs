@@ -236,10 +236,10 @@ public class DevTools : MonoBehaviour
             case "Options":
                 textLog += "\nOptions for param 1 [MapName]: ";
                 foreach (MapName name in Enum.GetValues(typeof(MapName)))
-                    {
-                        textLog += "\n" + name;
-                    }
-                    break;
+                {
+                    textLog += "\n" + name;
+                }
+                break;
             case "OuterLoop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 //Can be removed if prefered, maybe when in certain modes?
