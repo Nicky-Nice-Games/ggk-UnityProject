@@ -52,8 +52,8 @@ public class DevTools : MonoBehaviour
     void Start()
     {
         AddListener(gameObject);
-        commandPromptCanvas.enabled = false;
 
+        commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
                 "or [methodName] Options for param options (Note: currently only for LoadMap)";
 
@@ -64,6 +64,9 @@ public class DevTools : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
+        //to keep it enabled but it still doesn't show until the key is pressed again)
+
         //Debug.Log("loading " + sceneLoader.loading);
         if (sceneLoader.loading)
         {
@@ -84,25 +87,23 @@ public class DevTools : MonoBehaviour
         }
       
 
-        //Shows and hides the canvas (prompt) when ~ is pressed (KeyCode.Tilda not working) !!
+        //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working) !!
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
-            //Debug.Log("Pressed");
             if (commandPromptCanvas.enabled == false)
             {
-                //Debug.Log("false");
                 commandPromptCanvas.enabled = true;
                 inputField.ActivateInputField();
             }
             else
             {
-                //Debug.Log("true");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
             }
-            
         }
 
+        //Clears input field, returns cursor to field, and turns on auto-scroll when the user
+        //enters new input
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             inputField.text = "";
@@ -110,11 +111,13 @@ public class DevTools : MonoBehaviour
             isScrolling = false;
         }
 
+        //Turns on auto-scroll when the user isn't scrolling
         if(!isScrolling)
         {
             AutoScroll(scrollRect);
         }
         
+        //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
     }
 
@@ -124,7 +127,6 @@ public class DevTools : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
@@ -133,18 +135,16 @@ public class DevTools : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
-        }
-                
+        }         
     }
 
 
     /// <summary>
     /// Adds a game object as a listner if it is not already in the list.
     /// </summary>
-    /// <param name="listener"></param>
+    /// <param name="listener">The game object that listens for the commands.</param>
     public void AddListener(GameObject listener)
     {
-
         if (!listeners.Contains(listener))
         {
             listeners.Add(listener);
@@ -152,14 +152,21 @@ public class DevTools : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Command method is run On End Edit (String) of the UI input field and controls 
+    /// what happens to the input.
+    /// </summary>
+    /// <param name="input">The user entered text.</param>
     public void Command(string input)
     {
+        //Puts user entered text into the prompt log
         textLog += "\n\t>_ " + input;
 
         //Splits input into substrings with a space as the delimiter
         string[] parts = input.Split(new char[] { ' ' });
 
-        //Format: methodName space mapParam space modeParam
+        //Format: MethodName space MapParam space ModeParam?
+        //or MethodName param : MethodName param
         //  parts[0] = methodName
         //  parts[1] = param 1 (map name)
         //  parts[2] = param 2 (game mode)
@@ -193,6 +200,14 @@ public class DevTools : MonoBehaviour
 
             case "GameModeChange":
                 //TODO set up gamemode method command to change game mode without changing map
+                if (parts.Length > 1)
+                {
+                    GameModeChange(parts[1]);
+                }
+                else
+                {
+                    textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                }
                 textLog += "\nMethod not yet set up :)";
                 break;
 
@@ -204,24 +219,22 @@ public class DevTools : MonoBehaviour
             default:
                 textLog += "\nError: Method Command Not Found.";
                 break;
-
         }
-
 
     }
 
-    //textLog +=  "\nOptions: ";
-    //foreach (MapName mapName in Enum.GetValues(typeof(MapName)))
-    //{
-    //    textLog += "\n" + mapName;
-    //}
-
+ 
+    /// <summary>
+    /// Handles the LoadMap command based on the inputted paramater entered after it. 
+    /// </summary>
+    /// <param name="mapName">The inputted parameter after the LoadMap command.</param>
     public void LoadMap(string mapName)
     {
         switch (mapName)
         {
+            //Displays all of the parameter options for the LoadMap method
             case "Options":
-                textLog += "\nOptions for param 1 [mapName]: ";
+                textLog += "\nOptions for param 1 [MapName]: ";
                 foreach (MapName name in Enum.GetValues(typeof(MapName)))
                     {
                         textLog += "\n" + name;
@@ -257,13 +270,11 @@ public class DevTools : MonoBehaviour
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
-
                 break;
             case "TestTube":
                 sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
-
                 break;
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
@@ -278,23 +289,64 @@ public class DevTools : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Handles the GameModeChange command based on the inputted paramater entered after it.
+    /// </summary>
+    /// <param name="gameMode">The inputted parameter after the GameModeChange command.</param>
+    public void GameModeChange(string gameMode)
+    {
+
+        switch (gameMode)
+        {
+            //Displays all of the parameter options for the GameModeChange method
+            case "Options":
+                textLog += "\nOptions for param 1 [GameMode]: ";
+                foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+                {
+                    textLog += "\n" + mode;
+                }
+                break;
+
+            //Mode cases go here
+
+            case "":
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+            case null:
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+            default:
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+        }
+
+    }
+
+
+    /// <summary>
+    /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
+    /// </summary>
+    /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
     public void AutoScroll(ScrollRect scrollRect)
     {
-        //Keeps scroll bar at bottom to show most recent text
         scrollRect.verticalNormalizedPosition = 0;
     }
 
+
+    /// <summary>
+    /// Keeps the scroll bar from trying to stay at the bottom when the user is trying to scroll 
+    /// up to view previous text. Auto-scrolling continues when either the bar is scrolled back to 
+    /// the bottom or the user enters another input. 
+    /// </summary>
     public void StopAutoScroll()
     {
         isScrolling = true;
-        //Keeps scroll bar at bottom to show most recent text
         scrollRect.verticalNormalizedPosition = scrollRect.verticalNormalizedPosition;
 
         if(scrollRect.verticalNormalizedPosition == 0)
         {
             isScrolling = false;
         }
-
     }
 
 }
