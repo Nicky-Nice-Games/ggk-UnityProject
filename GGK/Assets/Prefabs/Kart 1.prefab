@@ -70467,7 +70467,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5946905664927676741}
-  - component: {fileID: 2749271850983187583}
+  - component: {fileID: 3651042994045691783}
   m_Layer: 0
   m_Name: Kart 1
   m_TagString: Untagged
@@ -70493,10 +70493,8 @@ Transform:
   - {fileID: 5456407202316583792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2749271850983187583
+--- !u!114 &3651042994045691783
 MonoBehaviour:
---- !u!1 &4896708664736989073
-GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -70507,7 +70505,7 @@ GameObject:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3123801656
+  GlobalObjectIdHash: 0
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -70516,6 +70514,12 @@ GameObject:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!1 &4896708664736989073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7387861010680531068}
@@ -111073,7 +111077,12 @@ MonoBehaviour:
   timer: 5
   itemDisplay: {fileID: 0}
   defaultItemDisplay: {fileID: 2800000, guid: 7b68c3fd2d2e4ab4c9af6a29ab528b67, type: 3}
+  uses: 0
+  gravityForce: 0
   miniMap: {fileID: 0}
+  length: 4
+  strength: 5
+  dampening: 20
 --- !u!114 &8552696247647127666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111088,13 +111097,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: f1affd61a6bd8f040a98a5fd0d2c0d3f, type: 3}
   color: {r: 0.9056604, g: 0, b: 0.6587271, a: 1}
-  name: 
+  kartName: 
   models:
-  - {fileID: 6114907265912750895}
-  - {fileID: 2933583560060013751}
-  - {fileID: 2368398520874762676}
-  - {fileID: 9030680248772034307}
-  - {fileID: 5374213970122044570}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &8019054329108714312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111126,11 +111135,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
-  - {fileID: 6284005883803008911}
-  - {fileID: 6194494102651323620}
-  - {fileID: 1051064947334986034}
-  - {fileID: 7560666949304106003}
-  - {fileID: 1930307494594273200}
 --- !u!1 &8143935920720143253
 GameObject:
   m_ObjectHideFlags: 0
@@ -121715,11 +121719,6 @@ PrefabInstance:
 --- !u!4 &422760763534631816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 13433cd13ada20f4589dcc88ea1697bb, type: 3}
-  m_PrefabInstance: {fileID: 168686875589543011}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1051064947334986034 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 13433cd13ada20f4589dcc88ea1697bb, type: 3}
   m_PrefabInstance: {fileID: 168686875589543011}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &852560849772262157
