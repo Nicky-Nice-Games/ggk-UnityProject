@@ -12,6 +12,20 @@ public class NPCPhysics : MonoBehaviour
     public Vector3 movementDirection;
     public Quaternion turning;
 
+    [Header("Navigation")]
+    public GameObject parent;
+    public KartCheckpoint KC;
+    public GameObject destination;
+    [SerializeField]
+    private int destinationAhead;
+    private Vector3 checkpointOffset;
+    [SerializeField]
+    Vector3 randomizedTarget;
+    public bool leftGrounded;
+    public bool rightGrounded;
+    bool lastLeftGrounded = true;
+    bool lastRightGrounded = true;
+
 
     [Header("Kart Settings")]
     //acceleration, decceleration
@@ -130,21 +144,7 @@ public class NPCPhysics : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
 
-    [Header("Navigation")]
-    public GameObject parent;
-    public KartCheckpoint KC;
-    public GameObject destination;
-    [SerializeField]
-    private int destinationAhead;
-    private Vector3 checkpointOffset;
-    [SerializeField]
-    Vector3 randomizedTarget;
-    public bool leftGrounded;
-    public bool rightGrounded;
-    bool lastLeftGrounded = true;
-    bool lastRightGrounded = true;
-    float edgeGroundMemory = 0.1f;
-    float edgeTimerL, edgeTimerR;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -386,52 +386,60 @@ public class NPCPhysics : MonoBehaviour
         destination = KC.checkpointList[destinationID];
         randomizedTarget = destination.transform.position + checkpointOffset;
 
-        Vector3 dirToTarget = destination.transform.position - transform.position;
-        dirToTarget.y = 0f; // Flatten vertical influence
-        Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+       
 
-        movementDirection = new Vector3(localDir.x, 0f, localDir.z);
-        movementDirection = Vector3.ClampMagnitude(localDir, 1f);
+        if (isGrounded) 
+        {
+            Vector3 dirToTarget = destination.transform.position - transform.position;
+            dirToTarget.y = 0f; // Flatten vertical influence
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            
+            movementDirection = new Vector3(localDir.x, 0f, localDir.z);
+
+            CheckRoadEdges();
+
+            //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
+            
+        }
         
-        CheckRoadEdges();
+        
         
     }
 
 
     void CheckRoadEdges()
     {
-       float edgeRayLength = 1.2f;
-    float raySideOffset = 0.6f;
-    float rayForwardOffset = 0.5f;
+        float edgeRayLength = 5f;
+        float raySideOffset = 1.5f;
+        float rayForwardOffset = 0.5f;
 
-    Vector3 originLeft = transform.position + (transform.right * -raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 0.2f);
-    Vector3 originRight = transform.position + (transform.right * raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 0.2f);
+        Vector3 originLeft = transform.position + (transform.right * -raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 1.2f);
+        Vector3 originRight = transform.position + (transform.right * raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 1.2f);
 
-    RaycastHit hitLeft, hitRight;
+        RaycastHit hitLeft, hitRight;
 
-    bool hitLeftGround = Physics.Raycast(originLeft, -kartNormal.up, out hitLeft, edgeRayLength, groundLayer);
-    bool hitRightGround = Physics.Raycast(originRight, -kartNormal.up, out hitRight, edgeRayLength, groundLayer);
+        Vector3 rayDir = -transform.up;
+        leftGrounded = Physics.Raycast(originLeft, rayDir, out hitLeft, edgeRayLength, groundLayer);
+        rightGrounded = Physics.Raycast(originRight, rayDir, out hitRight, edgeRayLength, groundLayer);
 
 
-    leftGrounded = hitLeftGround;
-    rightGrounded = hitRightGround;
 
-    float edgeAvoidStrength = 5f;
+        float edgeAvoidStrength = 2f;
 
-    if (!leftGrounded && rightGrounded)
-    {
-        movementDirection.x += edgeAvoidStrength;
-    }
-    else if (!rightGrounded && leftGrounded)
-    {
-        movementDirection.x -= edgeAvoidStrength;
-    }
-    else if (!leftGrounded && !rightGrounded)
-    {
-        movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake/slow
-    }
+        if (!leftGrounded && rightGrounded)
+        {
+            movementDirection.x += edgeAvoidStrength;
+        }
+        else if (!rightGrounded && leftGrounded)
+        {
+            movementDirection.x -= edgeAvoidStrength;
+        }
+        else if (!leftGrounded && !rightGrounded)
+        {
+            movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake/slow
+        }
 
-    movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
+    //movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
 
 
@@ -828,4 +836,6 @@ public class NPCPhysics : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         turboTwisting = false; //Reset the turbo twisting state
     }
+
+
 }
