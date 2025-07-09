@@ -130,8 +130,7 @@ public class NPCPhysics : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
 
-    [Header("Nav Mesh")]
-    public NavMeshAgent agent;
+    [Header("Navigation")]
     public GameObject parent;
     public KartCheckpoint KC;
     public GameObject destination;
@@ -140,11 +139,17 @@ public class NPCPhysics : MonoBehaviour
     private Vector3 checkpointOffset;
     [SerializeField]
     Vector3 randomizedTarget;
+    public bool leftGrounded;
+    public bool rightGrounded;
+    bool lastLeftGrounded = true;
+    bool lastRightGrounded = true;
+    float edgeGroundMemory = 0.1f;
+    float edgeTimerL, edgeTimerR;
 
     // Start is called before the first frame update
     void Start()
     {
-        float offsetRadius = 15f; 
+        float offsetRadius = 8f; 
         checkpointOffset = new Vector3(
             Random.Range(-offsetRadius, offsetRadius),
             0f,
@@ -160,6 +165,7 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
+
     }
 
     public void StopParticles()
@@ -371,7 +377,7 @@ public class NPCPhysics : MonoBehaviour
 
 
 
-        //------------NavMesh---------------------
+        //------------Navigation---------------------
         int destinationID = KC.checkpointId + destinationAhead;
         if (destinationID >= KC.checkpointList.Count)
         {
@@ -379,17 +385,54 @@ public class NPCPhysics : MonoBehaviour
         }
         destination = KC.checkpointList[destinationID];
         randomizedTarget = destination.transform.position + checkpointOffset;
-        agent.SetDestination(randomizedTarget);
 
         Vector3 dirToTarget = destination.transform.position - transform.position;
         dirToTarget.y = 0f; // Flatten vertical influence
         Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+
         movementDirection = new Vector3(localDir.x, 0f, localDir.z);
         movementDirection = Vector3.ClampMagnitude(localDir, 1f);
-        //Debug.Log($"MovementDir: {movementDirection}, Acceleration: {acceleration.magnitude}, Destination: {destination.name}");
+        
+        CheckRoadEdges();
+        
     }
 
 
+    void CheckRoadEdges()
+    {
+       float edgeRayLength = 1.2f;
+    float raySideOffset = 0.6f;
+    float rayForwardOffset = 0.5f;
+
+    Vector3 originLeft = transform.position + (transform.right * -raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 0.2f);
+    Vector3 originRight = transform.position + (transform.right * raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 0.2f);
+
+    RaycastHit hitLeft, hitRight;
+
+    bool hitLeftGround = Physics.Raycast(originLeft, -kartNormal.up, out hitLeft, edgeRayLength, groundLayer);
+    bool hitRightGround = Physics.Raycast(originRight, -kartNormal.up, out hitRight, edgeRayLength, groundLayer);
+
+
+    leftGrounded = hitLeftGround;
+    rightGrounded = hitRightGround;
+
+    float edgeAvoidStrength = 5f;
+
+    if (!leftGrounded && rightGrounded)
+    {
+        movementDirection.x += edgeAvoidStrength;
+    }
+    else if (!rightGrounded && leftGrounded)
+    {
+        movementDirection.x -= edgeAvoidStrength;
+    }
+    else if (!leftGrounded && !rightGrounded)
+    {
+        movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake/slow
+    }
+
+    movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
+    }
 
 
 
