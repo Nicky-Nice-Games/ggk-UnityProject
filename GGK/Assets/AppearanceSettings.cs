@@ -15,6 +15,19 @@ public class AppearanceSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //UPDATE ME LATER
+
+
+    }
+
+    public void UpdateAppearance()
+    {
         // If player (will need to be changed for multiplayer)
         if (GetComponent<NEWDriver>())
         {
@@ -43,13 +56,5 @@ public class AppearanceSettings : MonoBehaviour
         }
         // I think NPC icons and colors are currently manually set in scene,so
         // Else NPCDriver code when NPCDrivers get a new prefab?
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //UPDATE ME LATER
-
-        
     }
 }

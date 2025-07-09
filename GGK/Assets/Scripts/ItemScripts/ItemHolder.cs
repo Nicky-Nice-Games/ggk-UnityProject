@@ -28,6 +28,9 @@ public class ItemHolder : MonoBehaviour
     [SerializeField]
     private RawImage itemDisplay;
 
+    private Vector3 itemDisplayScale;
+    private Vector2 itemDisplayPosition;
+
     [SerializeField]
     private Texture defaultItemDisplay;
 
@@ -74,6 +77,8 @@ public class ItemHolder : MonoBehaviour
         if (thisDriver)
         {
             itemDisplay.texture = defaultItemDisplay;
+            itemDisplayScale = itemDisplay.rectTransform.localScale;
+            itemDisplayPosition = itemDisplay.rectTransform.position;
         }
 
         //soundPlayer = GetComponent<AudioSource>();
@@ -181,6 +186,7 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
@@ -455,6 +461,8 @@ public class ItemHolder : MonoBehaviour
     }
     public void ApplyItemTween(Texture item)
     {
+        itemDisplay.rectTransform.DOKill();
+        itemDisplay.rectTransform.localScale = itemDisplayScale;
         itemDisplay.texture = item;
         itemDisplay.rectTransform.DOShakeScale(0.5f);
     }
