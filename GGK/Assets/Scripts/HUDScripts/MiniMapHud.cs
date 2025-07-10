@@ -28,7 +28,7 @@ using UnityEngine.UI;
 //----------------ADDING OBJECTS-----------------
 //
 // 1. Add objects to track by adding their GameObjects to the "objects" GameObject list. Ensure these objects
-//    have an "AppearanceSettings" component if you wish to depcify their appearance on the map. 
+//    have an "AppearanceSettings" component if you wish to specify their appearance on the map. 
 // 2. Do NOT add anything to the "mapIcons" list. This will populate itself automatically. 
 //
 //----------------TRACKING DEPTH-----------------
@@ -86,6 +86,7 @@ public class MiniMapHud : MonoBehaviour
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
     [SerializeField] private float iconSpinoutSpeed;
+    [SerializeField] private GameObject trackingPlayer;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
@@ -139,19 +140,27 @@ public class MiniMapHud : MonoBehaviour
                 EstablishAppearance(objects[i], refImage);
             }
 
+            //set the player's icon to the front
+            int trackingIndex = objects.IndexOf(trackingPlayer);
+            if (trackingIndex != -1)
+            {
+                mapIcons[trackingIndex].transform.SetAsLastSibling();
+                mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
+            }
+            
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
                 if (obj.transform.parent != null)
                 {
-                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>(); 
+                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>();
                     if (recovery.Length > 0)
                     {
-                        foreach(DynamicRecovery r in recovery)
-                        r.miniMap = this;
+                        foreach (DynamicRecovery r in recovery)
+                            r.miniMap = this;
                     }
                 }
-                
+
                 if (holder)
                 {
                     holder.miniMap = this;
@@ -334,6 +343,7 @@ public class MiniMapHud : MonoBehaviour
 
         if (settings != null)
         {
+            settings.UpdateAppearance();
             img.sprite = settings.icon;
             img.color = settings.color;
         }
