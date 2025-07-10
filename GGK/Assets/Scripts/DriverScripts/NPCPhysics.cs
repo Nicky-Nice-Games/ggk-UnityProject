@@ -12,6 +12,20 @@ public class NPCPhysics : MonoBehaviour
     public Vector3 movementDirection;
     public Quaternion turning;
 
+    [Header("Navigation")]
+    public GameObject parent;
+    public KartCheckpoint KC;
+    public GameObject destination;
+    [SerializeField]
+    private int destinationAhead;
+    private Vector3 checkpointOffset;
+    [SerializeField]
+    Vector3 randomizedTarget;
+    public bool leftGrounded;
+    public bool rightGrounded;
+    bool lastLeftGrounded = true;
+    bool lastRightGrounded = true;
+
 
     [Header("Kart Settings")]
     //acceleration, decceleration
@@ -130,21 +144,12 @@ public class NPCPhysics : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
 
-    [Header("Nav Mesh")]
-    public NavMeshAgent agent;
-    public GameObject parent;
-    public KartCheckpoint KC;
-    public GameObject destination;
-    [SerializeField]
-    private int destinationAhead;
-    private Vector3 checkpointOffset;
-    [SerializeField]
-    Vector3 randomizedTarget;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        float offsetRadius = 15f; 
+        float offsetRadius = 8f; 
         checkpointOffset = new Vector3(
             Random.Range(-offsetRadius, offsetRadius),
             0f,
@@ -160,6 +165,7 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
+
     }
 
     public void StopParticles()
@@ -371,7 +377,7 @@ public class NPCPhysics : MonoBehaviour
 
 
 
-        //------------NavMesh---------------------
+        //------------Navigation---------------------
         int destinationID = KC.checkpointId + destinationAhead;
         if (destinationID >= KC.checkpointList.Count)
         {
@@ -379,17 +385,62 @@ public class NPCPhysics : MonoBehaviour
         }
         destination = KC.checkpointList[destinationID];
         randomizedTarget = destination.transform.position + checkpointOffset;
-        agent.SetDestination(randomizedTarget);
 
-        Vector3 dirToTarget = destination.transform.position - transform.position;
-        dirToTarget.y = 0f; // Flatten vertical influence
-        Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
-        movementDirection = new Vector3(localDir.x, 0f, localDir.z);
-        movementDirection = Vector3.ClampMagnitude(localDir, 1f);
-        //Debug.Log($"MovementDir: {movementDirection}, Acceleration: {acceleration.magnitude}, Destination: {destination.name}");
+       
+
+        if (isGrounded) 
+        {
+            Vector3 dirToTarget = destination.transform.position - transform.position;
+            dirToTarget.y = 0f; // Flatten vertical influence
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            
+            movementDirection = new Vector3(localDir.x, 0f, localDir.z);
+
+            CheckRoadEdges();
+
+            //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
+            
+        }
+        
+        
+        
     }
 
 
+    void CheckRoadEdges()
+    {
+        float edgeRayLength = 5f;
+        float raySideOffset = 1.5f;
+        float rayForwardOffset = 0.5f;
+
+        Vector3 originLeft = transform.position + (transform.right * -raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 1.2f);
+        Vector3 originRight = transform.position + (transform.right * raySideOffset) + (transform.forward * rayForwardOffset) + (transform.up * 1.2f);
+
+        RaycastHit hitLeft, hitRight;
+
+        Vector3 rayDir = -transform.up;
+        leftGrounded = Physics.Raycast(originLeft, rayDir, out hitLeft, edgeRayLength, groundLayer);
+        rightGrounded = Physics.Raycast(originRight, rayDir, out hitRight, edgeRayLength, groundLayer);
+
+
+
+        float edgeAvoidStrength = 2f;
+
+        if (!leftGrounded && rightGrounded)
+        {
+            movementDirection.x += edgeAvoidStrength;
+        }
+        else if (!rightGrounded && leftGrounded)
+        {
+            movementDirection.x -= edgeAvoidStrength;
+        }
+        else if (!leftGrounded && !rightGrounded)
+        {
+            movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake/slow
+        }
+
+    //movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
+    }
 
 
 
@@ -785,4 +836,6 @@ public class NPCPhysics : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         turboTwisting = false; //Reset the turbo twisting state
     }
+
+
 }
