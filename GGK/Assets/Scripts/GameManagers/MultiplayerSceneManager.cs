@@ -19,12 +19,12 @@ public class MultiplayerSceneManager : NetworkBehaviour
         {
             multiplayerActive = false;
             Instance = this;
-            //DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
         }
-        // else if (Instance != this)
-        // {
-        //     Destroy(this);
-        // }
+        else if (Instance != this)
+        {
+            Destroy(this);
+        }
     }
 
     public override void OnNetworkSpawn()
