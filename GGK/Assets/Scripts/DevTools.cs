@@ -17,10 +17,11 @@ using UnityEngine.UIElements;
 //  entered (likely something to do with On End Edit)
 //If seen as an issue (which I think it probably is), make it so that the command
 //  prompt is hidden when entering a map which happens when the prompt was already open
-//  and you go into a track not using a command 
+//  and you go into a track not using a command (Update: now not working with command either)
 //  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
 //Add other commands (see dev keyboard shortcuts; restart command? return to menu commands/other
 //  pause menu commands?)
+//Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 
 
 /// <summary>
@@ -93,16 +94,19 @@ public class DevTools : MonoBehaviour
             //inputField.ActivateInputField();
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
             //Debug.Log("Length " + textLog.Length);
-            if (textLog.Length > 131)   //TODO FIX! won't work if log has been cleared, run secondary check?
-            {
-                commandPromptCanvas.enabled = true;
-                inputField.ActivateInputField();
-            }
-            else
-            {
-                commandPromptCanvas.enabled = false;
-            }
-            sceneLoader.loading = false;
+
+            //TODO FIX! won't work if log has been cleared, run secondary check?
+            //  ALSO overrides disabling when entering a map
+            //if (textLog.Length > 131)   
+            //{
+            //    commandPromptCanvas.enabled = true;
+            //    inputField.ActivateInputField();
+            //}
+            //else
+            //{
+            //    commandPromptCanvas.enabled = false;
+            //}
+            //sceneLoader.loading = false;
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
         }
       
