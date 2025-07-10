@@ -444,18 +444,38 @@ public class ItemHolder : MonoBehaviour
                     }
                     else
                     {
-                        // Increase item tier if not max & apply upgrades
-                        if (driverItemTier < 4)
+                        // shield can't be upgraded while being used
+                        if(heldItem.ItemCategory != "Shield")
                         {
-                            driverItemTier++;
-                            heldItem.ItemTier = driverItemTier;
-                            heldItem.OnLevelUp(heldItem.ItemTier);
-                            uses = heldItem.UseCount;
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
                         }
-                        // Item Box Shake
-                        if (thisDriver)
+                        else if (uses == 1)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
                         }
                     }
                     break;
