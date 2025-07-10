@@ -66,6 +66,20 @@ public class Shield : BaseItem
         {
             Destroy(collision.gameObject);
         }
+        else if (collision.gameObject.CompareTag("Kart") || itemTier == 4)
+        {
+            // ensures the NEWDriver/NPCDriver exists
+            if (collision.gameObject.GetComponent<NEWDriver>() != null)
+            {
+                NEWDriver playerKart = collision.gameObject.GetComponent<NEWDriver>();
+                playerKart.Stun(2.0f);
+            }
+            else if(collision.gameObject.GetComponent<NPCDriver>() != null)
+            {
+                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
+                npcKart.StartRecovery(2.0f);
+            }
+        }
     }
 
     // Should be moved to BaseItem to be overridable

@@ -22,6 +22,8 @@ public class NPCDriver : MonoBehaviour
     public float turnSpeed = 60f;
     public float maxSteerAngle = 20f;
 
+    Tween driftRotationTween;
+
     [Header("Grounding")]
     public LayerMask groundLayer;
     public float groundCheckDistance = 8.6f;
@@ -401,6 +403,35 @@ public class NPCDriver : MonoBehaviour
         // Limit acceleration and maxSpeed temporarily
         accelerationRate = 500f;
         maxSpeed = 10f;
+    }
+
+    // StartRecovery for being bumped by a shield causing a spin out
+    public void StartRecovery(float duration)
+    {
+        isRecoveringFromHit = true;
+        recoveryTimer = recoveryDuration;
+
+        // Gently reduce current velocity
+        velocity *= 0.2f;
+
+        // Limit acceleration and maxSpeed temporarily
+        accelerationRate = 500f;
+        maxSpeed = 10f;
+
+        StartCoroutine(StunCoroutine(duration));
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
     }
 
     void OnCollisionEnter(Collision collision)
