@@ -144,7 +144,7 @@ public class NPCPhysics : NetworkBehaviour
     [Header("Confused Settings")]
     public bool isConfused;
     public float confusedTimer;
-
+    public Transform childNormal;
     
 
     // Start is called before the first frame update
@@ -464,7 +464,7 @@ public class NPCPhysics : NetworkBehaviour
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
 
-        Vector3 rayDir = transform.forward;
+        Vector3 rayDir = childNormal.forward;
 
         Vector3 originCenter = transform.position + (transform.up * rayVerticalOffset);
         Vector3 originLeft = originCenter + (transform.right * -raySideOffset);
