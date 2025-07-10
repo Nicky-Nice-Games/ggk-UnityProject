@@ -66,15 +66,18 @@ public class Shield : BaseItem
         {
             Destroy(collision.gameObject);
         }
-        else if (collision.gameObject.CompareTag("Kart") || itemTier == 4)
+        else if (collision.gameObject.CompareTag("Kart") && itemTier == 4)
         {
-            // ensures the NEWDriver/NPCDriver exists
+            // ensures that the shield is hitting a player or NPC kart
             if (collision.gameObject.GetComponent<NEWDriver>() != null)
+                //&& collision.gameObject.GetComponent<NEWDriver>() != Kart)
             {
                 NEWDriver playerKart = collision.gameObject.GetComponent<NEWDriver>();
                 playerKart.Stun(2.0f);
             }
-            else if(collision.gameObject.GetComponent<NPCDriver>() != null)
+
+            if(collision.gameObject.GetComponent<NPCDriver>() != null)
+                //&& collision.gameObject.GetComponent<NPCDriver>() != Kart)
             {
                 NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
                 npcKart.StartRecovery(2.0f);
