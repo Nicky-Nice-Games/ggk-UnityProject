@@ -6,13 +6,12 @@ using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class SignInManager : NetworkBehaviour
+public class SignInManager : MonoBehaviour
 {
 
     // UI elements for different parts of sign in scene
@@ -45,8 +44,8 @@ public class SignInManager : NetworkBehaviour
         }
 
         // Getting Client ID / creating player info
-        playerInfo = new PlayerInfo(NetworkManager.LocalClientId);
-        gameManager.playerList.Add(playerInfo);
+        playerInfo = new PlayerInfo();
+        gameManager.playerInfo = playerInfo;
     }
 
     // Update is called once per frame

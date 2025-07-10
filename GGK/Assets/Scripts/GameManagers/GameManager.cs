@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -29,7 +30,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
-    public List<PlayerInfo> playerList;
+    public PlayerInfo playerInfo;
     private APIManager apiManager;
 
     //the first button that should be selected should a controller need input
@@ -70,7 +71,7 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("Login");
         curState = GameStates.login;
-        playerList = new List<PlayerInfo>();
+        playerInfo = new PlayerInfo();
     }
 
     /// <summary>
@@ -81,14 +82,14 @@ public class GameManager : NetworkBehaviour
         // Turn guest mode on
         if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
         {
-            playerList[playerList.Count - 1].isGuest = true;
+            playerInfo.isGuest = true;
             Debug.Log("Guest mode on");
         }
 
         // Set validate player info
         else
         {
-            ValidatePlayer(playerList[playerList.Count - 1]);
+            ValidatePlayer(playerInfo);
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.login;
@@ -267,11 +268,7 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
-        // Posting data to server
-        foreach(PlayerInfo player in playerList)
-        {
-            apiManager.PostPlayerData(player);
-        }
+        apiManager.PostPlayerData(playerInfo);
 
         sceneLoader.LoadScene("GameOverScene");
         curState = GameStates.gameOver;
@@ -341,23 +338,4 @@ public class GameManager : NetworkBehaviour
         apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
 
-    /// <summary>
-    /// Searches the playerList for a matching player data via client ID
-    /// </summary>
-    /// <param name="thisClientID"></param>
-    /// <returns></returns>
-    public PlayerInfo AssignDataToDriver(ulong thisClientID)
-    {
-        // Finding a player info sheet with the same client ID
-        foreach(PlayerInfo player in playerList)
-        {
-            if(player.clientID == thisClientID)
-            {
-                return player;
-            }
-        }
-
-        // None are found
-        return null;
-    }
 }

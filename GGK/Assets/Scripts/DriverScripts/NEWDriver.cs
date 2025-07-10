@@ -141,7 +141,8 @@ public class NEWDriver : NetworkBehaviour
     {
         thisClientID = NetworkManager.LocalClientId;
         gameManagerObj = FindAnyObjectByType<GameManager>();
-        thisPlayerInfo = gameManagerObj.AssignDataToDriver(thisClientID);
+
+        thisPlayerInfo = gameManagerObj.playerInfo;
 
         sphere.drag = 0.5f;
 
