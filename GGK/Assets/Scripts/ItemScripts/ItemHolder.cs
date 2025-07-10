@@ -64,6 +64,10 @@ public class ItemHolder : MonoBehaviour
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
 
+    [Header("Tier 4 Boost Settings")]
+    [SerializeField] GameObject warpBoostEffect;
+    [SerializeField] float warpWaitTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +87,8 @@ public class ItemHolder : MonoBehaviour
 
         //soundPlayer = GetComponent<AudioSource>();
         driverItemTier = 1;
+
+        warpBoostEffect.SetActive(false);
     }
 
     // Update is called once per frame
@@ -561,11 +567,19 @@ public class ItemHolder : MonoBehaviour
                             }
 
                             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
-                            // set the kart's position to 3 checkpoints ahead
-                            thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
-                            kartCheck.checkpointId = warpCheckpointId;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+
+                            // Makes game object with wormhole effect appear
+                            warpBoostEffect.SetActive(true);
+
+                            // Waits a certain number of seconds, and then activates the warp boost
+                            StartCoroutine(WaitThenBoost(warpCheckpoint, kartCheck, warpCheckpointId,
+                                           boostMult, duration, boostMaxSpeed));
+
+                            //// set the kart's position to 3 checkpoints ahead
+                            //thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                            //thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+                            //kartCheck.checkpointId = warpCheckpointId;
+                            //StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                     }
                     Debug.Log("Applying Boost Item!");
@@ -610,6 +624,33 @@ public class ItemHolder : MonoBehaviour
         }
 
     }
+    
+    //Waits a certain number of seconds then activates the warp boost
+    IEnumerator WaitThenBoost(GameObject warpCheckpoint, KartCheckpoint kartCheck, int warpCheckpointId,
+                                      float boostMult, float duration, float boostMaxSpeed)
+    {
+        //This is the code for the player.
+        if (thisDriver != null)
+        {
+            //Movement and Velocity vectors are set to 0,
+            //we wait a certain amount of time,
+            //reset the vectors, and then boost!
+            Vector3 originalMovement = thisDriver.movementDirection;
+            Vector3 originalVelocity = thisDriver.sphere.velocity;
+            thisDriver.movementDirection = Vector3.zero;
+            thisDriver.sphere.velocity = Vector3.zero;
+            yield return new WaitForSeconds(warpWaitTime);
+            thisDriver.sphere.velocity = originalVelocity;
+            thisDriver.movementDirection = originalMovement;
+        }
+        // set the kart's position to 3 checkpoints ahead
+        thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+        thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+        kartCheck.checkpointId = warpCheckpointId;
+        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+        yield return new WaitForFixedUpdate();
+    }
+
     public void ApplyItemTween(Texture item)
     {
         itemDisplay.rectTransform.DOKill();
@@ -644,6 +685,7 @@ public class ItemHolder : MonoBehaviour
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+        warpBoostEffect.SetActive(false);
     }
 
     /// <summary>
