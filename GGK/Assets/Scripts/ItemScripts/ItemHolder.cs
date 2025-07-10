@@ -210,13 +210,8 @@ public class ItemHolder : MonoBehaviour
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
         }
-<<<<<<< HEAD
-        timer = Random.Range(5, 8);
-
-=======
         timer = Random.Range(1, 6);
        
->>>>>>> 0c2cd3f3 (HUD update)
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -400,18 +395,7 @@ public class ItemHolder : MonoBehaviour
             if (thisDriver != null)
             {
                 thisDriver.sphere.velocity /= 8000;
-<<<<<<< HEAD
-
-                // Checks if hazard is Confused Ritchie
-                if (collision.gameObject.GetComponent<TrapItem>().ItemTier == 3)
-                {
-                    thisDriver.confusedTimer = 10;
-                    thisDriver.isConfused = true;
-                    thisDriver.movementDirection *= -1; // Just here to forces confusion to activate even if you don't change movement input
-                }
-=======
                 ApplyIconSpin(gameObject, 3);
->>>>>>> 0c2cd3f3 (HUD update)
             }
             else if (npcDriver != null)
             {
@@ -433,9 +417,6 @@ public class ItemHolder : MonoBehaviour
         itemDisplay.rectTransform.DOShakeScale(0.5f);
     }
 
-<<<<<<< HEAD
-    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
-=======
     public void ApplyIconSpin(GameObject obj, int times)
     {
         if (miniMap.spinInstances.Contains(currentSpinCoroutine) && currentSpinCoroutine != null)
@@ -450,7 +431,6 @@ public class ItemHolder : MonoBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
->>>>>>> 0c2cd3f3 (HUD update)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
