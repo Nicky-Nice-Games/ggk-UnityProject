@@ -61,8 +61,8 @@ public class Shield : BaseItem
 
     private void OnTriggerEnter(Collider collision)
     {
-        // Destroys any game object or hazard the shield hits
-        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Hazard"))
+        // Destroys hazards at any tier and projectiles when less than tier 3
+        if ((itemTier < 3 && collision.gameObject.CompareTag("Projectile")) || collision.gameObject.CompareTag("Hazard"))
         {
             Destroy(collision.gameObject);
         }
