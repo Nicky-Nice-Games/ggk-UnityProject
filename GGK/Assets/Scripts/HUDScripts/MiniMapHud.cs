@@ -86,6 +86,7 @@ public class MiniMapHud : MonoBehaviour
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
     [SerializeField] private float iconSpinoutSpeed;
+    [SerializeField] private GameObject trackingPlayer;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
@@ -146,6 +147,14 @@ public class MiniMapHud : MonoBehaviour
                 EstablishAppearance(objects[i], refImage);
             }
 
+            //set the player's icon to the front
+            int trackingIndex = objects.IndexOf(trackingPlayer);
+            if (trackingIndex != -1)
+            {
+                mapIcons[trackingIndex].transform.SetAsLastSibling();
+                mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
+            }
+            
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
@@ -341,6 +350,7 @@ public class MiniMapHud : MonoBehaviour
 
         if (settings != null)
         {
+            settings.UpdateAppearance();
             img.sprite = settings.icon;
             img.color = settings.color;
         }
