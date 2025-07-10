@@ -328,12 +328,12 @@ public class ItemHolder : MonoBehaviour
                         default: // level 1
                             boostMult = 1.25f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
@@ -375,7 +375,7 @@ public class ItemHolder : MonoBehaviour
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
                             thisDriver.transform.rotation = Quaternion.LookRotation(warpCheckpoint.transform.forward);
                             kartCheck.checkpointId = warpCheckpointId;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
                             break;
                     }
                     Debug.Log("Applying Boost Item!");
@@ -435,10 +435,9 @@ public class ItemHolder : MonoBehaviour
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero; 
-            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
-            {
-                boostDirection = driver.transform.forward * boostForce;
-            }
+
+            Vector3 boostDirection = driver.transform.forward * boostForce;
+            
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
