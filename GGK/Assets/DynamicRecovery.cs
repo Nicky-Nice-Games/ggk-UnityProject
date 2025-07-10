@@ -30,8 +30,6 @@ public class DynamicRecovery : MonoBehaviour
 
     public MiniMapHud miniMap;
 
-    public MiniMapHud miniMap;
-
     // Start is called before the first frame update
     void Start()
     {

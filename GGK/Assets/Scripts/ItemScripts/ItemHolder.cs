@@ -44,10 +44,6 @@ public class ItemHolder : MonoBehaviour
     private IEnumerator currentSpinCoroutine;
     public MiniMapHud miniMap;
 
-    //the current coroutine animating spinning, to prevent double-ups
-    private IEnumerator currentSpinCoroutine;
-    public MiniMapHud miniMap;
-
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -541,12 +537,12 @@ public class ItemHolder : MonoBehaviour
                         default: // level 1
                             boostMult = 1.25f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
@@ -589,7 +585,7 @@ public class ItemHolder : MonoBehaviour
                             thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
                             thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
                             kartCheck.checkpointId = warpCheckpointId;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                     }
                     Debug.Log("Applying Boost Item!");
@@ -648,18 +644,20 @@ public class ItemHolder : MonoBehaviour
         miniMap.spinInstances.Add(currentSpinCoroutine);
         StartCoroutine(currentSpinCoroutine);
     }
-    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = Vector3.zero; 
-
-            Vector3 boostDirection = driver.transform.forward * boostForce;
-            
+            Vector3 boostDirection = Vector3.zero;
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
+            {
+                boostDirection = driver.transform.forward * boostForce;
+            }
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
     }
+
 
     /// <summary>
     /// for level 3 boost, adds a speed boost forwards and upwards
