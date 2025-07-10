@@ -53,27 +53,6 @@ public class Puck : BaseItem
 
         karts = GameObject.FindGameObjectsWithTag("Kart");
 
-        // Tracks the item tier
-        switch (itemTier)
-        {
-            // Multi-puck (3 uses)
-            case 2:
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to the closest player and lasts longer
-            case 3:
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to first place
-            case 4:
-                isTrackingFirst = true;
-                break;
-            // Normal puck, one use
-            default:
-                useCount = 1;
-                break;
-        }
-
         // Starts the puck with 0 bounces
         bounceCount = 0;
 
