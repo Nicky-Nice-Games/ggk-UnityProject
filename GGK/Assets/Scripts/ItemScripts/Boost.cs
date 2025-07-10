@@ -5,15 +5,6 @@ using UnityEngine;
 
 public class Boost : BaseItem
 {
-    // item icons for each tier
-    [SerializeField]
-    public Texture tierOneItemIcon;
-    [SerializeField]
-    public Texture tierTwoItemIcon;
-    [SerializeField]
-    public Texture tierThreeItemIcon;
-    [SerializeField]
-    public Texture tierFourItemIcon;
 
     private void Awake()
     {

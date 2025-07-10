@@ -34,6 +34,7 @@ public class ItemHolder : MonoBehaviour
     private BaseItem item;
     private int driverItemTier;
     public int uses;
+    public SpeedCameraEffect camera;
 
     public float gravityForce;
 

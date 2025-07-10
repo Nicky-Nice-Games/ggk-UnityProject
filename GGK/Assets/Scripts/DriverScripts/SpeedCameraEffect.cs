@@ -96,6 +96,8 @@ public class SpeedCameraEffect : MonoBehaviour
 
     private bool isHoldingTab;
 
+    public bool IsHoldingTab { get { return isHoldingTab; } }
+
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -130,7 +132,7 @@ public class SpeedCameraEffect : MonoBehaviour
         if (isHoldingTab)
         {
             transform.position = lookBackTarget.position;
-            Vector3 direction = target.position - transform.position;
+            Vector3 direction = target.position - transform.position; 
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }

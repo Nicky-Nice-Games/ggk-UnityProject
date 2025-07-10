@@ -8,14 +8,10 @@ public class TrapItem : BaseItem
     // public AudioClip hazardSound;
 
     // Different Items for Different Tiers
-    [SerializeField] private GameObject tierOneBody;
-    [SerializeField] private Texture tierOneIcon;
-    [SerializeField] private GameObject tierTwoBody;
-    [SerializeField] private Texture tierTwoIcon;
-    [SerializeField] private GameObject tierThreeBody;
-    [SerializeField] private Texture tierThreeIcon;
-    [SerializeField] private GameObject tierFourBody;
-    [SerializeField] private Texture tierFourIcon;
+    [SerializeField] public GameObject tierOneBody;
+    [SerializeField] public GameObject tierTwoBody;
+    [SerializeField] public GameObject tierThreeBody;
+    [SerializeField] public GameObject tierFourBody;
 
     // Start is called before the first frame update
     void Start()
@@ -49,26 +45,6 @@ public class TrapItem : BaseItem
     public void RotateBox()
     {
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
-    }
-
-    // Change trap item's shape and function
-    public void LevelUp()
-    {
-        switch (itemTier)
-        {
-            case 2:
-                UpdateComponents(tierTwoBody, tierTwoIcon);
-                break;
-            case 3:
-                UpdateComponents(tierThreeBody, tierThreeIcon);
-                break;
-            case 4:
-                UpdateComponents(tierFourBody, tierFourIcon);
-                break;
-            default:
-                UpdateComponents(tierOneBody, tierOneIcon);
-                break;
-        }
     }
     
     // So I don't have to write this out 4 times in LevelUp(), just swap out the tier body and icon for different levels
