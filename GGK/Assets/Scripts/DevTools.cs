@@ -11,7 +11,6 @@ using UnityEngine.UIElements;
 //Gina Piccirilli
 
 //OTHER TODOs (not listed elsewhere)
-//Need to put karts in dev maps and fix lighting for driving and fix pause menu
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
 //  Update: can type if you close and reopen prompt but not initially even though cursor is there
 //Fix issue where when clicking a button with the mouse it thinks input has been
