@@ -694,9 +694,6 @@ public class ItemHolder : MonoBehaviour
         driver.canDrift = false;
         driver.turnWheels = false;
 
-        // KartVisual visualScript = GetComponentInChildren<KartVisual>();
-        // visualScript.enabled = false;
-
         // get a list of the player's wheels for raycasting
         List<GameObject> wheels = new List<GameObject>();
         wheels.Add(driver.backTireL);
@@ -706,21 +703,16 @@ public class ItemHolder : MonoBehaviour
 
         for (int i = 0; i < wheels.Count; i++)
         {
+            // rotate wheels 90 degrees
             wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
 
-            //Vector3 scale = wheels[i].transform.localScale;
-            //scale.y = 0.75f;
-            //wheels[i].transform.localScale = scale;
-            ////Vector3 targetPos = wheels[i].transform.position;
-            ////targetPos.y++;
-            ////wheels[i].transform.position = targetPos;
+            // start wind effects
             effects[i].SetFloat("Duration", duration + 1.0f);
             effects[i].Play();
         }
 
         // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);
         RaycastHit hit;
-        float prevHitDistance = 100.0f;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             // perform a raycast at each wheel on the player's kart
@@ -738,18 +730,8 @@ public class ItemHolder : MonoBehaviour
                 }
                 else
                 {
-                    //if (Physics.Raycast(driver.transform.position, -driver.transform.up, out hit, 200.0f))
-                    //{
-                    //    if (hit.distance > prevHitDistance)
-                    //    {
-                    //        SpawnHoverParticles(driver.transform.position + (driver.transform.up * .2f));
-                    //    }
-                    //    prevHitDistance = hit.distance;
-                    //}
                     lastHitDistance = length * 1.1f;
                 }
-
-                
             }
 
             // gives forward boost
@@ -762,12 +744,11 @@ public class ItemHolder : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        // return wheels to original rotation
         for (int i = 0; i < wheels.Count; i++)
         {
             wheels[i].transform.localRotation = Quaternion.identity;
         }
-
-        // visualScript.enabled = true;
 
         // reenable drift and ground check
         driver.canDrift = true;
