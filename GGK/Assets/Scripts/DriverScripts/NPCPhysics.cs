@@ -414,7 +414,7 @@ public class NPCPhysics : NetworkBehaviour
             CheckRoadEdges();
 
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
-            
+            AvoidObstacle();
         }
         
         
@@ -455,6 +455,59 @@ public class NPCPhysics : NetworkBehaviour
         }
 
     //movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
+    }
+
+    void AvoidObstacle()
+    {
+        float rayForwardLength = 7f;
+        float raySideOffset = 1.0f;
+        float rayVerticalOffset = 1.2f;
+        float avoidStrength = 2f;
+
+        Vector3 rayDir = transform.forward;
+
+        Vector3 originCenter = transform.position + (transform.up * rayVerticalOffset);
+        Vector3 originLeft = originCenter + (transform.right * -raySideOffset);
+        Vector3 originRight = originCenter + (transform.right * raySideOffset);
+
+        bool obstacleCenter = Physics.Raycast(originCenter, rayDir, rayForwardLength, groundLayer);
+        bool obstacleLeft = Physics.Raycast(originLeft, rayDir, rayForwardLength, groundLayer);
+        bool obstacleRight = Physics.Raycast(originRight, rayDir, rayForwardLength, groundLayer);
+
+        Debug.DrawRay(originCenter, rayDir * rayForwardLength, Color.red);
+        Debug.DrawRay(originLeft, rayDir * rayForwardLength, Color.yellow);
+        Debug.DrawRay(originRight, rayDir * rayForwardLength, Color.yellow);
+
+        if (obstacleCenter)
+        {
+            // If center ray hits, try to pick a side based on which side is clearer
+            if (!obstacleLeft && obstacleRight)
+            {
+                movementDirection.x -= avoidStrength;
+            }
+            else if (!obstacleRight && obstacleLeft)
+            {
+                movementDirection.x += avoidStrength;
+            }
+            else
+            {
+                // If both sides are blocked or both are open, pick a default direction
+                movementDirection.x += Random.value > 0.5f ? avoidStrength : -avoidStrength;
+            }
+
+            movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
+        }
+        else if (obstacleLeft && !obstacleRight)
+        {
+            movementDirection.x += avoidStrength;
+        }
+        else if (obstacleRight && !obstacleLeft)
+        {
+            movementDirection.x -= avoidStrength;
+        }
+
+        // Clamp for safety
+        movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
 
 
