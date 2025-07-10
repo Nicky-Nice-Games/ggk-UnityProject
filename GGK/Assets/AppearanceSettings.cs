@@ -30,7 +30,7 @@ public class AppearanceSettings : NetworkBehaviour
     public void UpdateAppearance()
     {
         // If player (will need to be changed for multiplayer)
-        if (GetComponent<NEWDriver>() && !MultiplayerManager.Instance.IsMultiplayer)
+        if (GetComponent<NEWDriver>() && !IsSpawned)
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
@@ -97,12 +97,5 @@ public class AppearanceSettings : NetworkBehaviour
                 Destroy(models[i]);
             }
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        //UPDATE ME LATER
-
-        
     }
 }

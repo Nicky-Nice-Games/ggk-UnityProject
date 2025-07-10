@@ -347,7 +347,7 @@ public class MiniMapHud : MonoBehaviour
     private void EstablishAppearance(GameObject obj, Image img)
     {
         AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
-
+        Debug.Log($"set {obj.name}'s appearance settings, is settings null? {settings == null}");
         if (settings != null)
         {
             settings.UpdateAppearance();

@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
 - Active game object:
-  - Name: Canvas
-  - Tag: Untagged
-  - Layer: UI
+  - Name: dev_kart (4)
+  - Tag: Kart
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

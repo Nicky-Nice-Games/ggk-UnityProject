@@ -160,7 +160,7 @@ public class NEWDriver : NetworkBehaviour
 
         baseRotation = steeringWheel.transform.localRotation;
 
-        if (!MultiplayerManager.Instance.IsMultiplayer)
+        if (!IsSpawned)
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);

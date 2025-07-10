@@ -7,7 +7,7 @@ public class PlayerSpawner : NetworkBehaviour
 {
     // prefab to be spawned
     [SerializeField] private Transform playerKartPrefab;
-    //[SerializeField] private Transform npcKartPrefab;
+    [SerializeField] private Transform npcKartPrefab;
 
     [SerializeField] private List<Transform> spawnPoints;
 
@@ -16,11 +16,17 @@ public class PlayerSpawner : NetworkBehaviour
     private void Start()
     {
         spawnedKartCount = 0;
-        if (!MultiplayerManager.Instance.IsMultiplayer)
+        if (!IsSpawned)
         {
             Transform kartObject = Instantiate(playerKartPrefab);
             kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
             spawnedKartCount++;
+
+            while(spawnedKartCount < 8){
+            kartObject = Instantiate(npcKartPrefab);
+            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            spawnedKartCount++;
+        }
         }
         else
         {
@@ -50,11 +56,11 @@ public class PlayerSpawner : NetworkBehaviour
             }
         }
         
-        // while(spawnedKartCount < 8){
-        //     Transform kartObject = Instantiate(npcKartPrefab);
-        //     NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
-        //     kartNetworkObject.Spawn();
-        //     spawnedKartCount++;
-        // }
+        while(spawnedKartCount < 8){
+            Transform kartObject = Instantiate(npcKartPrefab);
+            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            kartNetworkObject.Spawn();
+            spawnedKartCount++;
+        }
     }
 }

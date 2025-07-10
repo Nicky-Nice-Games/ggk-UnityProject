@@ -1,10 +1,11 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCPhysics : MonoBehaviour
+public class NPCPhysics : NetworkBehaviour
 {
     // Keep
     [Header("Do not Change")]
@@ -165,9 +166,19 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
-
+        if (!IsSpawned)
+        {
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, KC);
+        }
     }
-
+    public override void OnNetworkSpawn()
+    {
+        Transform childTransform = parent.transform.GetChild(1);
+        KC = childTransform.GetComponent<KartCheckpoint>();
+        MiniMapHud.instance.AddKart(gameObject);
+        PlacementManager.instance.AddKart(gameObject, KC);
+    }
     public void StopParticles()
     {
         //-------------Particles----------------
@@ -198,6 +209,10 @@ public class NPCPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (IsSpawned)
+        {
+            if (!IsOwner) return;
+        }
         HandleGroundCheck();
         ApplyWheelVisuals();
 
