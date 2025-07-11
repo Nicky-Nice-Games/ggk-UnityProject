@@ -162,12 +162,18 @@ public class NEWDriver : NetworkBehaviour
 
         if (!IsSpawned)
         {
+            Debug.Log("Adding");
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
-            MiniMapHud.instance.AddKart(gameObject);
+
+            
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
+
+            Debug.Log("Added Driver");
+            MiniMapHud.instance.AddKart(gameObject);
+
         }
     }
 
