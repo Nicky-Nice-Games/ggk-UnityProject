@@ -27,7 +27,7 @@ using UnityEngine.UIElements;
 /// <summary>
 /// Enum for each map name keyword/command
 /// </summary>
-enum MapName 
+public enum MapName 
 { 
     OuterLoop,
     Golisano,
@@ -38,10 +38,24 @@ enum MapName
     TestTube
 }
 
+
+/// <summary>
+/// Enum for each scene name keyword/command
+/// </summary>
+public enum SceneName 
+{ 
+    Start,
+    MultiSingle,
+    ModeSelect,
+    PlayerKart,
+    MapSelect
+}
+
+
 /// <summary>
 /// Enum for each game mode keyword/command
 /// </summary>
-enum GameMode
+public enum GameMode
 {
     Race,
     GrandPrix,
@@ -76,7 +90,7 @@ public class DevTools : MonoBehaviour
 
         commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for param options (Note: currently only for LoadMap)";
+                "or [methodName] Options for param options";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -88,7 +102,7 @@ public class DevTools : MonoBehaviour
         //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
 
-        Debug.Log("loading " + sceneLoader.loading);
+        //Debug.Log("loading " + sceneLoader.loading);
         if (sceneLoader.loading)
         {
             //inputField.ActivateInputField();
@@ -183,69 +197,87 @@ public class DevTools : MonoBehaviour
     /// <param name="input">The user entered text.</param>
     public void Command(string input)
     {
+        string[] parts = null;
+
         //Puts user entered text into the prompt log
         textLog += "\n\t>_ " + input;
 
         //Splits input into substrings with a space as the delimiter
-        string[] parts = input.Split(new char[] { ' ' });
+        //string[] parts = input.Split(new char[] { ' ' });
 
+        //Splits input into substrings with a colon as the delimiter
+        string[] methods = input.Split(new char[] { ':' });
 
-        //TODO Set up split to also check for multiple methods
+        //Format:
+        //or MethodName Param:MethodName Param
+        //  methods[0] = Method1 Param1
+        //  methods[1] = Method2 Param2
+        //  parts[0] = MethodName
+        //  parts[1] = Param
 
-        //string[] parts = input.Split(new char[] { ' ', ':' });
-        //  for method strings, check if there is a parts[2]
-        //  what to do if first method has no params?
-        //  make separate split array? for each part in this second array, run the method switch
-        //      for the first part of it
-        //  second param in split method for max parts?
-
-        //Format: MethodName space MapParam space ModeParam?
-        //or MethodName param : MethodName param
-        //  parts[0] = methodName
-        //  parts[1] = param 1 (map name)
-        //  parts[2] = param 2 (game mode)?
-
-
-        switch (parts[0])
+        //For each method inputted, checks method name and parameters
+        for (int i = 0; i < methods.Length; i++)
         {
-            case "ShowMethods":
-                textLog += "\nMethod Options:\nShowMethods\nLoadMap\nGameModeChange\nClearLog";
-                break;
+            parts = methods[i].Split(new char[] { ' ' });
 
-            case "LoadMap":
-                
-                if (parts.Length > 1)
-                {
-                    LoadMap(parts[1]);
-                }
-                else
-                {
-                    textLog += "\nError: No Param 1 [MapName] was Entered.";
-                }
-                
-                break;
+            if (parts != null)
+            {
 
-            case "GameModeChange":
-                //TODO set up gamemode method command to change game mode without changing map
-                if (parts.Length > 1)
+                switch (parts[0])
                 {
-                    GameModeChange(parts[1]);
-                }
-                else
-                {
-                    textLog += "\nError: No Param 1 [GameMode] was Entered.";
-                }
-                textLog += "\nMethod not yet set up :)";
-                break;
+                    case "ShowMethods":
+                        textLog += "\nMethod Options:\nShowMethods\nLoadMap" +
+                            "\nLoadScene\nGameModeChange\nClearLog";
+                        break;
 
-            case "ClearLog":
-                textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for param options (Note: currently only for LoadMap)";
-                break;
+                    case "LoadMap":
 
-            default:
-                textLog += "\nError: Method Command Not Found.";
-                break;
+                        if (parts.Length > 1)
+                        {
+                            LoadMap(parts[1]);
+                        }
+                        else
+                        {
+                            textLog += "\nError: No Param 1 [MapName] was Entered.";
+                        }
+
+                        break;
+
+                    case "LoadScene":
+
+                        if (parts.Length > 1)
+                        {
+                            LoadScene(parts[1]);
+                        }
+                        else
+                        {
+                            textLog += "\nError: No Param 1 [SceneName] was Entered.";
+                        }
+                        break;
+
+                    case "GameModeChange":
+                        //TODO set up gamemode method command to change game mode without changing map
+                        if (parts.Length > 1)
+                        {
+                            GameModeChange(parts[1]);
+                        }
+                        else
+                        {
+                            textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                        }
+                        textLog += "\nMethod not yet set up :)";
+                        break;
+
+                    case "ClearLog":
+                        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
+                        "or [methodName] Options for param options";
+                        break;
+
+                    default:
+                        textLog += "\nError: Method Command Not Found.";
+                        break;
+                }
+            }
         }
 
     }
@@ -316,6 +348,69 @@ public class DevTools : MonoBehaviour
     }
 
 
+
+    /// <summary>
+    /// Handles the LoadScene command based on the inputted paramater entered after it.
+    /// </summary>
+    /// <param name="sceneName">The inputted parameter after the LoadScene command.</param>
+    public void LoadScene(string sceneName)
+    {
+        switch (sceneName)
+        {
+            //Displays all of the parameter options for the LoadScene method
+            case "Options":
+                textLog += "\nOptions for param 1 [SceneName]: ";
+                foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
+                {
+                    textLog += "\n" + name;
+                }
+                break;
+
+            case "Start":
+                sceneLoader.LoadScene("StartScene");
+                //Can be removed if prefered, maybe when in certain modes?
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+                break;
+
+            case "MultiSingle":
+                sceneLoader.LoadScene("MultiSinglePlayerScene");
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+                break;
+
+            case "ModeSelect":
+                sceneLoader.LoadScene("GameModeSelectScene");
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+                break;
+
+            case "PlayerKart":
+                sceneLoader.LoadScene("PlayerKartScene");
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+                break;
+
+            case "MapSelect":
+                sceneLoader.LoadScene("MapSelectScene");
+                commandPromptCanvas.enabled = true;
+                inputField.ActivateInputField();
+                break;
+
+            case "":
+                textLog += "\nError: No Param 1 [SceneName] was Entered.";
+                break;
+            case null:
+                textLog += "\nError: No Param 1 [SceneName] was Entered.";
+                break;
+            default:
+                textLog += "\nError: Param 1 [SceneName] Command Not Found.";
+                break;
+        }
+    }
+
+
+
     /// <summary>
     /// Handles the GameModeChange command based on the inputted paramater entered after it.
     /// </summary>
@@ -334,7 +429,7 @@ public class DevTools : MonoBehaviour
                 }
                 break;
 
-            //Mode cases go here
+            //TODO Mode cases go here
 
             case "":
                 textLog += "\nError: No Param 1 [GameMode] was Entered.";
