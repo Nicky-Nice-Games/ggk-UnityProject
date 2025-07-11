@@ -40,7 +40,6 @@ jobs:
 
   build-windows:
     name: Build the project for Windows
-    needs: test
     runs-on: ubuntu-latest
     steps:
 
@@ -79,7 +78,6 @@ jobs:
       
   build-mac:
     name: Build the project for macOs
-    needs: test
     runs-on: ubuntu-latest
     steps:
 
