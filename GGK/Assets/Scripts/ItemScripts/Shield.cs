@@ -61,10 +61,27 @@ public class Shield : BaseItem
 
     private void OnTriggerEnter(Collider collision)
     {
-        // Destroys any game object or hazard the shield hits
-        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Hazard"))
+        // Destroys hazards at any tier and projectiles when less than tier 3
+        if ((itemTier < 3 && collision.gameObject.CompareTag("Projectile")) || collision.gameObject.CompareTag("Hazard"))
         {
             Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Kart") && itemTier == 4)
+        {
+            // ensures that the shield is hitting a player or NPC kart
+            if (collision.gameObject.GetComponent<NEWDriver>() != null)
+                //&& collision.gameObject.GetComponent<NEWDriver>() != Kart)
+            {
+                NEWDriver playerKart = collision.gameObject.GetComponent<NEWDriver>();
+                playerKart.Stun(2.0f);
+            }
+
+            if(collision.gameObject.GetComponent<NPCDriver>() != null)
+                //&& collision.gameObject.GetComponent<NPCDriver>() != Kart)
+            {
+                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
+                npcKart.StartRecovery(2.0f);
+            }
         }
     }
 
