@@ -707,7 +707,7 @@ public class ItemHolder : MonoBehaviour
             wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
 
             // start wind effects
-            effects[i].SetFloat("Duration", duration + 1.0f);
+            effects[i].SetFloat("Duration", duration + 0.5f);
             effects[i].Play();
         }
 
