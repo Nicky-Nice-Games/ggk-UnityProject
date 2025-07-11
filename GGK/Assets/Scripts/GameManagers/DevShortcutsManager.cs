@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class DevShortcutsManager : MonoBehaviour
 {
-    [Tooltip("Should the player be allowed to toggle dev shortcuts on and off(with usage of the Backspace button)?")]
+    [Tooltip("Should the player be allowed to toggle dev shortcuts on and off(with usage of F1)?")]
     public bool allowDevShortcuts;
     [Tooltip("If true, the script will accept shortcuts")]
     public bool devEnabled;
@@ -48,7 +48,7 @@ public class DevShortcutsManager : MonoBehaviour
     void Update()
     {
         //press backspace to turn dev mode on
-        if (Input.GetKeyDown(KeyCode.F1) && allowDevShortcuts)
+        if ((Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.LeftAlt)) && allowDevShortcuts)
         {
             devEnabled = !devEnabled;
 
@@ -72,9 +72,15 @@ public class DevShortcutsManager : MonoBehaviour
                     //Backslash + S: skip to map select, make character JAMSTER because there's no gim model yet :(
                     if (charData)
                     {
-                        charData.characterColor = devColor;
-                        charData.characterSprite = devIcon;
-                        charData.characterName = "jamster";
+                        if (charData.characterColor == Color.clear)
+                        {
+                            charData.characterColor = devColor;
+                        }
+                        if (charData.characterSprite == null && charData.characterName == "")
+                        {
+                            charData.characterSprite = devIcon;
+                            charData.characterName = "jamster";
+                        }
                     }
                     manager.PlayerSelected();
                 }

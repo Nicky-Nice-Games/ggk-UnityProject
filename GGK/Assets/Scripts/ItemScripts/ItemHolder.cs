@@ -28,6 +28,9 @@ public class ItemHolder : MonoBehaviour
     [SerializeField]
     private RawImage itemDisplay;
 
+    private Vector3 itemDisplayScale;
+    private Vector2 itemDisplayPosition;
+
     [SerializeField]
     private Texture defaultItemDisplay;
 
@@ -75,6 +78,8 @@ public class ItemHolder : MonoBehaviour
         if (thisDriver)
         {
             itemDisplay.texture = defaultItemDisplay;
+            itemDisplayScale = itemDisplay.rectTransform.localScale;
+            itemDisplayPosition = itemDisplay.rectTransform.position;
         }
 
         //soundPlayer = GetComponent<AudioSource>();
@@ -186,6 +191,7 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
@@ -439,18 +445,38 @@ public class ItemHolder : MonoBehaviour
                     }
                     else
                     {
-                        // Increase item tier if not max & apply upgrades
-                        if (driverItemTier < 4)
+                        // shield can't be upgraded while being used
+                        if(heldItem.ItemCategory != "Shield")
                         {
-                            driverItemTier++;
-                            heldItem.ItemTier = driverItemTier;
-                            heldItem.OnLevelUp(heldItem.ItemTier);
-                            uses = heldItem.UseCount;
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
                         }
-                        // Item Box Shake
-                        if (thisDriver)
+                        else if (uses == 1)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
                         }
                     }
                     break;
@@ -607,6 +633,8 @@ public class ItemHolder : MonoBehaviour
     }
     public void ApplyItemTween(Texture item)
     {
+        itemDisplay.rectTransform.DOKill();
+        itemDisplay.rectTransform.localScale = itemDisplayScale;
         itemDisplay.texture = item;
         itemDisplay.rectTransform.DOShakeScale(0.5f);
     }

@@ -15,25 +15,39 @@ public class AppearanceSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //UPDATE ME LATER
+
+
+    }
+
+    public void UpdateAppearance()
+    {
         // If player (will need to be changed for multiplayer)
         if (GetComponent<NEWDriver>())
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
-            icon = characterData.characterSprite;
-            color = characterData.characterColor;
-            name = characterData.characterName.ToLower();
 
             // Set correct character model active
             if (characterData != null)
             {
+                icon = characterData.characterSprite;
+                color = characterData.characterColor;
+                name = characterData.characterName.ToLower();
+
                 for (int i = 0; i < models.Count; i++)
                 {
                     //Setting active correct model
                     if (name == models[i].name)
                     {
                         models[i].SetActive(true);
-                        break;
+                        continue;
                     }
 
                     //deleting the models that are not supposed to be active
@@ -43,13 +57,5 @@ public class AppearanceSettings : MonoBehaviour
         }
         // I think NPC icons and colors are currently manually set in scene,so
         // Else NPCDriver code when NPCDrivers get a new prefab?
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //UPDATE ME LATER
-
-        
     }
 }
