@@ -19,8 +19,7 @@ using UnityEngine.UIElements;
 //  prompt is hidden when entering a map which happens when the prompt was already open
 //  and you go into a track not using a command (Update: now not working with command either)
 //  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
-//Add other commands (see dev keyboard shortcuts; restart command? return to menu commands/other
-//  pause menu commands?)
+//Add other commands (see dev keyboard shortcuts; restart command?)
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 
 
