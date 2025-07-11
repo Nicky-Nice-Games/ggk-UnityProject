@@ -126,7 +126,6 @@ public class MiniMapHud : MonoBehaviour
         //find the minimap and icon reference
         miniMap = GameObject.Find(gameObject.name + "/MiniMap").GetComponent<Image>();
         iconRef = GameObject.Find(gameObject.name + "/MiniMap/MapIcon");
-
         //If there are objects to track..
         if (objects.Count > 0)
         {

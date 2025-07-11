@@ -42,17 +42,23 @@ public class AppearanceSettings : NetworkBehaviour
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
 
-                for (int i = 0; i < models.Count; i++)
+                if (models != null)
                 {
-                    //Setting active correct model
-                    if (kartName == models[i].name)
+                    if (models.Count > 0)
                     {
-                        models[i].SetActive(true);
-                        continue;
-                    }
+                        for (int i = 0; i < models.Count; i++)
+                        {
+                            //Setting active correct model
+                            if (kartName == models[i].name)
+                            {
+                                models[i].SetActive(true);
+                                continue;
+                            }
 
-                    //deleting the models that are not supposed to be active
-                    Destroy(models[i]);
+                            //deleting the models that are not supposed to be active
+                            Destroy(models[i]);
+                        }
+                    }
                 }
             }
         }
