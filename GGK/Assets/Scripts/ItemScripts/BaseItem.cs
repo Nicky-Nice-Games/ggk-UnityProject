@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class BaseItem : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class BaseItem : MonoBehaviour
     public Texture tierThreeItemIcon;
     [SerializeField]
     public Texture tierFourItemIcon;
+
+    public VisualEffect shieldEffect;
 
     /// <summary>
     /// Read and write property for the upgrade tier
