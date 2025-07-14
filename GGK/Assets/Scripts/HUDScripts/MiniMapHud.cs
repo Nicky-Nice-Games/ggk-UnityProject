@@ -27,7 +27,7 @@ using UnityEngine.UI;
 //----------------ADDING OBJECTS-----------------
 //
 // 1. Add objects to track by adding their GameObjects to the "objects" GameObject list. Ensure these objects
-//    have an "AppearanceSettings" component if you wish to depcify their appearance on the map. 
+//    have an "AppearanceSettings" component if you wish to specify their appearance on the map. 
 // 2. Do NOT add anything to the "mapIcons" list. This will populate itself automatically. 
 //
 //----------------TRACKING DEPTH-----------------
@@ -84,7 +84,8 @@ public class MiniMapHud : MonoBehaviour
     [Header("Misc.")]
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
-
+    [SerializeField] private float iconSpinoutSpeed;
+    [SerializeField] private GameObject trackingPlayer;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
@@ -95,15 +96,7 @@ public class MiniMapHud : MonoBehaviour
     private LineRenderer boundsMaker;
     private LineRenderer pointsMaker;
 
-    //----------test changes for multiplayer----------
-    public static MiniMapHud Instance;
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
+    public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
     // Start is called before the first frame update
     void Start()
@@ -145,6 +138,34 @@ public class MiniMapHud : MonoBehaviour
                 mapIcons.Add(refImage);
 
                 EstablishAppearance(objects[i], refImage);
+            }
+
+            //set the player's icon to the front
+            int trackingIndex = objects.IndexOf(trackingPlayer);
+            if (trackingIndex != -1)
+            {
+                mapIcons[trackingIndex].transform.SetAsLastSibling();
+                mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
+            }
+            
+            foreach (GameObject obj in objects)
+            {
+                ItemHolder holder = obj.GetComponent<ItemHolder>();
+                if (obj.transform.parent != null)
+                {
+                    DynamicRecovery[] recovery = obj.transform.parent.GetComponentsInChildren<DynamicRecovery>();
+                    if (recovery.Length > 0)
+                    {
+                        foreach (DynamicRecovery r in recovery)
+                            r.miniMap = this;
+                    }
+                }
+
+                if (holder)
+                {
+                    holder.miniMap = this;
+                }
+
             }
         }
     }
@@ -322,13 +343,34 @@ public class MiniMapHud : MonoBehaviour
 
         if (settings != null)
         {
+            settings.UpdateAppearance();
             img.sprite = settings.icon;
             img.color = settings.color;
         }
     }
 
-    public void AddToObjectList(GameObject gameObject) {
-        objects.Add(gameObject);
+    public IEnumerator SpinIcon(GameObject obj, int amount)
+    {
+        float spinsRemaining = amount;
+        float displacement = 0;
+        Image icon = mapIcons[objects.IndexOf(obj)].GetComponent<Image>();
+        float dt = Time.deltaTime;
+
+        while (spinsRemaining > 0)
+        {
+            float d = -360 * dt * iconSpinoutSpeed;
+            displacement += Mathf.Abs(d);
+            icon.rectTransform.rotation *= Quaternion.Euler(0, 0, d);
+
+            if (displacement >= 360)
+            {
+                icon.rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+                spinsRemaining--;
+                displacement = 0;
+            }
+
+            yield return new WaitForSeconds(dt);
+        }
     }
 }
 

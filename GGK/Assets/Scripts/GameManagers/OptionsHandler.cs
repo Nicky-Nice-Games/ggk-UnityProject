@@ -22,8 +22,19 @@ public class OptionsHandler : MonoBehaviour
     public Slider musicVolumeSlider;
     public TextMeshProUGUI musicVolumeValue;
 
+    public GameObject closeBtn;
+    private Vector3 initialScale;
+
     void OnEnable()
     {
+        if (initialScale == Vector3.zero)
+        {
+            initialScale = closeBtn.transform.localScale;
+        }
+        else
+        {
+            closeBtn.transform.localScale = initialScale;
+        }
         SetOptions();
     }
 

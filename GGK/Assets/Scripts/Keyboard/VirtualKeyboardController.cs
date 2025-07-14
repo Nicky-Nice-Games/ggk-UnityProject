@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
@@ -26,15 +27,30 @@ public class VirtualKeyboardController : MonoBehaviour
     private bool prevUp;
     private bool prevDown;
 
+    // holding delete variables
+    private bool holdingBackspace = false;
+    private float timer = 0;
+
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
-        HighlightButton(selectedIndex);
     }
 
     void Update()
     {
-        HandleNavigation();
+        // HandleNavigation();
+
+        // allows user to hold button on controllers to delete multiple characters
+        if (holdingBackspace)
+        {
+            timer += Time.deltaTime;
+
+            if (timer > 0.15f)
+            {
+                KeyPressed("Backspace");
+                timer = 0;
+            }
+        }
     }
 
     void HandleNavigation()
@@ -167,6 +183,35 @@ public class VirtualKeyboardController : MonoBehaviour
             }
         }
         inputField[curField].text = curText;
+    }
+
+    /// <summary>
+    /// input method for controllers to delete a character
+    /// </summary>
+    /// <param name="context"></param>
+    public void OnBackSpace(InputAction.CallbackContext context)
+    {
+        if (context.canceled)
+        {
+            KeyPressed("Backspace");
+        }
+    }
+
+    /// <summary>
+    /// hold input method for controllers to delete multiple characters
+    /// </summary>
+    /// <param name="context"></param>
+    public void OnHoldBackspace(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            holdingBackspace = true;
+        }
+        
+        if (context.canceled)
+        {
+            holdingBackspace = false;
+        }
     }
 }
 

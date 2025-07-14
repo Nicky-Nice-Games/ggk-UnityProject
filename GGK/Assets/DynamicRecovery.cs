@@ -12,7 +12,8 @@ public class DynamicRecovery : MonoBehaviour
     public CanvasGroup fadeCanvas;
 
     public Transform kartModel;
-    private Transform[] checkpoints;
+    private GameObject[] checkpoints;
+    public KartCheckpoint kartCheckpointScript;
     private Transform currentCheckpoint;
     private Transform normalTransform;
 
@@ -23,27 +24,33 @@ public class DynamicRecovery : MonoBehaviour
 
     private NEWDriver kartMovementScript;
 
+    [SerializeField]
+    private NPCPhysics kartPhysicsNPC;
+
+    public MiniMapHud miniMap;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
+        
+        //GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
+        //List<Transform> checkpointList = new List<Transform>();
+        //
+        //foreach (GameObject obj in checkpointObjects)
+        //{
+        //    checkpointList.Add(obj.transform);
+        //}
+        //
+        //checkpoints = checkpointList.ToArray();
 
-        GameObject[] checkpointObjects = GameObject.FindGameObjectsWithTag("Checkpoint");
-        List<Transform> checkpointList = new List<Transform>();
-
-        foreach (GameObject obj in checkpointObjects)
-        {
-            checkpointList.Add(obj.transform);
-        }
-
-        checkpoints = checkpointList.ToArray();
-
-        // Optional: default to first
-        if (checkpoints.Length > 0)
-            currentCheckpoint = checkpoints[0];
-
+        //checkpoints = kartCheckpointScript.checkpointList.ToArray();
+        //
+        //// Optional: default to first
+        //if (checkpoints.Length > 0)
+        //    currentCheckpoint = checkpoints[0].transform;
+        
         Transform kartRoot = transform.parent; // "Kart 1"
         Transform normal = kartRoot.Find("Kart");
 
@@ -53,12 +60,18 @@ public class DynamicRecovery : MonoBehaviour
         }
 
         kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
+        kartPhysicsNPC = kartRoot.GetComponentInChildren<NPCPhysics>();
         particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
 
     }
 
     void Update()
     {
+        if(checkpoints == null || checkpoints.Length == 0)
+        {
+            checkpoints = kartCheckpointScript.checkpointList.ToArray();            
+        }
+
         Debug.DrawRay(transform.position, transform.forward * 5, Color.red); // your kart
         if (currentCheckpoint != null)
             Debug.DrawRay(currentCheckpoint.position, currentCheckpoint.forward * 5, Color.green); // the checkpoint
@@ -76,6 +89,12 @@ public class DynamicRecovery : MonoBehaviour
 
     public void StartRecovery()
     {
+        if (miniMap)
+        {
+            //spins the player's icon if they need to be recovered
+            StartCoroutine(miniMap.SpinIcon(transform.parent.GetComponentInChildren<ItemHolder>().gameObject, 5));
+        }
+
         if (!isRecovering)
         {
             currentCheckpoint = FindClosestCheckpoint();
@@ -88,18 +107,22 @@ public class DynamicRecovery : MonoBehaviour
     private Transform FindClosestCheckpoint()
     {
         Transform closest = null;
-        float closestDistSqr = Mathf.Infinity;
-        Vector3 currentPosition = transform.position;
+        //float closestDistSqr = Mathf.Infinity;
+        //Vector3 currentPosition = transform.position;
+        //
+        //foreach (GameObject checkpoint in checkpoints)
+        //{
+        //    //float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
+        //    //if (distSqr < closestDistSqr)
+        //    //{
+        //    //    closestDistSqr = distSqr;
+        //    //    closest = checkpoint;
+        //    //}
+        //
+        //    
+        //}
 
-        foreach (Transform checkpoint in checkpoints)
-        {
-            float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
-            if (distSqr < closestDistSqr)
-            {
-                closestDistSqr = distSqr;
-                closest = checkpoint;
-            }
-        }
+        closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
 
         return closest;
 
@@ -140,12 +163,19 @@ public class DynamicRecovery : MonoBehaviour
     }
 
     private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
-    { 
+    {
 
-        if(kartMovementScript != null)
+        Quaternion finalRot = Quaternion.Euler(0, targetRotation.eulerAngles.y - 90, 0);
+
+        if (kartMovementScript != null)
         {
             kartMovementScript.enabled = false;
             
+        }
+
+        if (kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.enabled = false;
         }
         yield return new WaitForSeconds(1f);
 
@@ -163,13 +193,21 @@ public class DynamicRecovery : MonoBehaviour
         {
             float lerp = t / duration;
             kartVisual.localScale = Vector3.Lerp(originalScale, stretchedScale, lerp);
-            fadeCanvas.alpha = lerp; // screen fading to black
+            if (fadeCanvas != null)
+            {
+                fadeCanvas.alpha = lerp; // screen fading to black
+            }
             t += Time.deltaTime;
             yield return null;
         }
 
         kartVisual.localScale = stretchedScale;
-        fadeCanvas.alpha = 1f;
+
+        if (fadeCanvas != null)
+        {
+
+            fadeCanvas.alpha = 1f;
+        }
 
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
@@ -177,7 +215,7 @@ public class DynamicRecovery : MonoBehaviour
         // TELEPORT TO NEW POSITION 
         transform.position = targetPosition;
         ResetParticles();
-        normalTransform.rotation = targetRotation;
+        normalTransform.rotation = finalRot;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;
@@ -187,6 +225,11 @@ public class DynamicRecovery : MonoBehaviour
         if (kartMovementScript != null)
         {
             kartMovementScript.enabled = true;
+        }
+
+        if (kartPhysicsNPC != null) 
+        {
+            kartPhysicsNPC.enabled = true;
         }
 
         // REAPPEAR IN STRETCHED FORM
@@ -199,14 +242,29 @@ public class DynamicRecovery : MonoBehaviour
         {
             float lerp = t / duration;
             kartVisual.localScale = Vector3.Lerp(stretchedScale, originalScale, lerp);
-            fadeCanvas.alpha = 1f - lerp; // screen fading from black
+            if(fadeCanvas != null)
+            {
+
+                fadeCanvas.alpha = 1f - lerp; // screen fading from black
+            }
             t += Time.deltaTime;
             yield return null;
         }
 
-        kartMovementScript.StopParticles();
+        if (kartMovementScript != null)
+        {
+            kartMovementScript.StopParticles();
+        }
+        else if(kartPhysicsNPC != null)
+        {
+            kartPhysicsNPC.StopParticles();
+        }
         kartVisual.localScale = originalScale;
-        fadeCanvas.alpha = 0f;
+
+        if (fadeCanvas != null)
+        {
+            fadeCanvas.alpha = 0f;
+        }
 
         rb.useGravity = true;
         isRecovering = false;
@@ -214,16 +272,20 @@ public class DynamicRecovery : MonoBehaviour
 
     private IEnumerator Fade(float targetAlpha)
     {
-        float initialAlpha = fadeCanvas.alpha;
-        float elapsed = 0f;
-
-        while(elapsed < fadeTime)
+        if (fadeCanvas != null) 
         {
-            fadeCanvas.alpha = Mathf.Lerp(initialAlpha, targetAlpha, elapsed/fadeTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+            float initialAlpha = fadeCanvas.alpha;
+            float elapsed = 0f;
 
-        fadeCanvas.alpha = targetAlpha;
+            while (elapsed < fadeTime)
+            {
+                fadeCanvas.alpha = Mathf.Lerp(initialAlpha, targetAlpha, elapsed / fadeTime);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            fadeCanvas.alpha = targetAlpha;
+        }
+        
     }
 }
