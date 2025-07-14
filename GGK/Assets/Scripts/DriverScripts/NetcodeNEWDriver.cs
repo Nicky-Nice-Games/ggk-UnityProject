@@ -125,7 +125,8 @@ public class NetcodeNEWDriver : NetworkBehaviour
             ps.Stop();
         }
 
-        MiniMapHud.Instance.AddToObjectList(gameObject);
+        // This line threw an error in the merge. Do we still need it?
+        //MiniMapHud.Instance.AddToObjectList(gameObject);
 
         //-------------Multiplayer---------------
         if (!MultiplayerManager.Instance.IsMultiplayer) return;
