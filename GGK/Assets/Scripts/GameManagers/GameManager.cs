@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -28,6 +29,9 @@ public class GameManager : NetworkBehaviour
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+    public PlayerInfo playerInfo;
+    private APIManager apiManager;
+
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
 
@@ -65,8 +69,30 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void StartGame()
     {
-        curState = GameStates.multiSingle;
-        SafeLoad("MultiSinglePlayerScene");
+        sceneLoader.LoadScene("Login");
+        curState = GameStates.login;
+        playerInfo = new PlayerInfo();
+    }
+
+    /// <summary>
+    /// Once the player is logged in the player will be moved to the multi / single player select scene
+    /// </summary>
+    public void LoggedIn()
+    {
+        // Turn guest mode on
+        if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
+        {
+            playerInfo.isGuest = true;
+            Debug.Log("Guest mode on");
+        }
+
+        // Set validate player info
+        else
+        {
+            ValidatePlayer(playerInfo);
+        }
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
+        curState = GameStates.login;
     }
 
     /// <summary>
@@ -127,6 +153,8 @@ public class GameManager : NetworkBehaviour
     public void LoadedGameMode()
     {
         curState = GameStates.playerKart;
+        sceneLoader.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
@@ -139,6 +167,13 @@ public class GameManager : NetworkBehaviour
         { 
             SceneManager.LoadScene("PlayerKartScene");
         }
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void LoadedGameModeRpc()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
     }
 
     /// <summary>
@@ -159,6 +194,13 @@ public class GameManager : NetworkBehaviour
     }
 
     public void ToMapSelectScreen() {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToMapSelectScreenRpc()
+    {
         SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
@@ -227,6 +269,8 @@ public class GameManager : NetworkBehaviour
     public void GameFinished()
     {
         curState = GameStates.gameOver;
+        apiManager.PostPlayerData(playerInfo);
+
         sceneLoader.LoadScene("GameOverScene");
     }
 
@@ -287,6 +331,12 @@ public class GameManager : NetworkBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    private void ValidatePlayer(PlayerInfo player)
+    {
+        // Getting the players data
+        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
 
     /// <summary>

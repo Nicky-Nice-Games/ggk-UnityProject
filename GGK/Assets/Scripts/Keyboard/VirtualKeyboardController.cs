@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
-    [SerializeField] public TMP_InputField inputField;
+    public List<TMP_InputField> inputField = new List<TMP_InputField>();    // Ordered list according to screen visuals
+    private int curField = 0;
     [SerializeField] private List<Button> keyButtons;
     private int selectedIndex = 0;
     private int rowSize = 10;
     private string curText;
     private bool toCapitol = false;
+    private GameManager gameManager;
+
+    // Script that holds the function to record the responces
+    [SerializeField] private SignInManager signInScript;
 
     // controller variables
     private const float threshold = 0.5f;
@@ -27,7 +33,7 @@ public class VirtualKeyboardController : MonoBehaviour
 
     void Start()
     {
-        // HighlightButton(selectedIndex);
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     void Update()
@@ -124,10 +130,7 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="value"></param>
     public void KeyPressed(string value)
     {
-        // Temporary fix so that when switching text inputs
-        // the current text will be set to the input's text 
-        // when typing/using virtual keyboard
-        curText = inputField.text;
+        curText = inputField[curField].text;
         // Backspace
         if (value == "Backspace")
         {
@@ -142,6 +145,20 @@ public class VirtualKeyboardController : MonoBehaviour
         else if (value == "SPACE")
         {
             curText += " ";
+        }
+
+        // Swapping input fields
+        else if(value == "Enter")
+        {
+            signInScript.SetPlayerLoginData(inputField[curField].name, curText);
+            curText = "";
+
+            if(curField == inputField.Count -1)
+            {
+                gameManager.LoggedIn();
+                return;
+            }
+            curField++;
         }
 
         // Letters and shift
@@ -165,7 +182,7 @@ public class VirtualKeyboardController : MonoBehaviour
                 curText += value;
             }
         }
-        inputField.text = curText;
+        inputField[curField].text = curText;
     }
 
     /// <summary>

@@ -99,12 +99,6 @@ public class MiniMapHud : MonoBehaviour
 
     public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
-    // Awake is called before start wether or not the object is active
-    private void Awake()
-    {
-        instance = this;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -379,6 +373,8 @@ public class MiniMapHud : MonoBehaviour
         }
     }
 
+/*
+    This was not present in multiplayer main but I took it just in case this is still needed
     /// <summary>
     /// Allows adding of karts post start
     /// </summary>
@@ -392,5 +388,6 @@ public class MiniMapHud : MonoBehaviour
 
         EstablishAppearance(kart, refImage);
     }
+    */
 }
 

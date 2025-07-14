@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Shield : BaseItem
 {
@@ -11,16 +12,6 @@ public class Shield : BaseItem
     private Color defaultColor;
     // the color the shield flashes the last few seconds of it's duration
     private Color timerColor;
-
-    // item icons for each tier
-    [SerializeField]
-    public Texture tierOneItemIcon;
-    [SerializeField]
-    public Texture tierTwoItemIcon;
-    [SerializeField]
-    public Texture tierThreeItemIcon;
-    [SerializeField]
-    public Texture tierFourItemIcon;
 
     // the interval between color switches on the shield
     private float blinkInterval = 1.0f;
@@ -38,6 +29,9 @@ public class Shield : BaseItem
 
         timerColor = Color.red;
         timerColor.a = defaultColor.a;
+
+        shieldEffect.SetFloat("Duration", timer);
+        shieldEffect.Play();
     }
 
     // Update is called once per frame
@@ -87,25 +81,25 @@ public class Shield : BaseItem
 
     // Should be moved to BaseItem to be overridable
     // Added separately for now so there aren't big conflicts with the Puck when that's pushed
-    public void LevelUp()
-    {
-        // update the icon based on the item tier
-        switch (itemTier)
-        {
-            case 2:
-                itemIcon = tierTwoItemIcon;
-                break;
-            case 3:
-                itemIcon = tierThreeItemIcon;
-                break;
-            case 4:
-                itemIcon = tierFourItemIcon;
-                break;
-            default:
-                itemIcon = tierOneItemIcon;
-                break;
-        }
-    }
+    //public void LevelUp()
+    //{
+    //    // update the icon based on the item tier
+    //    switch (itemTier)
+    //    {
+    //        case 2:
+    //            itemIcon = tierTwoItemIcon;
+    //            break;
+    //        case 3:
+    //            itemIcon = tierThreeItemIcon;
+    //            break;
+    //        case 4:
+    //            itemIcon = tierFourItemIcon;
+    //            break;
+    //        default:
+    //            itemIcon = tierOneItemIcon;
+    //            break;
+    //    }
+    //}
 
     IEnumerator ColorBlink()
     {

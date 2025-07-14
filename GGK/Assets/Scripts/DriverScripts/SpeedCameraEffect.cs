@@ -97,10 +97,7 @@ public class SpeedCameraEffect : MonoBehaviour
 
     private bool isHoldingTab;
 
-    private void Awake()
-    {
-        instance = this;
-    }
+    public bool IsHoldingTab { get { return isHoldingTab; } }
 
     void Start()
     {
@@ -144,7 +141,7 @@ public class SpeedCameraEffect : MonoBehaviour
         if (isHoldingTab)
         {
             transform.position = lookBackTarget.position;
-            Vector3 direction = target.position - transform.position;
+            Vector3 direction = target.position - transform.position; 
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }

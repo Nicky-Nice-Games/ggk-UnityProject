@@ -84,8 +84,12 @@ public class NEWDriver : NetworkBehaviour
     //Front tires GO
     public GameObject frontTireR;    
     public GameObject frontTireL;
+    public GameObject backTireR;
+    public GameObject backTireL;
     public GameObject steeringWheel;
     Quaternion baseRotation; //Base rotation of the steering wheel for resetting
+    [HideInInspector]
+    public bool turnWheels = true;
 
 
     [Header("Reference to the kartModel transform for Animation")]
@@ -153,6 +157,8 @@ public class NEWDriver : NetworkBehaviour
     void Start()
     {
         gameManagerObj = FindAnyObjectByType<GameManager>();
+
+        thisPlayerInfo = gameManagerObj.playerInfo;
 
         sphere.drag = 0.5f;
 
@@ -225,7 +231,11 @@ public class NEWDriver : NetworkBehaviour
     void FixedUpdate()
     {
         HandleGroundCheck();
-        ApplyWheelVisuals();
+
+        if (turnWheels)
+        {
+            ApplyWheelVisuals();
+        }
 
         //Follow Collider
         transform.position = 
@@ -459,6 +469,7 @@ public class NEWDriver : NetworkBehaviour
         float steerAngle = movementDirection.x * maxSteerAngleTires;
         frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
         frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
+
         // Steering Wheel Rotation
         float targetAngle = movementDirection.x * maxSteeringAngle;
         //Quaternion targetRot = Quaternion.Euler(0, targetAngle, 0);

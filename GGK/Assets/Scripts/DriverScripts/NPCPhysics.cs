@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -145,7 +146,6 @@ public class NPCPhysics : NetworkBehaviour
     public bool isConfused;
     public float confusedTimer;
     public Transform childNormal;
-    
 
     // Start is called before the first frame update
     void Start()
@@ -209,10 +209,10 @@ public class NPCPhysics : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (IsSpawned)
-        {
-            if (!IsOwner) return;
-        }
+        //if (IsSpawned)
+        //{
+        //    if (!IsOwner) return;
+        //}
         HandleGroundCheck();
         ApplyWheelVisuals();
 
@@ -401,14 +401,14 @@ public class NPCPhysics : NetworkBehaviour
         destination = KC.checkpointList[destinationID];
         randomizedTarget = destination.transform.position + checkpointOffset;
 
-       
 
-        if (isGrounded) 
+
+        if (isGrounded)
         {
             Vector3 dirToTarget = destination.transform.position - transform.position;
             dirToTarget.y = 0f; // Flatten vertical influence
             Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
-            
+
             movementDirection = new Vector3(localDir.x, 0f, localDir.z);
 
             CheckRoadEdges();
@@ -416,9 +416,9 @@ public class NPCPhysics : NetworkBehaviour
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
             AvoidObstacle();
         }
-        
-        
-        
+
+
+
     }
 
 
@@ -509,8 +509,6 @@ public class NPCPhysics : NetworkBehaviour
         // Clamp for safety
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
-
-
 
     void HandleGroundCheck()
     {
