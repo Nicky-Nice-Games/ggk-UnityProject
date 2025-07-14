@@ -98,6 +98,9 @@ public class DevTools : MonoBehaviour
 
     private bool isScrolling;
 
+    [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
+    private ItemHolder itemHolder;
+
 
     // Start is called before the first frame update
     void Start()
@@ -295,7 +298,7 @@ public class DevTools : MonoBehaviour
                         }
                         else
                         {
-                            textLog += "\nError: No Param 1 [ItemType] was Entered.";
+                            textLog += "\nError: No Param 1 [ItemType] or Param 2 [ItemTier] were Entered.";
                         }
                         break;
 
@@ -479,6 +482,27 @@ public class DevTools : MonoBehaviour
     public void GiveItem(string itemType, string itemTier)
     {
 
+        GameObject kart = GameObject.Find("Kart 1/Kart");
+        if (kart != null)
+        {
+            itemHolder = kart.GetComponent<ItemHolder>();
+        }
+        else
+        {
+            textLog += "\nError: No Kart found in scene.";
+            return;
+        }
+
+        if (Int32.TryParse(itemTier, out int tier))
+        {
+            itemHolder.DriverItemTier = tier;
+        }
+        else
+        {
+            textLog += "\nError: Invalid Param 2 [ItemTier] was Entered.";
+            return;
+        }
+
         switch (itemType)
         {
             //Displays all of the parameter options for the GameModeChange method
@@ -493,85 +517,29 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "Offense":
-
-                switch (itemTier)
-                {
-                    case "1":
-                        break;
-
-                    case "2":
-                        break;
-
-                    case "3":
-                        break;
-
-                    case "4":
-                        break;
-                }
+                itemHolder.HeldItem = baseItems[0];
                 break;
 
             case "Defense":
-
-                switch (itemTier)
-                {
-                    case "1":
-                        break;
-
-                    case "2":
-                        break;
-
-                    case "3":
-                        break;
-
-                    case "4":
-                        break;
-                }
+                itemHolder.HeldItem = baseItems[1];
                 break;
 
             case "Hazard":
-
-                switch (itemTier)
-                {
-                    case "1":
-                        break;
-
-                    case "2":
-                        break;
-
-                    case "3":
-                        break;
-
-                    case "4":
-                        break;
-                }
+                itemHolder.HeldItem = baseItems[2];
                 break;
 
             case "Boost":
-
-                switch (itemTier)
-                {
-                    case "1":
-                        break;
-
-                    case "2":
-                        break;
-
-                    case "3":
-                        break;
-
-                    case "4":
-                        break;
-                }
+                itemHolder.HeldItem = baseItems[3];
                 break;
 
             case "":
-                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
                 break;
             case null:
-                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
                 break;
             default:
-                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
                 break;
         }
 
