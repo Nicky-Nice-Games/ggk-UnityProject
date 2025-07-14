@@ -1,11 +1,12 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D;
 
-public class NEWDriver : MonoBehaviour
+public class NEWDriver : NetworkBehaviour
 {
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
@@ -139,15 +140,19 @@ public class NEWDriver : MonoBehaviour
 
 
     // Player info for API
-    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
+    // The player info should be created in the Login handeler and player data filled out in here  
     // Any game related data will be filled in in the game scene handeler or manager
-    private PlayerInfo playerInfo;
+    private PlayerInfo thisPlayerInfo;
     private GameManager gameManagerObj;
+    private ulong thisClientID;
 
     // Start is called before the first frame update
     void Start()
     {
+        thisClientID = NetworkManager.LocalClientId;
         gameManagerObj = FindAnyObjectByType<GameManager>();
+
+        thisPlayerInfo = gameManagerObj.playerInfo;
 
         sphere.drag = 0.5f;
 

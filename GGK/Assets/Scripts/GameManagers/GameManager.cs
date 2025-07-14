@@ -1,6 +1,9 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,7 +14,9 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
+    lobby,
     gameMode,
     playerKart,
     map,
@@ -19,14 +24,18 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+    public PlayerInfo playerInfo;
+    private APIManager apiManager;
+
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
     void Awake()
     {
         if (thisManagerInstance == null)
@@ -50,24 +59,43 @@ public class GameManager : MonoBehaviour
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
-
+        RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
+        RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
+        apiManager = GetComponent<APIManager>();
     }
 
     /// <summary>
-    /// Changes the game state to multi /single player select
+    /// Changes the game state to login scene
     /// </summary>
     public void StartGame()
     {
-        curState = GameStates.multiSingle;
-        SafeLoad("MultiSinglePlayerScene");
+        sceneLoader.LoadScene("Login");
+        curState = GameStates.login;
+        playerInfo = new PlayerInfo();
+    }
+
+    /// <summary>
+    /// Once the player is logged in the player will be moved to the multi / single player select scene
+    /// </summary>
+    public void LoggedIn()
+    {
+        // Turn guest mode on
+        if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
+        {
+            playerInfo.isGuest = true;
+            Debug.Log("Guest mode on");
+        }
+
+        // Set validate player info
+        else
+        {
+            ValidatePlayer(playerInfo);
+        }
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
+        curState = GameStates.login;
     }
 
     /// <summary>
@@ -92,9 +120,32 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            curState = GameStates.gameMode;
-            sceneLoader.LoadScene("GameModeSelectScene");
+            SceneManager.LoadScene("MultiplayerMenus");
+            curState = GameStates.lobby;
         }
+    }
+
+    /// <summary>
+    /// RelayManager OnRelayStarted EventHandler
+    /// written by Phillip Brown
+    /// </summary>
+    public void RelayManager_OnRelayStarted(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
+    }
+
+    public void RelayManager_OnRelayJoined(object sender, EventArgs e)
+    {
+        ToGameModeSelectScene();
+    }
+    
+    /// <summary>
+    /// changes game state to the game mode selection scene
+    /// </summary>
+    public void ToGameModeSelectScene()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
     }
 
     /// <summary>
@@ -104,17 +155,51 @@ public class GameManager : MonoBehaviour
     {
         curState = GameStates.playerKart;
         sceneLoader.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.Reset();
+            if (IsHost)
+            {
+                LoadedGameModeRpc();
+            }
+        }
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void LoadedGameModeRpc()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
     }
 
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
-    /// multyplayer is added
+    /// multiplayer is added
     /// </summary>
     public void PlayerSelected()
     {
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId, CharacterData.Instance.character, CharacterData.Instance.characterColor);
+        }
+        else
+        {
+            ToMapSelectScreen();
+        }
+    }
+
+    public void ToMapSelectScreen() {
+        SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
-        sceneLoader.LoadScene("MapSelectScene");
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToMapSelectScreenRpc()
+    {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
     }
 
     /// <summary>
@@ -122,11 +207,38 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MapSelected()
     {
-        curState = GameStates.game;
-        // Loads the race based on the name of the button clicked
-        switch (GetComponent<ButtonBehavior>().buttonClickedName)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            case "RIT Outer Loop":
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "RIT Outer Loop":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITOuterLoop);
+                    break;
+                case "Golisano":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.Golisano);
+                    break;
+                case "RIT Dorm":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITDorm);
+                    break;
+                case "RIT Woods Greybox":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
+                    break;
+                case "RIT Quarter Mile ":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
+                    break;
+                case "Finals Brick Road ":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
+                    break;
+                default:
+                    break;
+            }      
+        }
+        else
+        {
+           // Loads the race based on the name of the button clicked
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "RIT Outer Loop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
             case "Golisano":
@@ -143,15 +255,25 @@ public class GameManager : MonoBehaviour
                 break;
             default:
                 break;
+            }
+            curState = GameStates.game; 
         }
+        
+
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    public void LoadMapRpc(string mapName)
+    {
+        SceneManager.LoadScene(mapName);
+    }
     /// <summary>
     /// Triggers when the game finishes
     /// </summary>
     public void GameFinished()
     {
-        curState = GameStates.gameOver;
+        apiManager.PostPlayerData(playerInfo);
+
         sceneLoader.LoadScene("GameOverScene");
     }
 
@@ -202,7 +324,6 @@ public class GameManager : MonoBehaviour
         RefreshSelected();
     }
 
-
     //refresh selected should a device confirguration be changed
     public void RefreshSelected(InputDevice device, InputDeviceChange change)
     {
@@ -212,6 +333,12 @@ public class GameManager : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    private void ValidatePlayer(PlayerInfo player)
+    {
+        // Getting the players data
+        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
 
     /// <summary>

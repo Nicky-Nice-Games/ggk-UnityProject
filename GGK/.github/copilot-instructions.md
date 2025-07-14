@@ -7,6 +7,7 @@
     - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Ground, Checkpoint, Trigger, Startpoint, ItemBox, Kart, Projectile, Boost, Hazard, slowDown, GameManager, UpgradeBox, Options, DeathZone, Obstacle, Rock, Road
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
+    - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
 - Active game object:
   - Name: Crossfade
   - Tag: Untagged

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-// Script relies on the data.json being in the same directory as API
-
 public class APIManager : MonoBehaviour
 {
 
@@ -44,9 +42,34 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator GetRequest(string uri, PlayerInfo thisPlayer)
+    /// <summary>
+    /// Starts the corutine for sending json data
+    /// </summary>
+    /// <param name="thisPlayer">the player whos data will be set</param>
+    /// <returns></returns>
+    public void PostPlayerData(PlayerInfo thisPlayer)
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        // Serializing data to send back
+        SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
+        serializable.ConvertToSerializable(thisPlayer);   
+        string json = JsonUtility.ToJson(serializable);
+
+        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));    
+    }
+
+    /// <summary>
+    /// Starts the corutine for getting json data
+    /// </summary>
+    /// <param name="pid">the player ID</param>
+    /// <param name="thisPlayer">the player whos data will be set</param>
+    /// <returns></returns>
+    private IEnumerator GetPlayerWithPid(string pid, PlayerInfo thisPlayer)
+    {
+        // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog/player/" + pid;
+        Debug.Log("Path: " + getPath);
+
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(getPath))
         {
             // Requesting and waiting for the desired data
             yield return webRequest.SendWebRequest();
@@ -66,33 +89,29 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Starts the corutine for sending json data
-    /// </summary>
-    /// <param name="thisPlayer">the player whos data will be set</param>
-    /// <returns></returns>
-    public void SendPost(PlayerInfo thisPlayer)
+    public IEnumerator GetPlayerWithNamePass(string username, string password, PlayerInfo thisPlayer)
     {
-        // Serializing data to send back
-        SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
-        serializable.ConvertToSerializable(thisPlayer);   
-        string json = JsonUtility.ToJson(serializable);
+        // Sending the request for the existing player info (gameservice/playerlog/login/{username}/{password})
+        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/login/" + username + "/" + password;
 
-        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));    
-    }
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(getPath))
+        {
+            // Requesting and waiting for the desired data
+            yield return webRequest.SendWebRequest();
 
-    /// <summary>
-    /// Starts the corutine for getting json data
-    /// </summary>
-    /// <param name="pid">the player ID</param>
-    /// <param name="thisPlayer">the player whos data will be set</param>
-    /// <returns></returns>
-    public IEnumerator SendGet(string pid, PlayerInfo thisPlayer)
-    {
-        // Sending the request for the existing player info (gameservice/gamelog/player/{pid})
-        string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog/player/" + pid;
-        Debug.Log("Path: " + getPath);
-        yield return StartCoroutine(GetRequest(getPath, thisPlayer));
+            // Checking good request
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                // Gets the basic user data that holds pid then using that to get the rest of players data
+                string data = webRequest.downloadHandler.text;
+                WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
+                GetPlayerWithPid(userData.pid, thisPlayer);
+            }
+            else
+            {
+                Debug.Log("Failed to get data" + webRequest.error);
+            }
+        }
     }
 
     /// <summary>
