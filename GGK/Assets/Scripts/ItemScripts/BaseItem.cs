@@ -15,6 +15,15 @@ public class BaseItem : MonoBehaviour
 
     [SerializeField]
     public Texture itemIcon;
+    // item icons for each tier
+    [SerializeField]
+    public Texture tierOneItemIcon;
+    [SerializeField]
+    public Texture tierTwoItemIcon;
+    [SerializeField]
+    public Texture tierThreeItemIcon;
+    [SerializeField]
+    public Texture tierFourItemIcon;
 
     /// <summary>
     /// Read and write property for the upgrade tier
@@ -28,6 +37,8 @@ public class BaseItem : MonoBehaviour
     /// Read and write property for the upgrade tier
     /// </summary>
     public float Timer { get { return timer; } set { timer = value; } }
+
+    public string ItemCategory { get { return itemCategory; } set { itemCategory = value; } }
 
 
     /// <summary>
@@ -61,10 +72,10 @@ public class BaseItem : MonoBehaviour
         // Destroys the item
         else
         {
-            if (itemCategory != "Shield")
-            {
+            //if (itemCategory != "Shield")
+            //{
                 Destroy(this.gameObject);
-            }
+            //}
         }
     }
 
@@ -74,6 +85,48 @@ public class BaseItem : MonoBehaviour
     /// <param name="level">current level of item</param>
     public void OnLevelUp(int level)
     {
+        // update the icon based on the item tier
+        switch (itemTier)
+        {
+            case 2:
+                itemIcon = tierTwoItemIcon;
+                break;
+            case 3:
+                itemIcon = tierThreeItemIcon;
+                break;
+            case 4:
+                itemIcon = tierFourItemIcon;
+                break;
+            default:
+                itemIcon = tierOneItemIcon;
+                break;
+        }
+        if (itemCategory == "Puck")
+        {
+            // Tracks the item tier
+            switch (itemTier)
+            {
+                // Multi-puck (3 uses)
+                case 2:
+                    useCount = 1;
+                    timer = 50;
+                    break;
+                // Puck tracks to the closest player and lasts longer
+                case 3:
+                    useCount = 3;
+                    timer = 50;
+                    break;
+                // Puck tracks to first place
+                case 4:
+                    useCount = 1;
+                    timer = 50;
+                    break;
+                // Normal puck, one use
+                default:
+                    useCount = 1;
+                    break;
+            }
+        }
         if (itemCategory == "Boost") // changes the use count for different boost levels
         {
             Debug.Log("Boost Upgraded.");
@@ -93,6 +146,7 @@ public class BaseItem : MonoBehaviour
                     useCount = 1;
                     break;
             }
+            Boost boost = (Boost)this;
         }
         else if (itemCategory == "Shield") // changes timer on different shield levels
         {
@@ -112,12 +166,27 @@ public class BaseItem : MonoBehaviour
                     timer = 4.0f;
                     break;
             }
+            Shield shield = (Shield)this;
             useCount = 1;
         }
         else if (itemCategory == "Hazard")
         {
             TrapItem temp = (TrapItem)this;
-            temp.LevelUp();
+            switch (itemTier)
+            {
+                case 2:
+                    temp.UpdateComponents(temp.tierTwoBody, tierTwoItemIcon);
+                    break;
+                case 3:
+                    temp.UpdateComponents(temp.tierThreeBody, tierThreeItemIcon);
+                    break;
+                case 4:
+                    temp.UpdateComponents(temp.tierFourBody, tierFourItemIcon);
+                    break;
+                default:
+                    temp.UpdateComponents(temp.tierOneBody, tierOneItemIcon);
+                    break;
+            }
         }
     }
 

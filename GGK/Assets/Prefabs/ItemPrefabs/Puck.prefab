@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 928149475739924505}
   - component: {fileID: 2055685921588137374}
   - component: {fileID: 7924491827093875233}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Puck
   m_TagString: Projectile
   m_Icon: {fileID: 0}
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3719725890108810590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.1356735, y: 18.464415, z: 22.866058}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 0.3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -97,7 +97,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -153,8 +153,13 @@ MonoBehaviour:
   useCount: 1
   isTimed: 0
   itemIcon: {fileID: 2800000, guid: 6e50068d0483a1b4882ad041d19858a1, type: 3}
+  tierOneItemIcon: {fileID: 2800000, guid: 6e50068d0483a1b4882ad041d19858a1, type: 3}
+  tierTwoItemIcon: {fileID: 2800000, guid: 61c9d2ea5c8c50247a5104aac6bb3a04, type: 3}
+  tierThreeItemIcon: {fileID: 2800000, guid: 0298f09ad1e2a36469dc7a91e9db2827, type: 3}
+  tierFourItemIcon: {fileID: 2800000, guid: 54e7abc4b46f41d4fae5641de1766dae, type: 3}
   maxBounces: 4
   agent: {fileID: 7924491827093875233}
+  karts: []
   cameraScript: {fileID: 0}
 --- !u!195 &7924491827093875233
 NavMeshAgent:
@@ -166,10 +171,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5000001
-  m_Speed: 100
-  m_Acceleration: 500
+  m_Speed: 200
+  m_Acceleration: 5000
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0

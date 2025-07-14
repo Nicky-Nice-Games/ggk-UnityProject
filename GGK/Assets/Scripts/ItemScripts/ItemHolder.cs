@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class ItemHolder : MonoBehaviour
 {
@@ -28,16 +29,29 @@ public class ItemHolder : MonoBehaviour
     [SerializeField]
     private RawImage itemDisplay;
 
+    private Vector3 itemDisplayScale;
+    private Vector2 itemDisplayPosition;
+
     [SerializeField]
     private Texture defaultItemDisplay;
 
     private BaseItem item;
     private int driverItemTier;
-    private int uses;
+    public int uses;
+    public SpeedCameraEffect camera;
+
+    public float gravityForce;
 
     //the current coroutine animating spinning, to prevent double-ups
     private IEnumerator currentSpinCoroutine;
     public MiniMapHud miniMap;
+
+    [SerializeField]
+    private ParticleSystem hoverEffect;
+
+    private ParticleSystem hoverParticleInstance;
+
+    public List<VisualEffect> effects;
 
     // [SerializeField]
     // private TextMesh heldItemText;
@@ -45,15 +59,33 @@ public class ItemHolder : MonoBehaviour
     // audio variables
     //private AudioSource soundPlayer;
 
-    [SerializeField]
+    // [SerializeField]
     //AudioClip throwSound;
+
+    // tier 3 boost variables
+    [Header("Tier 3 Boost Settings")]
+    public float length = 4.0f;
+    private float lastHitDistance;
+    public float strength = 5.0f;
+    public float dampening = 20.0f;
+
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
 
+    [Header("Tier 4 Boost Settings")]
+    [SerializeField] GameObject warpBoostEffect;
+    [SerializeField] float warpWaitTime;
+
     // Start is called before the first frame update
     void Start()
     {
+        // STOP
+        foreach (VisualEffect vs in effects)
+        {
+            vs.Stop();
+        }
+
         DOTween.Init();
         holdingItem = IsHoldingItem();
 
@@ -64,10 +96,14 @@ public class ItemHolder : MonoBehaviour
         if (thisDriver)
         {
             itemDisplay.texture = defaultItemDisplay;
+            itemDisplayScale = itemDisplay.rectTransform.localScale;
+            itemDisplayPosition = itemDisplay.rectTransform.position;
         }
 
         //soundPlayer = GetComponent<AudioSource>();
+        driverItemTier = 1;
 
+        warpBoostEffect.SetActive(false);
     }
 
     // Update is called once per frame
@@ -106,6 +142,7 @@ public class ItemHolder : MonoBehaviour
                     }
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount == 1 && !item.isTimed)
@@ -119,6 +156,7 @@ public class ItemHolder : MonoBehaviour
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount > 1 && item.isTimed)
@@ -133,6 +171,7 @@ public class ItemHolder : MonoBehaviour
                     }
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
             else if (item.UseCount >= 1 && !item.isTimed)
@@ -146,6 +185,7 @@ public class ItemHolder : MonoBehaviour
                         itemDisplay.texture = defaultItemDisplay;
                     }
                     Destroy(heldItem.gameObject);
+                    driverItemTier = 1;
                 }
             }
         }
@@ -171,6 +211,7 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
@@ -185,7 +226,9 @@ public class ItemHolder : MonoBehaviour
             }
 
             uses--; // Decrease after successful use
-            
+
+            Debug.Log(item.ItemTier);
+
         }
     }
 
@@ -212,60 +255,273 @@ public class ItemHolder : MonoBehaviour
         }
         timer = Random.Range(5, 8);
 
+        Debug.Log(item.ItemTier);
+
     }
 
     public void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Collided");
-        // Checks if kart hits an item box
-        if (collision.gameObject.CompareTag("ItemBox"))
-        {
-            ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+        //// Checks if kart hits an item box
+        //if (collision.gameObject.CompareTag("ItemBox"))
+        //{
+        //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
 
-            // Gives kart an item if they don't already have one
-            if (!holdingItem)
-            {
-                itemBox.RandomizeItem(this.gameObject);
-                
-                // Initialize use count if first use
-                if (uses == 0)
-                {
-                    uses = heldItem.UseCount;
-                }
-                Debug.Log(uses);
-                if (thisDriver)
-                {
-                    ApplyItemTween(heldItem.itemIcon);
-                }
-            }
-            // Disables the item box
-            itemBox.gameObject.SetActive(false);
-            //heldItemText.text = $"Held Item: {baseItem}";
-        }
-        else if (collision.gameObject.CompareTag("UpgradeBox"))
-        {
-            UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
-            // itemDisplay.texture = heldItem.itemIcon;
+        //    // Gives kart an item if they don't already have one
+        //    if (!holdingItem)
+        //    {
+        //        itemBox.RandomizeItem(this.gameObject);
+
+        //        // Initialize use count if first use
+        //        if (uses == 0)
+        //        {
+        //            uses = heldItem.UseCount;
+        //        }
+        //        Debug.Log(uses);
+        //        if (thisDriver)
+        //        {
+        //            ApplyItemTween(heldItem.itemIcon);
+        //        }
+        //    }
+        //    // Disables the item box
+        //    itemBox.gameObject.SetActive(false);
+        //    //heldItemText.text = $"Held Item: {baseItem}";
+        //}
+        //else if (collision.gameObject.CompareTag("UpgradeBox"))
+        //{
+        //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
+        //    // itemDisplay.texture = heldItem.itemIcon;
 
             // if player missing item, gives random level 2 item or upgrades current item
-            upgradeBox.UpgradeItem(this.gameObject);
-            heldItem.OnLevelUp(heldItem.ItemTier);
-            uses = heldItem.UseCount;
+            //upgradeBox.UpgradeItem(this.gameObject);
+            //heldItem.OnLevelUp(heldItem.ItemTier);
+            //uses = heldItem.UseCount;
 
             // Either upgrades the current item or gives the kart a random upgraded item
             //baseItem = upgradeBox.UpgradeItem(this);
 
             // displays item in the HUD
-            if (thisDriver)
+            //if (thisDriver)
+            //{
+            //    ApplyItemTween(heldItem.itemIcon);
+            //}
+
+        //    // Disables the upgrade box
+        //    upgradeBox.gameObject.SetActive(false);
+        //    //heldItemText.text = $"Held Item: {baseItem}+";
+        //}
+
+        // Checks if kart hits an item box
+        if (collision.gameObject.CompareTag("ItemBox"))
+        {
+            Debug.Log("Collided with ItemBox");
+            ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+            Debug.Log(itemBox.ItemBoxType);
+            switch (itemBox.ItemBoxType)
             {
-                ApplyItemTween(heldItem.itemIcon);
+                case "Projectile":
+                    ProjectileBrick projBrick = collision.gameObject.GetComponent<ProjectileBrick>();
+                    if (!holdingItem)
+                    {
+                        // Get projectile and intialize level
+                        projBrick.GiveProjectile(this.gameObject);
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Puck")
+                    {
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    break;
+                case "Boost":
+                    BoostBrick boostBrick = collision.gameObject.GetComponent<BoostBrick>();
+                    if (!holdingItem)
+                    {
+                        // Get boost and intialize level
+                        boostBrick.GiveBoost(this.gameObject);
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Boost")
+                    {
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    break;
+                case "Defense":
+                    DefenseBrick defBrick = collision.gameObject.GetComponent<DefenseBrick>();
+                    if (!holdingItem)
+                    {
+                        // Get shield and intialize level
+                        defBrick.GiveShield(this.gameObject);
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Shield")
+                    {
+                        // Do not upgrade if shield is being used
+                        if (uses > 0)
+                        {
+                            // Increase item tier & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
+                        }
+                    }
+                    break;
+                case "Hazard":
+                    HazardBrick hazBrick = collision.gameObject.GetComponent<HazardBrick>();
+                    if (!holdingItem)
+                    {
+                        // Get hazard and intialize level
+                        hazBrick.GiveHazard(this.gameObject);
+                        heldItem.ItemTier = driverItemTier;
+                        heldItem.OnLevelUp(heldItem.ItemTier);
+                        uses = heldItem.UseCount;
+
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    else if (heldItem.ItemCategory == "Hazard")
+                    {
+                        // Increase item tier & apply upgrades
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                            heldItem.ItemTier = driverItemTier;
+                            heldItem.OnLevelUp(heldItem.ItemTier);
+                            uses = heldItem.UseCount;
+                        }
+                        // Item Box Shake
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    break;
+                case "Upgrade":
+                    if (!holdingItem)
+                    {
+                        // Increase item tier if not max
+                        if (driverItemTier < 4)
+                        {
+                            driverItemTier++;
+                        }
+                    }
+                    else
+                    {
+                        // shield can't be upgraded while being used
+                        if(heldItem.ItemCategory != "Shield")
+                        {
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
+                        }
+                        else if (uses == 1)
+                        {
+                            // Increase item tier if not max & apply upgrades
+                            if (driverItemTier < 4)
+                            {
+                                driverItemTier++;
+                                heldItem.ItemTier = driverItemTier;
+                                heldItem.OnLevelUp(heldItem.ItemTier);
+                                uses = heldItem.UseCount;
+                            }
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                ApplyItemTween(heldItem.itemIcon);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    // Gives kart an item if they don't already have one
+                    if (!holdingItem)
+                    {
+                        itemBox.RandomizeItem(this.gameObject);
+
+                        // Initialize use count if first use
+                        if (uses == 0)
+                        {
+                            uses = heldItem.UseCount;
+                        }
+                        Debug.Log(uses);
+                        if (thisDriver)
+                        {
+                            ApplyItemTween(heldItem.itemIcon);
+                        }
+                    }
+                    break;
             }
-
-            // Disables the upgrade box
-            upgradeBox.gameObject.SetActive(false);
-            //heldItemText.text = $"Held Item: {baseItem}+";
+            // Disables the item box
+            itemBox.gameObject.SetActive(false);
         }
-
         if (collision.gameObject.CompareTag("Projectile"))
         {
             if (thisDriver != null)
@@ -311,7 +567,8 @@ public class ItemHolder : MonoBehaviour
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration));
+                            boostMaxSpeed = boostMult * 60;
+                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 4: // level 4
                                 // get the checkpoint from the kart's collider child to cross 3 checkpoints
@@ -345,11 +602,19 @@ public class ItemHolder : MonoBehaviour
                             }
 
                             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
-                            // set the kart's position to 3 checkpoints ahead
-                            thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
-                            kartCheck.checkpointId = warpCheckpointId;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+
+                            // Makes game object with wormhole effect appear
+                            warpBoostEffect.SetActive(true);
+
+                            // Waits a certain number of seconds, and then activates the warp boost
+                            StartCoroutine(WaitThenBoost(warpCheckpoint, kartCheck, warpCheckpointId,
+                                           boostMult, duration, boostMaxSpeed));
+
+                            //// set the kart's position to 3 checkpoints ahead
+                            //thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                            //thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+                            //kartCheck.checkpointId = warpCheckpointId;
+                            //StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                     }
                     Debug.Log("Applying Boost Item!");
@@ -394,8 +659,37 @@ public class ItemHolder : MonoBehaviour
         }
 
     }
+    
+    //Waits a certain number of seconds then activates the warp boost
+    IEnumerator WaitThenBoost(GameObject warpCheckpoint, KartCheckpoint kartCheck, int warpCheckpointId,
+                                      float boostMult, float duration, float boostMaxSpeed)
+    {
+        //This is the code for the player.
+        if (thisDriver != null)
+        {
+            //Movement and Velocity vectors are set to 0,
+            //we wait a certain amount of time,
+            //reset the vectors, and then boost!
+            Vector3 originalMovement = thisDriver.movementDirection;
+            Vector3 originalVelocity = thisDriver.sphere.velocity;
+            thisDriver.movementDirection = Vector3.zero;
+            thisDriver.sphere.velocity = Vector3.zero;
+            yield return new WaitForSeconds(warpWaitTime);
+            thisDriver.sphere.velocity = originalVelocity;
+            thisDriver.movementDirection = originalMovement;
+        }
+        // set the kart's position to 3 checkpoints ahead
+        thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+        thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+        kartCheck.checkpointId = warpCheckpointId;
+        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+        yield return new WaitForFixedUpdate();
+    }
+
     public void ApplyItemTween(Texture item)
     {
+        itemDisplay.rectTransform.DOKill();
+        itemDisplay.rectTransform.localScale = itemDisplayScale;
         itemDisplay.texture = item;
         itemDisplay.rectTransform.DOShakeScale(0.5f);
     }
@@ -426,98 +720,106 @@ public class ItemHolder : MonoBehaviour
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+        warpBoostEffect.SetActive(false);
     }
 
     /// <summary>
-    /// for level 3 boost, adds an speed boost forwards and upwards
+    /// for level 3 boost, adds a speed boost forwards and upwards
     /// </summary>
     /// <param name="driver">the player</param>
     /// <param name="boostForce">amount of force to boost character</param>
     /// <param name="duration">how long boost should last</param>
     /// <returns></returns>
-    IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoostUpward(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        List<Collider> ignoreColliders = new List<Collider>();
-        Collider[] allColliders = FindObjectsOfType<Collider>();
-
-        // disable any colliders we don't want to hit
-        foreach (Collider collider in allColliders)
-        {
-            // ignore own collider
-            if (collider == driver.sphere.gameObject.GetComponent<Collider>())
-            {
-                continue;
-            }
-
-            // ignore ground, rock, checkpoint, startpoint, road
-            if (!collider.CompareTag("Ground") && !collider.CompareTag("Rock") 
-                && !collider.CompareTag("Checkpoint") && !collider.CompareTag("Startpoint")
-                && !collider.CompareTag("Road"))
-            {
-                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, true);
-                ignoreColliders.Add(collider);
-            }
-        }
-
-        // keep reference to old offset
-        float oldOffset = driver.colliderOffset;
-        float oldGravity = driver.gravity;
-
         // turn off drift and ground check in driver script
         driver.doGroundCheck = false;
         driver.canDrift = false;
+        driver.turnWheels = false;
 
-        // get just model transform
-        Transform modelTransform = transform.Find("Normal/Parent/KartModel");
+        // get a list of the player's wheels for raycasting
+        List<GameObject> wheels = new List<GameObject>();
+        wheels.Add(driver.backTireL);
+        wheels.Add(driver.backTireR);
+        wheels.Add(driver.frontTireL);
+        wheels.Add(driver.frontTireR);
+
+        for (int i = 0; i < wheels.Count; i++)
+        {
+            // rotate wheels 90 degrees
+            wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
+
+            // start wind effects
+            effects[i].SetFloat("Duration", duration + 0.5f);
+            effects[i].Play();
+        }
+
+        // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);
         RaycastHit hit;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            // slightly change offset so change isn't instant
-            if (driver.colliderOffset >= -4.0f && t < duration - 0.5f)
+            // perform a raycast at each wheel on the player's kart
+            for (int i = 0; i < 4; i++)
             {
-                driver.colliderOffset -= 0.25f;
+                GameObject wheel = wheels[i];
+                if (Physics.Raycast(wheel.transform.position, -driver.transform.up, 
+                    out hit, length))
+                {
+                    // determine spring force
+                    float forceAmount = HooksLawDampen(hit.distance);
+
+                    // add force at each wheel position
+                    driver.sphere.AddForceAtPosition(driver.transform.up * forceAmount, wheel.transform.position);
+                }
+                else
+                {
+                    lastHitDistance = length * 1.1f;
+                }
             }
 
-            // slowly drop kart towards end of boost
-            if (t >= duration - 0.2f)
+            // gives forward boost
+            Vector3 boostDirection = Vector3.zero;
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
             {
-                driver.colliderOffset += 0.25f;
+                boostDirection = driver.transform.forward * boostForce;
             }
-
-            // perform raycast on model of the kart to give hover effect
-            if (Physics.Raycast(modelTransform.position + (modelTransform.up * .2f), -modelTransform.up, out hit, 50.0f, driver.groundLayer))
-            {
-                // rotates just the model to match the surface
-                modelTransform.up = Vector3.Lerp(modelTransform.up, hit.normal, Time.deltaTime * driver.rotationAlignSpeed);
-                modelTransform.Rotate(0, transform.eulerAngles.y, 0);
-
-            }
-
-            // gives forward boost effect
-            Vector3 boostDirection = driver.transform.forward * boostForce;
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
 
+        // return wheels to original rotation
+        for (int i = 0; i < wheels.Count; i++)
+        {
+            wheels[i].transform.localRotation = Quaternion.identity;
+        }
+
         // reenable drift and ground check
         driver.canDrift = true;
-        driver.colliderOffset = oldOffset;
         driver.doGroundCheck = true;
-        driver.gravity = oldGravity;
+        driver.turnWheels = true;
+    }
 
-        // aligns the kart with the ground
-        driver.AttemptDrift();
-        driver.EndDrift();
+    /// <summary>
+    /// determines a spring force for tier three boost to create hover effect
+    /// </summary>
+    /// <param name="hitDistance">distance raycast is from ground</param>
+    /// <returns>spring force</returns>
+    private float HooksLawDampen(float hitDistance)
+    {
+        float forceAmount = strength * (length - hitDistance) + (dampening * (lastHitDistance - hitDistance));
+        forceAmount = Mathf.Max(0f, forceAmount);
+        lastHitDistance = hitDistance;
 
-        // turn all colliders that were ignored back on
-        foreach (Collider collider in ignoreColliders)
-        {
-            if (collider != null)
-            {
-                Physics.IgnoreCollision(driver.sphere.gameObject.GetComponent<Collider>(), collider, false);
-            }
-        }
-        ignoreColliders.Clear();
+        return forceAmount;
+    }
+
+    /// <summary>
+    /// spawns hover particles for boost tier 3
+    /// </summary>
+    /// <param name="spawnPos">where to spawn the particles</param>
+    private void SpawnHoverParticles(Vector3 spawnPos)
+    {
+        hoverParticleInstance = Instantiate(hoverEffect, spawnPos, Quaternion.identity);
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
