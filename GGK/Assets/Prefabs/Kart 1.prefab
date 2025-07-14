@@ -16311,6 +16311,7 @@ MonoBehaviour:
   fadeCanvas: {fileID: 0}
   kartModel: {fileID: 9189572482977137924}
   kartCheckpointScript: {fileID: 1662150045652356610}
+  normalTransform: {fileID: 0}
   kartPhysicsNPC: {fileID: 0}
   miniMap: {fileID: 0}
 --- !u!114 &7570158564829231275
@@ -70655,7 +70656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3900838970
+  GlobalObjectIdHash: 3433765063
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -75838,6 +75839,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9189572482977137924}
+  - component: {fileID: 8501363267985836484}
   m_Layer: 0
   m_Name: KartModel
   m_TagString: Untagged
@@ -75870,6 +75872,37 @@ Transform:
   - {fileID: 1048506163130881267}
   m_Father: {fileID: 186836618869148178}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8501363267985836484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5542701787487389027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.05
+  RotAngleThreshold: 0.5
+  ScaleThreshold: 0.5
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &5555472850483202570
 GameObject:
   m_ObjectHideFlags: 0
