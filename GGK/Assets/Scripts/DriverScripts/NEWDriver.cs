@@ -834,7 +834,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 10)
+                if(TurnCount > 6 && i > 12)
                 {
                     break;
                 }
@@ -844,7 +844,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 10)
+            else if(TurnCount !> 6)
             {
                 TurnCount--;
             }
@@ -852,7 +852,7 @@ public class NEWDriver : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         //Check if player wants to drift either direction
-        if (TurnCount > 10)
+        if (TurnCount > 6)
         {
             driftMethodCaller = true;
 

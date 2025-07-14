@@ -51,7 +51,7 @@ public class KartVisual : MonoBehaviour
         wheelVelocity = new Vector3[wheelMeshes.Length];
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         ApplySuspension();
         ApplyLeaning();
