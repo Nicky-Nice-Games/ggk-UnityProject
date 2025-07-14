@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class ItemHolder : MonoBehaviour
 {
@@ -37,12 +38,22 @@ public class ItemHolder : MonoBehaviour
     private BaseItem item;
     private int driverItemTier;
     public int uses;
+    public SpeedCameraEffect camera;
 
     public float gravityForce;
 
     //the current coroutine animating spinning, to prevent double-ups
     private IEnumerator currentSpinCoroutine;
     public MiniMapHud miniMap;
+
+    [SerializeField]
+    private ParticleSystem hoverEffect;
+
+    private ParticleSystem hoverParticleInstance;
+
+    public List<VisualEffect> effects;
+
+    public VisualEffect shieldEffect;
 
     // [SerializeField]
     // private TextMesh heldItemText;
@@ -71,6 +82,13 @@ public class ItemHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // STOP
+        foreach (VisualEffect vs in effects)
+        {
+            vs.Stop();
+        }
+        shieldEffect.Stop();
+
         DOTween.Init();
         holdingItem = IsHoldingItem();
 
@@ -196,6 +214,12 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            // grab the kart's shield effect before instantiating
+            if (heldItem.ItemCategory == "Shield")
+            {
+                heldItem.shieldEffect = shieldEffect;
+            }
+
             itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
@@ -276,19 +300,19 @@ public class ItemHolder : MonoBehaviour
         //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
         //    // itemDisplay.texture = heldItem.itemIcon;
 
-        //    // if player missing item, gives random level 2 item or upgrades current item
-        //    upgradeBox.UpgradeItem(this.gameObject);
-        //    heldItem.OnLevelUp(heldItem.ItemTier);
-        //    uses = heldItem.UseCount;
+            // if player missing item, gives random level 2 item or upgrades current item
+            //upgradeBox.UpgradeItem(this.gameObject);
+            //heldItem.OnLevelUp(heldItem.ItemTier);
+            //uses = heldItem.UseCount;
 
-        //    // Either upgrades the current item or gives the kart a random upgraded item
-        //    //baseItem = upgradeBox.UpgradeItem(this);
+            // Either upgrades the current item or gives the kart a random upgraded item
+            //baseItem = upgradeBox.UpgradeItem(this);
 
-        //    // displays item in the HUD
-        //    if (thisDriver)
-        //    {
-        //        ApplyItemTween(heldItem.itemIcon);
-        //    }
+            // displays item in the HUD
+            //if (thisDriver)
+            //{
+            //    ApplyItemTween(heldItem.itemIcon);
+            //}
 
         //    // Disables the upgrade box
         //    upgradeBox.gameObject.SetActive(false);
@@ -720,30 +744,41 @@ public class ItemHolder : MonoBehaviour
         // turn off drift and ground check in driver script
         driver.doGroundCheck = false;
         driver.canDrift = false;
+        driver.turnWheels = false;
 
         // get a list of the player's wheels for raycasting
         List<GameObject> wheels = new List<GameObject>();
-        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotBL"));
-        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotFL"));
-        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotFR"));
-        wheels.Add(GameObject.Find("Kart 1/Kart/Normal/Parent/KartModel/formulaCar_model1/SteerPivotBR"));
+        wheels.Add(driver.backTireL);
+        wheels.Add(driver.backTireR);
+        wheels.Add(driver.frontTireL);
+        wheels.Add(driver.frontTireR);
 
+        for (int i = 0; i < wheels.Count; i++)
+        {
+            // rotate wheels 90 degrees
+            wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
+
+            // start wind effects
+            effects[i].SetFloat("Duration", duration + 0.5f);
+            effects[i].Play();
+        }
 
         // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);
         RaycastHit hit;
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             // perform a raycast at each wheel on the player's kart
-            foreach (GameObject wheel in wheels)
+            for (int i = 0; i < 4; i++)
             {
-                if (Physics.Raycast(wheel.transform.position, wheel.transform.TransformDirection(-Vector3.up), 
+                GameObject wheel = wheels[i];
+                if (Physics.Raycast(wheel.transform.position, -driver.transform.up, 
                     out hit, length))
                 {
                     // determine spring force
                     float forceAmount = HooksLawDampen(hit.distance);
 
                     // add force at each wheel position
-                    driver.sphere.AddForceAtPosition(wheel.transform.up * forceAmount, wheel.transform.position);
+                    driver.sphere.AddForceAtPosition(driver.transform.up * forceAmount, wheel.transform.position);
                 }
                 else
                 {
@@ -761,13 +796,16 @@ public class ItemHolder : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        // return wheels to original rotation
+        for (int i = 0; i < wheels.Count; i++)
+        {
+            wheels[i].transform.localRotation = Quaternion.identity;
+        }
+
         // reenable drift and ground check
         driver.canDrift = true;
         driver.doGroundCheck = true;
-
-        // aligns the kart with the ground
-        driver.AttemptDrift();
-        driver.EndDrift();
+        driver.turnWheels = true;
     }
 
     /// <summary>
@@ -782,6 +820,15 @@ public class ItemHolder : MonoBehaviour
         lastHitDistance = hitDistance;
 
         return forceAmount;
+    }
+
+    /// <summary>
+    /// spawns hover particles for boost tier 3
+    /// </summary>
+    /// <param name="spawnPos">where to spawn the particles</param>
+    private void SpawnHoverParticles(Vector3 spawnPos)
+    {
+        hoverParticleInstance = Instantiate(hoverEffect, spawnPos, Quaternion.identity);
     }
 
     IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)

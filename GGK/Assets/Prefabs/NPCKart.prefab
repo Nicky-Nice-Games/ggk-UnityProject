@@ -20103,7 +20103,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150621803132205607}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: -1372625422
   m_Radius: 0.5
   m_Speed: 36
@@ -35262,6 +35262,13 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   movementDirection: {x: 0, y: 0, z: 0}
   turning: {x: 0, y: 0, z: 0, w: 0}
+  parent: {fileID: 1150621803132205607}
+  KC: {fileID: 0}
+  destination: {fileID: 0}
+  destinationAhead: 1
+  randomizedTarget: {x: 0, y: 0, z: 0}
+  leftGrounded: 0
+  rightGrounded: 0
   accelerationRate: 2300
   deccelerationRate: 5
   airDeccelerationRate: 2
@@ -35346,12 +35353,7 @@ MonoBehaviour:
   isDriving: 0
   isConfused: 0
   confusedTimer: 0
-  agent: {fileID: 7259591001314354111}
-  parent: {fileID: 1150621803132205607}
-  KC: {fileID: 0}
-  destination: {fileID: 0}
-  destinationAhead: 1
-  randomizedTarget: {x: 0, y: 0, z: 0}
+  childNormal: {fileID: 80853751144720829}
 --- !u!114 &4657602963145992535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35370,7 +35372,14 @@ MonoBehaviour:
   timer: 5
   itemDisplay: {fileID: 0}
   defaultItemDisplay: {fileID: 2800000, guid: 7b68c3fd2d2e4ab4c9af6a29ab528b67, type: 3}
+  uses: 0
+  gravityForce: 0
   miniMap: {fileID: 0}
+  length: 4
+  strength: 5
+  dampening: 20
+  warpBoostEffect: {fileID: 0}
+  warpWaitTime: 0
 --- !u!114 &8006489090730080545
 MonoBehaviour:
   m_ObjectHideFlags: 0
