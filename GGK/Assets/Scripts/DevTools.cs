@@ -23,6 +23,9 @@ using UnityEngine.UIElements;
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
+//Can't load into another map (or scene?) when paused, it goes to a black screen but works after you
+//  unpause - make it auto-unpause/disable pause menu when load command happens
+//Change map names to updated names
 
 
 /// <summary>
@@ -65,6 +68,18 @@ public enum GameMode
 }
 
 
+/// <summary>
+/// Enum for each item category keyword/command
+/// </summary>
+public enum ItemType
+{
+    Offense,
+    Defense,
+    Hazard,
+    Boost
+}
+
+
 public class DevTools : MonoBehaviour
 {
 
@@ -91,7 +106,7 @@ public class DevTools : MonoBehaviour
 
         commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for param options";
+                "or [methodName] Options for Param options";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -269,9 +284,24 @@ public class DevTools : MonoBehaviour
                         textLog += "\nMethod not yet set up :)";
                         break;
 
+                    case "GiveItem":
+                        if (parts.Length > 2)
+                        {
+                            GiveItem(parts[1], parts[2]);
+                        }
+                        else if (parts.Length > 1 && parts.Length < 3)
+                        {
+                            textLog += "\nError: No Param 2 [ItemTier] was Entered.";
+                        }
+                        else
+                        {
+                            textLog += "\nError: No Param 1 [ItemType] was Entered.";
+                        }
+                        break;
+
                     case "ClearLog":
                         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or [methodName] Options for param options";
+                        "or [methodName] Options for Param options";
                         break;
 
                     default:
@@ -294,7 +324,7 @@ public class DevTools : MonoBehaviour
         {
             //Displays all of the parameter options for the LoadMap method
             case "Options":
-                textLog += "\nOptions for param 1 [MapName]: ";
+                textLog += "\nOptions for Param 1 [MapName]: ";
                 foreach (MapName name in Enum.GetValues(typeof(MapName)))
                 {
                     textLog += "\n" + name;
@@ -360,7 +390,7 @@ public class DevTools : MonoBehaviour
         {
             //Displays all of the parameter options for the LoadScene method
             case "Options":
-                textLog += "\nOptions for param 1 [SceneName]: ";
+                textLog += "\nOptions for Param 1 [SceneName]: ";
                 foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
                 {
                     textLog += "\n" + name;
@@ -423,7 +453,7 @@ public class DevTools : MonoBehaviour
         {
             //Displays all of the parameter options for the GameModeChange method
             case "Options":
-                textLog += "\nOptions for param 1 [GameMode]: ";
+                textLog += "\nOptions for Param 1 [GameMode]: ";
                 foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
                 {
                     textLog += "\n" + mode;
@@ -444,6 +474,109 @@ public class DevTools : MonoBehaviour
         }
 
     }
+
+
+    public void GiveItem(string itemType, string itemTier)
+    {
+
+        switch (itemType)
+        {
+            //Displays all of the parameter options for the GameModeChange method
+            case "Options":
+                textLog += "\nOptions for Param 1 [ItemType]: ";
+                foreach (GameMode type in Enum.GetValues(typeof(ItemType)))
+                {
+                    textLog += "\n" + type;
+                }
+                textLog += "\nOptions for Param 2 [ItemTier]: " +
+                    "\nEnter a number 1-4";
+                break;
+
+            case "Offense":
+
+                switch (itemTier)
+                {
+                    case "1":
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+                }
+                break;
+
+            case "Defense":
+
+                switch (itemTier)
+                {
+                    case "1":
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+                }
+                break;
+
+            case "Hazard":
+
+                switch (itemTier)
+                {
+                    case "1":
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+                }
+                break;
+
+            case "Boost":
+
+                switch (itemTier)
+                {
+                    case "1":
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+                }
+                break;
+
+            case "":
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+            case null:
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+            default:
+                textLog += "\nError: No Param 1 [GameMode] was Entered.";
+                break;
+        }
+
+    }
+
 
 
     /// <summary>
