@@ -53,6 +53,8 @@ public class ItemHolder : MonoBehaviour
 
     public List<VisualEffect> effects;
 
+    public VisualEffect shieldEffect;
+
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -85,6 +87,7 @@ public class ItemHolder : MonoBehaviour
         {
             vs.Stop();
         }
+        shieldEffect.Stop();
 
         DOTween.Init();
         holdingItem = IsHoldingItem();
@@ -211,6 +214,12 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            // grab the kart's shield effect before instantiating
+            if (heldItem.ItemCategory == "Shield")
+            {
+                heldItem.shieldEffect = shieldEffect;
+            }
+
             itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
