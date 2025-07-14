@@ -21,6 +21,8 @@ using UnityEngine.UIElements;
 //  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
 //Add other commands (see dev keyboard shortcuts; restart command?)
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
+//Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
+//  a space before a method name, prevent having to retype)
 
 
 /// <summary>
@@ -102,8 +104,8 @@ public class DevTools : MonoBehaviour
         //to keep it enabled but it still doesn't show until the key is pressed again)
 
         //Debug.Log("loading " + sceneLoader.loading);
-        if (sceneLoader.loading)
-        {
+        //if (sceneLoader.loading)
+        //{
             //inputField.ActivateInputField();
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
             //Debug.Log("Length " + textLog.Length);
@@ -121,10 +123,10 @@ public class DevTools : MonoBehaviour
             //}
             //sceneLoader.loading = false;
             //Debug.Log("enabled " + commandPromptCanvas.enabled);
-        }
+        //}
       
 
-        //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working) !!
+        //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             if (commandPromptCanvas.enabled == false)
@@ -201,7 +203,7 @@ public class DevTools : MonoBehaviour
         //Puts user entered text into the prompt log
         textLog += "\n\t>_ " + input;
 
-        //Splits input into substrings with a space as the delimiter
+        //Splits input into substrings with a space as the delimiter (Pre-method chaining)
         //string[] parts = input.Split(new char[] { ' ' });
 
         //Splits input into substrings with a colon as the delimiter
