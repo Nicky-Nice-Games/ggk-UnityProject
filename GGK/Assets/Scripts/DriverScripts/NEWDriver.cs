@@ -878,7 +878,7 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 10)
+                if(TurnCount > 6 && i > 12)
                 {
                     break;
                 }
@@ -888,7 +888,7 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 10)
+            else if(TurnCount !> 6)
             {
                 TurnCount--;
             }
@@ -896,7 +896,7 @@ public class NEWDriver : NetworkBehaviour
             yield return new WaitForFixedUpdate();
         }
         //Check if player wants to drift either direction
-        if (TurnCount > 10)
+        if (TurnCount > 6)
         {
             driftMethodCaller = true;
 
