@@ -10426,6 +10426,7 @@ Transform:
   - {fileID: 156305402636570110}
   - {fileID: 5175546395433121647}
   - {fileID: 8719071438036900973}
+  - {fileID: 8650760387202532977}
   m_Father: {fileID: 9189572482977137924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1759510822825020021
@@ -110970,6 +110971,7 @@ MonoBehaviour:
   - {fileID: 5549197109593913330}
   - {fileID: 8345684812774874352}
   shieldEffect: {fileID: 6378743885833040560}
+  boostEffect: {fileID: 7376428985925975929}
   length: 4
   strength: 4
   dampening: 40
@@ -121855,6 +121857,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8193235909684480713, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_Name
       value: TornadoVFXGraph (3)
@@ -121921,6 +121931,14 @@ PrefabInstance:
     - target: {fileID: 7140810299582633035, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8193235909684480713, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_Name
@@ -121992,6 +122010,14 @@ PrefabInstance:
     - target: {fileID: 3702214791741420942, guid: 4aface2a6c044d44aa9d2697968857f3, type: 3}
       propertyPath: m_Name
       value: Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 8339438600643687685, guid: 4aface2a6c044d44aa9d2697968857f3, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8339438600643687685, guid: 4aface2a6c044d44aa9d2697968857f3, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -122552,6 +122578,97 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
   m_PrefabInstance: {fileID: 6625973587709248222}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6779666186601302265
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7324962379893977866}
+    m_Modifications:
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055598586654242688, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055598586654242688, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055598586654242688, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.z
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7815024032172944922, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+      propertyPath: m_Name
+      value: EnergyDrinkBoost
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+--- !u!2083052967 &7376428985925975929 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4055598586654242688, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+  m_PrefabInstance: {fileID: 6779666186601302265}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8650760387202532977 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
+  m_PrefabInstance: {fileID: 6779666186601302265}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7003677746940500405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122599,6 +122716,14 @@ PrefabInstance:
     - target: {fileID: 7140810299582633035, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8193235909684480713, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_Name
@@ -122861,6 +122986,14 @@ PrefabInstance:
     - target: {fileID: 7140810299582633035, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622562795782067414, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8193235909684480713, guid: 1cfd25c35c9decc4d8352cb73f8fc647, type: 3}
       propertyPath: m_Name
