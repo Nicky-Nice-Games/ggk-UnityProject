@@ -10,4 +10,5 @@ public class WebUserData
     public string pw;
     public int uid;
     public string username;
+    public string password;
 }

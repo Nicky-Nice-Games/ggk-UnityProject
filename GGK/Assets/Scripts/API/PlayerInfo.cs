@@ -27,7 +27,7 @@ public class PlayerInfo : MonoBehaviour
     public ulong clientID;
 
     //Default constructor
-    public PlayerInfo() 
+    public PlayerInfo()
     {
         playerID = 0;
         raceStartTime = 0;

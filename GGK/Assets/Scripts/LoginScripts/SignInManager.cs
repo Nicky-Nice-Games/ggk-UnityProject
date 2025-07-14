@@ -1,4 +1,4 @@
-// Joshua Chisholm
+// Joshua Chisholm and Logan Larrondo
 // 6/25/25
 // Basic button functions for signing in
 
@@ -52,7 +52,7 @@ public class SignInManager : MonoBehaviour
         gameManager.playerInfo = playerInfo;
 
         // Organizing fields list into dict
-        foreach(TMP_InputField field in inputFieldsList)
+        foreach (TMP_InputField field in inputFieldsList)
         {
             inputFields[field.name] = field;
         }
@@ -61,7 +61,7 @@ public class SignInManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class SignInManager : MonoBehaviour
     /// <param name="data">data from user input</param>
     public void SetPlayerLoginData(string fieldName, string data)
     {
-        if(logInOption == "Login")
+        if (logInOption == "Login")
         {
             // Checking imput fields to assign correct player data
             switch (fieldName)
@@ -88,7 +88,7 @@ public class SignInManager : MonoBehaviour
                     break;
             }
         }
-        else if(logInOption == "SignUp")
+        else if (logInOption == "SignUp")
         {
             // Checking imput fields to assign correct player data
             switch (fieldName)
@@ -152,7 +152,7 @@ public class SignInManager : MonoBehaviour
         loginUI.SetActive(false);
     }
 
-    public void DisplayKeyboard(GameObject sender) 
+    public void DisplayKeyboard(GameObject sender)
     {
         TMP_InputField input = sender.GetComponent<TMP_InputField>();
         keyboard.gameObject.SetActive(true);

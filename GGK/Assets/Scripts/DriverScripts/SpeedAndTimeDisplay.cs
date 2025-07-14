@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SpeedAndTimeDisplay : MonoBehaviour
 {
+    public static SpeedAndTimeDisplay instance;
+
     // Fields for text displays
     [SerializeField]
     TextMeshProUGUI speedDisplay;
@@ -12,11 +14,15 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     TextMeshProUGUI timeDisplay;
 
     [SerializeField]
-    public NetcodeNEWDriver kart;
+    public NEWDriver kart;
 
     [SerializeField]
     SpeedBar speedBar;
     float timer;
+
+    private void Awake() {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -34,5 +40,10 @@ public class SpeedAndTimeDisplay : MonoBehaviour
         speedBar.SetSpeed(kart.sphere.velocity.magnitude);
         speedDisplay.text = "Speed: " + kart.sphere.velocity.magnitude.ToString("n2");
         timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
+    }
+
+    public void TrackKart(GameObject trackedKart)
+    {
+        kart = trackedKart.GetComponent<NEWDriver>();
     }
 }

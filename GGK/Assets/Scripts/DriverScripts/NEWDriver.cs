@@ -8,6 +8,12 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+     // root reference of the prefab
+    public Transform rootTransform;
+    public KartCheckpoint kartCheckpoint;
+    
+    [Header("Input System Settings")]
+    public PlayerInput playerInput;
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
     [Header("Do not Change")]
@@ -140,29 +146,62 @@ public class NEWDriver : NetworkBehaviour
 
 
     // Player info for API
-    // The player info should be created in the Login handeler and player data filled out in here  
+    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
     // Any game related data will be filled in in the game scene handeler or manager
-    private PlayerInfo thisPlayerInfo;
+    private PlayerInfo playerInfo;
     private GameManager gameManagerObj;
-    private ulong thisClientID;
+
+   
 
     // Start is called before the first frame update
     void Start()
     {
-        thisClientID = NetworkManager.LocalClientId;
         gameManagerObj = FindAnyObjectByType<GameManager>();
 
-        thisPlayerInfo = gameManagerObj.playerInfo;
+        playerInfo = gameManagerObj.playerInfo;
 
         sphere.drag = 0.5f;
 
         StopParticles();
 
         baseRotation = steeringWheel.transform.localRotation;
+
+        if (!IsSpawned)
+        {
+            Debug.Log("Adding");
+            playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+
+            
+            PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
+
+            Debug.Log("Added Driver");
+            MiniMapHud.instance.AddKart(gameObject);
+
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
+        }
+        if (IsServer)
+        {
+            // PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+        }
+        MiniMapHud.instance.AddKart(gameObject);
+        PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
     }
 
     public void StopParticles()
-    {        
+    {
         //-------------Particles----------------
         foreach (ParticleSystem ps in particleSystemsBR)
         {

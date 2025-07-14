@@ -47,6 +47,7 @@ using UnityEngine.UI;
 //
 public class MiniMapHud : MonoBehaviour
 {
+    public static MiniMapHud instance;
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
     // list of points
@@ -119,7 +120,6 @@ public class MiniMapHud : MonoBehaviour
         //find the minimap and icon reference
         miniMap = GameObject.Find(gameObject.name + "/MiniMap").GetComponent<Image>();
         iconRef = GameObject.Find(gameObject.name + "/MiniMap/MapIcon");
-
         //If there are objects to track..
         if (objects.Count > 0)
         {
@@ -340,7 +340,7 @@ public class MiniMapHud : MonoBehaviour
     private void EstablishAppearance(GameObject obj, Image img)
     {
         AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
-
+        Debug.Log($"set {obj.name}'s appearance settings, is settings null? {settings == null}");
         if (settings != null)
         {
             settings.UpdateAppearance();
@@ -371,6 +371,20 @@ public class MiniMapHud : MonoBehaviour
 
             yield return new WaitForSeconds(dt);
         }
+    }
+
+    /// <summary>
+    /// Allows adding of karts post start
+    /// </summary>
+    /// <param name="kart"></param>
+    public void AddKart(GameObject kart)
+    {
+        objects.Add(kart);
+        GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
+        Image refImage = newIcon.GetComponent<Image>();
+        mapIcons.Add(refImage);
+
+        EstablishAppearance(kart, refImage);
     }
 }
 

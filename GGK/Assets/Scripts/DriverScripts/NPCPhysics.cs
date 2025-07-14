@@ -1,11 +1,12 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCPhysics : MonoBehaviour
+public class NPCPhysics : NetworkBehaviour
 {
     // Keep
     [Header("Do not Change")]
@@ -146,7 +147,6 @@ public class NPCPhysics : MonoBehaviour
     public float confusedTimer;
     public Transform childNormal;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -166,9 +166,19 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
-
+        if (!IsSpawned)
+        {
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, KC);
+        }
     }
-
+    public override void OnNetworkSpawn()
+    {
+        Transform childTransform = parent.transform.GetChild(1);
+        KC = childTransform.GetComponent<KartCheckpoint>();
+        MiniMapHud.instance.AddKart(gameObject);
+        PlacementManager.instance.AddKart(gameObject, KC);
+    }
     public void StopParticles()
     {
         //-------------Particles----------------
@@ -499,9 +509,6 @@ public class NPCPhysics : MonoBehaviour
         // Clamp for safety
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
-
-
-
 
     void HandleGroundCheck()
     {

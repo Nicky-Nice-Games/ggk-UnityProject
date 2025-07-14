@@ -15,7 +15,7 @@ public class DynamicRecovery : MonoBehaviour
     private GameObject[] checkpoints;
     public KartCheckpoint kartCheckpointScript;
     private Transform currentCheckpoint;
-    private Transform normalTransform;
+    [SerializeField] private Transform normalTransform;
 
     private Rigidbody rb;
     private bool isRecovering = false;
@@ -52,7 +52,7 @@ public class DynamicRecovery : MonoBehaviour
         //    currentCheckpoint = checkpoints[0].transform;
         
         Transform kartRoot = transform.parent; // "Kart 1"
-        Transform normal = kartRoot.Find("Kart");
+        Transform normal = kartRoot.GetChild(0);
 
         if (normal != null)
         {
@@ -123,7 +123,6 @@ public class DynamicRecovery : MonoBehaviour
         //}
 
         closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
-
         return closest;
 
     }
@@ -211,10 +210,11 @@ public class DynamicRecovery : MonoBehaviour
 
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
-
+        
         // TELEPORT TO NEW POSITION 
         transform.position = targetPosition;
         ResetParticles();
+        Debug.Log(finalRot);
         normalTransform.rotation = finalRot;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;

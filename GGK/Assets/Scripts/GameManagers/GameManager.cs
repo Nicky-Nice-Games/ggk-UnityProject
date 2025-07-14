@@ -63,12 +63,10 @@ public class GameManager : NetworkBehaviour
         RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
-
-        apiManager = GetComponent<APIManager>();
     }
 
     /// <summary>
-    /// Changes the game state to login scene
+    /// Changes the game state to multi /single player select
     /// </summary>
     public void StartGame()
     {
@@ -122,6 +120,7 @@ public class GameManager : NetworkBehaviour
             // Will most likely be replaced when implimenting the comments above
             SceneManager.LoadScene("MultiplayerMenus");
             curState = GameStates.lobby;
+            //NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerMenus", LoadSceneMode.Single);
         }
     }
 
@@ -131,12 +130,13 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
+        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
     {
-        ToGameModeSelectScene();
+        //ToGameModeSelectScene();
     }
     
     /// <summary>
@@ -159,10 +159,14 @@ public class GameManager : NetworkBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
-            if (IsHost)
+            if (NetworkManager.IsServer)
             {
-                LoadedGameModeRpc();
+                MultiplayerSceneManager.Instance.ToPlayerKartScene();
             }
+        }
+        else
+        { 
+            SceneManager.LoadScene("PlayerKartScene");
         }
     }
 
@@ -182,7 +186,7 @@ public class GameManager : NetworkBehaviour
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            MultiplayerManager.Instance.PlayerKartSelectedRpc(NetworkManager.Singleton.LocalClientId, CharacterData.Instance.character, CharacterData.Instance.characterColor);
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
         }
         else
         {
@@ -238,7 +242,7 @@ public class GameManager : NetworkBehaviour
            // Loads the race based on the name of the button clicked
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
-                case "RIT Outer Loop":
+            case "RIT Outer Loop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
             case "Golisano":
@@ -258,20 +262,14 @@ public class GameManager : NetworkBehaviour
             }
             curState = GameStates.game; 
         }
-        
-
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    public void LoadMapRpc(string mapName)
-    {
-        SceneManager.LoadScene(mapName);
-    }
     /// <summary>
     /// Triggers when the game finishes
     /// </summary>
     public void GameFinished()
     {
+        curState = GameStates.gameOver;
         apiManager.PostPlayerData(playerInfo);
 
         sceneLoader.LoadScene("GameOverScene");
@@ -323,6 +321,7 @@ public class GameManager : NetworkBehaviour
     {
         RefreshSelected();
     }
+
 
     //refresh selected should a device confirguration be changed
     public void RefreshSelected(InputDevice device, InputDeviceChange change)

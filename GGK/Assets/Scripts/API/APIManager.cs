@@ -10,7 +10,7 @@ public class APIManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     /// <summary>
@@ -51,10 +51,10 @@ public class APIManager : MonoBehaviour
     {
         // Serializing data to send back
         SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
-        serializable.ConvertToSerializable(thisPlayer);   
+        serializable.ConvertToSerializable(thisPlayer);
         string json = JsonUtility.ToJson(serializable);
 
-        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));    
+        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class APIManager : MonoBehaviour
             yield return webRequest.SendWebRequest();
 
             // Checking good request
-            if(webRequest.result == UnityWebRequest.Result.Success)
+            if (webRequest.result == UnityWebRequest.Result.Success)
             {
                 string json = webRequest.downloadHandler.text;
 
