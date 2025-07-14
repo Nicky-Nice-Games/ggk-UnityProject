@@ -158,7 +158,7 @@ public class NEWDriver : NetworkBehaviour
     {
         gameManagerObj = FindAnyObjectByType<GameManager>();
 
-        thisPlayerInfo = gameManagerObj.playerInfo;
+        playerInfo = gameManagerObj.playerInfo;
 
         sphere.drag = 0.5f;
 

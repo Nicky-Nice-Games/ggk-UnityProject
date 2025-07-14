@@ -14,6 +14,7 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
     lobby,
     gameMode,
