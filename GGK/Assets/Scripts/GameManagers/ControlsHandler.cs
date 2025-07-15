@@ -19,11 +19,19 @@ public class ControlsHandler : MonoBehaviour
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private GameObject buttonIn;
     [SerializeField] private GameObject buttonOut;
+
+    private Vector3 initialScale;
     public void OnEnable()
     {
+        initialScale = buttonIn.transform.localScale;
         Keyboard();
         // When this panel opens this is the first button to be hovered
         eventSystem.SetSelectedGameObject(buttonIn); 
+    }
+
+    public void OnDisable()
+    {
+        buttonIn.transform.localScale = initialScale;
     }
 
     public void Open()

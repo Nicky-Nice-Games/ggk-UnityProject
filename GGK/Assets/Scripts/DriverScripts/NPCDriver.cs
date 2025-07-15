@@ -22,6 +22,8 @@ public class NPCDriver : MonoBehaviour
     public float turnSpeed = 60f;
     public float maxSteerAngle = 20f;
 
+    Tween driftRotationTween;
+
     [Header("Grounding")]
     public LayerMask groundLayer;
     public float groundCheckDistance = 8.6f;
@@ -140,7 +142,7 @@ public class NPCDriver : MonoBehaviour
 
         distanceSquaredToFollow = math.distancesq(transform.position, followTarget.position);
 
-        float maxDistance = boosted ? 4000f * boostDistanceMultiplier : 4000f;
+        float maxDistance = boosted ? 3000f * boostDistanceMultiplier : 3000f;
         if (distanceSquaredToFollow > maxDistance && !avoidingObstacle && !correctingEdge && !isRecoveringFromHit)
         {
             returningToTarget = true;
@@ -159,8 +161,15 @@ public class NPCDriver : MonoBehaviour
             Quaternion targetRot = Quaternion.LookRotation(toTarget);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 180f * Time.deltaTime);
             //accelerationRate = 2000f;
-            rBody.velocity = toTarget.normalized * returnSpeed;
+            Vector3 desiredVelocity = toTarget.normalized * returnSpeed;
+
+            if (!isGrounded)
+            {
+                desiredVelocity += Vector3.down * 9.81f * airGravityMultiplier * Time.fixedDeltaTime;
+            }
+            rBody.velocity = desiredVelocity;
             //velocity += toTarget.normalized * (accelerationRate * Time.fixedDeltaTime);
+
 
 
             if (toTarget.magnitude < arrivalThreshold)
@@ -263,23 +272,23 @@ public class NPCDriver : MonoBehaviour
 
                 return; // still blending back to normal
             }
-            else if (correctingEdge)
-            {
-                edgeCorrectTimer -= Time.deltaTime;
-
-                velocity = transform.forward * maxSpeed;
-                rBody.velocity = velocity;
-
-                Quaternion steerBack = Quaternion.LookRotation(avoidanceDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, steerBack, Time.deltaTime * steerBackStrength);
-
-                if (edgeCorrectTimer <= 0f)
-                {
-                    correctingEdge = false;
-                }
-
-                return;
-            }
+            //else if (correctingEdge)
+            //{
+            //    edgeCorrectTimer -= Time.deltaTime;
+            //
+            //    velocity = transform.forward * maxSpeed;
+            //    rBody.velocity = velocity;
+            //
+            //    Quaternion steerBack = Quaternion.LookRotation(avoidanceDirection);
+            //    transform.rotation = Quaternion.Slerp(transform.rotation, steerBack, Time.deltaTime * steerBackStrength);
+            //
+            //    if (edgeCorrectTimer <= 0f)
+            //    {
+            //        correctingEdge = false;
+            //    }
+            //
+            //    return;
+            //}
 
 
             // ---- Edge Detection & Correction ----
@@ -394,6 +403,35 @@ public class NPCDriver : MonoBehaviour
         // Limit acceleration and maxSpeed temporarily
         accelerationRate = 500f;
         maxSpeed = 10f;
+    }
+
+    // StartRecovery for being bumped by a shield causing a spin out
+    public void StartRecovery(float duration)
+    {
+        isRecoveringFromHit = true;
+        recoveryTimer = recoveryDuration;
+
+        // Gently reduce current velocity
+        velocity *= 0.2f;
+
+        // Limit acceleration and maxSpeed temporarily
+        accelerationRate = 500f;
+        maxSpeed = 10f;
+
+        StartCoroutine(StunCoroutine(duration));
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
     }
 
     void OnCollisionEnter(Collision collision)
