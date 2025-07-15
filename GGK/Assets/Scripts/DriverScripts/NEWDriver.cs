@@ -77,8 +77,12 @@ public class NEWDriver : MonoBehaviour
     //Front tires GO
     public GameObject frontTireR;    
     public GameObject frontTireL;
+    public GameObject backTireR;
+    public GameObject backTireL;
     public GameObject steeringWheel;
     Quaternion baseRotation; //Base rotation of the steering wheel for resetting
+    [HideInInspector]
+    public bool turnWheels = true;
 
 
     [Header("Reference to the kartModel transform for Animation")]
@@ -187,7 +191,11 @@ public class NEWDriver : MonoBehaviour
     void FixedUpdate()
     {
         HandleGroundCheck();
-        ApplyWheelVisuals();
+
+        if (turnWheels)
+        {
+            ApplyWheelVisuals();
+        }
 
         //Follow Collider
         transform.position = 
@@ -469,6 +477,7 @@ public class NEWDriver : MonoBehaviour
         float steerAngle = movementDirection.x * maxSteerAngleTires;
         frontTireL.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
         frontTireR.transform.localRotation = Quaternion.Euler(0, steerAngle, 0f);
+
         // Steering Wheel Rotation
         float targetAngle = movementDirection.x * maxSteeringAngle;
         //Quaternion targetRot = Quaternion.Euler(0, targetAngle, 0);
@@ -880,7 +889,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 10)
+                if(TurnCount > 6 && i > 12)
                 {
                     break;
                 }
@@ -890,7 +899,7 @@ public class NEWDriver : MonoBehaviour
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 10)
+            else if(TurnCount !> 6)
             {
                 TurnCount--;
             }
@@ -898,7 +907,7 @@ public class NEWDriver : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         //Check if player wants to drift either direction
-        if (TurnCount > 10)
+        if (TurnCount > 6)
         {
             driftMethodCaller = true;
 

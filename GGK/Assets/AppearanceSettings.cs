@@ -41,17 +41,21 @@ public class AppearanceSettings : MonoBehaviour
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
 
-                for (int i = 0; i < models.Count; i++)
+                //if models is null, and models is populated...
+                if (models != null && models.Count > 0)
                 {
-                    //Setting active correct model
-                    if (name == models[i].name)
+                    for (int i = 0; i < models.Count; i++)
                     {
-                        models[i].SetActive(true);
-                        continue;
-                    }
+                        //Setting active correct model
+                        if (models[i] != null && name == models[i].name)
+                        {
+                            models[i].SetActive(true);
+                            continue;
+                        }
 
-                    //deleting the models that are not supposed to be active
-                    Destroy(models[i]);
+                        //deleting the models that are not supposed to be active
+                        Destroy(models[i]);
+                    }
                 }
             }
         }
