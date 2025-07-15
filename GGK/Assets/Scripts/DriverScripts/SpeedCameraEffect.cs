@@ -99,6 +99,11 @@ public class SpeedCameraEffect : MonoBehaviour
 
     public bool IsHoldingTab { get { return isHoldingTab; } }
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         cam = GetComponent<Camera>();
