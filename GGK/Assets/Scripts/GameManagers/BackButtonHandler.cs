@@ -39,6 +39,10 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.sceneLoader.LoadScene("Login");
                 gamemanagerObj.curState = GameStates.login;
                 break;
+            case GameStates.lobby:
+                gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
+                gamemanagerObj.curState = GameStates.multiSingle;
+                break;
             case GameStates.gameMode:
                 gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
                 gamemanagerObj.curState = GameStates.multiSingle;
