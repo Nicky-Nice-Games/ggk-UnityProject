@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
 
@@ -100,6 +101,7 @@ public class DevTools : MonoBehaviour
 
     [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
+    private BaseItem baseItem;
 
 
     // Start is called before the first frame update
@@ -518,18 +520,31 @@ public class DevTools : MonoBehaviour
 
             case "Offense":
                 itemHolder.HeldItem = baseItems[0];
+                itemHolder.HoldingItem = true;
+                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+                itemHolder.uses = itemHolder.HeldItem.UseCount;
+                baseItems[0].OnLevelUp(itemHolder.DriverItemTier);
                 break;
 
             case "Defense":
                 itemHolder.HeldItem = baseItems[1];
+                itemHolder.HoldingItem = true;
+                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+                itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
 
             case "Hazard":
                 itemHolder.HeldItem = baseItems[2];
+                itemHolder.HoldingItem = true;
+                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+                itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
 
             case "Boost":
                 itemHolder.HeldItem = baseItems[3];
+                itemHolder.HoldingItem = true;
+                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+                itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
 
             case "":
@@ -542,6 +557,9 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: No Param 1 [ItemType] was Entered.";
                 break;
         }
+
+        Debug.Log(itemHolder.DriverItemTier);
+        Debug.Log(itemHolder.HeldItem);
 
     }
 
