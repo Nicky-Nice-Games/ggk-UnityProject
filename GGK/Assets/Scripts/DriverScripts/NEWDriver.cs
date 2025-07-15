@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,7 +20,7 @@ public class NEWDriver : NetworkBehaviour
     // Keep
     [Header("Do not Change")]
     public Vector3 acceleration; //How fast karts velocity changes        
-    public Vector3 movementDirection;
+    public Vector3 movementDirection; // the input to vector reference
     public Quaternion turning;
 
 
@@ -151,7 +153,59 @@ public class NEWDriver : NetworkBehaviour
     private PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
-   
+    // Network Variables these are going to be moved into their own files soon
+    public struct InputPayload : INetworkSerializable
+    {
+        public int tick;
+        public Vector3 inputVector; // should be all the inputs
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref tick);
+            serializer.SerializeValue(ref inputVector);
+        }
+    }
+    public struct StatePayload : INetworkSerializable
+    {
+        public int tick;
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 velocity;
+        public Vector3 angularVelocity;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref tick);
+            serializer.SerializeValue(ref position);
+            serializer.SerializeValue(ref rotation);
+            serializer.SerializeValue(ref velocity);
+            serializer.SerializeValue(ref angularVelocity);
+        }
+    }
+
+    // Netcode General
+    NetworkTimer timer;
+    const float serverTickRate = 60;
+    const int bufferSize = 1024;
+
+    // Netcode Client Specific
+    CircularBuffer<StatePayload> clientStateBuffer;
+    CircularBuffer<InputPayload> clientInputBuffer;
+    StatePayload lastServerState;
+    StatePayload lastProcessedState;
+
+    // Netcode Server Specific
+    CircularBuffer<StatePayload> serverStateBuffer;
+    Queue<InputPayload> serverInputQueue;
+
+    private void Awake()
+    {
+        timer = new NetworkTimer(serverTickRate);
+        clientStateBuffer = new CircularBuffer<StatePayload>(bufferSize);
+        clientInputBuffer = new CircularBuffer<InputPayload>(bufferSize);
+        serverStateBuffer = new CircularBuffer<StatePayload>(bufferSize);
+        serverInputQueue = new Queue<InputPayload>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -173,7 +227,7 @@ public class NEWDriver : NetworkBehaviour
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
-            
+
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
 
@@ -225,8 +279,108 @@ public class NEWDriver : NetworkBehaviour
         airTrickParticles.Stop();
     }
 
+    private void Update()
+    {
+        timer.Update(Time.deltaTime);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
+    {
+        if (IsSpawned)
+        {
+            if (!IsOwner) return;
+        }
+
+        while (timer.ShouldTick())
+        {
+            HandleClientTick();
+            HandleServerTick();
+        }
+    }
+
+    private void HandleServerTick()
+    {
+        int bufferIndex = -1;
+        while (serverInputQueue.Count > 0)
+        {
+            InputPayload inputPayload = serverInputQueue.Dequeue();
+
+            bufferIndex = inputPayload.tick % bufferSize;
+
+            StatePayload statePayload = SimulateMovement(inputPayload);
+            serverStateBuffer.Add(statePayload, bufferIndex);
+        }
+
+        if (bufferIndex == -1) return;
+        SendToClientRpc(serverStateBuffer.Get(bufferIndex));
+    }
+
+    private StatePayload SimulateMovement(InputPayload inputPayload)
+    {
+        Physics.simulationMode = SimulationMode.Script;
+        Move(); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
+                // so we can hijack the inputs before it reaches the kart's physics
+        Physics.Simulate(Time.fixedDeltaTime);
+        Physics.simulationMode = SimulationMode.FixedUpdate;
+
+        return new StatePayload()
+        {
+            tick = inputPayload.tick,
+            position = transform.position,
+            rotation = transform.rotation,
+            velocity = sphere.velocity,
+            angularVelocity = sphere.angularVelocity,
+        };
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SendToClientRpc(StatePayload statePayload)
+    {
+        if (!IsOwner) return;
+        lastServerState = statePayload;
+    }
+
+    private void HandleClientTick(){
+        if (!IsClient) return;
+        var currentTick = timer.CurrentTick;
+        var bufferIndex = currentTick % bufferSize;
+
+        InputPayload inputPayload = new InputPayload(){
+            tick = currentTick,
+            inputVector = Vector3.zero // this is suppose to be all the input information that leads to kart motion
+        };
+
+        clientInputBuffer.Add(inputPayload, bufferIndex);
+        SentToServerRpc(inputPayload);
+
+        StatePayload statePayload = ProcessMovement(inputPayload);
+        clientStateBuffer.Add(statePayload, bufferIndex);
+
+        // HandleServerReconciliation();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SentToServerRpc(InputPayload input)
+    {
+        serverInputQueue.Enqueue(input);
+    }
+
+    StatePayload ProcessMovement(InputPayload input)
+    {
+        Move(); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
+                // so we can hijack the inputs before it reaches the kart's physics
+        return new StatePayload()
+        {
+            tick = input.tick,
+            position = transform.position,
+            rotation = transform.rotation,
+            velocity = sphere.velocity,
+            angularVelocity = sphere.angularVelocity
+        };
+    }
+
+    private void Move()
     {
         HandleGroundCheck();
 
@@ -236,23 +390,21 @@ public class NEWDriver : NetworkBehaviour
         }
 
         //Follow Collider
-        transform.position = 
-            new Vector3(spherePosTransform.transform.position.x, 
-            spherePosTransform.transform.position.y - colliderOffset, 
+        transform.position =
+            new Vector3(spherePosTransform.transform.position.x,
+            spherePosTransform.transform.position.y - colliderOffset,
             spherePosTransform.transform.position.z);
-
-        
 
         //------------Movement stuff---------------------
 
         //Stunned
-        if(isStunned) movementDirection = Vector3.zero;
+        if (isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
-        {              
+        {
             //Setting acceleration 
-            if((sphere.velocity.magnitude > maxSpeed ) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+            if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
             {
                 acceleration = Vector3.zero; //If we are going too fast, stop accelerating
             }
@@ -260,9 +412,9 @@ public class NEWDriver : NetworkBehaviour
             {
                 acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
             }
-            
+
         }
-        else if(isGrounded)
+        else if (isGrounded)
         {
             //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
@@ -279,8 +431,6 @@ public class NEWDriver : NetworkBehaviour
             //In the air, decelerating bc of drag
             acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
         }
-
-
 
         //------------Turning stuff---------------------
 
@@ -340,9 +490,9 @@ public class NEWDriver : NetworkBehaviour
 
             if (isGrounded && movementDirection.x != 0f)
             {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
+                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
                 sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
-                
+
             }
 
             acceleration = turning * acceleration;
@@ -356,7 +506,7 @@ public class NEWDriver : NetworkBehaviour
 
         //Falling down
         if (!isGrounded && !attemptingDrift)
-        {       
+        {
             float airRotationSpeed = 2.0f;
 
             // Target upright rotation based on Yaw (keep current Y, reset pitch/roll)
@@ -366,7 +516,7 @@ public class NEWDriver : NetworkBehaviour
             kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
 
-            if(AirTricking)
+            if (AirTricking)
             {
 
             }
@@ -377,7 +527,7 @@ public class NEWDriver : NetworkBehaviour
         }
         else
         {
-            if(AirTricking)
+            if (AirTricking)
             {
                 StartCoroutine(Boost(airTrickBoostForce, 0.5f * airTrickCount)); //Apply boost when landing
                 airTrickInProgress = false;
@@ -387,14 +537,14 @@ public class NEWDriver : NetworkBehaviour
 
             }
             AirTricking = false; //Reset air tricking state
-            
+
         }
 
         // Apply extra downward force to fall faster
-        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); 
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration);
 
 
-        sphere.AddForce(acceleration, ForceMode.Acceleration);       
+        sphere.AddForce(acceleration, ForceMode.Acceleration);
         transform.rotation = transform.rotation * turning;
 
         //------------Traction---------------------
@@ -434,8 +584,6 @@ public class NEWDriver : NetworkBehaviour
         //    STUNBUTTON = false; // Reset stun button state
         //}
     }
-
-
 
     void HandleGroundCheck()
     {
