@@ -89,6 +89,6 @@ public class LeaderboardController : NetworkBehaviour
     /// <param name="presTime">The present time</param>
     public void OnTimeChange(float prevTime, float presTime)
     {
-        curTime = prevTime;
+        curTime = presTime;
     }
 }
