@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class BaseItem : MonoBehaviour
+public class BaseItem : NetworkBehaviour
 {
     [SerializeField] protected float timer;    // Seconds until the item disappears
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody

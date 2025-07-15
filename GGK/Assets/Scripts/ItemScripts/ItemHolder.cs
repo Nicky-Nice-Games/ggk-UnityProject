@@ -102,6 +102,8 @@ public class ItemHolder : MonoBehaviour
 
         uses = 0;
 
+        itemDisplay = CanvasHandler.canvasHandlerInstance.ItemDisplay;
+
         if (thisDriver)
         {
             itemDisplay.texture = defaultItemDisplay;
