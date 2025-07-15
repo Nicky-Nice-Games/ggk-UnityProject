@@ -492,7 +492,7 @@ public class NPCPhysics : NetworkBehaviour
             else
             {
                 // If both sides are blocked or both are open, pick a default direction
-                movementDirection.x += Random.value > 0.5f ? avoidStrength : -avoidStrength;
+                movementDirection.y -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
