@@ -93,7 +93,7 @@ public class GameManager : NetworkBehaviour
             ValidatePlayer(playerInfo);
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
-        curState = GameStates.login;
+        curState = GameStates.multiSingle;
     }
 
     /// <summary>
