@@ -483,7 +483,7 @@ public class DevTools : MonoBehaviour
 
     public void GiveItem(string itemType, string itemTier)
     {
-
+        int tier;
         GameObject kart = GameObject.Find("Kart 1/Kart");
         if (kart != null)
         {
@@ -495,7 +495,7 @@ public class DevTools : MonoBehaviour
             return;
         }
 
-        if (Int32.TryParse(itemTier, out int tier))
+        if (Int32.TryParse(itemTier, out tier))
         {
             itemHolder.DriverItemTier = tier;
         }
@@ -521,14 +521,18 @@ public class DevTools : MonoBehaviour
             case "Offense":
                 itemHolder.HeldItem = baseItems[0];
                 itemHolder.HoldingItem = true;
+                itemHolder.HeldItem.ItemTier = tier;
+                itemHolder.HeldItem.OnLevelUp(tier);
                 itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
                 itemHolder.uses = itemHolder.HeldItem.UseCount;
-                baseItems[0].OnLevelUp(itemHolder.DriverItemTier);
+                
                 break;
 
             case "Defense":
                 itemHolder.HeldItem = baseItems[1];
                 itemHolder.HoldingItem = true;
+                itemHolder.HeldItem.ItemTier = tier;
+                itemHolder.HeldItem.OnLevelUp(tier);
                 itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
                 itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
@@ -536,6 +540,8 @@ public class DevTools : MonoBehaviour
             case "Hazard":
                 itemHolder.HeldItem = baseItems[2];
                 itemHolder.HoldingItem = true;
+                itemHolder.HeldItem.ItemTier = tier;
+                itemHolder.HeldItem.OnLevelUp(tier);
                 itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
                 itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
@@ -543,6 +549,8 @@ public class DevTools : MonoBehaviour
             case "Boost":
                 itemHolder.HeldItem = baseItems[3];
                 itemHolder.HoldingItem = true;
+                itemHolder.HeldItem.ItemTier = tier;
+                itemHolder.HeldItem.OnLevelUp(tier);
                 itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
                 itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
