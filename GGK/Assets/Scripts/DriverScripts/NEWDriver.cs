@@ -158,28 +158,26 @@ public class NEWDriver : NetworkBehaviour
     {
         gameManagerObj = FindAnyObjectByType<GameManager>();
 
-        playerInfo = gameManagerObj.playerInfo;
+        if (gameManagerObj)
+        {
+            playerInfo = gameManagerObj.playerInfo;
+        }
 
         sphere.drag = 0.5f;
 
         StopParticles();
 
         baseRotation = steeringWheel.transform.localRotation;
-
         if (!IsSpawned)
         {
-            Debug.Log("Adding");
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
-
             
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
 
-            Debug.Log("Added Driver");
             MiniMapHud.instance.AddKart(gameObject);
-
         }
     }
 
