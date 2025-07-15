@@ -69,6 +69,7 @@ public class PlayerSpawner : NetworkBehaviour
         }
         
         while(spawnedKartCount < 8){
+            Debug.Log("Spawning NPC");
             Transform kartObject = Instantiate(npcKartPrefab);
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();

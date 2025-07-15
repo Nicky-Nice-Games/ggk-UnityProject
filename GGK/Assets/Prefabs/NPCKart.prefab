@@ -20108,7 +20108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 480922830
+  GlobalObjectIdHash: 3814057406
   InScenePlacedSourceGlobalObjectIdHash: 480922830
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -20117,21 +20117,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
-  m_Enabled: 0
-  m_AgentTypeID: -1372625422
-  m_Radius: 0.5
-  m_Speed: 36
-  m_Acceleration: 7
-  avoidancePriority: 50
-  m_AngularSpeed: 105
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &1157483740920373510
 GameObject:
   m_ObjectHideFlags: 0
@@ -25142,7 +25127,7 @@ GameObject:
   - component: {fileID: 7189411415377363997}
   - component: {fileID: 4679423159663870852}
   - component: {fileID: 9031282341346162923}
-  - component: {fileID: 8795752668020615234}
+  - component: {fileID: 4942931471640916442}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Kart
@@ -25260,7 +25245,7 @@ MonoBehaviour:
   normalTransform: {fileID: 0}
   kartPhysicsNPC: {fileID: 0}
   miniMap: {fileID: 0}
---- !u!114 &8795752668020615234
+--- !u!114 &4942931471640916442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -25269,7 +25254,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1556177066443104893}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -35248,7 +35233,7 @@ GameObject:
   - component: {fileID: 4036233003175977672}
   - component: {fileID: 4657602963145992535}
   - component: {fileID: 8006489090730080545}
-  - component: {fileID: 5936835666316783428}
+  - component: {fileID: 7659096378049929152}
   m_Layer: 0
   m_Name: Kart
   m_TagString: Kart
@@ -35421,8 +35406,12 @@ MonoBehaviour:
   itemDisplay: {fileID: 0}
   defaultItemDisplay: {fileID: 2800000, guid: 7b68c3fd2d2e4ab4c9af6a29ab528b67, type: 3}
   uses: 0
+  camera: {fileID: 0}
   gravityForce: 0
   miniMap: {fileID: 0}
+  hoverEffect: {fileID: 0}
+  effects: []
+  shieldEffect: {fileID: 0}
   length: 4
   strength: 5
   dampening: 20
@@ -35449,7 +35438,7 @@ MonoBehaviour:
   - {fileID: 4228419271817021641}
   - {fileID: 6372531181334515736}
   - {fileID: 21980374959904692}
---- !u!114 &5936835666316783428
+--- !u!114 &7659096378049929152
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -35458,7 +35447,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2675256623757705101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
