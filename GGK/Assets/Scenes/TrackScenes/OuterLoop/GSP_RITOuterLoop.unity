@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 95a299bee198ed340a49f6baa055e880, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -2879,7 +2879,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 0.9519098, b: 0.8207547, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -5871,6 +5871,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1663975988}
     m_Modifications:
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: slowDown
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
+      propertyPath: AudioClip
+      value: 
+      objectReference: {fileID: 1301386236}
     - target: {fileID: 1106090965097549554, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -249.4
@@ -5915,14 +5923,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemBox
       objectReference: {fileID: 0}
-    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
-      propertyPath: slowDown
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8646964569141853072, guid: b6f035be535ed67429c35b1771181608, type: 3}
-      propertyPath: AudioClip
-      value: 
-      objectReference: {fileID: 1301386236}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7239,12 +7239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df3a3039c1512448af2e3101d88cec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSkip: 10
-  checkpointManager: {fileID: 0}
-  placementDisplay: {fileID: 0}
-  lapDisplay: {fileID: 0}
-  trackedKart: {fileID: 0}
-  kartCheckpointList: []
+  checkpointList: []
   sortedList: []
   kartsList: []
 --- !u!4 &659787554
@@ -9779,6 +9774,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3968316585592200023, guid: 85e48ae5f1d717f498c086c572796c60, type: 3}
   m_PrefabInstance: {fileID: 782068356}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &782176755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782176757}
+  - component: {fileID: 782176756}
+  m_Layer: 0
+  m_Name: WwiseGlobal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &782176756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782176755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b9f99da4dde524c8c1acaf56bc961f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializationSettings: {fileID: 11400000, guid: 38f447111e1e84a4e9e7ee788042784c, type: 2}
+  basePath: 
+  language: 
+  defaultPoolSize: 0
+  lowerPoolSize: 0
+  streamingPoolSize: 0
+  memoryCutoffThreshold: 0
+  monitorPoolSize: 0
+  monitorQueuePoolSize: 0
+  callbackManagerBufferSize: 0
+  spatialAudioPoolSize: 0
+  maxSoundPropagationDepth: 0
+  engineLogging: 0
+--- !u!4 &782176757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782176755}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &790903000
 GameObject:
   m_ObjectHideFlags: 0
@@ -14178,9 +14230,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1081338261}
   - component: {fileID: 1081338260}
-  - component: {fileID: 1081338259}
   - component: {fileID: 1081338258}
   - component: {fileID: 1081338262}
+  - component: {fileID: 1081338264}
+  - component: {fileID: 1081338263}
   m_Layer: 0
   m_Name: Main Camera (1)
   m_TagString: MainCamera
@@ -14210,14 +14263,6 @@ MonoBehaviour:
   baseOffset: {x: 0, y: 2.5, z: -5}
   maxZoomOutZ: -7
   followSpeed: 15
---- !u!81 &1081338259
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081338257}
-  m_Enabled: 1
 --- !u!20 &1081338260
 Camera:
   m_ObjectHideFlags: 0
@@ -14328,6 +14373,46 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1081338263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081338257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda3ab63b5eafcf4cac5101b88cae1e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDefaultListener: 1
+  bOverrideScalingFactor: 0
+  scalingFactor: -1
+  listenerId: 0
+--- !u!114 &1081338264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081338257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbaeb0e016ef85459620001cc18f610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_listeners:
+    initialListenerList: []
+    useDefaultListeners: 1
+  isEnvironmentAware: 0
+  isStaticObject: 0
+  usePositionOffsetData: 0
+  m_positionOffsetData:
+    KeepMe: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+  scalingFactor: 1
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
 --- !u!1 &1084175060
 GameObject:
   m_ObjectHideFlags: 0
@@ -25618,3 +25703,4 @@ SceneRoots:
   - {fileID: 1519348421}
   - {fileID: 1700238601}
   - {fileID: 1728684369}
+  - {fileID: 782176757}
