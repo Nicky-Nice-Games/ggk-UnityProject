@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 628999392}
   m_HandleRect: {fileID: 628999391}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3643,12 +3643,12 @@ GameObject:
   - component: {fileID: 1555633133}
   - component: {fileID: 1555633137}
   - component: {fileID: 1555633139}
+  - component: {fileID: 1555633142}
   - component: {fileID: 1555633132}
   - component: {fileID: 1555633134}
   - component: {fileID: 1555633135}
   - component: {fileID: 1555633136}
   - component: {fileID: 1555633138}
-  - component: {fileID: 1555633140}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -3670,6 +3670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curState: 0
   sceneLoader: {fileID: 1555633137}
+  playerInfo: {fileID: 0}
   currentSceneFirst: {fileID: 0}
 --- !u!4 &1555633133
 Transform:
@@ -3713,7 +3714,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterSprite: {fileID: 0}
-  characterModelSelected: {fileID: 0}
   characterName: 
   characterColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1555633136
@@ -4916,3 +4916,6 @@ SceneRoots:
   - {fileID: 193614649}
   - {fileID: 59390594}
   - {fileID: 1967160889}
+  - {fileID: 376136322}
+  - {fileID: 1011990453}
+  - {fileID: 1499987440}
