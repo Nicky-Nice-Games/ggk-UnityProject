@@ -2,7 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Pipes;
-
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -224,6 +224,26 @@ public class ItemHolder : MonoBehaviour
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
+            NetworkObject itemNetworkObject = item.GetComponent<NetworkObject>();
+            // spawn all items except boost for multiplayer to see
+            if (item.ItemCategory != "Boost")
+            {
+                // get the item from the network object
+                BaseItem netItem = itemNetworkObject.gameObject.GetComponent<BaseItem>();
+
+                // modify the item
+                netItem.Kart = this;
+                netItem.ItemTier = heldItem.ItemTier;
+
+                if (heldItem.ItemTier > 1)
+                {
+                    item.OnLevelUp(item.ItemTier);
+                }
+
+                uses--; // Decrease after successful use
+                itemNetworkObject = netItem.gameObject.GetComponent<NetworkObject>();
+                itemNetworkObject.Spawn();
+            }
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
             item.Kart = this;
