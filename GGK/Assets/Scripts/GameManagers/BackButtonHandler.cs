@@ -7,7 +7,7 @@ using Assets.Scripts;
 public class BackButtonHandler : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> backOption = new List<GameObject>();
+    private GameObject backOption;
     private GameManager gamemanagerObj;
 
     // Start is called before the first frame update
@@ -15,13 +15,10 @@ public class BackButtonHandler : MonoBehaviour
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
 
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in backOption)
-        {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
-        }
+        // assign back button
+        Button button = backOption.GetComponent<Button>();
+        button.onClick.AddListener(() =>
+        GetComponent<BackButtonHandler>().GoBack());
     }
 
     // Update is called once per frame
@@ -34,18 +31,25 @@ public class BackButtonHandler : MonoBehaviour
     {
         switch (gamemanagerObj.curState)
         {
+            case GameStates.login:
+                gamemanagerObj.sceneLoader.LoadScene("StartScene");
+                gamemanagerObj.curState = GameStates.start;
+                break;
             case GameStates.multiSingle:
-                gamemanagerObj.LoadStartMenu();
+                gamemanagerObj.sceneLoader.LoadScene("Login");
+                gamemanagerObj.curState = GameStates.login;
                 break;
             case GameStates.gameMode:
-                gamemanagerObj.StartGame();
+                gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
+                gamemanagerObj.curState = GameStates.multiSingle;
                 break;
             case GameStates.playerKart:
                 gamemanagerObj.sceneLoader.LoadScene("GameModeSelectScene");
                 gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
-                gamemanagerObj.LoadedGameMode();
+                gamemanagerObj.sceneLoader.LoadScene("PlayerKartScene");
+                gamemanagerObj.curState = GameStates.playerKart;
                 break;
             default:
                 break;
