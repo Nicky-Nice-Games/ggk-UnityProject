@@ -83,22 +83,22 @@ public enum ItemType
 
 public class DevTools : MonoBehaviour
 {
-
+    //Variables and references for setting up the DevTools object
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
     //[SerializeField] public GameObject gameManagerObj;
     //[SerializeField] public GameManager gameManager;
-
     private List<GameObject> listeners = new List<GameObject>();
 
+    //Variables and references for the visible command prompt game objects
     private string textLog;
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
-
     private bool isScrolling;
 
+    //Variables and references for GiveItem command
     [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
     private BaseItem baseItem;
@@ -318,11 +318,12 @@ public class DevTools : MonoBehaviour
 
     }
 
- 
+
     /// <summary>
     /// Handles the LoadMap command based on the inputted paramater entered after it. 
     /// </summary>
-    /// <param name="mapName">The inputted parameter after the LoadMap command.</param>
+    /// <param name="mapName">The inputted parameter after the LoadMap command to 
+    /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
         switch (mapName)
@@ -384,11 +385,11 @@ public class DevTools : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Handles the LoadScene command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="sceneName">The inputted parameter after the LoadScene command.</param>
+    /// <param name="sceneName">The inputted parameter after the LoadScene command to 
+    /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
         switch (sceneName)
@@ -446,11 +447,11 @@ public class DevTools : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Handles the GameModeChange command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="gameMode">The inputted parameter after the GameModeChange command.</param>
+    /// <param name="gameMode">The inputted parameter after the GameModeChange command to 
+    /// specify the game mode that the user wants to change to.</param>
     public void GameModeChange(string gameMode)
     {
 
@@ -481,9 +482,18 @@ public class DevTools : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Handles the GiveItem command based on the inputted paramaters entered after it.
+    /// </summary>
+    /// <param name="itemType">The first inputted parameter after the GiveItem command 
+    /// to specify the item type that the user wants.</param>
+    /// <param name="itemTier">The second inputted parameter after the GiveItem command 
+    /// to specify the item tier that the user wants.</param>
     public void GiveItem(string itemType, string itemTier)
     {
         int tier;
+
+        //Checks if you are in a track scene or not (such as a menu)
         GameObject kart = GameObject.Find("Kart 1/Kart");
         if (kart != null)
         {
@@ -491,13 +501,22 @@ public class DevTools : MonoBehaviour
         }
         else
         {
-            textLog += "\nError: No Kart found in scene.";
+            textLog += "\nError: No Kart found in scene, cannot use command.";
             return;
         }
 
+        //Checks if the second parameter inputted is a number 1-4
         if (Int32.TryParse(itemTier, out tier))
         {
-            itemHolder.DriverItemTier = tier;
+            if(tier >= 1 && tier <= 4)
+            {
+                itemHolder.DriverItemTier = tier;
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [ItemTier] was Entered.";
+                return;
+            }
         }
         else
         {
@@ -507,7 +526,7 @@ public class DevTools : MonoBehaviour
 
         switch (itemType)
         {
-            //Displays all of the parameter options for the GameModeChange method
+            //Displays all of the parameter options for the GiveItem method
             case "Options":
                 textLog += "\nOptions for Param 1 [ItemType]: ";
                 foreach (GameMode type in Enum.GetValues(typeof(ItemType)))
@@ -519,58 +538,42 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "Offense":
-                itemHolder.HeldItem = baseItems[0];
-                itemHolder.HoldingItem = true;
-                itemHolder.HeldItem.ItemTier = tier;
-                itemHolder.HeldItem.OnLevelUp(tier);
-                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-                itemHolder.uses = itemHolder.HeldItem.UseCount;
-                
+                itemHolder.HeldItem = baseItems[0];                
                 break;
 
             case "Defense":
                 itemHolder.HeldItem = baseItems[1];
-                itemHolder.HoldingItem = true;
-                itemHolder.HeldItem.ItemTier = tier;
-                itemHolder.HeldItem.OnLevelUp(tier);
-                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-                itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
 
             case "Hazard":
-                itemHolder.HeldItem = baseItems[2];
-                itemHolder.HoldingItem = true;
-                itemHolder.HeldItem.ItemTier = tier;
-                itemHolder.HeldItem.OnLevelUp(tier);
-                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-                itemHolder.uses = itemHolder.HeldItem.UseCount;
+                itemHolder.HeldItem = baseItems[2];              
                 break;
 
             case "Boost":
                 itemHolder.HeldItem = baseItems[3];
-                itemHolder.HoldingItem = true;
-                itemHolder.HeldItem.ItemTier = tier;
-                itemHolder.HeldItem.OnLevelUp(tier);
-                itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-                itemHolder.uses = itemHolder.HeldItem.UseCount;
                 break;
 
             case "":
                 textLog += "\nError: No Param 1 [ItemType] was Entered.";
-                break;
+                return;
+
             case null:
                 textLog += "\nError: No Param 1 [ItemType] was Entered.";
-                break;
+                return;
+
             default:
                 textLog += "\nError: No Param 1 [ItemType] was Entered.";
-                break;
+                return;
         }
 
-        Debug.Log(itemHolder.DriverItemTier);
-        Debug.Log(itemHolder.HeldItem);
-
+        //Setting appropriate variables for the held item, regardless of item type
+        //Note: Does not run if a parameter is invalid because of return statements
+        itemHolder.HoldingItem = true;
+        itemHolder.HeldItem.ItemTier = tier;
+        itemHolder.HeldItem.OnLevelUp(tier);
+        itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+        itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
-
 
 
     /// <summary>
