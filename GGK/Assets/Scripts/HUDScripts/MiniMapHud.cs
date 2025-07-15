@@ -103,6 +103,10 @@ public class MiniMapHud : MonoBehaviour
 
     public List<IEnumerator> spinInstances = new List<IEnumerator>();
 
+    private void Awake()
+    {
+        instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
