@@ -9,12 +9,23 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private Transform playerKartPrefab;
     [SerializeField] private Transform npcKartPrefab;
 
+    [SerializeField] private Transform spawnPointParent;
     [SerializeField] private List<Transform> spawnPoints;
 
     private int spawnedKartCount = 0;
 
+    private void LoadSpawnPoints()
+    {
+        spawnPoints.Clear();
+        foreach (Transform spawnPoint in spawnPointParent.GetComponentInChildren<Transform>(true))
+        {
+            spawnPoints.Add(spawnPoint);
+        }
+    }
+
     private void Start()
     {
+        LoadSpawnPoints();
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
@@ -22,11 +33,12 @@ public class PlayerSpawner : NetworkBehaviour
             kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
             spawnedKartCount++;
 
-            while(spawnedKartCount < 8){
-            kartObject = Instantiate(npcKartPrefab);
-            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-            spawnedKartCount++;
-        }
+            while (spawnedKartCount < 8)
+            {
+                kartObject = Instantiate(npcKartPrefab);
+                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                spawnedKartCount++;
+            }
         }
         else
         {
@@ -58,8 +70,8 @@ public class PlayerSpawner : NetworkBehaviour
         
         while(spawnedKartCount < 8){
             Transform kartObject = Instantiate(npcKartPrefab);
-            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
             kartNetworkObject.Spawn();
             spawnedKartCount++;
         }
