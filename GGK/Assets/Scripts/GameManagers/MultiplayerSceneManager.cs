@@ -29,6 +29,11 @@ public class MultiplayerSceneManager : NetworkBehaviour
         }
     }
 
+    [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
+    public void SceneAnnouncementRpc(string sceneName){
+        Debug.Log($"Server pulling client to {sceneName} scene");
+    }
+
     public override void OnNetworkSpawn()
     {
         multiplayerActive = true;
@@ -64,6 +69,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
             Debug.LogWarning("Non-Server connection tried to change scene");
             return;
         }
+        SceneAnnouncementRpc(sceneName);
         SceneEventProgressStatus status = NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         if (status != SceneEventProgressStatus.Started)
         {
