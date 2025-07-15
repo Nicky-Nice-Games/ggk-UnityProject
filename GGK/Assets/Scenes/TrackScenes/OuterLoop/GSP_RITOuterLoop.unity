@@ -7239,7 +7239,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df3a3039c1512448af2e3101d88cec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointList: []
+  maxSkip: 10
+  checkpointManager: {fileID: 0}
+  placementDisplay: {fileID: 0}
+  lapDisplay: {fileID: 0}
+  trackedKart: {fileID: 0}
+  kartCheckpointList: []
   sortedList: []
   kartsList: []
 --- !u!4 &659787554
@@ -17442,9 +17447,9 @@ MonoBehaviour:
   - {x: 320, y: -55, z: -240}
   - {x: 320, y: -55, z: 370}
   usePoints: 0
-  center: {x: 10, y: -55, z: 65}
-  width: 640
-  height: 640
+  center: {x: 15, y: 0, z: 40}
+  width: 710
+  height: 710
   depth: 140
   objects:
   - {fileID: 1516910072}
@@ -21350,7 +21355,7 @@ PrefabInstance:
     - target: {fileID: 1041506153920354169, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: b260b79e128386f40ba9b934c305d106, type: 3}
+      objectReference: {fileID: 21300000, guid: e7fce620bbb690e4384c57c93321d8c9, type: 3}
     - target: {fileID: 7014209292422214074, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
       propertyPath: m_Name
       value: MiniMap
