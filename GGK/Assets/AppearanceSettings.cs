@@ -41,13 +41,13 @@ public class AppearanceSettings : MonoBehaviour
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
 
-                //if models is null...
-                if (models != null)
+                //if models is null, and models is populated...
+                if (models != null && models.Count > 0)
                 {
                     for (int i = 0; i < models.Count; i++)
                     {
                         //Setting active correct model
-                        if (name == models[i].name)
+                        if (models[i] != null && name == models[i].name)
                         {
                             models[i].SetActive(true);
                             continue;
