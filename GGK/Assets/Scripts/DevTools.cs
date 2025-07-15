@@ -24,9 +24,11 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
-//Can't load into another map (or scene?) when paused, it goes to a black screen but works after you
+//Can't load into another map or scene when paused, it goes to a black screen but works after you
 //  unpause - make it auto-unpause/disable pause menu when load command happens
-//Change map names to updated names
+//  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
+//  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
+//  the prompt or pause panel before it actually registers 
 
 
 /// <summary>
@@ -121,29 +123,29 @@ public class DevTools : MonoBehaviour
     {
         //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
-
+        #region Commented out testing
         //Debug.Log("loading " + sceneLoader.loading);
         //if (sceneLoader.loading)
         //{
-            //inputField.ActivateInputField();
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
-            //Debug.Log("Length " + textLog.Length);
+        //inputField.ActivateInputField();
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //Debug.Log("Length " + textLog.Length);
 
-            //TODO FIX! won't work if log has been cleared, run secondary check?
-            //  ALSO overrides disabling when entering a map
-            //if (textLog.Length > 131)   
-            //{
-            //    commandPromptCanvas.enabled = true;
-            //    inputField.ActivateInputField();
-            //}
-            //else
-            //{
-            //    commandPromptCanvas.enabled = false;
-            //}
-            //sceneLoader.loading = false;
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //TODO FIX! won't work if log has been cleared, run secondary check?
+        //  ALSO overrides disabling when entering a map
+        //if (textLog.Length > 131)   
+        //{
+        //    commandPromptCanvas.enabled = true;
+        //    inputField.ActivateInputField();
         //}
-      
+        //else
+        //{
+        //    commandPromptCanvas.enabled = false;
+        //}
+        //sceneLoader.loading = false;
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //}
+        #endregion
 
         //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -332,6 +334,7 @@ public class DevTools : MonoBehaviour
     /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
+        //DeactivatePause();
         switch (mapName)
         {
             //Displays all of the parameter options for the LoadMap method
@@ -390,6 +393,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [MapName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -400,6 +404,7 @@ public class DevTools : MonoBehaviour
     /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
+        //DeactivatePause();
         switch (sceneName)
         {
             //Displays all of the parameter options for the LoadScene method
@@ -452,6 +457,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [SceneName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -624,6 +630,17 @@ public class DevTools : MonoBehaviour
         if(scrollRect.verticalNormalizedPosition == 0)
         {
             isScrolling = false;
+        }
+    }
+
+
+    public void DeactivatePause()
+    {
+        //Checks if pause panel is active and deactivates if so
+        GameObject pausePanel = GameObject.Find("PausePanel");
+        if (pausePanel != null && pausePanel.activeSelf)
+        {
+            pausePanel.SetActive(false);
         }
     }
 
