@@ -5188,9 +5188,9 @@ MonoBehaviour:
     m_ActionName: Car/LookBack[/Keyboard/tab]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+      - m_Target: {fileID: 1749223670}
         m_TargetAssemblyTypeName: ItemHolder, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: OnThrow
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7239,12 +7239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df3a3039c1512448af2e3101d88cec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSkip: 10
-  checkpointManager: {fileID: 0}
-  placementDisplay: {fileID: 0}
-  lapDisplay: {fileID: 0}
-  trackedKart: {fileID: 0}
-  kartCheckpointList: []
+  checkpointList: []
   sortedList: []
   kartsList: []
 --- !u!4 &659787554
@@ -21787,6 +21782,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6866088379297677056, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 1749223665}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1749223670 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+  m_PrefabInstance: {fileID: 1749223665}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516910072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b8329a6d3879447a16aa2eabb5db39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1776843048
 PrefabInstance:
   m_ObjectHideFlags: 0
