@@ -1,26 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public class LeaderboardController : MonoBehaviour
+public class LeaderboardController : NetworkBehaviour
 {
     // References
     public GameObject leaderboard;
     public GameObject leaderboardItem;
     private List<KartCheckpoint> finishedKarts = new List<KartCheckpoint>();
     // Timer
-    public float curTime = 0;
-
+    public float curTime;
+    public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
     // Update is called once per frame
     void Update()
     {
-        curTime += Time.deltaTime;
+        if (IsServer)
+        {
+            curTime += Time.deltaTime;
+            networkTime.Value = curTime;
+            Debug.Log(networkTime.Value);
+        }
+        else if (!IsSpawned)
+        {
+            curTime += Time.deltaTime;
+        }
+    }
 
-        //if (Input.GetKeyDown(KeyCode.Tab))
-        //{
-        //    ToggleLeaderBoard();
-        //}
+    public override void OnNetworkSpawn()
+    {
+        if (IsClient)
+        {
+            networkTime.OnValueChanged += OnTimeChange;
+        }
     }
 
     public void ToggleLeaderBoard()
@@ -66,5 +79,16 @@ public class LeaderboardController : MonoBehaviour
         }
 
         leaderboard.SetActive(true);
+    }
+
+    /// <summary>
+    /// Event for clients for when times changes on server
+    /// Clients recieve the updated time as their current time.
+    /// </summary>
+    /// <param name="prevTime">The previous time</param>
+    /// <param name="presTime">The present time</param>
+    public void OnTimeChange(float prevTime, float presTime)
+    {
+        curTime = prevTime;
     }
 }
