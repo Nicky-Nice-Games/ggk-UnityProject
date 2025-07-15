@@ -34,11 +34,10 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 /// </summary>
 public enum MapName 
 { 
-    OuterLoop,
-    Golisano,
-    Dorm,
-    FinalsBrickRoad,
-    QuarterMile, //Remove?
+    CampusCircuit,
+    TechHouseTurnpike,
+    DormRoomDerby,
+    AllNighterExpressway,
     TestGrid,
     TestTube
 }
@@ -248,7 +247,7 @@ public class DevTools : MonoBehaviour
                 {
                     case "ShowMethods":
                         textLog += "\nMethod Options:\nShowMethods\nLoadMap" +
-                            "\nLoadScene\nGameModeChange\nClearLog";
+                            "\nLoadScene\nGameModeChange\nGiveItem\nClearLog";
                         break;
 
                     case "LoadMap":
@@ -294,13 +293,20 @@ public class DevTools : MonoBehaviour
                         {
                             GiveItem(parts[1], parts[2]);
                         }
-                        else if (parts.Length > 1 && parts.Length < 3)
+                        else if (parts[1] == "Options")
                         {
-                            textLog += "\nError: No Param 2 [ItemTier] was Entered.";
-                        }
+                            textLog += "\nOptions for Param 1 [ItemType]: ";
+                            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                            {
+                                textLog += "\n" + type;
+                            }
+                            textLog += "\nOptions for Param 2 [ItemTier]: " +
+                                "\nEnter a number 1-4";
+                            break;
+                        }             
                         else
                         {
-                            textLog += "\nError: No Param 1 [ItemType] or Param 2 [ItemTier] were Entered.";
+                            textLog += "\nError: No or Invalid Param 1 [ItemType] or Param 2 [ItemTier] was Entered.";
                         }
                         break;
 
@@ -336,42 +342,44 @@ public class DevTools : MonoBehaviour
                     textLog += "\n" + name;
                 }
                 break;
-            case "OuterLoop":
+
+            case "CampusCircuit":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "Golisano":
+
+            case "TechHouseTurnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "Dorm":
+
+            case "DormRoomDerby":
                 sceneLoader.LoadScene("GSP_RITDorm");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "FinalsBrickRoad":
+
+            case "AllNighterExpressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "QuarterMile":
-                sceneLoader.LoadScene("GSP_RITQuarterMile");
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
-                break;
+
             case "TestGrid":
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
+
             case "TestTube":
                 sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
+
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
                 break;
@@ -493,17 +501,34 @@ public class DevTools : MonoBehaviour
     {
         int tier;
 
-        //Checks if you are in a track scene or not (such as a menu)
-        GameObject kart = GameObject.Find("Kart 1/Kart");
-        if (kart != null)
+        //TODO remove? check moved to command; Check for options before tier to prevent check for tier
+        if (itemType == "Options")
         {
-            itemHolder = kart.GetComponent<ItemHolder>();
+            textLog += "\nOptions for Param 1 [ItemType]: ";
+            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+            {
+                textLog += "\n" + type;
+            }
+            textLog += "\nOptions for Param 2 [ItemTier]: " +
+                "\nEnter a number 1-4";
+            return;
         }
         else
         {
-            textLog += "\nError: No Kart found in scene, cannot use command.";
-            return;
+            //Checks if you are in a track scene or not (such as a menu)
+            GameObject kart = GameObject.Find("Kart 1/Kart");
+            if (kart != null)
+            {
+                itemHolder = kart.GetComponent<ItemHolder>();
+            }
+            else
+            {
+                textLog += "\nError: No Kart found in scene, cannot use command.";
+                return;
+            }
         }
+
+        
 
         //Checks if the second parameter inputted is a number 1-4
         if (Int32.TryParse(itemTier, out tier))
@@ -529,7 +554,7 @@ public class DevTools : MonoBehaviour
             //Displays all of the parameter options for the GiveItem method
             case "Options":
                 textLog += "\nOptions for Param 1 [ItemType]: ";
-                foreach (GameMode type in Enum.GetValues(typeof(ItemType)))
+                foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
                 {
                     textLog += "\n" + type;
                 }
