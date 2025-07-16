@@ -248,7 +248,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (item.ItemCategory != "Boost")
                 {
-                    SpawnItemRpc(thisDriver.transform.position, item);
+                    SpawnItemRpc();
                 }
             }
             //soundPlayer.PlayOneShot(throwSound);
@@ -887,8 +887,9 @@ public class ItemHolder : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc(Vector3 spawnPos, BaseItem item)
+    private void SpawnItemRpc()
     {
+        Vector3 spawnPos = thisDriver.transform.position;
         NetworkObject networkItem = item.GetComponent<NetworkObject>();
         networkItem.transform.position = spawnPos;
         networkItem.Spawn();
