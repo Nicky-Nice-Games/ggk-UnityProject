@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
+using Unity.Netcode;
 
-public class TwoDimensionalAnimController : MonoBehaviour
+public class TwoDimensionalAnimController : NetworkBehaviour
 {
     Animator animator;
     float turningValue = 0;
@@ -18,6 +20,8 @@ public class TwoDimensionalAnimController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
         turningValue = Mathf.Lerp(turningValue, driver.movementDirection.x, Time.deltaTime * lerpSpeed);
 
 
