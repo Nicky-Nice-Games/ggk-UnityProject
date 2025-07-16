@@ -150,6 +150,13 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.gameMode;
     }
 
+    [Rpc(SendTo.NotServer)]
+    public void ToGameModeSelectSceneRpc()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
+    }
+
     /// <summary>
     /// Called once the game mode is selected and loaded
     /// </summary>
