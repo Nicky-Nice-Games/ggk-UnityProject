@@ -177,8 +177,9 @@ public class NPCPhysics : NetworkBehaviour
         Debug.Log("NetworkNPC");
         Transform childTransform = parent.transform.GetChild(1);
         KC = childTransform.GetComponent<KartCheckpoint>();
-        MiniMapHud.instance.AddKart(gameObject);
         PlacementManager.instance.AddKart(gameObject, KC);
+        MiniMapHud.instance.AddKart(gameObject);
+        
     }
 
     public void StopParticles()
