@@ -197,6 +197,8 @@ public class NEWDriver : NetworkBehaviour
     // Netcode Server Specific
     CircularBuffer<StatePayload> serverStateBuffer;
     Queue<InputPayload> serverInputQueue;
+    [SerializeField] private double reconcililationThreshhold = 10f;
+
 
     private void Awake()
     {
@@ -287,16 +289,20 @@ public class NEWDriver : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (IsSpawned)
+        if (IsSpawned) // if in multiplayer do Server Authoritative with Client Prediction and Reconciliation
         {
             if (!IsOwner) return;
+            while (timer.ShouldTick())
+            {
+                HandleClientTick();
+                HandleServerTick();
+            }
+        }
+        else // other wise just operate with out the prediction
+        {
+            Move(this.movementDirection);
         }
 
-        while (timer.ShouldTick())
-        {
-            HandleClientTick();
-            HandleServerTick();
-        }
     }
 
     private void HandleServerTick()
@@ -319,7 +325,7 @@ public class NEWDriver : NetworkBehaviour
     private StatePayload SimulateMovement(InputPayload inputPayload)
     {
         Physics.simulationMode = SimulationMode.Script;
-        Move(); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
+        Move(inputPayload.inputVector); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
                 // so we can hijack the inputs before it reaches the kart's physics
         Physics.Simulate(Time.fixedDeltaTime);
         Physics.simulationMode = SimulationMode.FixedUpdate;
@@ -348,7 +354,7 @@ public class NEWDriver : NetworkBehaviour
 
         InputPayload inputPayload = new InputPayload(){
             tick = currentTick,
-            inputVector = Vector3.zero // this is suppose to be all the input information that leads to kart motion
+            inputVector = this.movementDirection // this is suppose to be all the input information that leads to kart motion
         };
 
         clientInputBuffer.Add(inputPayload, bufferIndex);
@@ -357,7 +363,58 @@ public class NEWDriver : NetworkBehaviour
         StatePayload statePayload = ProcessMovement(inputPayload);
         clientStateBuffer.Add(statePayload, bufferIndex);
 
-        // HandleServerReconciliation();
+        HandleServerReconciliation();
+    }
+
+    private bool ShouldReconcile()
+    {
+        bool isNewServerState = !lastServerState.Equals(default);
+        bool isLastStateUndefindedOrDifferent = lastProcessedState.Equals(default) || !lastProcessedState.Equals(lastServerState);
+        return isNewServerState && isLastStateUndefindedOrDifferent;
+    }
+
+    private void HandleServerReconciliation()
+    {
+        if (!ShouldReconcile()) return;
+
+        float positionError;
+        int bufferIndex;
+        StatePayload rewindState = default;
+
+        bufferIndex = lastServerState.tick % bufferSize;
+        if (bufferIndex - 0 < 0) return;
+
+        rewindState = IsHost ? serverStateBuffer.Get(bufferIndex) : lastServerState;
+        positionError = Vector3.Distance(rewindState.position, clientStateBuffer.Get(bufferIndex).position);
+
+        if (positionError > reconcililationThreshhold)
+        {
+            ReconcileState(rewindState);
+        }
+
+        lastProcessedState = lastServerState;
+    }
+
+    private void ReconcileState(StatePayload rewindState)
+    {
+        transform.position = rewindState.position;
+        transform.rotation = rewindState.rotation;
+        sphere.velocity = rewindState.velocity;
+        sphere.angularVelocity = rewindState.angularVelocity;
+
+        if (!rewindState.Equals(lastServerState)) return;
+
+        clientStateBuffer.Add(rewindState, rewindState.tick);
+
+        int tickToReplay = lastServerState.tick;
+
+        while (tickToReplay < timer.CurrentTick)
+        {
+            int bufferIndex = tickToReplay % bufferSize;
+            StatePayload statePayload = ProcessMovement(clientInputBuffer.Get(bufferIndex));
+            clientStateBuffer.Add(statePayload, bufferIndex);
+            tickToReplay++;
+        }
     }
 
     [Rpc(SendTo.Server)]
@@ -368,8 +425,8 @@ public class NEWDriver : NetworkBehaviour
 
     StatePayload ProcessMovement(InputPayload input)
     {
-        Move(); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
-                // so we can hijack the inputs before it reaches the kart's physics
+        Move(input.inputVector); // this Move() was everything in FixedUpdate() before cut and pasted to a different function
+                                // so we can hijack the inputs before it reaches the kart's physics
         return new StatePayload()
         {
             tick = input.tick,
@@ -380,7 +437,7 @@ public class NEWDriver : NetworkBehaviour
         };
     }
 
-    private void Move()
+    private void Move(Vector3 movementDirection)
     {
         HandleGroundCheck();
 
@@ -400,6 +457,9 @@ public class NEWDriver : NetworkBehaviour
         //Stunned
         if (isStunned) movementDirection = Vector3.zero;
 
+        // if this kart has been network spawned used adjusted time frame, other wise use normal delta
+        float fraction = IsSpawned ? timer.MinimumTimeBetweenTicks / (1f / Time.deltaTime) : Time.fixedDeltaTime;
+
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
         {
@@ -410,7 +470,7 @@ public class NEWDriver : NetworkBehaviour
             }
             else
             {
-                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
+                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.fixedDeltaTime;
             }
 
         }

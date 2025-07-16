@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: Kart
+  - Name: Collider
   - Tag: Kart
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

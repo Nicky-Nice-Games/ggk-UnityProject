@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CircularBuffer<T> : MonoBehaviour
+public class CircularBuffer<T>
 {
     T[] buffer;
     int bufferSize;
