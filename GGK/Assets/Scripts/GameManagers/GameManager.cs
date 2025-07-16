@@ -90,10 +90,10 @@ public class GameManager : NetworkBehaviour
         // Set validate player info
         else
         {
-            ValidatePlayer(playerInfo);
+            //ValidatePlayer(playerInfo);
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
-        curState = GameStates.login;
+        curState = GameStates.multiSingle;
     }
 
     /// <summary>
