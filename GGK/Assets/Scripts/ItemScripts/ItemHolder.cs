@@ -246,7 +246,7 @@ public class ItemHolder : NetworkBehaviour
             // spawn all items except boost for multiplayer to see
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                if (item.ItemCategory != "Boost")
+                if (heldItem.ItemCategory != "Boost")
                 {
                     SpawnItemRpc();
                 }
@@ -257,7 +257,7 @@ public class ItemHolder : NetworkBehaviour
             }
             else
             {
-                
+                item = Instantiate(heldItem, transform.position, transform.rotation);
             }
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
