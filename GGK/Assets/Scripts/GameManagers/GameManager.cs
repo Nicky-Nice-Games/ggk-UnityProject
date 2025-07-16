@@ -132,6 +132,7 @@ public class GameManager : NetworkBehaviour
     {
         //ToGameModeSelectScene();
         MultiplayerSceneManager.Instance.ToGameModeSelectScene();
+        curState = GameStates.gameMode;
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
