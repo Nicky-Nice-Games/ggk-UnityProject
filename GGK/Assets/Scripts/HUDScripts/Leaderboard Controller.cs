@@ -10,6 +10,8 @@ public class LeaderboardController : NetworkBehaviour
     public GameObject leaderboard;
     public GameObject leaderboardItem;
     private List<KartCheckpoint> finishedKarts = new List<KartCheckpoint>();
+    [SerializeField]
+    private TextMeshProUGUI timeDisplay;
     // Timer
     public float curTime;
     public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
@@ -26,6 +28,10 @@ public class LeaderboardController : NetworkBehaviour
         {
             curTime += Time.deltaTime;
         }
+
+        float seconds = curTime % 60;
+        int minutes = (int)curTime / 60;
+        timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 
     public override void OnNetworkSpawn()

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+
+// TIME DISPLAY HAS BEEN MOVED TO LEADERBOARD CONTROLLER
 public class SpeedAndTimeDisplay : MonoBehaviour
 {
     public static SpeedAndTimeDisplay instance;
@@ -10,8 +12,9 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     // Fields for text displays
     [SerializeField]
     TextMeshProUGUI speedDisplay;
-    [SerializeField]
-    TextMeshProUGUI timeDisplay;
+
+    // [SerializeField]
+    // TextMeshProUGUI timeDisplay;
 
     [SerializeField]
     public NEWDriver kart;
@@ -34,12 +37,8 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        float seconds = timer % 60;
-        int minutes = (int)timer / 60;
         speedBar.SetSpeed(kart.sphere.velocity.magnitude);
         speedDisplay.text = "Speed: " + kart.sphere.velocity.magnitude.ToString("n2");
-        timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 
     public void TrackKart(GameObject trackedKart)
