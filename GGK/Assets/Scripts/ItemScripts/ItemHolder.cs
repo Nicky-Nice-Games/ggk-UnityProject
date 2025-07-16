@@ -246,24 +246,9 @@ public class ItemHolder : NetworkBehaviour
             // spawn all items except boost for multiplayer to see
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                NetworkObject itemNetworkObject = item.GetComponent<NetworkObject>();
                 if (item.ItemCategory != "Boost")
                 {
-                    // get the item from the network object
-                    BaseItem netItem = itemNetworkObject.gameObject.GetComponent<BaseItem>();
-
-                    // modify the item
-                    netItem.Kart = this;
-                    netItem.ItemTier = heldItem.ItemTier;
-
-                    if (heldItem.ItemTier > 1)
-                    {
-                        item.OnLevelUp(item.ItemTier);
-                    }
-
-                    uses--; // Decrease after successful use
-                    itemNetworkObject = netItem.gameObject.GetComponent<NetworkObject>();
-                    itemNetworkObject.Spawn();
+                    SpawnItemRpc(thisDriver.transform.position, item);
                 }
             }
             //soundPlayer.PlayOneShot(throwSound);
@@ -899,5 +884,13 @@ public class ItemHolder : NetworkBehaviour
         spline.NormalizedTime = spline.NormalizedTime;
 
         driver.boosted = false;
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = true)]
+    private void SpawnItemRpc(Vector3 spawnPos, BaseItem item)
+    {
+        NetworkObject networkItem = item.GetComponent<NetworkObject>();
+        networkItem.transform.position = spawnPos;
+        networkItem.Spawn();
     }
 }
