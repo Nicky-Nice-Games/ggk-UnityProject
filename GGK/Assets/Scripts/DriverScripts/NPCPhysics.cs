@@ -174,11 +174,14 @@ public class NPCPhysics : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
+        Debug.Log("NetworkNPC");
         Transform childTransform = parent.transform.GetChild(1);
         KC = childTransform.GetComponent<KartCheckpoint>();
-        MiniMapHud.instance.AddKart(gameObject);
         PlacementManager.instance.AddKart(gameObject, KC);
+        MiniMapHud.instance.AddKart(gameObject);
+        
     }
+
     public void StopParticles()
     {
         //-------------Particles----------------
@@ -209,10 +212,10 @@ public class NPCPhysics : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (IsSpawned)
-        //{
-        //    if (!IsOwner) return;
-        //}
+        if (IsSpawned)
+        {
+            if (!IsOwner) return;
+        }
         HandleGroundCheck();
         ApplyWheelVisuals();
 
@@ -492,7 +495,7 @@ public class NPCPhysics : NetworkBehaviour
             else
             {
                 // If both sides are blocked or both are open, pick a default direction
-                movementDirection.x += Random.value > 0.5f ? avoidStrength : -avoidStrength;
+                movementDirection.y -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
