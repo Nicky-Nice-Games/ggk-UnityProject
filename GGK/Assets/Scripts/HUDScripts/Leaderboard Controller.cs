@@ -24,6 +24,7 @@ public class LeaderboardController : NetworkBehaviour
         {
             curTime += Time.deltaTime;
             networkTime.Value = curTime;
+            Debug.Log(networkTime.Value);
         }
         // Otherwise, update single player time
         else if (!IsSpawned)
@@ -100,6 +101,6 @@ public class LeaderboardController : NetworkBehaviour
     /// <param name="presTime">The present time</param>
     public void OnTimeChange(float prevTime, float presTime)
     {
-        networkTime.Value = presTime;
+        networkTime.Value = curTime;
     }
 }
