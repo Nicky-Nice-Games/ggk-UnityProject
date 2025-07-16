@@ -6,15 +6,23 @@ using UnityEngine;
 
 public class LeaderboardController : NetworkBehaviour
 {
+    public static LeaderboardController instance;
     // References
     public GameObject leaderboard;
     public GameObject leaderboardItem;
     private List<KartCheckpoint> finishedKarts = new List<KartCheckpoint>();
+
     [SerializeField]
     private TextMeshProUGUI timeDisplay;
     // Timer
     public float curTime;
     public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
+
+
+    private void Awake()
+    {
+        instance = this;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -80,14 +88,30 @@ public class LeaderboardController : NetworkBehaviour
             KartCheckpoint k = finishedKarts[i];
             k.placement = i + 1;
 
-            GameObject tempItem = Instantiate(leaderboardItem);
-            TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-            tempArray[0].text = k.placement.ToString();
-            tempArray[1].text = k.name;
-            tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)k.finishTime / 60, k.finishTime % 60);
+            if (!IsSpawned)
+            {
+                GameObject tempItem = Instantiate(leaderboardItem);
+                TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+                tempArray[0].text = k.placement.ToString();
+                tempArray[1].text = k.name;
+                tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)k.finishTime / 60, k.finishTime % 60);
 
-            tempItem.transform.SetParent(leaderboard.transform);
-            tempItem.transform.localScale = Vector3.one;
+                tempItem.transform.SetParent(leaderboard.transform);
+                tempItem.transform.localScale = Vector3.one;
+            }
+            else if (IsServer)
+            {
+                int tempPlacement = k.placement;
+                string tempName = k.name;
+                float tempFinishTime = k.finishTime;
+
+                SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
+            }          
+            else
+            {
+                Debug.Log("this is client");
+            }
+            
         }
 
         leaderboard.SetActive(true);
@@ -101,6 +125,44 @@ public class LeaderboardController : NetworkBehaviour
     /// <param name="presTime">The present time</param>
     public void OnTimeChange(float prevTime, float presTime)
     {
-        networkTime.Value = curTime;
+        curTime = presTime;
     }
+
+
+    [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
+    public void SendTimeDisplayRpc(LeaderboardDisplayCard card)
+    {
+        Debug.Log("SendTimeDisplayRPC called");
+        GameObject tempItem = Instantiate(leaderboardItem);
+        TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+
+        tempArray[0].text = card.Placement.ToString();
+        tempArray[1].text = card.Name;
+        tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)card.Time / 60, card.Time % 60);
+
+        tempItem.transform.SetParent(leaderboard.transform);
+        tempItem.transform.localScale = Vector3.one;
+    }
+
+    public struct LeaderboardDisplayCard : INetworkSerializable
+    {
+        public int Placement;
+        public string Name;
+        public float Time;
+
+        public LeaderboardDisplayCard(int placement, string name, float time)
+        {
+            Placement = placement;
+            Name = name;
+            Time = time;
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Placement);
+            serializer.SerializeValue(ref Name);
+            serializer.SerializeValue(ref Time);
+        }
+    }
+
 }

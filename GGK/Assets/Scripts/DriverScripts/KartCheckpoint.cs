@@ -80,7 +80,7 @@ public class KartCheckpoint : NetworkBehaviour
 
         if (passedWithWarp && lap == totalLaps)
         {
-            finishTime = FindAnyObjectByType<LeaderboardController>().networkTime.Value;
+            finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
