@@ -10,7 +10,7 @@ using UnityEngine.Splines;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 
-public class ItemHolder : MonoBehaviour
+public class ItemHolder : NetworkBehaviour
 {
     private bool holdingItem;
 
@@ -81,9 +81,16 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
 
+    public NetworkVariable<int> networkItemTier;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            networkItemTier = new NetworkVariable<int>(1);
+        }
+
         if (thisDriver)
         {
             // STOP
@@ -235,25 +242,29 @@ public class ItemHolder : MonoBehaviour
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
-            NetworkObject itemNetworkObject = item.GetComponent<NetworkObject>();
+            
             // spawn all items except boost for multiplayer to see
-            if (item.ItemCategory != "Boost")
+            if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                // get the item from the network object
-                BaseItem netItem = itemNetworkObject.gameObject.GetComponent<BaseItem>();
-
-                // modify the item
-                netItem.Kart = this;
-                netItem.ItemTier = heldItem.ItemTier;
-
-                if (heldItem.ItemTier > 1)
+                NetworkObject itemNetworkObject = item.GetComponent<NetworkObject>();
+                if (item.ItemCategory != "Boost")
                 {
-                    item.OnLevelUp(item.ItemTier);
-                }
+                    // get the item from the network object
+                    BaseItem netItem = itemNetworkObject.gameObject.GetComponent<BaseItem>();
 
-                uses--; // Decrease after successful use
-                itemNetworkObject = netItem.gameObject.GetComponent<NetworkObject>();
-                itemNetworkObject.Spawn();
+                    // modify the item
+                    netItem.Kart = this;
+                    netItem.ItemTier = heldItem.ItemTier;
+
+                    if (heldItem.ItemTier > 1)
+                    {
+                        item.OnLevelUp(item.ItemTier);
+                    }
+
+                    uses--; // Decrease after successful use
+                    itemNetworkObject = netItem.gameObject.GetComponent<NetworkObject>();
+                    itemNetworkObject.Spawn();
+                }
             }
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);

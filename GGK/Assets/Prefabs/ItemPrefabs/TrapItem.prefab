@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: -3394249030290981851}
   - component: {fileID: 261783437122124890}
   - component: {fileID: 573546189471640699}
+  - component: {fileID: -3136193450443246022}
   - component: {fileID: 5201143229639170716}
+  - component: {fileID: 7652172915254280710}
   m_Layer: 3
   m_Name: TrapItem
   m_TagString: Hazard
@@ -134,6 +136,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!114 &-3136193450443246022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333525430460299149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3366939432
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &5201143229639170716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,11 +179,39 @@ MonoBehaviour:
   tierTwoItemIcon: {fileID: 2800000, guid: 7fad476ebba1b1a4faad3e9a966d388d, type: 3}
   tierThreeItemIcon: {fileID: 2800000, guid: e4abe763de9f7ca4d94e64a4c2f26b9e, type: 3}
   tierFourItemIcon: {fileID: 2800000, guid: 1ad214199b390f440bba4813bde47118, type: 3}
+  shieldEffect: {fileID: 0}
   tierOneBody: {fileID: 767706840856509470, guid: 793d97737815c3e4bb2dd48f19109467, type: 3}
-  tierOneIcon: {fileID: 2800000, guid: 42dbbbc2a70a56a428ae0fcba94e9fb3, type: 3}
   tierTwoBody: {fileID: 9117759039799724987, guid: 36af317b638c1fc488b4435d8722ef8a, type: 3}
-  tierTwoIcon: {fileID: 2800000, guid: 7fad476ebba1b1a4faad3e9a966d388d, type: 3}
   tierThreeBody: {fileID: 9117759039799724987, guid: 9defcc1d57fa8b94bb67ef0d1b280972, type: 3}
-  tierThreeIcon: {fileID: 2800000, guid: e4abe763de9f7ca4d94e64a4c2f26b9e, type: 3}
   tierFourBody: {fileID: 9117759039799724987, guid: 0b518e80a6b139940be4f5af15419f04, type: 3}
-  tierFourIcon: {fileID: 2800000, guid: 1ad214199b390f440bba4813bde47118, type: 3}
+--- !u!114 &7652172915254280710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333525430460299149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 0
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
