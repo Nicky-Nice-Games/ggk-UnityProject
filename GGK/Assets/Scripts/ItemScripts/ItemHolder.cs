@@ -81,6 +81,9 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
 
+    [Header("Wwise Kart Sounds")]
+    [SerializeField] KartSounds kartSounds;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -332,6 +335,14 @@ public class ItemHolder : MonoBehaviour
         if (collision.gameObject.CompareTag("ItemBox"))
         {
             Debug.Log("Collided with ItemBox");
+            if(kartSounds != null)
+            {
+                kartSounds.PlayItemPickup();
+            }
+            else
+            {
+                Debug.Log("No KartSounds script found.");
+            }
             ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
             Debug.Log(itemBox.ItemBoxType);
             switch (itemBox.ItemBoxType)

@@ -15886,7 +15886,7 @@ GameObject:
   - component: {fileID: 2322137005112669540}
   - component: {fileID: 1963019358762205591}
   - component: {fileID: 2445508020905217369}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BonkCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110788,8 +110788,8 @@ GameObject:
   - component: {fileID: 6316634641190557527}
   - component: {fileID: 4107905189492007490}
   - component: {fileID: 8552696247647127666}
-  - component: {fileID: 9125930377372475731}
   - component: {fileID: 5081769024241348583}
+  - component: {fileID: 7850898730877698485}
   m_Layer: 0
   m_Name: Kart
   m_TagString: Kart
@@ -110979,6 +110979,7 @@ MonoBehaviour:
   dampening: 40
   warpBoostEffect: {fileID: 3447564834503212499}
   warpWaitTime: 2
+  kartSounds: {fileID: 7850898730877698485}
 --- !u!114 &8552696247647127666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111000,30 +111001,6 @@ MonoBehaviour:
   - {fileID: 1051064947334986034}
   - {fileID: 7560666949304106003}
   - {fileID: 1930307494594273200}
-  --- !u!114 &9125930377372475731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7937854632911162198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bbaeb0e016ef85459620001cc18f610, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_listeners:
-    initialListenerList: []
-    useDefaultListeners: 1
-  isEnvironmentAware: 1
-  isStaticObject: 0
-  usePositionOffsetData: 0
-  m_positionOffsetData:
-    KeepMe: 0
-    positionOffset: {x: 0, y: 0, z: 0}
-  scalingFactor: 1
-  m_posOffsetData: {fileID: 0}
-  listenerMask: 1
 --- !u!114 &5081769024241348583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111049,6 +111026,22 @@ MonoBehaviour:
   unloadTriggerList: 958ca0ea
   bankNameInternal: 
   valueGuidInternal: 
+--- !u!114 &7850898730877698485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937854632911162198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eec1a7c6b86349347b35c0d93f347fb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemPickup:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: f09821e877f7022438ff444408f67d67, type: 2}
 --- !u!1 &8143935920720143253
 GameObject:
   m_ObjectHideFlags: 0
@@ -122639,15 +122632,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.05
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.05
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.05
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalPosition.x
@@ -122659,7 +122652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0144
       objectReference: {fileID: 0}
     - target: {fileID: 2745958568445562504, guid: 73d5d62a08230974d9ed273cd2000c34, type: 3}
       propertyPath: m_LocalRotation.w

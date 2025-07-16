@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundTest : MonoBehaviour
 {
-    [SerializeField] AK.Wwise.Event TestEvent;
+    [SerializeField] KartSounds kartSounds;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +16,7 @@ public class SoundTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            TestEvent.Post(gameObject);
+            kartSounds.PlayItemPickup();
         }
     }
 }

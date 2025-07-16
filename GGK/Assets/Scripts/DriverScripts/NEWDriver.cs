@@ -144,7 +144,7 @@ public class NEWDriver : MonoBehaviour
     private PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
-    //@Jonathan Coyne: Following two lines are a MERGERESULT, unsure if they are neccessary/ going to be used
+    //Wwise sound ID's
     private uint drivingSoundID;
     private uint driftingSoundID;
 
