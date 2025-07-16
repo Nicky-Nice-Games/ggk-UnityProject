@@ -249,7 +249,7 @@ public class ItemHolder : NetworkBehaviour
                 if (item.ItemCategory != "Boost")
                 {
                     NetworkObject networkItem = item.GetComponent<NetworkObject>();
-                    SpawnItemRpc(networkItem);
+                    SpawnItemRpc(item);
                 }
             }
             //soundPlayer.PlayOneShot(throwSound);
@@ -888,8 +888,9 @@ public class ItemHolder : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc(NetworkObject itemNet)
+    private void SpawnItemRpc(NetworkBehaviourReference item)
     {
+        NetworkObject itemNet = item.ConvertTo<NetworkObject>();
         itemNet.Spawn();
     }
 }
