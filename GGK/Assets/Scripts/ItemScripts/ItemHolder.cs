@@ -248,7 +248,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (heldItem.ItemCategory != "Boost")
                 {
-                    SpawnItemRpc();
+                    RequestSpawnItemRpc();
                 }
                 else
                 {
@@ -899,5 +899,17 @@ public class ItemHolder : NetworkBehaviour
     {
         NetworkObject netItem = Instantiate(heldItem, transform.position, transform.rotation).GetComponent<NetworkObject>();
         netItem.Spawn();
+    }
+
+    public void SpawnItem()
+    {
+        GameObject rpcItem = Instantiate(item.gameObject);
+        rpcItem.GetComponent<NetworkObject>().Spawn();
+    }
+
+    [Rpc(SendTo.Server)]
+    public void RequestSpawnItemRpc()
+    {
+        SpawnItem();
     }
 }
