@@ -80,7 +80,7 @@ public class KartCheckpoint : NetworkBehaviour
 
         if (passedWithWarp && lap == totalLaps)
         {
-            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            finishTime = FindAnyObjectByType<LeaderboardController>().networkTime.Value;
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
@@ -126,7 +126,7 @@ public class KartCheckpoint : NetworkBehaviour
 
                 if (lap == totalLaps)
                 {
-                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                    finishTime = FindAnyObjectByType<LeaderboardController>().networkTime.Value;
                     StartCoroutine(FinalizeFinish());
                 }
             }
