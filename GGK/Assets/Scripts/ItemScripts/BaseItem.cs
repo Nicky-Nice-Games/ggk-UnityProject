@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class BaseItem : NetworkBehaviour
+public class BaseItem : NetworkBehaviour, INetworkSerializable
 {
     [SerializeField] protected float timer;    // Seconds until the item disappears
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
@@ -194,4 +194,10 @@ public class BaseItem : NetworkBehaviour
         }
     }
 
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref timer);
+        serializer.SerializeValue(ref useCount);
+        serializer.SerializeValue(ref itemTier);
+    }
 }
