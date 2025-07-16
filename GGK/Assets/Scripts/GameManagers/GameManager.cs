@@ -55,6 +55,7 @@ public class GameManager : NetworkBehaviour
     void Start()
     {
         curState = GameStates.start;
+        apiManager = thisManagerObjInstance.GetComponent<APIManager>();
 
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
@@ -90,7 +91,7 @@ public class GameManager : NetworkBehaviour
         // Set validate player info
         else
         {
-            ValidatePlayer(playerInfo);
+            //ValidatePlayer(playerInfo);
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
@@ -270,7 +271,7 @@ public class GameManager : NetworkBehaviour
     public void GameFinished()
     {
         curState = GameStates.gameOver;
-        apiManager.PostPlayerData(playerInfo);
+        //apiManager.PostPlayerData(playerInfo);
 
         sceneLoader.LoadScene("GameOverScene");
     }

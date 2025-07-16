@@ -18,7 +18,7 @@ public class BackButtonHandler : MonoBehaviour
         // assign back button
         Button button = backOption.GetComponent<Button>();
         button.onClick.AddListener(() =>
-        GetComponent<BackButtonHandler>().GoBack());
+            GetComponent<BackButtonHandler>().GoBack());
     }
 
     // Update is called once per frame
@@ -40,10 +40,44 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.curState = GameStates.login;
                 break;
             case GameStates.lobby:
+                if (MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    // get the players in the lobby and kick all (except the host)
+                    if (LobbyManager.Instance.IsLobbyHost())
+                    {
+                        Debug.Log("Kicking");
+                        int players = LobbyManager.Instance.GetJoinedLobby().Players.Count;
+                        for (int i = 0; i < players; i++)
+                        {
+                            LobbyManager.Instance.KickPlayer();
+                        }
+                    }
+                    // end multiplayer and leave the lobby
+                    Debug.Log("Leaving");
+                    LobbyManager.Instance.LeaveLobby();
+                    MultiplayerManager.Instance.IsMultiplayer = false;
+                }
                 gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
                 gamemanagerObj.curState = GameStates.multiSingle;
                 break;
             case GameStates.gameMode:
+                if (MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    // get the players in the lobby and kick all (except the host)
+                    if (LobbyManager.Instance.IsLobbyHost())
+                    {
+                        Debug.Log("Kicking");
+                        int players = LobbyManager.Instance.GetJoinedLobby().Players.Count;
+                        for (int i = 1; i < players; i++)
+                        {
+                            LobbyManager.Instance.KickPlayer();
+                        }
+                    }
+                    // end multiplayer and leave the lobby
+                    Debug.Log("Leaving");
+                    LobbyManager.Instance.LeaveLobby();
+                    MultiplayerManager.Instance.IsMultiplayer = false;
+                }
                 gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
                 gamemanagerObj.curState = GameStates.multiSingle;
                 break;
@@ -59,4 +93,5 @@ public class BackButtonHandler : MonoBehaviour
                 break;
         }
     }
+
 }
