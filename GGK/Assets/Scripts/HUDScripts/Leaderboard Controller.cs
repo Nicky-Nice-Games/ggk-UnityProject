@@ -18,17 +18,22 @@ public class LeaderboardController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        // If server, update networkTme
         if (IsServer)
         {
             curTime += Time.deltaTime;
             networkTime.Value = curTime;
             Debug.Log(networkTime.Value);
         }
+        // Otherwise, update single player time
         else if (!IsSpawned)
         {
             curTime += Time.deltaTime;
         }
 
+
+        // Format and display time
         float seconds = curTime % 60;
         int minutes = (int)curTime / 60;
         timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
@@ -36,6 +41,7 @@ public class LeaderboardController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        // If a client, set networkTime's OnValueChanged
         if (IsClient)
         {
             networkTime.OnValueChanged += OnTimeChange;
