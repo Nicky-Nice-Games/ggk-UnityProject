@@ -266,6 +266,7 @@ public class ItemHolder : NetworkBehaviour
                     }
 
                     uses--; // Decrease after successful use
+                    Debug.Log(item.ItemTier);
                 }
             }
             else
@@ -282,9 +283,6 @@ public class ItemHolder : NetworkBehaviour
 
                 uses--; // Decrease after successful use
             }
-
-            Debug.Log(item.ItemTier);
-
         }
     }
 
