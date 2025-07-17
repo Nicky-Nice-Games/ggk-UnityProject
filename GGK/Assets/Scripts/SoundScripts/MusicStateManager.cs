@@ -46,6 +46,7 @@ public class MusicStateManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
+            //AkUnitySoundEngine.PostEvent("Music", gameObject);
             startMusic.Post(gameObject);
             SetMusicState(MusicState.Menu);
         }
