@@ -50,7 +50,6 @@ public class BaseItem : NetworkBehaviour, INetworkSerializable
     /// </summary>
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
 
-
     // Start is called before the first frame update
     void Start()
     {
