@@ -101,7 +101,7 @@ public class Puck : BaseItem
 
             useCount = 1;
 
-            currentPos = new NetworkVariable<Vector3>(Vector3.zero);
+            currentPos = new NetworkVariable<Vector3>(transform.position);
         }
     }
 
@@ -110,13 +110,13 @@ public class Puck : BaseItem
         // Acts as stronger gravity to bring the puck down
         rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
 
-        if (IsHost)
+        if (IsClient)
         {
-            currentPos.Value = transform.position;
+            transform.position = currentPos.Value;
         }
         else
         {
-            transform.position = currentPos.Value;
+            currentPos.Value = transform.position;
         }
     }
 
