@@ -251,57 +251,56 @@ public class ItemHolder : NetworkBehaviour
                 SpawnItemRpc();
             }
 
-            //if (MultiplayerManager.Instance.IsMultiplayer)
-            //{
-            //    if (!IsClient)
-            //    {
-            //        //soundPlayer.PlayOneShot(throwSound);
-            //        item.gameObject.SetActive(true);
-            //        item.Kart = this;
-            //        item.ItemTier = heldItem.ItemTier;
-
-            //        if (heldItem.ItemTier > 1)
-            //        {
-            //            item.OnLevelUp(item.ItemTier);
-            //        }
-
-            //        uses--; // Decrease after successful use
-            //        Debug.Log(item.ItemTier);
-            //    }
-            //    else
-            //    {
-            //        heldItem = null;
-            //        holdingItem = false;
-            //        itemDisplay.texture = defaultItemDisplay;
-            //    }
-            //}
-            //else
-            //{
-            //    //soundPlayer.PlayOneShot(throwSound);
-            //    item.gameObject.SetActive(true);
-            //    item.Kart = this;
-            //    item.ItemTier = heldItem.ItemTier;
-
-            //    if (heldItem.ItemTier > 1)
-            //    {
-            //        item.OnLevelUp(item.ItemTier);
-            //    }
-
-            //    uses--; // Decrease after successful use
-            //}
-
-            //soundPlayer.PlayOneShot(throwSound);
-            item.gameObject.SetActive(true);
-            item.Kart = this;
-            item.ItemTier = heldItem.ItemTier;
-
-            if (heldItem.ItemTier > 1)
+            if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                item.OnLevelUp(item.ItemTier);
-            }
+                if (IsHost)
+                {
+                    Debug.Log("Youre the HOST.");
+                }
+                if (IsServer)
+                {
+                    Debug.Log("Youre the SERVER");
+                }
+                if (IsClient)
+                {
+                    Debug.Log("Youre the CLIENT.");
+                }
+                if (!IsClient)
+                {
+                    //soundPlayer.PlayOneShot(throwSound);
+                    item.gameObject.SetActive(true);
+                    item.Kart = this;
+                    item.ItemTier = heldItem.ItemTier;
 
-            uses--; // Decrease after successful use
-            Debug.Log(item.ItemTier);
+                    if (heldItem.ItemTier > 1)
+                    {
+                        item.OnLevelUp(item.ItemTier);
+                    }
+
+                    uses--; // Decrease after successful use
+                    Debug.Log(item.ItemTier);
+                }
+                else
+                {
+                    heldItem = null;
+                    holdingItem = false;
+                    itemDisplay.texture = defaultItemDisplay;
+                }
+            }
+            else
+            {
+                //soundPlayer.PlayOneShot(throwSound);
+                item.gameObject.SetActive(true);
+                item.Kart = this;
+                item.ItemTier = heldItem.ItemTier;
+
+                if (heldItem.ItemTier > 1)
+                {
+                    item.OnLevelUp(item.ItemTier);
+                }
+
+                uses--; // Decrease after successful use
+            }
         }
     }
 
