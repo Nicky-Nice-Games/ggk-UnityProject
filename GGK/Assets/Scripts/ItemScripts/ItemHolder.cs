@@ -886,8 +886,8 @@ public class ItemHolder : NetworkBehaviour
         driver.boosted = false;
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc()
+    [ServerRpc(RequireOwnership = true)]
+    private void SpawnItemServerRpc()
     {
         if (heldItem.ItemCategory == "Puck")
         {
