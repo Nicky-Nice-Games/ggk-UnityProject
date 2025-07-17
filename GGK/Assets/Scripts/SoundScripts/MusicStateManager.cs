@@ -42,10 +42,13 @@ public class MusicStateManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Update()
     {
-        startMusic.Post(gameObject);
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            startMusic.Post(gameObject);
+            SetMusicState(MusicState.Menu);
+        }
     }
 
     public void SetMusicState(MusicState newState)
