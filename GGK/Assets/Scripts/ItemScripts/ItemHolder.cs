@@ -248,7 +248,7 @@ public class ItemHolder : NetworkBehaviour
             }
             else if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                SpawnItemRpc();
+                SpawnItemServerRpc();
             }
 
             //soundPlayer.PlayOneShot(throwSound);
