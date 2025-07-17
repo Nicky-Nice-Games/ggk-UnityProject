@@ -177,6 +177,7 @@ public class MultiplayerManager : NetworkBehaviour
         PlayerData player = players[senderClientId];
         //player.PlayerCharacter = playerCharacter;
         player.CharacterColor = characterColor;
+        player.CharacterName = characterName; //DELETE IF NOT WORKY
         players[senderClientId] = player;
         Debug.Log($"Client {senderClientId} chose {characterName} in color {characterColor}");
 
