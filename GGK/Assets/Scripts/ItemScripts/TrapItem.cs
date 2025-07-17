@@ -54,13 +54,18 @@ public class TrapItem : BaseItem
             RotateBox();
         }
 
-        if (IsClient)
+        if (!IsSpawned)
         {
-            transform.position = currentPos.Value;
+            return;
         }
-        else
+
+        if (IsServer)
         {
             currentPos.Value = transform.position;
+        }
+        else if (IsClient)
+        {
+            transform.position = currentPos.Value;
         }
     }
 
