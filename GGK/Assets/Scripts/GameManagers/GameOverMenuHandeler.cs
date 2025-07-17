@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts;
+using Unity.Netcode;
 
 public class GameOverMenuHandeler : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> mapOptions = new List<GameObject>();
+    private List<GameObject> buttonOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
 
     // panels with options tailored for multiplayer postgame
@@ -22,7 +23,7 @@ public class GameOverMenuHandeler : MonoBehaviour
         gamemanagerObj = FindAnyObjectByType<GameManager>();
 
         // Assigning the buttons their listeners
-        foreach (GameObject obj in mapOptions)
+        foreach (GameObject obj in buttonOptions)
         {
             Button button = obj.GetComponent<Button>();
             button.onClick.AddListener(() =>
@@ -33,20 +34,16 @@ public class GameOverMenuHandeler : MonoBehaviour
         {
             multiplayerPanel.SetActive(true);
         }
+        else
+        {
+            multiplayerPanel.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    private void OpenPlayAgain()
-    {
-        if (!playAgainPanel.activeSelf)
-        {
-            playAgainPanel.SetActive(true);
-        }
+        
     }
 
     public void ReplayButton()
@@ -62,16 +59,39 @@ public class GameOverMenuHandeler : MonoBehaviour
     // Multiplayer Panel Button Functions
     public void ReturnToMapMulti()
     {
-        gamemanagerObj.ToMapSelectScreenRpc();
+        if (MultiplayerManager.Instance.NetworkManager.IsHost)
+        {
+            gamemanagerObj.ToMapSelectScreenRpc();
+        }
     }
 
     public void ReturnToCharMulti()
     {
-        gamemanagerObj.LoadedGameModeRpc();
+        if (MultiplayerManager.Instance.NetworkManager.IsHost)
+        {
+            gamemanagerObj.LoadedGameMode();
+        }
     }
 
     public void ReturnToModesMulti()
     {
-        gamemanagerObj.ToGameModeSelectSceneRpc();
+        if (MultiplayerManager.Instance.NetworkManager.IsHost)
+        {
+            gamemanagerObj.ToGameModeSelectSceneRpc();
+        }
+    }
+
+    public void LeaveLobby()
+    {
+        // kick players if the host leaves (until host migration is implemented)
+
+        MultiplayerManager.Instance.IsMultiplayer = false;
+        gamemanagerObj.LoggedIn(); // to multisingle select
+    }
+
+    public void StayInLobby()
+    {
+        // take all players who pressed this to the next panel
+        playAgainPanel.SetActive(true);
     }
 }

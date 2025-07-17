@@ -150,7 +150,7 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.gameMode;
     }
 
-    [Rpc(SendTo.NotServer)]
+    [Rpc(SendTo.ClientsAndHost)]
     public void ToGameModeSelectSceneRpc()
     {
         SceneManager.LoadScene("GameModeSelectScene");
@@ -277,6 +277,15 @@ public class GameManager : NetworkBehaviour
     /// Triggers when the game finishes
     /// </summary>
     public void GameFinished()
+    {
+        curState = GameStates.gameOver;
+        //apiManager.PostPlayerData(playerInfo);
+
+        sceneLoader.LoadScene("GameOverScene");
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void GameFinishedRpc()
     {
         curState = GameStates.gameOver;
         //apiManager.PostPlayerData(playerInfo);
