@@ -251,7 +251,24 @@ public class ItemHolder : NetworkBehaviour
                 SpawnItemRpc();
             }
 
-            if (!IsClient)
+            if (MultiplayerManager.Instance.IsMultiplayer)
+            {
+                if (!IsClient)
+                {
+                    //soundPlayer.PlayOneShot(throwSound);
+                    item.gameObject.SetActive(true);
+                    item.Kart = this;
+                    item.ItemTier = heldItem.ItemTier;
+
+                    if (heldItem.ItemTier > 1)
+                    {
+                        item.OnLevelUp(item.ItemTier);
+                    }
+
+                    uses--; // Decrease after successful use
+                }
+            }
+            else
             {
                 //soundPlayer.PlayOneShot(throwSound);
                 item.gameObject.SetActive(true);
