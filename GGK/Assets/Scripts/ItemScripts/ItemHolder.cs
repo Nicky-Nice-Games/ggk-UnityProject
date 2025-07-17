@@ -240,25 +240,17 @@ public class ItemHolder : NetworkBehaviour
 
             itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
-
-            
             
             // spawn all items except boost for multiplayer to see
-            if (MultiplayerManager.Instance.IsMultiplayer)
-            {
-                if (heldItem.ItemCategory != "Boost")
-                {
-                    SpawnItemRpc();
-                }
-                else
-                {
-                    item = Instantiate(heldItem, transform.position, transform.rotation);
-                }
-            }
-            else
+            if (!MultiplayerManager.Instance.IsMultiplayer || heldItem.ItemCategory == "Boost")
             {
                 item = Instantiate(heldItem, transform.position, transform.rotation);
             }
+            else if (MultiplayerManager.Instance.IsMultiplayer)
+            {
+                SpawnItemRpc();
+            }
+
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
             item.Kart = this;
@@ -897,7 +889,9 @@ public class ItemHolder : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = true)]
     private void SpawnItemRpc()
     {
-        NetworkObject netItem = Instantiate(heldItem, transform.position, transform.rotation).GetComponent<NetworkObject>();
+        item = Instantiate(heldItem, transform.position, transform.rotation);
+        NetworkObject netItem = item.GetComponent<NetworkObject>();
+        
         netItem.Spawn();
     }
 }
