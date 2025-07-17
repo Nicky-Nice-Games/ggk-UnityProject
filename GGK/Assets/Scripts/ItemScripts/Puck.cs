@@ -31,6 +31,8 @@ public class Puck : BaseItem
         direction = transform.forward * 200.0f;
 
         bounceCount = 0;
+
+        useCount = 1;
     }
 
     // Start is called before the first frame update
