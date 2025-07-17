@@ -39,62 +39,65 @@ public class Puck : BaseItem
 
         // If the kart is looking backwards
         // sends puck backwards
-        if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
+        if (!MultiplayerManager.Instance.IsMultiplayer)
         {
-            // The puck spawns 15 units behind of the kart
-            transform.position = new Vector3(transform.position.x -transform.forward.x * 10f,
-                            transform.position.y,
-                            transform.position.z -transform.forward.z * 10f);
+            if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
+            {
+                // The puck spawns 15 units behind of the kart
+                transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                transform.position.y,
+                                transform.position.z - transform.forward.z * 10f);
 
-            // The speed of the puck times 200
-            // Keeps the player from hitting it during use regardless of speed
-            direction = -(transform.forward * 200.0f);
-        }
-        // If the kart is looking forwards
-        // sends puck forwards
-        else
-        {
-            // The puck spawns 15 units in front of the kart
-            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                            transform.position.y,
-                            transform.position.z + transform.forward.z * 5f);
+                // The speed of the puck times 200
+                // Keeps the player from hitting it during use regardless of speed
+                direction = -(transform.forward * 200.0f);
+            }
+            // If the kart is looking forwards
+            // sends puck forwards
+            else
+            {
+                // The puck spawns 15 units in front of the kart
+                transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+                                transform.position.y,
+                                transform.position.z + transform.forward.z * 5f);
 
-            // The speed of the puck times 200
-            // Keeps the player from hitting it during use regardless of speed
-            direction = transform.forward * 200.0f;
-        }
+                // The speed of the puck times 200
+                // Keeps the player from hitting it during use regardless of speed
+                direction = transform.forward * 200.0f;
+            }
 
 
-        karts = GameObject.FindGameObjectsWithTag("Kart");
+            karts = GameObject.FindGameObjectsWithTag("Kart");
 
-        // Starts the puck with 0 bounces
-        bounceCount = 0;
+            // Starts the puck with 0 bounces
+            bounceCount = 0;
 
-        // Tracks the item tier
-        switch (itemTier)
-        {
-            // Multi-puck (3 uses)
-            case 2:
-                useCount = 1;
-                timer = 50;
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to the closest player and lasts longer
-            case 3:
-                useCount = 3;
-                timer = 50;
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to first place
-            case 4:
-                useCount = 1;
-                timer = 50;
-                isTrackingFirst = true;
-                break;
-            // Normal puck, one use
-            default:
-                useCount = 1;
-                break;
+            // Tracks the item tier
+            switch (itemTier)
+            {
+                // Multi-puck (3 uses)
+                case 2:
+                    useCount = 1;
+                    timer = 50;
+                    FindClosestKart(karts);
+                    break;
+                // Puck tracks to the closest player and lasts longer
+                case 3:
+                    useCount = 3;
+                    timer = 50;
+                    FindClosestKart(karts);
+                    break;
+                // Puck tracks to first place
+                case 4:
+                    useCount = 1;
+                    timer = 50;
+                    isTrackingFirst = true;
+                    break;
+                // Normal puck, one use
+                default:
+                    useCount = 1;
+                    break;
+            }
         }
     }
 
