@@ -22,6 +22,8 @@ public class Puck : BaseItem
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
         // The puck spawns 15 units in front of the kart
         transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
                         transform.position.y,
