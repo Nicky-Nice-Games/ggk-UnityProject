@@ -114,7 +114,7 @@ public class SpeedCameraEffect : MonoBehaviour
         Transform driverScriptObject = kart.GetComponentInChildren<NEWDriver>().transform;
         target = driverScriptObject.Find("CameraFollowFront");
         lookBackTarget = driverScriptObject.Find("CameraFollowBack");
-        targetRigidbody = kart.GetComponentInChildren<Rigidbody>();
+        targetRigidbody = kart.Find("Collider").GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()

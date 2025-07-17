@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D;
@@ -234,6 +235,10 @@ public class NEWDriver : NetworkBehaviour
             PlacementManager.instance.TrackKart(kartCheckpoint);
 
             MiniMapHud.instance.AddKart(gameObject);
+
+            //removing the network rigidbody if single player
+            Destroy(kartCheckpoint.gameObject.GetComponent<NetworkRigidbody>());
+            kartCheckpoint.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         }
     }
 
@@ -305,6 +310,7 @@ public class NEWDriver : NetworkBehaviour
 
     }
 
+    #region Server Authoritative with Client Prediction and Reconciliation
     private void HandleServerTick()
     {
         int bufferIndex = -1;
@@ -436,6 +442,7 @@ public class NEWDriver : NetworkBehaviour
             angularVelocity = sphere.angularVelocity
         };
     }
+    #endregion
 
     private void Move(Vector3 movementDirection)
     {
@@ -458,7 +465,8 @@ public class NEWDriver : NetworkBehaviour
         if (isStunned) movementDirection = Vector3.zero;
 
         // if this kart has been network spawned used adjusted time frame, other wise use normal delta
-        float fraction = IsSpawned ? timer.MinimumTimeBetweenTicks / (1f / Time.deltaTime) : Time.fixedDeltaTime;
+        //float timeFraction = IsSpawned ? timer.MinimumTimeBetweenTicks / (1f / Time.deltaTime) : Time.fixedDeltaTime;
+        float timeFraction = IsSpawned ? Time.fixedDeltaTime : Time.fixedDeltaTime;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -470,14 +478,14 @@ public class NEWDriver : NetworkBehaviour
             }
             else
             {
-                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.fixedDeltaTime;
+                acceleration = kartModel.forward * movementDirection.z * accelerationRate * timeFraction;
             }
 
         }
         else if (isGrounded)
         {
             //Decceleration
-            acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
+            acceleration *= 1f - (deccelerationRate * timeFraction);
 
             //Stop the vehicle once we reach a certain minimum speed
             if (sphere.velocity.magnitude < minSpeed)
@@ -489,7 +497,7 @@ public class NEWDriver : NetworkBehaviour
         else
         {
             //In the air, decelerating bc of drag
-            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
+            acceleration *= 1f - (airDeccelerationRate * timeFraction);
         }
 
         //------------Turning stuff---------------------
@@ -511,7 +519,7 @@ public class NEWDriver : NetworkBehaviour
             if (driftMethodCaller)
             {
                 //Gradually increase traction during drift
-                currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
+                currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, timeFraction * tractionLerpSpeed);
 
 
                 //Keep drifting
@@ -525,7 +533,7 @@ public class NEWDriver : NetworkBehaviour
 
                 if (isGrounded && airTime < 1.5f)
                 {
-                    acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    acceleration *= driftFowardCompensation * timeFraction; //Compensate for the forward force when drifting
                 }
                 else
                 {
@@ -538,14 +546,14 @@ public class NEWDriver : NetworkBehaviour
             if (backwardsCheck < 0)
             {
                 //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+                turning = Quaternion.Euler(0f, -(turningDirection * timeFraction), 0f);
 
                 EndDrift();
             }
             else
             {
                 //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                turning = Quaternion.Euler(0f, turningDirection * timeFraction, 0f);
             }
 
             if (isGrounded && movementDirection.x != 0f)
@@ -573,8 +581,8 @@ public class NEWDriver : NetworkBehaviour
             Quaternion targetUpright = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
             // Smoothly rotate the kart's visual and normal upright orientation back to upright
-            kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
+            kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, timeFraction * airRotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, timeFraction * airRotationSpeed);
 
             if (AirTricking)
             {
