@@ -71,7 +71,17 @@ public class LeaderboardController : NetworkBehaviour
     public void Finished(KartCheckpoint kart)
     {
         if (!finishedKarts.Contains(kart))
+        {
             finishedKarts.Add(kart);
+        }
+
+
+
+        if (kart.GetComponent<NPCDriver>() == null)
+        {
+            leaderboard.SetActive(true);
+        }
+
 
         // Sort by actual finish time
         finishedKarts.Sort((a, b) => a.finishTime.CompareTo(b.finishTime));
@@ -114,7 +124,7 @@ public class LeaderboardController : NetworkBehaviour
             
         }
 
-        leaderboard.SetActive(true);
+        
     }
 
     /// <summary>
