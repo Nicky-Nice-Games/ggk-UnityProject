@@ -7,21 +7,17 @@ using Assets.Scripts;
 public class RaceModeStubHandeler : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> menuOptions = new List<GameObject>();
+    private GameObject menuOption;
     private GameManager gamemanagerObj;
 
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
-
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in menuOptions)
-        {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
-        }
+       
+        Button button = menuOption.GetComponent<Button>();
+        button.onClick.AddListener(() =>
+        gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
     }
 
     // Update is called once per frame
@@ -34,10 +30,5 @@ public class RaceModeStubHandeler : MonoBehaviour
     {
         gamemanagerObj.sceneLoader.LoadScene("GameModeSelectScene");
         gamemanagerObj.curState = GameStates.gameMode;
-    }
-
-    public void ReturnToMMButton()
-    {
-        gamemanagerObj.LoadStartMenu();
     }
 }

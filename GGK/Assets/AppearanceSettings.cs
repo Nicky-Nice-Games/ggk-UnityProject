@@ -29,19 +29,19 @@ public class AppearanceSettings : NetworkBehaviour
 
     public void UpdateAppearance()
     {
-        // If player (will need to be changed for multiplayer)
+        //// If player (will need to be changed for multiplayer)
         if (GetComponent<NEWDriver>() && !IsSpawned)
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
-
+        
             // Set correct character model active
             if (characterData != null)
             {
                 icon = characterData.characterSprite;
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
-
+        
                 if (models != null)
                 {
                     if (models.Count > 0)
@@ -54,12 +54,17 @@ public class AppearanceSettings : NetworkBehaviour
                                 models[i].SetActive(true);
                                 continue;
                             }
-
+        
                             //deleting the models that are not supposed to be active
                             Destroy(models[i]);
                         }
                     }
                 }
+            }
+            else
+            {
+                // If no characterData found, set the last model in the list as active
+                models[models.Count - 1].SetActive(true); 
             }
         }
         // I think NPC icons and colors are currently manually set in scene,so
@@ -102,6 +107,11 @@ public class AppearanceSettings : NetworkBehaviour
                 //deleting the models that are not supposed to be active
                 Destroy(models[i]);
             }
+        }
+        else
+        {
+            // If no characterData found, set the last model in the list as active
+            models[models.Count - 1].SetActive(true);
         }
     }
 }
