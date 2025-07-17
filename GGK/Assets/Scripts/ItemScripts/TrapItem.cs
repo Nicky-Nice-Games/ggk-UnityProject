@@ -16,26 +16,34 @@ public class TrapItem : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        // starts the hazard slightly behind the player
-        if (itemTier == 1)
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            // starts the hazard slightly behind the player
+            if (itemTier == 1)
+            {
+                Vector3 behindPos = transform.position - transform.forward * 6;
+                transform.position = behindPos;
+            }
+            if (itemTier > 1)
+            {
+                Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
+                transform.position = behindPos;
+            }
+
+            // freeze the fake item box's Y position
+            if (itemTier == 4)
+            {
+                rb.constraints = RigidbodyConstraints.FreezePositionY;
+            }
+
+            // sends the hazard slightly up and behind the player before landing on the ground
+            // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
+        }
+        else
         {
             Vector3 behindPos = transform.position - transform.forward * 6;
             transform.position = behindPos;
         }
-        if (itemTier > 1)
-        {
-            Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
-            transform.position = behindPos;
-        }
-
-        // freeze the fake item box's Y position
-        if(itemTier == 4)
-        {
-            rb.constraints = RigidbodyConstraints.FreezePositionY;
-        }
-        
-        // sends the hazard slightly up and behind the player before landing on the ground
-        // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
     }
 
     // Update is called once per frame
@@ -44,6 +52,15 @@ public class TrapItem : BaseItem
         if (itemTier > 2)
         {
             RotateBox();
+        }
+
+        if (IsClient)
+        {
+            transform.position = currentPos.Value;
+        }
+        else
+        {
+            currentPos.Value = transform.position;
         }
     }
 
