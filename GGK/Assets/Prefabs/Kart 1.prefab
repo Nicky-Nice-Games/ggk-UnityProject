@@ -70683,6 +70683,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5946905664927676741}
   - component: {fileID: 3651042994045691783}
+  - component: {fileID: 6883445038158429493}
+  - component: {fileID: 6047473532667698248}
   m_Layer: 0
   m_Name: Kart 1
   m_TagString: Untagged
@@ -70729,6 +70731,35 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &6883445038158429493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4828833863746977510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 224779565945821861}
+--- !u!114 &6047473532667698248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4828833863746977510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17331542c15417458cbaa9bb6be1656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 224779565945821861}
+  driver: {fileID: 6316634641190557527}
+  lerpSpeed: 4
 --- !u!1 &4896708664736989073
 GameObject:
   m_ObjectHideFlags: 0
@@ -122370,6 +122401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c17331542c15417458cbaa9bb6be1656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   driver: {fileID: 6316634641190557527}
   lerpSpeed: 4
 --- !u!114 &7999080927122746556
@@ -122946,6 +122978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c17331542c15417458cbaa9bb6be1656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   driver: {fileID: 6316634641190557527}
   lerpSpeed: 4
 --- !u!114 &3021905445999621562
@@ -123104,12 +123137,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4638030265361136461}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 105757169538526193}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2789497906532994050}
   m_SourcePrefab: {fileID: 100100000, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
 --- !u!4 &1462600325099068866 stripped
 Transform:
@@ -123158,34 +123185,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 390265754511947601}
     m_Active: 1
   m_Effectors: []
---- !u!114 &105757169538526193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6284005883803008911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c17331542c15417458cbaa9bb6be1656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  driver: {fileID: 6316634641190557527}
-  lerpSpeed: 4
---- !u!114 &2789497906532994050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6284005883803008911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 224779565945821861}
 --- !u!4 &6664930122094257461 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a2314536b8e2544b99680df5d2a4109, type: 3}
@@ -123438,6 +123437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c17331542c15417458cbaa9bb6be1656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   driver: {fileID: 6316634641190557527}
   lerpSpeed: 4
 --- !u!114 &943523511452311591

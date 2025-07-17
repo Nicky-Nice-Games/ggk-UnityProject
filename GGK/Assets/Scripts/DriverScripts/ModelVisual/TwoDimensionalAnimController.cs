@@ -6,7 +6,8 @@ using Unity.Netcode;
 
 public class TwoDimensionalAnimController : NetworkBehaviour
 {
-    Animator animator;
+    public Animator animator;
+    //Animator animator;
     float turningValue = 0;
     public NEWDriver driver;
     public float lerpSpeed;
@@ -14,7 +15,8 @@ public class TwoDimensionalAnimController : NetworkBehaviour
     void Start()
     {
         //Getting our animator :D
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
