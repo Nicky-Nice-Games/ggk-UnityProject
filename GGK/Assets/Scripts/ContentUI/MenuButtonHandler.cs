@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharButtonHandler : MonoBehaviour
+public class MenuButtonHandler : MonoBehaviour
 {
     [SerializeField]
     Sprite buttonSprite;
@@ -13,6 +13,7 @@ public class CharButtonHandler : MonoBehaviour
     Sprite buttonSelectedSprite;
 
     [SerializeField]
+    GameObject buttonParent;
     List<GameObject> buttons;
 
     [SerializeField]
@@ -21,7 +22,11 @@ public class CharButtonHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        buttons = new List<GameObject>();
+        foreach (Transform child in buttonParent.transform)
+        {
+            buttons.Add(child.gameObject);
+        }
     }
 
     // Update is called once per frame
