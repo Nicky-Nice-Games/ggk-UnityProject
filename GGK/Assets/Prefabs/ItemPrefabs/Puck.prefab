@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: -2451396029727509108}
   - component: {fileID: 2055685921588137374}
   - component: {fileID: 7924491827093875233}
-  - component: {fileID: -6065567256249930430}
   m_Layer: 8
   m_Name: Puck
   m_TagString: Projectile
@@ -181,6 +180,8 @@ MonoBehaviour:
   tierThreeItemIcon: {fileID: 2800000, guid: 0298f09ad1e2a36469dc7a91e9db2827, type: 3}
   tierFourItemIcon: {fileID: 2800000, guid: 54e7abc4b46f41d4fae5641de1766dae, type: 3}
   shieldEffect: {fileID: 0}
+  currentPos:
+    m_InternalValue: {x: 0, y: 0, z: 0}
   maxBounces: 4
   agent: {fileID: 7924491827093875233}
   karts: []
@@ -207,34 +208,3 @@ NavMeshAgent:
   m_BaseOffset: 0.99999994
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-6065567256249930430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3719725890108810590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0

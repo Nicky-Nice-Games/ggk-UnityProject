@@ -44,6 +44,8 @@ public class BaseItem : NetworkBehaviour, INetworkSerializable
 
     public string ItemCategory { get { return itemCategory; } set { itemCategory = value; } }
 
+    public NetworkVariable<Vector3> currentPos;
+
 
     /// <summary>
     /// Read and write property for the kart holding the item
@@ -53,13 +55,13 @@ public class BaseItem : NetworkBehaviour, INetworkSerializable
     // Start is called before the first frame update
     void Start()
     {
-
+      
     }
 
     // Update is called once per frame
     public void Update()
     {
-
+        
     }
 
     /// <summary>

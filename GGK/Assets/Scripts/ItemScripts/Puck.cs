@@ -100,6 +100,8 @@ public class Puck : BaseItem
             bounceCount = 0;
 
             useCount = 1;
+
+            currentPos = new NetworkVariable<Vector3>(Vector3.zero);
         }
     }
 
@@ -107,6 +109,15 @@ public class Puck : BaseItem
     {
         // Acts as stronger gravity to bring the puck down
         rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
+
+        if (IsServer)
+        {
+            currentPos.Value = transform.position;
+        }
+        else
+        {
+            transform.position = currentPos.Value;
+        }
     }
 
     void FixedUpdate()
