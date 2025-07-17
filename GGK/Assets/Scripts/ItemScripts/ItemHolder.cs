@@ -272,6 +272,7 @@ public class ItemHolder : NetworkBehaviour
                 {
                     heldItem = null;
                     holdingItem = false;
+                    itemDisplay.texture = defaultItemDisplay;
                 }
             }
             else
