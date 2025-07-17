@@ -125,8 +125,9 @@ public class KartCheckpoint : NetworkBehaviour
                 }
 
                 if (lap == totalLaps)
-                {
+                {                    
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -141,10 +142,20 @@ public class KartCheckpoint : NetworkBehaviour
 
     IEnumerator FinalizeFinish()
     {
+        Debug.Log("In FinalizeFinish");
         yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        StartCoroutine(GameOverWait());
+
+        Debug.Log("count: " + NetworkManager.ConnectedClients.Count);
+
+        if (NetworkManager.ConnectedClients.Count == leaderboardController.numOfPlayerKarts)
+        {
+            LeaderboardController.instance.leaderboard.SetActive(true);
+            Debug.Log("done");
+            StartCoroutine(GameOverWait());
+        }
+        
     }
 }

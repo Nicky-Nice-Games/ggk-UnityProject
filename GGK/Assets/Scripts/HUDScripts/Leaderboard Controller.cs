@@ -18,6 +18,8 @@ public class LeaderboardController : NetworkBehaviour
     public float curTime;
     public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
 
+    public int numOfPlayerKarts = 0;
+
 
     private void Awake()
     {
@@ -54,6 +56,7 @@ public class LeaderboardController : NetworkBehaviour
         {
             networkTime.OnValueChanged += OnTimeChange;
         }
+        
     }
 
     public void ToggleLeaderBoard()
@@ -75,12 +78,29 @@ public class LeaderboardController : NetworkBehaviour
             finishedKarts.Add(kart);
         }
 
+        //if multiplayer, figure out number of clients +1, for each player kart, ++ until matches # of clients(+1)
 
+        //if (kart.GetComponent<NEWDriver>() != null)
+        //{
+        //leaderboard.SetActive(true);
 
-        if (kart.GetComponent<NPCDriver>() == null)
+        if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
         {
-            leaderboard.SetActive(true);
+            numOfPlayerKarts++;
+            Debug.Log("Player kart added, total: " + numOfPlayerKarts);
         }
+
+        //if (IsClient || IsServer)
+        //{
+        //    numOfPlayerKarts++;
+        //    Debug.Log("Player kart added, total: " + numOfPlayerKarts);
+        //}
+        //else if (kart.GetComponent<NEWDriver>() != null)
+        //{
+        //    numOfPlayerKarts = 1;
+        //}
+
+        //}
 
 
         // Sort by actual finish time
