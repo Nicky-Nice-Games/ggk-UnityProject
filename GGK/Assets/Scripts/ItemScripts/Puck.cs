@@ -20,24 +20,6 @@ public class Puck : BaseItem
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-
-        // The puck spawns 15 units in front of the kart
-        transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                        transform.position.y,
-                        transform.position.z + transform.forward.z * 5f);
-
-        // The speed of the puck times 200
-        // Keeps the player from hitting it during use regardless of speed
-        direction = transform.forward * 200.0f;
-
-        bounceCount = 0;
-
-        useCount = 1;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -103,6 +85,21 @@ public class Puck : BaseItem
                     useCount = 1;
                     break;
             }
+        }
+        else
+        {
+            // The puck spawns 15 units in front of the kart
+            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+                            transform.position.y,
+                            transform.position.z + transform.forward.z * 5f);
+
+            // The speed of the puck times 200
+            // Keeps the player from hitting it during use regardless of speed
+            direction = transform.forward * 200.0f;
+
+            bounceCount = 0;
+
+            useCount = 1;
         }
     }
 

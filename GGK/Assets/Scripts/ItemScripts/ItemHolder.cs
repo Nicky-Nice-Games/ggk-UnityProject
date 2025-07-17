@@ -248,7 +248,7 @@ public class ItemHolder : NetworkBehaviour
             }
             else if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                SpawnItemServerRpc();
+                SpawnItemRpc();
             }
 
             //soundPlayer.PlayOneShot(throwSound);
@@ -886,8 +886,8 @@ public class ItemHolder : NetworkBehaviour
         driver.boosted = false;
     }
 
-    [ServerRpc(RequireOwnership = true)]
-    private void SpawnItemServerRpc()
+    [Rpc(SendTo.Server, RequireOwnership = true)]
+    private void SpawnItemRpc()
     {
         if (heldItem.ItemCategory == "Puck")
         {
