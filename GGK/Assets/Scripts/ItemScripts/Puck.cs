@@ -20,6 +20,11 @@ public class Puck : BaseItem
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
 
+    private void Awake()
+    {
+        Debug.Log("This was called.");
+    }
+
     public override void OnNetworkSpawn()
     {
         // The puck spawns 15 units in front of the kart
