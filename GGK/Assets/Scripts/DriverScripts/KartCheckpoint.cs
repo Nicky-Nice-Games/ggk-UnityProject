@@ -126,7 +126,7 @@ public class KartCheckpoint : NetworkBehaviour
 
                 if (lap == totalLaps)
                 {
-                    finishTime = FindAnyObjectByType<LeaderboardController>().networkTime.Value;
+                    finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
                     StartCoroutine(FinalizeFinish());
                 }
             }
