@@ -253,19 +253,7 @@ public class ItemHolder : NetworkBehaviour
 
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                if (IsHost)
-                {
-                    Debug.Log("Youre the HOST.");
-                }
-                if (IsServer)
-                {
-                    Debug.Log("Youre the SERVER");
-                }
-                if (IsClient)
-                {
-                    Debug.Log("Youre the CLIENT.");
-                }
-                if (!IsClient)
+                if (NetworkManager.Singleton.IsHost)
                 {
                     //soundPlayer.PlayOneShot(throwSound);
                     item.gameObject.SetActive(true);

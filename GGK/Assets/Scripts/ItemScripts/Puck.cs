@@ -110,13 +110,18 @@ public class Puck : BaseItem
         // Acts as stronger gravity to bring the puck down
         rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
 
-        if (IsClient)
+        if (!IsSpawned)
         {
-            transform.position = currentPos.Value;
+            return;
+        }
+
+        if (NetworkManager.Singleton.IsHost)
+        {
+            currentPos.Value = transform.position;
         }
         else
         {
-            currentPos.Value = transform.position;
+            transform.position = currentPos.Value;
         }
     }
 
