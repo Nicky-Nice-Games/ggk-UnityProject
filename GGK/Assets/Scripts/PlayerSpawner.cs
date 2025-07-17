@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerSpawner : NetworkBehaviour
@@ -8,6 +10,7 @@ public class PlayerSpawner : NetworkBehaviour
     // prefab to be spawned
     [SerializeField] private Transform playerKartPrefab;
     [SerializeField] private Transform npcKartPrefab;
+    [SerializeField] private Transform multiplayerNPC;
 
     [SerializeField] private Transform spawnPointParent;
     [SerializeField] private List<Transform> spawnPoints;
@@ -36,6 +39,8 @@ public class PlayerSpawner : NetworkBehaviour
             while (spawnedKartCount < 8)
             {
                 kartObject = Instantiate(npcKartPrefab);
+                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
+                
                 kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 spawnedKartCount++;
             }
@@ -69,7 +74,8 @@ public class PlayerSpawner : NetworkBehaviour
         }
         
         while(spawnedKartCount < 8){
-            Transform kartObject = Instantiate(npcKartPrefab);
+            Debug.Log("Spawning NPC");
+            Transform kartObject = Instantiate(multiplayerNPC);
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
             kartNetworkObject.Spawn();

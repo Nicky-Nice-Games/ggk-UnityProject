@@ -255,8 +255,12 @@ public class NEWDriver : NetworkBehaviour
         {
             // PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
         }
-        MiniMapHud.instance.AddKart(gameObject);
         PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+        
+        Debug.Log("Before");
+        MiniMapHud.instance.AddKart(gameObject);
+        Debug.Log("After");
+
     }
 
     public void StopParticles()

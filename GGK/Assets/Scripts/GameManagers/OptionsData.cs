@@ -13,11 +13,15 @@ public class OptionsData : MonoBehaviour
     private GameManager gameManager;
     public GameManager GameManager { get { return gameManager; } }
 
-    // Data
+    // Volume Data
     public float masterVolume = 100;
     public float dialougeVolume = 100;
     public float sfxVolume = 100;
     public float musicVolume = 100;
+
+    // Resolution Data
+    public bool IsFullScreen = true;
+    public Vector2 resolution;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +30,13 @@ public class OptionsData : MonoBehaviour
 
         SceneManager.sceneLoaded += ConnectOptions;
         ConnectOptions();
+
+        // Force full screen max resolution because certain settings are saved even if you closed the application)
+        // Resolution cannot go beyond your display resolution so I took the numbers of the largest computer resolution,
+        // but setting them to any sufficiently large numbers is fine
+        resolution.x = 3840;
+        resolution.y = 2160;
+        Screen.SetResolution((int)resolution.x, (int)resolution.y, IsFullScreen);
     }
 
     // Options methods
