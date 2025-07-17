@@ -251,6 +251,11 @@ public class ItemHolder : NetworkBehaviour
                 SpawnItemRpc();
             }
 
+            if (IsClient)
+            {
+                item = Instantiate(heldItem, transform.position, transform.rotation);
+            }
+
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
             item.Kart = this;
