@@ -251,44 +251,57 @@ public class ItemHolder : NetworkBehaviour
                 SpawnItemRpc();
             }
 
-            if (MultiplayerManager.Instance.IsMultiplayer)
+            //if (MultiplayerManager.Instance.IsMultiplayer)
+            //{
+            //    if (!IsClient)
+            //    {
+            //        //soundPlayer.PlayOneShot(throwSound);
+            //        item.gameObject.SetActive(true);
+            //        item.Kart = this;
+            //        item.ItemTier = heldItem.ItemTier;
+
+            //        if (heldItem.ItemTier > 1)
+            //        {
+            //            item.OnLevelUp(item.ItemTier);
+            //        }
+
+            //        uses--; // Decrease after successful use
+            //        Debug.Log(item.ItemTier);
+            //    }
+            //    else
+            //    {
+            //        heldItem = null;
+            //        holdingItem = false;
+            //        itemDisplay.texture = defaultItemDisplay;
+            //    }
+            //}
+            //else
+            //{
+            //    //soundPlayer.PlayOneShot(throwSound);
+            //    item.gameObject.SetActive(true);
+            //    item.Kart = this;
+            //    item.ItemTier = heldItem.ItemTier;
+
+            //    if (heldItem.ItemTier > 1)
+            //    {
+            //        item.OnLevelUp(item.ItemTier);
+            //    }
+
+            //    uses--; // Decrease after successful use
+            //}
+
+            //soundPlayer.PlayOneShot(throwSound);
+            item.gameObject.SetActive(true);
+            item.Kart = this;
+            item.ItemTier = heldItem.ItemTier;
+
+            if (heldItem.ItemTier > 1)
             {
-                if (!IsClient)
-                {
-                    //soundPlayer.PlayOneShot(throwSound);
-                    item.gameObject.SetActive(true);
-                    item.Kart = this;
-                    item.ItemTier = heldItem.ItemTier;
-
-                    if (heldItem.ItemTier > 1)
-                    {
-                        item.OnLevelUp(item.ItemTier);
-                    }
-
-                    uses--; // Decrease after successful use
-                    Debug.Log(item.ItemTier);
-                }
-                else
-                {
-                    heldItem = null;
-                    holdingItem = false;
-                    itemDisplay.texture = defaultItemDisplay;
-                }
+                item.OnLevelUp(item.ItemTier);
             }
-            else
-            {
-                //soundPlayer.PlayOneShot(throwSound);
-                item.gameObject.SetActive(true);
-                item.Kart = this;
-                item.ItemTier = heldItem.ItemTier;
 
-                if (heldItem.ItemTier > 1)
-                {
-                    item.OnLevelUp(item.ItemTier);
-                }
-
-                uses--; // Decrease after successful use
-            }
+            uses--; // Decrease after successful use
+            Debug.Log(item.ItemTier);
         }
     }
 
