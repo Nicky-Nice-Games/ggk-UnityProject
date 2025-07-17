@@ -59,13 +59,13 @@ public class TrapItem : BaseItem
             return;
         }
 
-        if (IsServer)
-        {
-            currentPos.Value = transform.position;
-        }
-        else if (IsClient)
+        if (IsClient)
         {
             transform.position = currentPos.Value;
+        }
+        else
+        {   
+            currentPos.Value = transform.position;
         }
     }
 
