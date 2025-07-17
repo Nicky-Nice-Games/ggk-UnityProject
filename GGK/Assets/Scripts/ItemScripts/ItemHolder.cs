@@ -889,7 +889,17 @@ public class ItemHolder : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = true)]
     private void SpawnItemRpc()
     {
-        item = Instantiate(heldItem, transform.position, transform.rotation);
+        if (heldItem.ItemCategory == "Puck")
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x + transform.forward.x * 5f,
+                        transform.position.y,
+                        transform.position.z + transform.forward.z * 5f);
+            item = Instantiate(heldItem, spawnPos, transform.rotation);
+        }
+        else
+        {
+            item = Instantiate(heldItem, transform.position, transform.rotation);
+        }
         NetworkObject netItem = item.GetComponent<NetworkObject>();
         
         netItem.Spawn();
