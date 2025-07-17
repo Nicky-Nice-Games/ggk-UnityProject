@@ -151,7 +151,7 @@ public class KartCheckpoint : NetworkBehaviour
         Debug.Log("count: " + NetworkManager.ConnectedClients.Count);
 
         if (NetworkManager.ConnectedClients.Count == leaderboardController.numOfPlayerKarts)
-        {
+        {            
             LeaderboardController.instance.leaderboard.SetActive(true);
             Debug.Log("done");
             StartCoroutine(GameOverWait());

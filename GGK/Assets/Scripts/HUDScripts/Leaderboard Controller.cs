@@ -19,6 +19,8 @@ public class LeaderboardController : NetworkBehaviour
     public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
 
     public int numOfPlayerKarts = 0;
+    public NetworkVariable<bool> allKartsFinished = new NetworkVariable<bool>(false);
+    public List<KartCheckpoint> finishedPlayerKarts = new List<KartCheckpoint>();
 
 
     private void Awake()
@@ -88,6 +90,15 @@ public class LeaderboardController : NetworkBehaviour
         {
             numOfPlayerKarts++;
             Debug.Log("Player kart added, total: " + numOfPlayerKarts);
+            if (!finishedPlayerKarts.Contains(kart))
+            {
+                finishedPlayerKarts.Add(kart);
+            }
+        }
+
+        if(NetworkManager.ConnectedClients.Count == numOfPlayerKarts)
+        {
+            leaderboard.SetActive(true);
         }
 
         //if (IsClient || IsServer)
