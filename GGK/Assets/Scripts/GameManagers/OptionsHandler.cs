@@ -30,6 +30,8 @@ public class OptionsHandler : MonoBehaviour
     public TMP_InputField widthInputField;
     public TMP_InputField heightInputField;
 
+    private bool initalizing;
+
     private void Update()
     {
         // Updates resolution text fields when resolution changes
@@ -58,6 +60,8 @@ public class OptionsHandler : MonoBehaviour
     // Initialize saved values from OptionsData
     public void SetOptions()
     {
+        initalizing = true;
+
         masterVolumeSlider.value = optionsData.masterVolume;
         masterVolumeValue.text = optionsData.masterVolume.ToString();
 
@@ -85,6 +89,8 @@ public class OptionsHandler : MonoBehaviour
         optionsData.resolution.y = Screen.height;
         widthInputField.text = optionsData.resolution.x.ToString();
         heightInputField.text = optionsData.resolution.y.ToString();
+
+        initalizing = false;
     }
 
     // Methods to attach to options panel interactables
@@ -110,6 +116,8 @@ public class OptionsHandler : MonoBehaviour
     }
     public void FullScreenChange()
     {
+        if (initalizing) return;
+
         if (optionsData.IsFullScreen)
         {
             optionsData.IsFullScreen = false;

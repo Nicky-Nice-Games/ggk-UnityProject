@@ -188,6 +188,11 @@ public class MultiplayerManager : NetworkBehaviour
 
     private void FindTimer()
     {
+        // set run timer false when entering new scene
+        runKartSelectionTimer = false;
+        runMapSelectionTimer = false;
+
+        // If in PlayerKartScene set timer to kartSelectionTimerMax and make it run
         if (SceneManager.GetActiveScene().name == "PlayerKartScene")
         {
             timer = GameObject.Find("Timer");
@@ -207,6 +212,7 @@ public class MultiplayerManager : NetworkBehaviour
                 timer.SetActive(false);
             }
         }
+        // If in MapSelectScene set timer to mapSelectionTimerMax and make it run
         else if (SceneManager.GetActiveScene().name == "MapSelectScene")
         {
             timer = GameObject.Find("Timer");
