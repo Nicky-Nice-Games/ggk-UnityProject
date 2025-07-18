@@ -43,6 +43,11 @@ public class TrapItem : BaseItem
         {
             Vector3 behindPos = transform.position - transform.forward * 6;
             transform.position = behindPos;
+
+            if (IsServer)
+            {
+                currentPos.Value = transform.position;
+            }
         }
     }
 

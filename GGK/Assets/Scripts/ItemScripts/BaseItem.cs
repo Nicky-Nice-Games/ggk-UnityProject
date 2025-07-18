@@ -44,7 +44,7 @@ public class BaseItem : NetworkBehaviour
 
     public string ItemCategory { get { return itemCategory; } set { itemCategory = value; } }
 
-    public NetworkVariable<Vector3> currentPos;
+    public NetworkVariable<Vector3> currentPos = new NetworkVariable<Vector3>();
 
 
     /// <summary>

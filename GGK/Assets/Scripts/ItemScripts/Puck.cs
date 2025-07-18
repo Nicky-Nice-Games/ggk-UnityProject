@@ -101,7 +101,10 @@ public class Puck : BaseItem
 
             useCount = 1;
 
-            currentPos = new NetworkVariable<Vector3>(transform.position);
+            if (IsServer)
+            {
+                currentPos.Value = transform.position; 
+            }
         }
     }
 
