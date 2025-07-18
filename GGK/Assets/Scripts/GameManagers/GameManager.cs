@@ -31,6 +31,7 @@ public class GameManager : NetworkBehaviour
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
     public PlayerInfo playerInfo;
+    public PostGameManager postGameManager;
     private APIManager apiManager;
 
     //the first button that should be selected should a controller need input
@@ -56,6 +57,7 @@ public class GameManager : NetworkBehaviour
     {
         curState = GameStates.start;
         apiManager = thisManagerObjInstance.GetComponent<APIManager>();
+        postGameManager = thisManagerObjInstance.GetComponent<PostGameManager>();
 
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
