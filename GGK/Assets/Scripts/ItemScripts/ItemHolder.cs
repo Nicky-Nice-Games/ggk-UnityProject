@@ -247,10 +247,11 @@ public class ItemHolder : NetworkBehaviour
 
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
+                item.gameObject.SetActive(true);
                 if (NetworkManager.Singleton.IsHost)
                 {
                     //soundPlayer.PlayOneShot(throwSound);
-                    item.gameObject.SetActive(true);
+                    
                     item.Kart = this;
                     item.ItemTier = heldItem.ItemTier;
 
