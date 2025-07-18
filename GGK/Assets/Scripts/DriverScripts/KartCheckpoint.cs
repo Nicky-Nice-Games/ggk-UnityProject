@@ -148,7 +148,9 @@ public class KartCheckpoint : NetworkBehaviour
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
 
-        if (LeaderboardController.instance.allPlayerKartsFinished.Value)
+        Debug.Log("count: " + NetworkManager.ConnectedClients.Count);
+
+        if (NetworkManager.ConnectedClients.Count == leaderboardController.numOfPlayerKarts)
         {            
             LeaderboardController.instance.leaderboard.SetActive(true);
             Debug.Log("done");
