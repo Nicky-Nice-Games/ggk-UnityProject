@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// MultiplayerManager class by Phillip Brown
@@ -17,6 +20,7 @@ public class MultiplayerManager : NetworkBehaviour
     public bool IsMultiplayer { get; set; }
 
     public PlayerData playerData { get; set; }
+
     /// <summary>
     /// Current Gamemode
     /// </summary>
@@ -32,7 +36,6 @@ public class MultiplayerManager : NetworkBehaviour
     private Dictionary<ulong, Map> playerMapSelections = new Dictionary<ulong, Map>();
     public Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
 
-
     // timer variables for kart select and map select scenes
     [SerializeField] private const float kartSelectionTimerMax = 30f;
     private float kartSelectionTimer = 30f;
@@ -40,6 +43,11 @@ public class MultiplayerManager : NetworkBehaviour
     [SerializeField] private const float mapSelectionTimerMax = 60f;
     private float mapSelectionTimer = 60f;
     [SerializeField] private bool runMapSelectionTimer = false;
+
+    // timer visual
+    private GameObject timer;
+    private TextMeshProUGUI countdown;
+    private Image fill;
 
     private System.Random random = new System.Random();
 
@@ -68,6 +76,7 @@ public class MultiplayerManager : NetworkBehaviour
     {
         gamemode.OnValueChanged += OnGamemodeChanged;
         selectedMap.OnValueChanged += OnMapSelected;
+        SceneManager.sceneLoaded += FindTimer;
     }
 
     public override void OnNetworkSpawn()
@@ -126,6 +135,9 @@ public class MultiplayerManager : NetworkBehaviour
         if (runKartSelectionTimer)
         {
             kartSelectionTimer -= Time.deltaTime;
+            countdown.text = ((int)kartSelectionTimer).ToString();
+            fill.fillAmount = kartSelectionTimer / kartSelectionTimerMax;
+
             if (kartSelectionTimer <= 0f)
             {
                 runKartSelectionTimer = false;
@@ -135,6 +147,8 @@ public class MultiplayerManager : NetworkBehaviour
         if (runMapSelectionTimer)
         {
             mapSelectionTimer -= Time.deltaTime;
+            countdown.text = ((int)mapSelectionTimer).ToString();
+            fill.fillAmount = mapSelectionTimer / mapSelectionTimerMax;
             if (mapSelectionTimer <= 0f)
             {
                 runMapSelectionTimer = false;
@@ -157,13 +171,70 @@ public class MultiplayerManager : NetworkBehaviour
     {
         // if the client hasnt made a choice
         // force pick the option they were hovering
+        ForcePlayerKartSelectRpc();
     }
 
     private void OnMapSelectionTimerEnd()
     {
         // if the client doesnt have a map vote casted
         // force pick the map they are hovering
+        ForceVoteMapRpc();
     }
+
+    private void FindTimer(Scene s, LoadSceneMode l)
+    {
+        FindTimer();
+    }
+
+    private void FindTimer()
+    {
+        // set run timer false when entering new scene
+        runKartSelectionTimer = false;
+        runMapSelectionTimer = false;
+
+        // If in PlayerKartScene set timer to kartSelectionTimerMax and make it run
+        if (SceneManager.GetActiveScene().name == "PlayerKartScene")
+        {
+            timer = GameObject.Find("Timer");
+
+            if (IsMultiplayer)
+            {
+                countdown = timer.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                fill = timer.transform.GetChild(2).GetComponent<Image>();
+                
+                runKartSelectionTimer = true;
+                kartSelectionTimer = kartSelectionTimerMax;
+                countdown.text = kartSelectionTimerMax.ToString();
+                fill.fillAmount = 1;
+            }
+            else
+            {
+                timer.SetActive(false);
+            }
+        }
+        // If in MapSelectScene set timer to mapSelectionTimerMax and make it run
+        else if (SceneManager.GetActiveScene().name == "MapSelectScene")
+        {
+            timer = GameObject.Find("Timer");
+
+            if (IsMultiplayer)
+            {
+                countdown = timer.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                fill = timer.transform.GetChild(2).GetComponent<Image>();
+
+                runMapSelectionTimer = true;
+                mapSelectionTimer = mapSelectionTimerMax;
+                countdown.text = mapSelectionTimerMax.ToString();
+                fill.fillAmount = 1;
+            }
+            else
+            {
+                timer.SetActive(false);
+            }
+        }
+    }
+
+
     #endregion
 
     #region kart selection
@@ -177,6 +248,7 @@ public class MultiplayerManager : NetworkBehaviour
         PlayerData player = players[senderClientId];
         //player.PlayerCharacter = playerCharacter;
         player.CharacterColor = characterColor;
+        player.CharacterName = characterName; //DELETE IF NOT WORKY
         players[senderClientId] = player;
         Debug.Log($"Client {senderClientId} chose {characterName} in color {characterColor}");
 
@@ -201,6 +273,7 @@ public class MultiplayerManager : NetworkBehaviour
     public void ForcePlayerKartSelectRpc()
     {
         // Auto picks the kart they are hovering
+        PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor); // Most recently selected character and color for now
     }
     #endregion
 
