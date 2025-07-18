@@ -171,7 +171,14 @@ public class Puck : BaseItem
             // Destroys puck if it bounced enough times
             if (bounceCount == maxBounces + 1)
             {
-                Destroy(this.gameObject);
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                {
+                    this.NetworkObject.Despawn();
+                }
             }
         }
 
@@ -230,13 +237,27 @@ public class Puck : BaseItem
                 {
                     if (collision.transform.root.gameObject == kartTarget)
                     {
-                        Destroy(this.gameObject);
+                        if (!MultiplayerManager.Instance.IsMultiplayer)
+                        {
+                            Destroy(this.gameObject);
+                        }
+                        else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                        {
+                            this.NetworkObject.Despawn();
+                        }
                     }
                 }
                 // Otherwise destroys puck regardless of kart hit
                 else
                 {
-                    Destroy(this.gameObject);
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                    {
+                        this.NetworkObject.Despawn();
+                    }
                 }
             }
         }
@@ -247,7 +268,14 @@ public class Puck : BaseItem
             if (collision.gameObject.GetComponent<Puck>().itemTier != 4)
             {
                 Destroy(collision.gameObject);
-                Destroy(this.gameObject);
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                {
+                    this.NetworkObject.Despawn();
+                }
             }
         }
 
@@ -259,7 +287,14 @@ public class Puck : BaseItem
         if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
         {
             Destroy(other.gameObject);
-            Destroy(this.gameObject);
+            if (!MultiplayerManager.Instance.IsMultiplayer)
+            {
+                Destroy(this.gameObject);
+            }
+            else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+            {
+                this.NetworkObject.Despawn();
+            }
         }
     }
 
