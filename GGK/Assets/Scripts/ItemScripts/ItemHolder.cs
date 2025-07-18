@@ -81,15 +81,9 @@ public class ItemHolder : NetworkBehaviour
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
 
-    public NetworkVariable<int> networkItemTier;
-
     // Start is called before the first frame update
     void Start()
     {
-        if (MultiplayerManager.Instance.IsMultiplayer)
-        {
-            networkItemTier = new NetworkVariable<int>(1);
-        }
 
         if (thisDriver)
         {
