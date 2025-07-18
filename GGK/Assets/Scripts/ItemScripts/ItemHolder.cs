@@ -247,7 +247,10 @@ public class ItemHolder : NetworkBehaviour
 
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                item.gameObject.SetActive(true);
+                if (item != null)
+                {
+                    item.gameObject.SetActive(true);
+                }
                 if (NetworkManager.Singleton.IsHost)
                 {
                     //soundPlayer.PlayOneShot(throwSound);
