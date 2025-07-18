@@ -114,12 +114,12 @@ public class Puck : BaseItem
         {
             return;
         }
-
+        
         if (NetworkManager.Singleton.IsHost)
         {
             currentPos.Value = transform.position;
         }
-        else
+        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
         {
             transform.position = currentPos.Value;
         }

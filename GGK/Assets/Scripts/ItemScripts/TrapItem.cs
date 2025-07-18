@@ -59,11 +59,11 @@ public class TrapItem : BaseItem
             return;
         }
 
-        if (IsHost)
+        if (NetworkManager.IsHost)
         {
             currentPos.Value = transform.position;
         }
-        else
+        else if (NetworkManager.IsClient && !NetworkManager.IsHost)
         {
             transform.position = currentPos.Value;
         }
