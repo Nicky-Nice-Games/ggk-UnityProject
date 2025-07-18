@@ -247,27 +247,16 @@ public class ItemHolder : NetworkBehaviour
 
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                if (NetworkManager.Singleton.IsHost)
-                {
-                    //soundPlayer.PlayOneShot(throwSound);
+                //if (NetworkManager.Singleton.IsHost)
+                //{
                     
-                    item.Kart = this;
-                    item.ItemTier = heldItem.ItemTier;
-
-                    if (heldItem.ItemTier > 1)
-                    {
-                        item.OnLevelUp(item.ItemTier);
-                    }
-
-                    uses--; // Decrease after successful use
-                    Debug.Log(item.ItemTier);
-                }
-                else
-                {
-                    heldItem = null;
-                    holdingItem = false;
-                    itemDisplay.texture = defaultItemDisplay;
-                }
+                //}
+                //else
+                //{
+                //    heldItem = null;
+                //    holdingItem = false;
+                //    itemDisplay.texture = defaultItemDisplay;
+                //}
             }
             else
             {
@@ -909,6 +898,19 @@ public class ItemHolder : NetworkBehaviour
     {
         item = Instantiate(heldItem, transform.position, transform.rotation);
         item.gameObject.SetActive(true);
+        //soundPlayer.PlayOneShot(throwSound);
+
+        item.Kart = this;
+        item.ItemTier = heldItem.ItemTier;
+
+        if (heldItem.ItemTier > 1)
+        {
+            item.OnLevelUp(item.ItemTier);
+        }
+
+        uses--; // Decrease after successful use
+        Debug.Log(item.ItemTier);
+
         NetworkObject netItem = item.GetComponent<NetworkObject>();
         
         netItem.Spawn();
