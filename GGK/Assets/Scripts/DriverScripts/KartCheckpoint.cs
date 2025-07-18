@@ -148,6 +148,8 @@ public class KartCheckpoint : NetworkBehaviour
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
 
+        Debug.Log("count: " + NetworkManager.ConnectedClients.Count);
+
         if (LeaderboardController.instance.allPlayerKartsFinished.Value)
         {            
             LeaderboardController.instance.leaderboard.SetActive(true);
