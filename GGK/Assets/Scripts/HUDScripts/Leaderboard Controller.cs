@@ -19,7 +19,7 @@ public class LeaderboardController : NetworkBehaviour
     public NetworkVariable<float> networkTime = new NetworkVariable<float>(0);
 
     public int numOfPlayerKarts = 0;
-    public NetworkVariable<bool> allKartsFinished = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> allPlayerKartsFinished = new NetworkVariable<bool>(false);
     public List<KartCheckpoint> finishedPlayerKarts = new List<KartCheckpoint>();
 
 
@@ -30,13 +30,14 @@ public class LeaderboardController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        // If server, update networkTme
         if (IsServer)
         {
+            // If server, update networkTme
             curTime += Time.deltaTime;
             networkTime.Value = curTime;
-            Debug.Log(networkTime.Value);
+            //Debug.Log(networkTime.Value);
+            //updating if all karts are finished
+            allPlayerKartsFinished.Value = NetworkManager.ConnectedClients.Count == numOfPlayerKarts;
         }
         // Otherwise, update single player time
         else if (!IsSpawned)
@@ -57,8 +58,14 @@ public class LeaderboardController : NetworkBehaviour
         if (IsClient)
         {
             networkTime.OnValueChanged += OnTimeChange;
+            allPlayerKartsFinished.OnValueChanged += OnPlayersFinished;
         }
         
+    }
+
+    private void OnPlayersFinished(bool previousValue, bool newValue)
+    {
+        leaderboard.SetActive(true);
     }
 
     public void ToggleLeaderBoard()
@@ -96,10 +103,10 @@ public class LeaderboardController : NetworkBehaviour
             }
         }
 
-        if(NetworkManager.ConnectedClients.Count == numOfPlayerKarts)
-        {
-            leaderboard.SetActive(true);
-        }
+        // if(allPlayerKartsFinished.Value)
+        // {
+        //     leaderboard.SetActive(true);
+        // }
 
         //if (IsClient || IsServer)
         //{
@@ -129,7 +136,7 @@ public class LeaderboardController : NetworkBehaviour
             KartCheckpoint k = finishedKarts[i];
             k.placement = i + 1;
 
-            if (!IsSpawned)
+            if (!IsSpawned) // single player
             {
                 GameObject tempItem = Instantiate(leaderboardItem);
                 TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
@@ -183,6 +190,7 @@ public class LeaderboardController : NetworkBehaviour
 
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
+        Debug.Log("added card to leaderboard");
     }
 
     public struct LeaderboardDisplayCard : INetworkSerializable
