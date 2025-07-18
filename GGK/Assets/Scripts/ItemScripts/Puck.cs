@@ -16,6 +16,7 @@ public class Puck : BaseItem
     private bool goStraight;                       // If the puck goes straight
     private bool isTrackingFirst;                  // If the puck should track to first
     public GameObject[] karts;
+    private float startTimer = 0;
 
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
@@ -110,6 +111,8 @@ public class Puck : BaseItem
 
     void Update()
     {
+        startTimer += Time.deltaTime;
+
         // Acts as stronger gravity to bring the puck down
         rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
 
@@ -199,40 +202,42 @@ public class Puck : BaseItem
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
-
-            // Detects if puck hit an NPC or player
-            NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
-            NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
-
-            // Stops player
-            if (playerKart)
+            if (startTimer >= 1.0f)
             {
-                playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
-                playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
-                Debug.Log(collision.transform.root.GetChild(0).gameObject);
-            }
-            // Stops NPC and starts recovery
-            else if (npcKart)
-            {
-                npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                npcKart.StartRecovery();
-                collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
-            }
+                // Detects if puck hit an NPC or player
+                NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
+                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
-            // Destroys puck only if it is tier 4 and it hits the first
-            // place kart
-            if (isTrackingFirst)
-            {
-                if (collision.transform.root.gameObject == kartTarget)
+                // Stops player
+                if (playerKart)
+                {
+                    playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
+                    playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                    collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    Debug.Log(collision.transform.root.GetChild(0).gameObject);
+                }
+                // Stops NPC and starts recovery
+                else if (npcKart)
+                {
+                    npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                    npcKart.StartRecovery();
+                    collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
+                }
+
+                // Destroys puck only if it is tier 4 and it hits the first
+                // place kart
+                if (isTrackingFirst)
+                {
+                    if (collision.transform.root.gameObject == kartTarget)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                }
+                // Otherwise destroys puck regardless of kart hit
+                else
                 {
                     Destroy(this.gameObject);
                 }
-            }
-            // Otherwise destroys puck regardless of kart hit
-            else
-            {
-                Destroy(this.gameObject);
             }
         }
         // Pucks can destroy other pucks
