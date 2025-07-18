@@ -247,10 +247,6 @@ public class ItemHolder : NetworkBehaviour
 
             if (MultiplayerManager.Instance.IsMultiplayer)
             {
-                if (item != null)
-                {
-                    item.gameObject.SetActive(true);
-                }
                 if (NetworkManager.Singleton.IsHost)
                 {
                     //soundPlayer.PlayOneShot(throwSound);
@@ -912,7 +908,7 @@ public class ItemHolder : NetworkBehaviour
     private void SpawnItemRpc()
     {
         item = Instantiate(heldItem, transform.position, transform.rotation);
-        
+        item.gameObject.SetActive(true);
         NetworkObject netItem = item.GetComponent<NetworkObject>();
         
         netItem.Spawn();
