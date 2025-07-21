@@ -153,11 +153,13 @@ public class VirtualKeyboardController : MonoBehaviour
             signInScript.SetPlayerLoginData(inputField[curField].name, curText);
             curText = "";
 
+            /*
             if(curField == inputField.Count -1)
             {
                 gameManager.LoggedIn();
                 return;
             }
+            */
             curField++;
         }
 

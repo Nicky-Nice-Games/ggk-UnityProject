@@ -82,7 +82,8 @@ public class SignInManager : MonoBehaviour
 
                 case "Password Login":
                     playerInfo.playerPassword = data;
-                    break;
+                    gameManager.LoggedIn();
+                    return;
 
                 default:
                     break;
@@ -107,7 +108,8 @@ public class SignInManager : MonoBehaviour
 
                 case "Confirm Password":
                     // TODO: Add functionality to validate password
-                    break;
+                    gameManager.LoggedIn();
+                    return;
 
                 default:
                     break;
@@ -140,6 +142,7 @@ public class SignInManager : MonoBehaviour
         keyboard.inputField.Add(inputFields["Email Sign Up"]);
         keyboard.inputField.Add(inputFields["Username Sign Up"]);
         keyboard.inputField.Add(inputFields["Password Sign Up"]);
+        keyboard.inputField.Add(inputFields["Confirm Password"]);
     }
 
     /// <summary>
