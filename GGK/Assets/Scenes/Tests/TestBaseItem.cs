@@ -7,11 +7,11 @@ using UnityEngine.TestTools;
 
 public class TestBaseItem// : MonoBehaviour 
 {
-    //BaseItem baseItem;
+    BaseItem baseItem;
     [Test]
     public void TestCreateBaseItem()
     {
-        //GameObject baseItem = new GameObject();
-        //baseItem.AddComponent<BaseItem>(); 
+        GameObject baseItem = new GameObject();
+        baseItem.AddComponent<BaseItem>(); 
     }
 }

@@ -92,7 +92,7 @@ public class KartCheckpoint : MonoBehaviour
                 {
                     LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
                     finishTime = leaderboardController.curTime;
-                    leaderboardController.Finished(this);
+                    //leaderboardController.Finished(this); //this has been commented out due to causing an error with the assembly definition references
                     
                     StartCoroutine(GameOverWait());
                 }

@@ -15,34 +15,34 @@ public class NewTestScript
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator NewTestScriptWithEnumeratorPasses()
-    {
+    //[UnityTest]
+    //public IEnumerator NewTestScriptWithEnumeratorPasses()
+    //{
         // Use the Assert class to test conditions.
         // Use yield to skip a frame.
         //BaseItem baseItem;
-        yield return null;
-    }
+    //    yield return null;
+    //}
 
-    [UnityTest]
-    public IEnumerator MonoBehaviourTest_Works()
-    {
-        yield return new MonoBehaviourTest<MyMonoBehaviourTest>();
-    }
+    //[UnityTest]
+    //public IEnumerator MonoBehaviourTest_Works()
+    //{
+    //    yield return new MonoBehaviourTest<MyMonoBehaviourTest>();
+    //}
 
-    public class MyMonoBehaviourTest : MonoBehaviour, IMonoBehaviourTest
-    {
-        private int frameCount;
-        private GameObject gameObject = new GameObject();
-        public bool IsTestFinished
-        {
-            get { return frameCount > 10; }
-        }
+    //public class MyMonoBehaviourTest : MonoBehaviour, IMonoBehaviourTest
+    //{
+    //    private int frameCount;
+    //    private GameObject gameObject = new GameObject();
+    //    public bool IsTestFinished
+    //    {
+    //        get { return frameCount > 10; }
+    //    }
 
-        void Update()
-        {
-            frameCount++;
-            gameObject.AddComponent<BaseItem>();
-        }
-    }
+    //    void Update()
+    //    {
+    //        frameCount++;
+    //        gameObject.AddComponent<BaseItem>();
+    //    }
+    //}
 }

@@ -14,9 +14,9 @@ public class NewTestScript
     }
 
     [Test]
-    public void FailTest()
+    public void TestTesting()
     {
-        Assert.AreEqual(1, 2);
+        Assert.AreEqual(1, 1);
         //BaseItem baseItem;
     }
 

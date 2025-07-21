@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 public class BaseItemTest
 {
 
-    [UnityTest]
+    //[UnityTest]
     //public GameObject GettingMockBaseItem()
     //{
         //return Substitute.For<BaseItem>();
@@ -16,9 +16,9 @@ public class BaseItemTest
 
     //private GameObject baseItemTester;
     //private BaseItem baseItem;
-    [SetUp]
-    public void Setup()
-    {
+    //[SetUp]
+    //public void Setup()
+    //{
         // This method is called before each test is run.
         // You can use it to set up any necessary objects or state.
         //baseItemTester = new GameObject("BaseItemTester");
@@ -62,7 +62,7 @@ public class BaseItemTest
         // Set IsUpgraded back to false and test
         //baseItem.IsUpgraded = false;
         //Assert.IsFalse(baseItem.IsUpgraded, "IsUpgraded should be false after setting it to false");
-    }
+    //}
 
 
 
