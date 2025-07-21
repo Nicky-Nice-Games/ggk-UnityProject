@@ -307,7 +307,7 @@ public class ItemHolder : NetworkBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        //// Checks if kart hits an item box
+        /* Checks if kart hits an item box
         //if (collision.gameObject.CompareTag("ItemBox"))
         //{
         //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
@@ -354,7 +354,7 @@ public class ItemHolder : NetworkBehaviour
         //    // Disables the upgrade box
         //    upgradeBox.gameObject.SetActive(false);
         //    //heldItemText.text = $"Held Item: {baseItem}+";
-        //}
+        //}*/
 
         // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
@@ -379,6 +379,9 @@ public class ItemHolder : NetworkBehaviour
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
+
+                        // new code
+                        Type = ItemType.Puck;
                     }
                     else if (heldItem.ItemCategory == "Puck")
                     {
@@ -389,6 +392,9 @@ public class ItemHolder : NetworkBehaviour
                             heldItem.ItemTier = driverItemTier;
                             heldItem.OnLevelUp(heldItem.ItemTier);
                             uses = heldItem.UseCount;
+
+                            // new code
+                            Tier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -412,6 +418,9 @@ public class ItemHolder : NetworkBehaviour
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
+
+                        // new code
+                        Type = ItemType.Boost;
                     }
                     else if (heldItem.ItemCategory == "Boost")
                     {
@@ -422,6 +431,9 @@ public class ItemHolder : NetworkBehaviour
                             heldItem.ItemTier = driverItemTier;
                             heldItem.OnLevelUp(heldItem.ItemTier);
                             uses = heldItem.UseCount;
+
+                            // new code
+                            Tier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -445,6 +457,9 @@ public class ItemHolder : NetworkBehaviour
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
+
+                        // new code
+                        Type = ItemType.Shield;
                     }
                     else if (heldItem.ItemCategory == "Shield")
                     {
@@ -458,6 +473,9 @@ public class ItemHolder : NetworkBehaviour
                                 heldItem.ItemTier = driverItemTier;
                                 heldItem.OnLevelUp(heldItem.ItemTier);
                                 uses = heldItem.UseCount;
+
+                                // new code
+                                Tier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -482,6 +500,9 @@ public class ItemHolder : NetworkBehaviour
                         {
                             ApplyItemTween(heldItem.itemIcon);
                         }
+
+                        // new code
+                        Type = ItemType.Hazard;
                     }
                     else if (heldItem.ItemCategory == "Hazard")
                     {
@@ -492,12 +513,15 @@ public class ItemHolder : NetworkBehaviour
                             heldItem.ItemTier = driverItemTier;
                             heldItem.OnLevelUp(heldItem.ItemTier);
                             uses = heldItem.UseCount;
+
+                            // new code
+                            Tier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
                         {
                             ApplyItemTween(heldItem.itemIcon);
-                        }
+                        }   
                     }
                     break;
                 case "Upgrade":
@@ -508,6 +532,9 @@ public class ItemHolder : NetworkBehaviour
                         {
                             driverItemTier++;
                         }
+
+                        // new code
+                        Tier++;  
                     }
                     else
                     {
@@ -521,6 +548,9 @@ public class ItemHolder : NetworkBehaviour
                                 heldItem.ItemTier = driverItemTier;
                                 heldItem.OnLevelUp(heldItem.ItemTier);
                                 uses = heldItem.UseCount;
+
+                                // new code
+                                Tier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -537,6 +567,9 @@ public class ItemHolder : NetworkBehaviour
                                 heldItem.ItemTier = driverItemTier;
                                 heldItem.OnLevelUp(heldItem.ItemTier);
                                 uses = heldItem.UseCount;
+
+                                // new code
+                                Tier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -703,7 +736,6 @@ public class ItemHolder : NetworkBehaviour
             ApplyIconSpin(gameObject, 1);
             Destroy(collision.gameObject);
         }
-
     }
 
     //Waits a certain number of seconds then activates the warp boost
@@ -936,7 +968,12 @@ public class ItemHolder : NetworkBehaviour
     [SerializeField] private Transform[] PuckArray ;
 
     private List<Transform[]> ItemArray = new List<Transform[]>();
-    private int Tier = 0;
+    public int Tier
+    {
+        get { return Tier; }
+        set { if (Tier + value > maxTier) Tier = maxTier; }
+    }
+    const int maxTier = 3;
     private ItemType Type = 0;
 
     private void InitItemArray()
