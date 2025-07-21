@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -31,8 +32,8 @@ public class MultiplayerManager : NetworkBehaviour
     /// </summary>
     private NetworkVariable<int> selectedMap = new NetworkVariable<int>(0); // data type should be however we are representing the maps
 
-    private Dictionary<ulong,bool> playerKartSelectionChecks = new Dictionary<ulong, bool>();
-    private Dictionary<ulong,bool> playerMapSelectionChecks = new Dictionary<ulong, bool>();
+    private Dictionary<ulong, bool> playerKartSelectionChecks = new Dictionary<ulong, bool>();
+    private Dictionary<ulong, bool> playerMapSelectionChecks = new Dictionary<ulong, bool>();
     private Dictionary<ulong, Map> playerMapSelections = new Dictionary<ulong, Map>();
     public Dictionary<ulong, PlayerData> players = new Dictionary<ulong, PlayerData>();
 
@@ -48,6 +49,11 @@ public class MultiplayerManager : NetworkBehaviour
     private GameObject timer;
     private TextMeshProUGUI countdown;
     private Image fill;
+
+    // Multiplayer Tracking
+    [SerializeField] GameObject multiplayerPanel;
+    [SerializeField] GameObject playerPanelItemTemplate;
+    private Dictionary<ulong, GameObject> playerPanelItems = new Dictionary<ulong, GameObject>();
 
     private System.Random random = new System.Random();
 
@@ -77,6 +83,8 @@ public class MultiplayerManager : NetworkBehaviour
         gamemode.OnValueChanged += OnGamemodeChanged;
         selectedMap.OnValueChanged += OnMapSelected;
         SceneManager.sceneLoaded += FindTimer;
+        SceneManager.sceneLoaded += SceneTransitionPanelUpdate;
+        multiplayerPanel.SetActive(false);
     }
 
     public override void OnNetworkSpawn()
@@ -106,6 +114,7 @@ public class MultiplayerManager : NetworkBehaviour
         playerKartSelectionChecks.Clear();
         playerMapSelectionChecks.Clear();
         playerMapSelections.Clear();
+        playerPanelItems.Clear();
         players.Clear();
         InitPlayerDataRpc();
         Debug.Log($"number of connected clients {NetworkManager.ConnectedClientsIds.Count}");
@@ -114,6 +123,7 @@ public class MultiplayerManager : NetworkBehaviour
             playerKartSelectionChecks.Add(clientId, false);
             playerMapSelectionChecks.Add(clientId, false);
             playerMapSelections.Add(clientId, Map.RITOuterLoop);
+            AddPlayerToPanelRpc(clientId);
         }
     }
 
@@ -164,6 +174,56 @@ public class MultiplayerManager : NetworkBehaviour
         // transition all players to the kart select scene
         
         Debug.Log(IsHost ? "I chose Race gamemode" : "the Host chose Race gamemode");
+    }
+
+    // player panel stuff
+    [Rpc(SendTo.ClientsAndHost)]
+    private void AddPlayerToPanelRpc(ulong clientId)
+    {
+        GameObject tempPanelItem = Instantiate(playerPanelItemTemplate);
+        tempPanelItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[clientId].PlayerName;
+        if (IsHost)
+        {
+            tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Choosing GameMode";
+        }
+        else
+        {
+            tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Waiting";
+        }
+        tempPanelItem.transform.parent = multiplayerPanel.transform;
+        tempPanelItem.transform.localScale = Vector3.one;
+
+        playerPanelItems[clientId] = tempPanelItem;
+    }
+
+    private void SceneTransitionPanelUpdate(Scene s, LoadSceneMode l)
+    {
+        SceneTransitionPanelUpdate();
+    }
+
+    private void SceneTransitionPanelUpdate()
+    {
+        if (!IsMultiplayer) return;
+
+        /*
+        if (SceneManager.GetActiveScene().name == "GameModeSelectScene" || SceneManager.GetActiveScene().name == "GameOverScene")
+        {
+            multiplayerPanel.SetActive(true);
+        }
+        */
+        if (SceneManager.GetActiveScene().name == "PlayerKartScene" || SceneManager.GetActiveScene().name == "MapSelectScene")
+        {
+            multiplayerPanel.SetActive(true);
+
+            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            {
+                playerPanelItems[clientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Selecting";
+            }
+        }
+        else
+        {
+            multiplayerPanel.SetActive(false);
+        }
     }
 
     #region timer events
@@ -250,6 +310,7 @@ public class MultiplayerManager : NetworkBehaviour
         player.CharacterColor = characterColor;
         player.CharacterName = characterName; //DELETE IF NOT WORKY
         players[senderClientId] = player;
+        playerPanelItems[senderClientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Confirmed";
         Debug.Log($"Client {senderClientId} chose {characterName} in color {characterColor}");
 
         //checking if all players have made a selection
@@ -286,6 +347,7 @@ public class MultiplayerManager : NetworkBehaviour
         Debug.Log($"Rpc called by clientid: {senderClientId}");
         playerMapSelectionChecks[senderClientId] = true;
         playerMapSelections[senderClientId] = map;
+        playerPanelItems[senderClientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = map.ToString();
         if (AllPlayerMapVotesIn())
         {
             // pick random map
