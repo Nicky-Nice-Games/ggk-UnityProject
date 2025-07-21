@@ -18,32 +18,34 @@ public class PostGameManager : NetworkBehaviour
 {
     private Dictionary<ulong, PlayerDecisions> playerDecisions = new();
 
+    // Check if all players have selected to stay or leave
     private bool allSelected = false;
 
     public bool AllSelected {  get { return allSelected; } }
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            // set each player to undecided
-            foreach(var clientId in NetworkManager.Singleton.ConnectedClientsIds.ToList())
-            {
-                playerDecisions.Add(clientId, PlayerDecisions.Undecided);
-            }
-        }
+        MakeClientsList();
     }
 
     private void Update()
     {
+        // reset decisions when the game over scene isn't active
         if (SceneManager.GetActiveScene().name != "GameOverScene")
         {
             ResetDecisions();
         }
+
+        // if the connectedclients count doesn't equal the playerdecisions count, update it
+        if(NetworkManager.Singleton.ConnectedClientsIds.ToList().Count != playerDecisions.Count)
+        {
+            MakeClientsList();
+        }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void EnterDecisionServerRpc(PlayerDecisions decision, ServerRpcParams rpcParams = default)
+    // Stores each players decision and gives the host the ability to proceed when every player makes a decision
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void EnterDecisionRpc(PlayerDecisions decision, RpcParams rpcParams = default)
     {
         ulong clientId = rpcParams.Receive.SenderClientId;
         playerDecisions[clientId] = decision;
@@ -70,6 +72,7 @@ public class PostGameManager : NetworkBehaviour
         return true;
     }
 
+    // If a player decides to leave, disconnect them
     private void ProcessDecisions()
     {
         foreach(var pair in playerDecisions)
@@ -83,6 +86,7 @@ public class PostGameManager : NetworkBehaviour
         }
     }
 
+    // resets all decisions to Undecided so they don't carry over into a second or following race
     private void ResetDecisions()
     {
         foreach (var pair in playerDecisions.ToList())
@@ -90,5 +94,22 @@ public class PostGameManager : NetworkBehaviour
             playerDecisions[pair.Key] = PlayerDecisions.Undecided;
         }
         allSelected = false;
+    }
+
+    // Adds all connected clients to the list for player decisions
+    private void MakeClientsList()
+    {
+        if (IsServer)
+        {
+            // set each player to undecided
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds.ToList())
+            {
+                // check that the key isn't already added from the network spawning
+                if (!playerDecisions.ContainsKey(clientId))
+                {
+                    playerDecisions.Add(clientId, PlayerDecisions.Undecided);
+                }
+            }
+        }
     }
 }

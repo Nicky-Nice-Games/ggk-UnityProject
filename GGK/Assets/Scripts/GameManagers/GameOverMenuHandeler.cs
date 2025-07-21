@@ -115,7 +115,7 @@ public class GameOverMenuHandeler : MonoBehaviour
 
     public void LeaveLobby()
     {
-        postgamemanager.EnterDecisionServerRpc(PlayerDecisions.Leaving);
+        postgamemanager.EnterDecisionRpc(PlayerDecisions.Leaving);
         MultiplayerManager.Instance.IsMultiplayer = false;
         gamemanagerObj.LoggedIn(); // to multisingle select
     }
@@ -126,7 +126,7 @@ public class GameOverMenuHandeler : MonoBehaviour
         stayButton.SetActive(false);
         waiting.gameObject.SetActive(true);
 
-        postgamemanager.EnterDecisionServerRpc(PlayerDecisions.Staying);
+        postgamemanager.EnterDecisionRpc(PlayerDecisions.Staying);
     }
 
     // helper method to get a specific button
