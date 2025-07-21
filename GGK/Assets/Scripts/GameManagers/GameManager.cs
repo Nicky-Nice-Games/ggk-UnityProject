@@ -123,11 +123,15 @@ public class GameManager : MonoBehaviour
     public void MapSelected()
     {
         curState = GameStates.game;
+        MusicStateManager.instance.ResetToLimbo();
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {
             case "RIT Outer Loop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
+                MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
+                MusicLapStateManager.instance.SetLapState(LapState.Lap1);
+                MusicStateManager.instance.SetMusicState(MusicState.OuterLoop);
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");

@@ -37,6 +37,8 @@ public class MusicStateManager : MonoBehaviour
         //AkUnitySoundEngine.PostEvent("Music", gameObject);
         startMusic.Post(gameObject);
         SetMusicState(MusicState.Menu);
+        MusicLapStateManager.instance.SetLapState(LapState.None);
+        MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
     }
 
     public void SetMusicState(MusicState newState)
@@ -65,5 +67,13 @@ public class MusicStateManager : MonoBehaviour
         {
             postRaceState.SetValue();
         }
+    }
+
+    public void ResetToLimbo()
+    {
+        Debug.Log("Limbo");
+        SetMusicState(MusicState.None);
+        MusicLapStateManager.instance.SetLapState(LapState.None);
+        MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
     }
 }

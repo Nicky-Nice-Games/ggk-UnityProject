@@ -45,6 +45,7 @@ public class MusicLapStateManager : MonoBehaviour
         else if (newState == LapState.None)
         {
             noneState.SetValue();
+            Debug.Log("Lap is none");
         }
     }
 }
