@@ -96,10 +96,15 @@ public class LeaderboardController : NetworkBehaviour
         if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
         {
             numOfPlayerKarts++;
-            Debug.Log("Player kart added, total: " + numOfPlayerKarts);
+            Debug.Log("Player kart added, total: " + numOfPlayerKarts); 
             if (!finishedPlayerKarts.Contains(kart))
             {
                 finishedPlayerKarts.Add(kart);
+            }
+            if (!IsSpawned)
+            {
+                leaderboard.SetActive(true);
+                allPlayerKartsFinished.Value = true;
             }
         }
 
