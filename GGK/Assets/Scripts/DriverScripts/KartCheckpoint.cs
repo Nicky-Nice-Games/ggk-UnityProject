@@ -80,7 +80,7 @@ public class KartCheckpoint : NetworkBehaviour
 
         if (passedWithWarp && lap == totalLaps)
         {
-            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
@@ -125,8 +125,9 @@ public class KartCheckpoint : NetworkBehaviour
                 }
 
                 if (lap == totalLaps)
-                {
-                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                {                    
+                    finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -146,12 +147,22 @@ public class KartCheckpoint : NetworkBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Finishes the race once ALL the players finishes the race
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FinalizeFinish()
     {
+        Debug.Log("In FinalizeFinish");
         yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        StartCoroutine(GameOverWait());
+        
+        if (leaderboardController.allPlayerKartsFinished.Value)
+        {            
+            StartCoroutine(GameOverWait());
+        }
     }
 }

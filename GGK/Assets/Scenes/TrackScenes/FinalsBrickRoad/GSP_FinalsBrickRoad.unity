@@ -548,7 +548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &104981044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3394,6 +3394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 604657646}
+  - component: {fileID: 604657647}
   - component: {fileID: 604657645}
   m_Layer: 0
   m_Name: LeaderboardController
@@ -3416,7 +3417,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaderboard: {fileID: 1249502447}
   leaderboardItem: {fileID: 2025370594096732721, guid: 048e9d4df3668cd46b33144720f14e35, type: 3}
+  timeDisplay: {fileID: 1665841046}
   curTime: 0
+  networkTime:
+    m_InternalValue: 0
 --- !u!4 &604657646
 Transform:
   m_ObjectHideFlags: 0
@@ -3432,6 +3436,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &604657647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604657644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3548568757
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &627353657
 GameObject:
   m_ObjectHideFlags: 0
