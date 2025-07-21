@@ -126,6 +126,7 @@ public class ItemHolder : NetworkBehaviour
         // new code 
         // InitItemArray();
         InitItemImageArray();
+        ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
     }
 
     // Update is called once per frame
@@ -151,8 +152,7 @@ public class ItemHolder : NetworkBehaviour
 
         if (holdingItem && item)
         {
-            // for shield
-            if (item.isTimed)
+            if (item.isTimed) // for shield
             {
                 if (item.Timer <= 0.0f)
                 {
@@ -165,9 +165,13 @@ public class ItemHolder : NetworkBehaviour
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
                     driverItemTier = 1;
+
+                    // new code
+                    ItemTier = 0;
+                    Type = ItemType.NoItem;
                 }
             }
-            else if (item.UseCount == 1 && !item.isTimed)
+            else if (item.UseCount == 1 && !item.isTimed) // hazards, lv1,lv3,lv4 puck
             {
                 if (uses == 0)
                 {
@@ -179,9 +183,13 @@ public class ItemHolder : NetworkBehaviour
                     }
                     Destroy(heldItem.gameObject);
                     driverItemTier = 1;
+
+                    // new code
+                    ItemTier = 0;
+                    Type = ItemType.NoItem;
                 }
             }
-            else if (item.UseCount > 1 && item.isTimed)
+            else if (item.UseCount > 1 && item.isTimed) //
             {
                 if (item.Timer <= 0.0f || uses == 0)
                 {
@@ -194,9 +202,13 @@ public class ItemHolder : NetworkBehaviour
                     Destroy(item.gameObject);
                     Destroy(heldItem.gameObject);
                     driverItemTier = 1;
+
+                    // new code
+                    ItemTier = 0;
+                    Type = ItemType.NoItem;
                 }
             }
-            else if (item.UseCount >= 1 && !item.isTimed)
+            else if (item.UseCount >= 1 && !item.isTimed) //
             {
                 if (uses == 0)
                 {
@@ -208,6 +220,10 @@ public class ItemHolder : NetworkBehaviour
                     }
                     Destroy(heldItem.gameObject);
                     driverItemTier = 1;
+
+                    // new code
+                    ItemTier = 0;
+                    Type = ItemType.NoItem;
                 }
             }
         }
@@ -227,7 +243,7 @@ public class ItemHolder : NetworkBehaviour
         }
     }
 
-    public void OnThrow(InputAction.CallbackContext context)
+    public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
 
@@ -282,7 +298,7 @@ public class ItemHolder : NetworkBehaviour
         }
     }
 
-    public void OnThrow()
+    public void OnThrow() // for npcs
     {
         // handles item usage
         if (holdingItem)
@@ -378,6 +394,9 @@ public class ItemHolder : NetworkBehaviour
                         heldItem.OnLevelUp(heldItem.ItemTier);
                         uses = heldItem.UseCount;
 
+                        // new code
+                        Type = ItemType.Puck;
+
                         // Item Box Shake
                         if (thisDriver)
                         {
@@ -387,8 +406,6 @@ public class ItemHolder : NetworkBehaviour
 
                         }
 
-                        // new code
-                        Type = ItemType.Puck;
                     }
                     else if (heldItem.ItemCategory == "Puck")
                     {
@@ -422,6 +439,9 @@ public class ItemHolder : NetworkBehaviour
                         heldItem.OnLevelUp(heldItem.ItemTier);
                         uses = heldItem.UseCount;
 
+                        // new code
+                        Type = ItemType.Boost;
+
                         // Item Box Shake
                         if (thisDriver)
                         {
@@ -430,8 +450,6 @@ public class ItemHolder : NetworkBehaviour
                             ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
-                        // new code
-                        Type = ItemType.Boost;
                     }
                     else if (heldItem.ItemCategory == "Boost")
                     {
@@ -465,6 +483,9 @@ public class ItemHolder : NetworkBehaviour
                         heldItem.OnLevelUp(heldItem.ItemTier);
                         uses = heldItem.UseCount;
 
+                        // new code
+                        Type = ItemType.Shield;
+
                         // Item Box Shake
                         if (thisDriver)
                         {
@@ -473,8 +494,6 @@ public class ItemHolder : NetworkBehaviour
                             ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
-                        // new code
-                        Type = ItemType.Shield;
                     }
                     else if (heldItem.ItemCategory == "Shield")
                     {
@@ -512,6 +531,9 @@ public class ItemHolder : NetworkBehaviour
                         heldItem.OnLevelUp(heldItem.ItemTier);
                         uses = heldItem.UseCount;
 
+                        // new code
+                        Type = ItemType.Hazard;
+
                         // Item Box Shake
                         if (thisDriver)
                         {
@@ -520,8 +542,6 @@ public class ItemHolder : NetworkBehaviour
                             ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
-                        // new code
-                        Type = ItemType.Hazard;
                     }
                     else if (heldItem.ItemCategory == "Hazard")
                     {
@@ -975,7 +995,6 @@ public class ItemHolder : NetworkBehaviour
         Debug.Log(item.ItemTier);
 
         NetworkObject netItem = item.GetComponent<NetworkObject>();
-
         netItem.Spawn();
     }
     #endregion
@@ -1008,7 +1027,11 @@ public class ItemHolder : NetworkBehaviour
     public int ItemTier
     {
         get { return tier; }
-        set { if (tier + value < maxTier) tier = maxTier; }
+        set
+        {
+            if (tier + value > maxTier) tier = maxTier;
+            else tier = value;
+         }
     }
     const int maxTier = 3;
     [SerializeField] private ItemType Type = ItemType.NoItem;
