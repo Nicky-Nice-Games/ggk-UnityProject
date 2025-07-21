@@ -19,11 +19,14 @@ public class AppearanceSettings : NetworkBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    // OnNetworkSpawn is called when the GameObject is synced to all clients
+    public override void OnNetworkSpawn()
     {
-        //UPDATE ME LATER
-
+        if (!GetComponent<NEWDriver>()) return;
+        if (!IsServer) return;
+        string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
+        Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
+        SetKartAppearanceRpc(characterName, characterColor);
 
     }
 
@@ -56,7 +59,6 @@ public class AppearanceSettings : NetworkBehaviour
 
     public void UpdateModel()
     {
-        
         // Set correct character model active
         if (models != null)
         {
@@ -79,17 +81,6 @@ public class AppearanceSettings : NetworkBehaviour
             // If no characterData found, set the last model in the list as active
             models[models.Count - 1].SetActive(true);
         }
-    }
-
-    // OnNetworkSpawn is called when the GameObject is synced to all clients
-    public override void OnNetworkSpawn()
-    {
-        if (!GetComponent<NEWDriver>()) return;
-        if (!IsServer) return;
-        string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
-        Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
-        SetKartAppearanceRpc(characterName, characterColor);
-
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
