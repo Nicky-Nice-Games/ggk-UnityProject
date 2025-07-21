@@ -163,6 +163,8 @@ public class DynamicRecovery : MonoBehaviour
 
     private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
     {
+        //Making rigidbody kinematic
+        rb.isKinematic = true;
 
         Quaternion finalRot = Quaternion.Euler(0, targetRotation.eulerAngles.y - 90, 0);
 
@@ -210,11 +212,14 @@ public class DynamicRecovery : MonoBehaviour
 
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
+
         
+
         // TELEPORT TO NEW POSITION 
         transform.position = targetPosition;
+        rb.isKinematic = false;
         ResetParticles();
-        Debug.Log(finalRot);
+        
         normalTransform.rotation = finalRot;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
