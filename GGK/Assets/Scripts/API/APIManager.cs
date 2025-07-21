@@ -115,8 +115,11 @@ public class APIManager : MonoBehaviour
     /// Creates a new user in the database 
     /// </summary>
     /// <param name="thisPlayer"></param>
-    public void CreatePlayer(PlayerInfo thisPlayer)
+    /// <returns>True if player was created</returns>
+    public bool CreatePlayer(PlayerInfo thisPlayer)
     {
+        bool wasCreated = false;
+
         WebUserData webUserData = new WebUserData();
         webUserData.username = thisPlayer.playerName;
         webUserData.password = thisPlayer.playerPassword;
@@ -125,7 +128,23 @@ public class APIManager : MonoBehaviour
         string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
         string json = JsonUtility.ToJson(webUserData);
 
-        StartCoroutine(PostJson(path, json));
+        // Making sure there is no player with this existing data
+        StartCoroutine(CheckForPlayerInData(webUserData.email, (playerExists) =>
+        {
+            Debug.Log("Player found in server?: " + playerExists);
+
+            if (!playerExists)
+            {
+                StartCoroutine(PostJson(path, json));
+                wasCreated = true;
+            }
+            else
+            {
+                wasCreated = false;
+            }
+        }));
+
+        return wasCreated;
     }
 
     /// <summary>

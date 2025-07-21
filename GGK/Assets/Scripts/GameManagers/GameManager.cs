@@ -100,7 +100,13 @@ public class GameManager : NetworkBehaviour
             }
             else
             {
-                apiManager.CreatePlayer(playerInfo);
+                // Checking if sign up data conflicts with existing data in backend
+                if (!apiManager.CreatePlayer(playerInfo)) 
+                {
+                    VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+                    kbController.ResetCurrentFields();
+                }
+                
             }
             
         }
