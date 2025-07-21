@@ -209,7 +209,7 @@ public class Puck : BaseItem
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
-            if (startTimer >= 1.0f)
+            if (startTimer >= 0.1f)
             {
                 // Detects if puck hit an NPC or player
                 NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
