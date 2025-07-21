@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SoundTest : MonoBehaviour
 {
-    [SerializeField] KartSounds kartSounds;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,9 +13,17 @@ public class SoundTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            kartSounds.PlayItemPickup();
+            MusicStateManager.instance.ResetToLimbo();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            MusicLapStateManager.instance.SetLapState(LapState.Lap1);
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
+            MusicStateManager.instance.SetMusicState(MusicState.OuterLoop);
+        }
+
     }
 }
