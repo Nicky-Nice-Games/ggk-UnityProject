@@ -136,14 +136,14 @@ public class DynamicRecovery : MonoBehaviour
 
         // Teleport at checkpoint
         Vector3 hoverPos = currentCheckpoint.position + Vector3.up * hoverHeight;
-        transform.position = hoverPos;
+        rb.position = hoverPos;
 
         rb.velocity = Vector3.zero; // Reset first
         rb.angularVelocity = Vector3.zero;
 
 
         //face forward
-        transform.rotation = currentCheckpoint.rotation;
+        rb.rotation = currentCheckpoint.rotation;
         kartModel.rotation = currentCheckpoint.rotation;
 
         rb.useGravity = false;
@@ -216,7 +216,7 @@ public class DynamicRecovery : MonoBehaviour
         
 
         // TELEPORT TO NEW POSITION 
-        transform.position = targetPosition;
+        rb.position = targetPosition;
         rb.isKinematic = false;
         ResetParticles();
         
