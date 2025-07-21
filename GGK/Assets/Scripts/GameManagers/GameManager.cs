@@ -93,7 +93,16 @@ public class GameManager : NetworkBehaviour
         // Set validate player info
         else
         {
-            //ValidatePlayer(playerInfo);
+            // Checking for Log in or sign up
+            if(playerInfo.playerEmail == "")
+            {
+                ValidatePlayer(playerInfo);
+            }
+            else
+            {
+                apiManager.CreatePlayer(playerInfo);
+            }
+            
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
