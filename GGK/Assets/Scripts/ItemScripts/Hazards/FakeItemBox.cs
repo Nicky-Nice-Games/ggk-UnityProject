@@ -37,7 +37,7 @@ public class FakeItemBox : BaseItem
     }
 
     // Update is called once per frame
-    void Update()
+    private new void Update()
     {
         RotateBox();
     }
