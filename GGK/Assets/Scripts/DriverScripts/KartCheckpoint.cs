@@ -136,7 +136,14 @@ public class KartCheckpoint : NetworkBehaviour
     IEnumerator GameOverWait()
     {
         yield return new WaitForSeconds(10.5f);
-        gameManager.GameFinished();
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            gameManager.GameFinishedRpc();
+        }
+        else
+        {
+            gameManager.GameFinished();
+        }
     }
 
     IEnumerator FinalizeFinish()
