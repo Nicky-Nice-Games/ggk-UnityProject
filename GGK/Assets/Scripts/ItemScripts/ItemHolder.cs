@@ -1,6 +1,8 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO.Pipes;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -12,6 +14,7 @@ using UnityEngine.VFX;
 
 public class ItemHolder : NetworkBehaviour
 {
+    #region previous code
     private bool holdingItem;
 
     [SerializeField]
@@ -99,7 +102,7 @@ public class ItemHolder : NetworkBehaviour
         DOTween.Init();
         holdingItem = IsHoldingItem();
 
-        timer = Random.Range(5, 8);
+        timer = UnityEngine.Random.Range(5, 8);
 
         uses = 0;
 
@@ -234,7 +237,7 @@ public class ItemHolder : NetworkBehaviour
 
             itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
-            
+
             // spawn all items except boost for multiplayer to see
             if (!MultiplayerManager.Instance.IsMultiplayer || heldItem.ItemCategory == "Boost")
             {
@@ -249,7 +252,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 //if (NetworkManager.Singleton.IsHost)
                 //{
-                    
+
                 //}
                 //else
                 //{
@@ -296,7 +299,7 @@ public class ItemHolder : NetworkBehaviour
             item.Kart = this;
             item.ItemTier = heldItem.ItemTier;
         }
-        timer = Random.Range(5, 8);
+        timer = UnityEngine.Random.Range(5, 8);
 
         Debug.Log(item.ItemTier);
 
@@ -334,19 +337,19 @@ public class ItemHolder : NetworkBehaviour
         //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
         //    // itemDisplay.texture = heldItem.itemIcon;
 
-            // if player missing item, gives random level 2 item or upgrades current item
-            //upgradeBox.UpgradeItem(this.gameObject);
-            //heldItem.OnLevelUp(heldItem.ItemTier);
-            //uses = heldItem.UseCount;
+        // if player missing item, gives random level 2 item or upgrades current item
+        //upgradeBox.UpgradeItem(this.gameObject);
+        //heldItem.OnLevelUp(heldItem.ItemTier);
+        //uses = heldItem.UseCount;
 
-            // Either upgrades the current item or gives the kart a random upgraded item
-            //baseItem = upgradeBox.UpgradeItem(this);
+        // Either upgrades the current item or gives the kart a random upgraded item
+        //baseItem = upgradeBox.UpgradeItem(this);
 
-            // displays item in the HUD
-            //if (thisDriver)
-            //{
-            //    ApplyItemTween(heldItem.itemIcon);
-            //}
+        // displays item in the HUD
+        //if (thisDriver)
+        //{
+        //    ApplyItemTween(heldItem.itemIcon);
+        //}
 
         //    // Disables the upgrade box
         //    upgradeBox.gameObject.SetActive(false);
@@ -509,7 +512,7 @@ public class ItemHolder : NetworkBehaviour
                     else
                     {
                         // shield can't be upgraded while being used
-                        if(heldItem.ItemCategory != "Shield")
+                        if (heldItem.ItemCategory != "Shield")
                         {
                             // Increase item tier if not max & apply upgrades
                             if (driverItemTier < 4)
@@ -593,82 +596,82 @@ public class ItemHolder : NetworkBehaviour
             }
 
             duration = 3.0f;
-                if (thisDriver != null)
+            if (thisDriver != null)
+            {
+                // different values and functionality for different levels of boosts
+                switch (boost.ItemTier)
                 {
-                    // different values and functionality for different levels of boosts
-                    switch (boost.ItemTier)
-                    {
-                        default: // level 1
-                            boostMult = 1.25f;
-                            boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
-                            break;
-                        case 2: // level 2
-                            boostMult = 1.5f;
-                            boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
-                            break;
-                        case 3: // level 3
-                            boostMult = 1.75f;
-                            boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
-                            break;
-                        case 4: // level 4
-                                // get the checkpoint from the kart's collider child to cross 3 checkpoints
-                            GameObject kartParent = transform.parent.gameObject;
-                            KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
-                            boostMult = 1.25f;
-                            boostMaxSpeed = boostMult * 60;
+                    default: // level 1
+                        boostMult = 1.25f;
+                        boostMaxSpeed = boostMult * 60;
+                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                        break;
+                    case 2: // level 2
+                        boostMult = 1.5f;
+                        boostMaxSpeed = boostMult * 60;
+                        StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                        break;
+                    case 3: // level 3
+                        boostMult = 1.75f;
+                        boostMaxSpeed = boostMult * 60;
+                        StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
+                        break;
+                    case 4: // level 4
+                            // get the checkpoint from the kart's collider child to cross 3 checkpoints
+                        GameObject kartParent = transform.parent.gameObject;
+                        KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
+                        boostMult = 1.25f;
+                        boostMaxSpeed = boostMult * 60;
 
-                            int currentCheckpointId = kartCheck.checkpointId;
-                            int warpCheckpointId = currentCheckpointId + 3;
+                        int currentCheckpointId = kartCheck.checkpointId;
+                        int warpCheckpointId = currentCheckpointId + 3;
 
-                            // check if the checkpoint is past the count and adjust
-                            int checkpointMax = kartCheck.checkpointList.Count - 1;
-                            if (warpCheckpointId > checkpointMax)
+                        // check if the checkpoint is past the count and adjust
+                        int checkpointMax = kartCheck.checkpointList.Count - 1;
+                        if (warpCheckpointId > checkpointMax)
+                        {
+                            // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
+                            if (checkpointMax + 1 == warpCheckpointId)
                             {
-                                // check if the warp checkpoint passes the last checkpoint by 1, 2 or 3
-                                if (checkpointMax + 1 == warpCheckpointId)
-                                {
-                                    warpCheckpointId = 0;
-                                }
-                                else if (checkpointMax + 2 == warpCheckpointId)
-                                {
-                                    warpCheckpointId = 1;
-                                }
-                                else if (checkpointMax + 3 == warpCheckpointId)
-                                {
-                                    warpCheckpointId = 2;
-                                }
-                                kartCheck.lap++;
-                                kartCheck.PassedWithWarp = true;
+                                warpCheckpointId = 0;
                             }
+                            else if (checkpointMax + 2 == warpCheckpointId)
+                            {
+                                warpCheckpointId = 1;
+                            }
+                            else if (checkpointMax + 3 == warpCheckpointId)
+                            {
+                                warpCheckpointId = 2;
+                            }
+                            kartCheck.lap++;
+                            kartCheck.PassedWithWarp = true;
+                        }
 
-                            GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
+                        GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
 
-                            // Makes game object with wormhole effect appear
-                            warpBoostEffect.SetActive(true);
+                        // Makes game object with wormhole effect appear
+                        warpBoostEffect.SetActive(true);
 
-                            // Waits a certain number of seconds, and then activates the warp boost
-                            StartCoroutine(WaitThenBoost(warpCheckpoint, kartCheck, warpCheckpointId,
-                                           boostMult, duration, boostMaxSpeed));
+                        // Waits a certain number of seconds, and then activates the warp boost
+                        StartCoroutine(WaitThenBoost(warpCheckpoint, kartCheck, warpCheckpointId,
+                                       boostMult, duration, boostMaxSpeed));
 
-                            //// set the kart's position to 3 checkpoints ahead
-                            //thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
-                            //thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
-                            //kartCheck.checkpointId = warpCheckpointId;
-                            //StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
-                            break;
-                    }
-                    Debug.Log("Applying Boost Item!");
+                        //// set the kart's position to 3 checkpoints ahead
+                        //thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
+                        //thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
+                        //kartCheck.checkpointId = warpCheckpointId;
+                        //StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                        break;
                 }
-                else if (npcDriver != null) // boost for npcs
-                {
-                    boostMult = 1.5f;
-                    StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
-                    Debug.Log("Applying Boost Item!");
-                }
-                Destroy(collision.gameObject);
+                Debug.Log("Applying Boost Item!");
+            }
+            else if (npcDriver != null) // boost for npcs
+            {
+                boostMult = 1.5f;
+                StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
+                Debug.Log("Applying Boost Item!");
+            }
+            Destroy(collision.gameObject);
         }
 
         // checks if the kart drives into a hazard and drops the velocity to 1/8th of the previous value
@@ -695,14 +698,14 @@ public class ItemHolder : NetworkBehaviour
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
 
                 npcDriver.StartRecovery();
-                
+
             }
             ApplyIconSpin(gameObject, 1);
             Destroy(collision.gameObject);
         }
 
     }
-    
+
     //Waits a certain number of seconds then activates the warp boost
     IEnumerator WaitThenBoost(GameObject warpCheckpoint, KartCheckpoint kartCheck, int warpCheckpointId,
                                       float boostMult, float duration, float boostMaxSpeed)
@@ -757,7 +760,7 @@ public class ItemHolder : NetworkBehaviour
         boostEffect.Play();
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            Vector3 boostDirection = Vector3.zero; 
+            Vector3 boostDirection = Vector3.zero;
             if (driver.sphere.velocity.magnitude < boostMaxSpeed)
             {
                 boostDirection = driver.transform.forward * boostForce;
@@ -808,7 +811,7 @@ public class ItemHolder : NetworkBehaviour
             for (int i = 0; i < 4; i++)
             {
                 GameObject wheel = wheels[i];
-                if (Physics.Raycast(wheel.transform.position, -driver.transform.up, 
+                if (Physics.Raycast(wheel.transform.position, -driver.transform.up,
                     out hit, length))
                 {
                     // determine spring force
@@ -913,7 +916,41 @@ public class ItemHolder : NetworkBehaviour
         Debug.Log(item.ItemTier);
 
         NetworkObject netItem = item.GetComponent<NetworkObject>();
-        
+
         netItem.Spawn();
     }
+    #endregion
+    #region new code
+    // private Transform[,] ItemArray = {
+    //     { "NoItemT1", "BoostT1", "ShieldT1", "HazardT1", "PuckT1" },
+    //     { "NoItemT2", "BoostT2", "ShieldT2", "HazardT2", "PuckT2" },
+    //     { "NoItemT3", "BoostT3", "ShieldT3", "HazardT3", "PuckT3" },
+    //     { "NoItemT4", "BoostT4", "ShieldT4", "HazardT4", "PuckT4" }
+    // };
+
+    enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
+    [Header("ItemArray")]
+    [SerializeField] private Transform[] BoostArray ;
+    [SerializeField] private Transform[] ShieldArray ;
+    [SerializeField] private Transform[] HazardArray ;
+    [SerializeField] private Transform[] PuckArray ;
+
+    private List<Transform[]> ItemArray = new List<Transform[]>();
+    private int Tier = 0;
+    private ItemType Type = 0;
+
+    private void InitItemArray()
+    {
+        ItemArray.Add(BoostArray);
+        ItemArray.Add(ShieldArray);
+        ItemArray.Add(HazardArray);
+        ItemArray.Add(PuckArray);
+    }
+
+    private void SpawnItem()
+    {
+        if(Type == ItemType.NoItem) return; /* dont spawn the item*/
+        Instantiate(ItemArray[(int)Type][Tier]);
+    }
+    #endregion
 }

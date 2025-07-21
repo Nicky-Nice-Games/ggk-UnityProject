@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 
 public class BaseItem : NetworkBehaviour
 {
+    #region old variables
     [SerializeField] protected float timer;    // Seconds until the item disappears
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
     protected ItemHolder kart;                 // The kart holding the item
@@ -51,18 +52,19 @@ public class BaseItem : NetworkBehaviour
     /// Read and write property for the kart holding the item
     /// </summary>
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-      
+
     }
 
     // Update is called once per frame
     public void Update()
     {
 
-        
+
     }
 
     /// <summary>
@@ -80,7 +82,7 @@ public class BaseItem : NetworkBehaviour
         {
             //if (itemCategory != "Shield")
             //{
-                Destroy(this.gameObject);
+            Destroy(this.gameObject);
             //}
         }
     }
@@ -202,4 +204,11 @@ public class BaseItem : NetworkBehaviour
     //    serializer.SerializeValue(ref useCount);
     //    serializer.SerializeValue(ref itemTier);
     //}
+
+    #region new code
+    public virtual void UseItem()
+    {
+
+    }
+    #endregion
 }
