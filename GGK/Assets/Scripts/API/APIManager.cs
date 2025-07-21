@@ -7,12 +7,6 @@ using UnityEngine.Networking;
 
 public class APIManager : MonoBehaviour
 {
-
-    void Start()
-    {
-
-    }
-
     /// <summary>
     /// Setting up the post request
     /// </summary>
@@ -81,6 +75,7 @@ public class APIManager : MonoBehaviour
                 string data = webRequest.downloadHandler.text;
                 PlayerInfo userData = JsonUtility.FromJson<PlayerInfo>(data);
                 thisPlayer = userData;
+                Debug.Log($"Updated player data!\n{thisPlayer}");
             }
             else
             {
@@ -102,6 +97,8 @@ public class APIManager : MonoBehaviour
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
+                Debug.Log("Found player");
+
                 // Gets the basic user data that holds pid then using that to get the rest of players data
                 string data = webRequest.downloadHandler.text;
                 WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
@@ -112,6 +109,23 @@ public class APIManager : MonoBehaviour
                 Debug.Log("Failed to get data" + webRequest.error);
             }
         }
+    }
+
+    /// <summary>
+    /// Creates a new user in the database 
+    /// </summary>
+    /// <param name="thisPlayer"></param>
+    public void CreatePlayer(PlayerInfo thisPlayer)
+    {
+        WebUserData webUserData = new WebUserData();
+        webUserData.username = thisPlayer.playerName;
+        webUserData.password = thisPlayer.playerPassword;
+        webUserData.email = thisPlayer.playerEmail;
+
+        string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
+        string json = JsonUtility.ToJson(webUserData);
+
+        StartCoroutine(PostJson(path, json));
     }
 
     /// <summary>
