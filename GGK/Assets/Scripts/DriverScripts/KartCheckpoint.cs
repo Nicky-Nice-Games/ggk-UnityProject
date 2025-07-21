@@ -140,6 +140,11 @@ public class KartCheckpoint : NetworkBehaviour
         gameManager.GameFinished();
     }
 
+
+    /// <summary>
+    /// Finishes the race once ALL the players finishes the race
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FinalizeFinish()
     {
         Debug.Log("In FinalizeFinish");
@@ -147,7 +152,7 @@ public class KartCheckpoint : NetworkBehaviour
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-
+        
         if (leaderboardController.allPlayerKartsFinished.Value)
         {            
             StartCoroutine(GameOverWait());

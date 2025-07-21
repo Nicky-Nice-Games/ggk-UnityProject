@@ -52,9 +52,11 @@ public class LeaderboardController : NetworkBehaviour
         timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 
+    /// <summary>
+    /// Set up OnValueChanged functions for network variables client side
+    /// </summary>
     public override void OnNetworkSpawn()
     {
-        // If a client, set networkTime's OnValueChanged
         if (IsClient)
         {
             networkTime.OnValueChanged += OnTimeChange;
@@ -63,6 +65,12 @@ public class LeaderboardController : NetworkBehaviour
         
     }
 
+    /// <summary>
+    /// Set leaderboard active to true once all players
+    /// finish the race
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
     private void OnPlayersFinished(bool previousValue, bool newValue)
     {
         leaderboard.SetActive(true);
@@ -181,7 +189,10 @@ public class LeaderboardController : NetworkBehaviour
         curTime = presTime;
     }
 
-
+    /// <summary>
+    /// Sends leaderboard info to clients to display server information about the race
+    /// </summary>
+    /// <param name="card"></param>
     [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
     public void SendTimeDisplayRpc(LeaderboardDisplayCard card)
     {

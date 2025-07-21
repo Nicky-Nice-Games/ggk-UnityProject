@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-
+// THIS SCRIPT IS NOW OUT OF DATE AS THE SPEEDOMETER HAS BEEN SCRAPPED
 // TIME DISPLAY HAS BEEN MOVED TO LEADERBOARD CONTROLLER
 public class SpeedAndTimeDisplay : MonoBehaviour
 {
