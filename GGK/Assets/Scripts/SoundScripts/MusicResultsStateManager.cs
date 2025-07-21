@@ -12,15 +12,6 @@ public class MusicResultsStateManager : MonoBehaviour
     [SerializeField] AK.Wwise.State startingState;
     [SerializeField] AK.Wwise.State winState;
 
-    public enum ResultsState
-    {
-        InProgress,
-        Loss,
-        None,
-        Starting,
-        Win
-    }
-
     void Awake()
     {
         // only have one instance of this script at a time

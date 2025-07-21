@@ -15,16 +15,6 @@ public class MusicStateManager : MonoBehaviour
     [SerializeField] AK.Wwise.State outerLoopState;
     [SerializeField] AK.Wwise.State postRaceState;
 
-    public enum MusicState
-    {
-        Dorm,
-        FBR,
-        Menu,
-        None,
-        OuterLoop,
-        PostRace
-    }
-
     void Awake()
     {
         // only have one instance of this script at a time
@@ -42,14 +32,11 @@ public class MusicStateManager : MonoBehaviour
         }
     }
 
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            //AkUnitySoundEngine.PostEvent("Music", gameObject);
-            startMusic.Post(gameObject);
-            SetMusicState(MusicState.Menu);
-        }
+        //AkUnitySoundEngine.PostEvent("Music", gameObject);
+        startMusic.Post(gameObject);
+        SetMusicState(MusicState.Menu);
     }
 
     public void SetMusicState(MusicState newState)

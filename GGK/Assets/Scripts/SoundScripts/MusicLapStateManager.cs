@@ -11,14 +11,6 @@ public class MusicLapStateManager : MonoBehaviour
     [SerializeField] AK.Wwise.State lap3State;
     [SerializeField] AK.Wwise.State noneState;
 
-    public enum LapState
-    {
-        Lap1,
-        Lap2,
-        Lap3,
-        None
-    }
-
     void Awake()
     {
         // only have one instance of this script at a time
