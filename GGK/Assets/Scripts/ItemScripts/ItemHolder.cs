@@ -962,12 +962,21 @@ public class ItemHolder : NetworkBehaviour
 
     enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
     [Header("ItemArray")]
-    [SerializeField] private Transform[] BoostArray ;
-    [SerializeField] private Transform[] ShieldArray ;
-    [SerializeField] private Transform[] HazardArray ;
-    [SerializeField] private Transform[] PuckArray ;
-
+    [SerializeField] private Transform[] BoostArray;
+    [SerializeField] private Transform[] ShieldArray;
+    [SerializeField] private Transform[] HazardArray;
+    [SerializeField] private Transform[] PuckArray;
     private List<Transform[]> ItemArray = new List<Transform[]>();
+
+
+    [Header("ItemImageArray")]
+    [SerializeField] private Texture[] BoostImageArray;
+    [SerializeField] private Texture[] ShieldImageArray;
+    [SerializeField] private Texture[] HazardImageArray;
+    [SerializeField] private Texture[] PuckImageArray;
+    private List<Texture[]> ItemImageArray = new List<Texture[]>();
+
+
     public int Tier
     {
         get { return Tier; }
@@ -983,10 +992,18 @@ public class ItemHolder : NetworkBehaviour
         ItemArray.Add(HazardArray);
         ItemArray.Add(PuckArray);
     }
+    private void InitItemImageArray()
+    { 
+        ItemImageArray.Add(BoostImageArray);
+        ItemImageArray.Add(ShieldImageArray);
+        ItemImageArray.Add(HazardImageArray);
+        ItemImageArray.Add(PuckImageArray);
+        
+    }
 
     private void SpawnItem()
     {
-        if(Type == ItemType.NoItem) return; /* dont spawn the item*/
+        if (Type == ItemType.NoItem) return; /* dont spawn the item*/
         Instantiate(ItemArray[(int)Type][Tier]);
     }
     #endregion
