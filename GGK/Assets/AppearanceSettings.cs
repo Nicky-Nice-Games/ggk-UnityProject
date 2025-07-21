@@ -34,41 +34,51 @@ public class AppearanceSettings : NetworkBehaviour
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
-        
+
             // Set correct character model active
             if (characterData != null)
             {
                 icon = characterData.characterSprite;
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
-        
-                if (models != null)
-                {
-                    if (models.Count > 0)
-                    {
-                        for (int i = 0; i < models.Count; i++)
-                        {
-                            //Setting active correct model
-                            if (name == models[i].name)
-                            {
-                                models[i].SetActive(true);
-                                continue;
-                            }
-        
-                            //deleting the models that are not supposed to be active
-                            Destroy(models[i]);
-                        }
-                    }
-                }
+
+                UpdateModel();
             }
             else
             {
                 // If no characterData found, set the last model in the list as active
-                models[models.Count - 1].SetActive(true); 
+                models[models.Count - 1].SetActive(true);
             }
         }
         // I think NPC icons and colors are currently manually set in scene,so
         // Else NPCDriver code when NPCDrivers get a new prefab?
+    }
+
+    public void UpdateModel()
+    {
+        
+        // Set correct character model active
+        if (models != null)
+        {
+            for (int i = 0; i < models.Count; i++)
+            {
+                //Setting active correct model
+                if (name == models[i].name || kartName == models[i].name)
+                {
+                    models[i].SetActive(true);
+                    break;
+                }
+                //deleting the models that are not supposed to be active
+
+                //bugs out in multiplayer :(
+                //Destroy(models[i])
+            }
+        }
+        else
+        {
+            // If no characterData found, set the last model in the list as active
+            models[models.Count - 1].SetActive(true);
+        }
     }
 
     // OnNetworkSpawn is called when the GameObject is synced to all clients
@@ -79,39 +89,19 @@ public class AppearanceSettings : NetworkBehaviour
         string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
         Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
         SetKartAppearanceRpc(characterName, characterColor);
-        
+
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void SetKartAppearanceRpc(/*CharacterData characterData, */ string characterName, Color characterColor) // should use a struct or a simpler keyword that fully represents the look of the kart
     {
-        // Loading characterData
-        characterData = FindAnyObjectByType<CharacterData>();
-        icon = characterData.characterSprite;
+        print(characterName);
         color = characterColor;
         kartName = characterName.ToLower();
-        Debug.Log($"Setting {OwnerClientId}'s kart color to {color} and name/model to {kartName}");
-
-        // Set correct character model active
-        if (characterData != null)
-        {
-            for (int i = 0; i < models.Count; i++)
-            {
-                //Setting active correct model
-                if (kartName == models[i].name)
-                {
-                    models[i].SetActive(true);
-                    break;
-                }
-
-                //deleting the models that are not supposed to be active
-                Destroy(models[i]);
-            }
-        }
-        else
-        {
-            // If no characterData found, set the last model in the list as active
-            models[models.Count - 1].SetActive(true);
-        }
+        icon = CharacterBuilder.NameToSprite(kartName);
+        name = characterName;
+        Debug.Log($"Setting {OwnerClientId}'s kart color to {color}, sprite to {icon.name} and name/model to {kartName}");
+        UpdateModel();
+        MiniMapHud.instance.UpdateIconAppearance(gameObject, this);
     }
 }
