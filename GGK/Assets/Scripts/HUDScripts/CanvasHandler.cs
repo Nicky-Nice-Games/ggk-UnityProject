@@ -10,7 +10,7 @@ public class CanvasHandler : MonoBehaviour
 
     [SerializeField] protected RawImage itemDisplay;  // The held item (can be empty)
 
-    public static CanvasHandler canvasHandlerInstance;
+    public static CanvasHandler instance;
 
     /// <summary>
     /// Read and write
@@ -33,6 +33,6 @@ public class CanvasHandler : MonoBehaviour
 
     private void Awake()
     {
-        canvasHandlerInstance = this;
+        instance = this;
     }
 }

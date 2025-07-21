@@ -103,7 +103,7 @@ public class ItemHolder : NetworkBehaviour
 
         uses = 0;
 
-        itemDisplay = CanvasHandler.canvasHandlerInstance.ItemDisplay;
+        itemDisplay = CanvasHandler.instance.ItemDisplay;
 
         if (thisDriver)
         {
@@ -731,6 +731,7 @@ public class ItemHolder : NetworkBehaviour
 
     public void ApplyItemTween(Texture item)
     {
+        if (IsSpawned && !IsOwner) return;
         itemDisplay.rectTransform.DOKill();
         itemDisplay.rectTransform.localScale = itemDisplayScale;
         itemDisplay.texture = item;
