@@ -122,6 +122,10 @@ public class ItemHolder : NetworkBehaviour
         {
             warpBoostEffect.SetActive(false);
         }
+
+        // new code 
+        // InitItemArray();
+        InitItemImageArray();
     }
 
     // Update is called once per frame
@@ -377,7 +381,10 @@ public class ItemHolder : NetworkBehaviour
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+
                         }
 
                         // new code
@@ -394,12 +401,14 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            Tier++;
+                            ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
                     }
                     break;
@@ -416,7 +425,9 @@ public class ItemHolder : NetworkBehaviour
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
                         // new code
@@ -433,12 +444,14 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            Tier++;
+                            ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
                     }
                     break;
@@ -455,7 +468,9 @@ public class ItemHolder : NetworkBehaviour
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
                         // new code
@@ -475,12 +490,14 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                Tier++;
+                                ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
                             {
-                                ApplyItemTween(heldItem.itemIcon);
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                             }
                         }
                     }
@@ -498,7 +515,9 @@ public class ItemHolder : NetworkBehaviour
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
 
                         // new code
@@ -515,12 +534,14 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            Tier++;
+                            ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }   
                     }
                     break;
@@ -534,7 +555,7 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                         // new code
-                        Tier++;  
+                        ItemTier++;  
                     }
                     else
                     {
@@ -550,12 +571,14 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                Tier++;
+                                ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
                             {
-                                ApplyItemTween(heldItem.itemIcon);
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                             }
                         }
                         else if (uses == 1)
@@ -569,12 +592,14 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                Tier++;
+                                ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
                             {
-                                ApplyItemTween(heldItem.itemIcon);
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                             }
                         }
                     }
@@ -593,7 +618,9 @@ public class ItemHolder : NetworkBehaviour
                         Debug.Log(uses);
                         if (thisDriver)
                         {
-                            ApplyItemTween(heldItem.itemIcon);
+                            //ApplyItemTween(heldItem.itemIcon);
+                            // new code
+                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
                         }
                     }
                     break;
@@ -976,14 +1003,15 @@ public class ItemHolder : NetworkBehaviour
     [SerializeField] private Texture[] PuckImageArray;
     private List<Texture[]> ItemImageArray = new List<Texture[]>();
 
-
-    public int Tier
+    [Header("Held Item")]
+    [SerializeField] private int tier = 0;
+    public int ItemTier
     {
-        get { return Tier; }
-        set { if (Tier + value > maxTier) Tier = maxTier; }
+        get { return tier; }
+        set { if (tier + value < maxTier) tier = maxTier; }
     }
     const int maxTier = 3;
-    private ItemType Type = 0;
+    [SerializeField] private ItemType Type = ItemType.NoItem;
 
     private void InitItemArray()
     {
@@ -1004,7 +1032,7 @@ public class ItemHolder : NetworkBehaviour
     private void SpawnItem()
     {
         if (Type == ItemType.NoItem) return; /* dont spawn the item*/
-        Instantiate(ItemArray[(int)Type][Tier]);
+        Instantiate(ItemArray[(int)Type][ItemTier]);
     }
     #endregion
 }
