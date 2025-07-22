@@ -13,7 +13,6 @@ public class APIManager : MonoBehaviour
 {
     private GameManager gameManager;
 
-
     private void Start()
     {
         gameManager = GetComponent<GameManager>();
@@ -34,7 +33,7 @@ public class APIManager : MonoBehaviour
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
 
-            var operation = webRequest.SendWebRequest();
+            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
             while (!operation.isDone)
                 await Task.Yield();
 
@@ -97,7 +96,7 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    public IEnumerator GetPlayerWithNamePass(string username, string password, PlayerInfo thisPlayer)
+    private async Task<bool> GetPlayerWithNamePassAsync(string username, string password, PlayerInfo thisPlayer)
     {
         // Sending the request for the existing player info (gameservice/playerlog/login/{username}/{password})
         string getPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/login/" + username + "/" + password;
@@ -105,7 +104,9 @@ public class APIManager : MonoBehaviour
         using (UnityWebRequest webRequest = UnityWebRequest.Get(getPath))
         {
             // Requesting and waiting for the desired data
-            yield return webRequest.SendWebRequest();
+            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
 
             // Checking good request
             if (webRequest.result == UnityWebRequest.Result.Success)
@@ -116,10 +117,12 @@ public class APIManager : MonoBehaviour
                 string data = webRequest.downloadHandler.text;
                 WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
                 GetPlayerWithPid(userData.pid, thisPlayer);
+                return true;
             }
             else
             {
                 Debug.Log("Failed to get data" + webRequest.error);
+                return false;
             }
         }
     }
@@ -161,16 +164,15 @@ public class APIManager : MonoBehaviour
     /// <param name="email">email</param>
     /// <param name="callback">the bool that will be returned as a callback</param>
     /// <returns></returns>
-    public async Task<bool> CheckForPlayerInDataAsync(string email)
+    private async Task<bool> CheckForPlayerInDataAsync(string email)
     {
         string url = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            var operation = webRequest.SendWebRequest();
-
+            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
             while (!operation.isDone)
-                await Task.Yield(); // Let Unity update frame
+                await Task.Yield();
 
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
@@ -185,13 +187,21 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    // Wrapper to call async from non-async
+    /// <summary>
+    /// Wrapper to call async from non-async
+    /// </summary>
+    /// <param name="thisPlayer"></param>
     public void CreatePlayer(PlayerInfo thisPlayer)
     {
-        _ = CallAsyncFromNonAsync(thisPlayer);
+        _ = CreatePlayerAsyncToNonAsync(thisPlayer);
     }
 
-    private async Task CallAsyncFromNonAsync(PlayerInfo thisPlayer)
+    /// <summary>
+    /// Async that will handle logic 
+    /// </summary>
+    /// <param name="thisPlayer"></param>
+    /// <returns></returns>
+    private async Task CreatePlayerAsyncToNonAsync(PlayerInfo thisPlayer)
     {
         bool wasCreated = await CreatePlayerAsync(thisPlayer);
         Debug.Log("Was created (async): " + wasCreated);
@@ -207,5 +217,36 @@ public class APIManager : MonoBehaviour
             gameManager.LoggedIn();
         }
         
+    }
+
+    /// <summary>
+    /// Wrapper to call async from non-async
+    /// </summary>
+    /// <param name="email"></param>
+    public void CheckPlayer(PlayerInfo playerInfo)
+    {
+        _ = CheckPlayerAsyncToNonAsync(playerInfo);
+    }
+
+    /// <summary>
+    /// Async that will handle logic
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    private async Task CheckPlayerAsyncToNonAsync(PlayerInfo playerInfo)
+    {
+        bool wasFound = await GetPlayerWithNamePassAsync(playerInfo.playerName, playerInfo.playerPassword, playerInfo);
+        Debug.Log("Was found (async): " + wasFound);
+
+        if (!wasFound)
+        {
+            VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+            kbController.ResetCurrentFields();
+            return;
+        }
+        else
+        {
+            gameManager.LoggedIn();
+        }
     }
 }

@@ -84,7 +84,7 @@ public class SignInManager : MonoBehaviour
 
                 case "Password Login":
                     playerInfo.playerPassword = data;
-                    gameManager.LoggedIn();
+                    apiManager.CheckPlayer(playerInfo);
                     return;
 
                 default:
