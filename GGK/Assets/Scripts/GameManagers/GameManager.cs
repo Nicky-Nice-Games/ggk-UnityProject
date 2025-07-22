@@ -98,14 +98,6 @@ public class GameManager : NetworkBehaviour
             {
                 ValidatePlayer(playerInfo);
             }
-            /*
-            else
-            {
-                // Checking if sign up data conflicts with existing data in backend
-                apiManager.CreatePlayer(playerInfo);
-                
-            }
-            */
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
