@@ -10,10 +10,9 @@ using UnityEngine.UI;
 
 public class PasswordHider : MonoBehaviour
 {
-    [SerializeField]
-    Toggle showPassword;
-
+    [SerializeField] Toggle showPassword;
     [SerializeField] TMP_InputField passwordInput;
+
     // Start is called before the first frame update
     void Start()
     {
