@@ -170,7 +170,7 @@ public static class CharacterBuilder
         KeyValuePair<Character, Color> character = CreateNewCharacter();
 
         string charName = Enum.GetName(typeof(Character), character.Key);
-        settings.gameObject.name = NameToModel(charName);
+        settings.gameObject.name = charName;
         settings.kartName = charName;
         settings.icon = EnumToSprite(character.Key);
         settings.color = character.Value;
@@ -199,7 +199,7 @@ public static class CharacterBuilder
         }
 
         string charName = Enum.GetName(typeof(Character), character.Key);
-        settings.gameObject.name = NameToModel(charName);
+        settings.gameObject.name = charName;
         settings.kartName = charName;
         settings.icon = EnumToSprite(character.Key);
         settings.color = character.Value;
