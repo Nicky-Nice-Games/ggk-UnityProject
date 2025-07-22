@@ -142,7 +142,8 @@ public class KartCheckpoint : NetworkBehaviour
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
         
-        if (leaderboardController.allPlayerKartsFinished.Value)
+        if (leaderboardController.allPlayerKartsFinished.Value && 
+            gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
         {            
             StartCoroutine(GameOverWait());
         }
