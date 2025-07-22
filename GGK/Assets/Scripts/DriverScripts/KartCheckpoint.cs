@@ -35,7 +35,7 @@ public class KartCheckpoint : MonoBehaviour
 
     void Start()
     {
-        totalLaps = 1;
+        totalLaps = 3;
         checkpointId = 0;
         Transform childTransform = parent.transform.GetChild(0);
         physicsNPC = childTransform.GetComponent<NPCPhysics>();
@@ -121,6 +121,18 @@ public class KartCheckpoint : MonoBehaviour
                 if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
                     lapDisplay.text = "Lap: " + (lap + 1);
+                }
+
+                if (MusicLapStateManager.instance != null && this.GetComponent<NPCDriver>() == null)
+                {
+                    if (lap + 1 == 2)
+                    {
+                        MusicLapStateManager.instance.SetLapState(LapState.Lap2);
+                    }
+                    else if (lap + 1 == 3)
+                    {
+                        MusicLapStateManager.instance.SetLapState(LapState.Lap3);
+                    }
                 }
 
                 if (lap == totalLaps)
