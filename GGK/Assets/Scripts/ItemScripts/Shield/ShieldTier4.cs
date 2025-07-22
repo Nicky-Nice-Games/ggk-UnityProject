@@ -49,11 +49,11 @@ public class ShieldTier4 : BaseItem
                 playerKart.Stun(2.0f);
             }
 
-            if (collision.gameObject.GetComponent<NPCDriver>() != null)
+            if (collision.gameObject.GetComponent<NPCPhysics>() != null)
             //&& collision.gameObject.GetComponent<NPCDriver>() != Kart)
             {
-                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
-                npcKart.StartRecovery(2.0f);
+                //NPCPhysics npcKart = collision.gameObject.GetComponent<NPCPhysics>();
+                //npcKart.Stun(2.0f);
             }
         }
     }
