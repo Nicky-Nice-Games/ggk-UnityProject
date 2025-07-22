@@ -20,13 +20,6 @@ public class PuckTier2 : BaseItem
     void Start()
     {
 
-        PuckTier2 additionalPuck = new PuckTier2();
-        additionalPuck.itemCount = itemCount - 1;
-        if (itemCount > 0)
-        {
-            kart.HeldItem = additionalPuck;
-        }
-
         // If the kart is looking backwards
         // sends puck backwards
         if (!MultiplayerManager.Instance.IsMultiplayer)
