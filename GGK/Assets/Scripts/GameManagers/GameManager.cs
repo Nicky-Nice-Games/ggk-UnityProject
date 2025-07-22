@@ -129,9 +129,6 @@ public class GameManager : MonoBehaviour
         {
             case "RIT Outer Loop":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
-                //MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
-                //MusicLapStateManager.instance.SetLapState(LapState.Lap1);
-                //MusicStateManager.instance.SetMusicState(MusicState.OuterLoop);
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");
