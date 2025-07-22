@@ -253,7 +253,8 @@ public class ItemHolder : NetworkBehaviour
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
-        Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation);
+        GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
+        thrownItem.GetComponent<BaseItem>().Kart = this;
         itemType = ItemType.NoItem;
         ItemTier = 0;
         ApplyItemTween(defaultItemDisplay);
