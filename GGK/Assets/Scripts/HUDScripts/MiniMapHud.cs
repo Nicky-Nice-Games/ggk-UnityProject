@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.XR.Oculus.Input;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -86,13 +88,13 @@ public class MiniMapHud : MonoBehaviour
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
     [SerializeField] private float iconSpinoutSpeed;
-    [SerializeField] private GameObject trackingPlayer;
+    public GameObject trackingPlayer;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
-    private Image miniMap;
+    [SerializeField] private Image miniMap;
     //reference icon
-    private GameObject iconRef;
+    [SerializeField] private GameObject iconRef;
     //Line renderers for calculated bounds and/or points
     private LineRenderer boundsMaker;
     private LineRenderer pointsMaker;
@@ -106,7 +108,7 @@ public class MiniMapHud : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        canvas = GetComponent<Canvas>();
+        canvas = instance.gameObject.GetComponent<Canvas>();
 
         if (showDebug)
         {
@@ -120,38 +122,11 @@ public class MiniMapHud : MonoBehaviour
             EstablishBounds(points);
         }
         DebugBounds();
-
-        //find the minimap and icon reference
-        miniMap = GameObject.Find(gameObject.name + "/MiniMap").GetComponent<Image>();
-        iconRef = GameObject.Find(gameObject.name + "/MiniMap/MapIcon");
+        
         //If there are objects to track..
         if (objects.Count > 0)
         {
-            //add objects to the icon list
-            iconRef.SetActive(true);
-            Image refImage = iconRef.GetComponent<Image>();
-            mapIcons.Add(refImage);
 
-            EstablishAppearance(objects[0], refImage);
-
-            //create more icons as more are needed
-            for (int i = 1; i < objects.Count; i++)
-            {
-                GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
-                refImage = newIcon.GetComponent<Image>();
-                mapIcons.Add(refImage);
-
-                EstablishAppearance(objects[i], refImage);
-            }
-
-            //set the player's icon to the front
-            int trackingIndex = objects.IndexOf(trackingPlayer);
-            if (trackingIndex != -1)
-            {
-                mapIcons[trackingIndex].transform.SetAsLastSibling();
-                mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
-            }
-            
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
@@ -180,42 +155,47 @@ public class MiniMapHud : MonoBehaviour
         //update icon position
         for (int i = 0; i < objects.Count; i++)
         {
-            //calulate position
-            Vector3 objPos = objects[i].transform.TransformPoint(0, 0, 0);
-            Vector2 miniMapSize = miniMap.rectTransform.sizeDelta;
-
-            float xBoundMin = center.x - (width / 2);
-            float xBoundMax = center.x + (width / 2);
-            float yBoundMin = center.z - (height / 2);
-            float yBoundMax = center.z + (height / 2);
-
-            float xLerp = Mathf.InverseLerp(xBoundMin, xBoundMax, objPos.x);
-            float yLerp = Mathf.InverseLerp(yBoundMin, yBoundMax, objPos.z);
-
-            float xPos = Mathf.Lerp(-miniMapSize.x / 2, miniMapSize.x / 2, xLerp);
-            float yPos = Mathf.Lerp(-miniMapSize.y / 2, miniMapSize.y / 2, yLerp);
-
-            //set new icon position
-            mapIcons[i].transform.localPosition = new Vector3(xPos, yPos, 0);
-
-            if (!ignoreDepth)
+            if (objects[i])
             {
-                //calculate icon size
-                //default size-- 5% of minimap size times average size multiplier
-                float defSize = (Mathf.Sqrt(miniMapSize.x * miniMapSize.y) / 20) * averageSize;
+                //calulate position
+                Vector3 objPos = objects[i].transform.TransformPoint(0, 0, 0);
+                Vector2 miniMapSize = miniMap.rectTransform.sizeDelta;
 
-                //map icon size
-                Vector2 size = mapIcons[i].rectTransform.sizeDelta;
+                float xBoundMin = center.x - (width / 2);
+                float xBoundMax = center.x + (width / 2);
+                float yBoundMin = center.z - (height / 2);
+                float yBoundMax = center.z + (height / 2);
 
-                //position of the depth as a value between 0 and 1
-                float lerp = Mathf.InverseLerp(minDepthTracking, maxDepthTracking, objPos.y);
+                float xLerp = Mathf.InverseLerp(xBoundMin, xBoundMax, objPos.x);
+                float yLerp = Mathf.InverseLerp(yBoundMin, yBoundMax, objPos.z);
 
-                //use lerp value to lerp between min size and max size
-                float iconSize = Mathf.Lerp((defSize / sizeOffset), (defSize * sizeOffset), Mathf.Clamp(lerp, 0, 1));
+                float xPos = Mathf.Lerp(-miniMapSize.x / 2, miniMapSize.x / 2, xLerp);
+                float yPos = Mathf.Lerp(-miniMapSize.y / 2, miniMapSize.y / 2, yLerp);
 
-                //set new icon size
-                mapIcons[i].rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
+                //set new icon position
+                mapIcons[i].transform.localPosition = new Vector3(xPos, yPos, 0);
+
+
+                if (!ignoreDepth)
+                {
+                    //calculate icon size
+                    //default size-- 5% of minimap size times average size multiplier
+                    float defSize = (Mathf.Sqrt(miniMapSize.x * miniMapSize.y) / 20) * averageSize;
+
+                    //map icon size
+                    //Vector2 size = mapIcons[i].rectTransform.sizeDelta;
+
+                    //position of the depth as a value between 0 and 1
+                    float lerp = Mathf.InverseLerp(minDepthTracking, maxDepthTracking, objPos.y);
+
+                    //use lerp value to lerp between min size and max size
+                    float iconSize = Mathf.Lerp((defSize / sizeOffset), (defSize * sizeOffset), Mathf.Clamp(lerp, 0, 1));
+
+                    //set new icon size
+                    mapIcons[i].rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
+                }
             }
+            
         }
     }
 
@@ -344,12 +324,22 @@ public class MiniMapHud : MonoBehaviour
     private void EstablishAppearance(GameObject obj, Image img)
     {
         AppearanceSettings settings = obj.GetComponent<AppearanceSettings>();
-        Debug.Log($"set {obj.name}'s appearance settings, is settings null? {settings == null}");
+        //Debug.Log($"set {obj.name}'s appearance settings, is settings null? {settings == null}");
         if (settings != null)
         {
-            settings.UpdateAppearance();
             img.sprite = settings.icon;
             img.color = settings.color;
+        }
+    }
+
+    public void UpdateIconAppearance(GameObject obj, AppearanceSettings settings)
+    {
+        int i = objects.IndexOf(obj);
+
+        if (mapIcons[i])
+        {
+            mapIcons[i].sprite = settings.icon;
+            mapIcons[i].color = settings.color;
         }
     }
 
@@ -359,21 +349,23 @@ public class MiniMapHud : MonoBehaviour
         float displacement = 0;
         Image icon = mapIcons[objects.IndexOf(obj)].GetComponent<Image>();
         float dt = Time.deltaTime;
-
-        while (spinsRemaining > 0)
+        if (amount > 0)
         {
-            float d = -360 * dt * iconSpinoutSpeed;
-            displacement += Mathf.Abs(d);
-            icon.rectTransform.rotation *= Quaternion.Euler(0, 0, d);
-
-            if (displacement >= 360)
+            while (spinsRemaining > 0)
             {
-                icon.rectTransform.rotation = Quaternion.Euler(0, 0, 0);
-                spinsRemaining--;
-                displacement = 0;
-            }
+                float d = -360 * dt * iconSpinoutSpeed;
+                displacement += Mathf.Abs(d);
+                icon.rectTransform.rotation *= Quaternion.Euler(0, 0, d);
 
-            yield return new WaitForSeconds(dt);
+                if (displacement >= 360)
+                {
+                    icon.rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+                    spinsRemaining--;
+                    displacement = 0;
+                }
+
+                yield return new WaitForSeconds(dt);
+            }
         }
     }
 
@@ -385,10 +377,19 @@ public class MiniMapHud : MonoBehaviour
     {
         objects.Add(kart);
         GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
+        newIcon.SetActive(true);
         Image refImage = newIcon.GetComponent<Image>();
+        EstablishAppearance(kart, refImage);
         mapIcons.Add(refImage);
 
-        EstablishAppearance(kart, refImage);
+        //set the player's icon to the front
+        int trackingIndex = objects.IndexOf(trackingPlayer);
+        if (trackingIndex != -1)
+        {
+            mapIcons[trackingIndex].transform.SetAsLastSibling();
+            mapIcons[trackingIndex].rectTransform.sizeDelta = iconRef.GetComponent<Image>().rectTransform.sizeDelta * 1.15f;
+        }
+        
     }
 }
 
