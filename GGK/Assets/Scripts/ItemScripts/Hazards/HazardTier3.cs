@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConfusedRitchie : BaseItem
+/// <summary>
+/// Confused Ritchie
+/// </summary>
+public class HazardTier3 : BaseItem
 {
-    private void Start() {
-        
+    private void Start()
+    {
+
     }
 
     private new void Update()
