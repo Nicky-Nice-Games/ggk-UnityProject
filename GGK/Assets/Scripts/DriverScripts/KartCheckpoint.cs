@@ -13,25 +13,38 @@ public class KartCheckpoint : MonoBehaviour
     public float finishTime = float.MaxValue;
     public int placement;
     public string name;
-    [SerializeField] List<GameObject> checkpointList;
+    [SerializeField] public List<GameObject> checkpointList;
     [SerializeField]
     private GameObject checkPointParent;
     GameManager gameManager;
+    public GameObject parent;
+    public NPCPhysics physicsNPC;
 
     [SerializeField]
     TextMeshProUGUI placementDisplay;
     [SerializeField]
     TextMeshProUGUI lapDisplay;
 
+    [SerializeField]
+    private int totalLaps;
+
+    // check if the player finished the lap/race with the warp
+    private bool passedWithWarp = false;
+
+    public bool PassedWithWarp { get { return passedWithWarp; } set { passedWithWarp = value; } }
+
     void Start()
     {
+        totalLaps = 3;
         checkpointId = 0;
+        Transform childTransform = parent.transform.GetChild(0);
+        physicsNPC = childTransform.GetComponent<NPCPhysics>();
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
         {
             if (child != checkPointParent.transform) // Avoid adding the parent itself
                 checkpointList.Add(child.gameObject);
         }
-        if(this.GetComponent<NPCDriver>() == null)
+        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
         }
@@ -49,6 +62,9 @@ public class KartCheckpoint : MonoBehaviour
 
 
         }
+
+
+        
     }
 
     // Update is called once per frame
@@ -56,53 +72,78 @@ public class KartCheckpoint : MonoBehaviour
     {
         distanceSquaredToNextCP = Mathf.Pow(transform.position.x - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.x, 2) +
             Mathf.Pow(transform.position.z - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.z, 2);
-        if (this.GetComponent<NPCDriver>()== null)
+        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             placementDisplay.text = "Placement: " + placement;
         }
+
+        if (passedWithWarp && lap == totalLaps)
+        {
+            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            StartCoroutine(FinalizeFinish());
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }
+            passedWithWarp = false;
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         bool canPass = false;
+        int maxSkip = 15; // how many checkpoints can be skipped ahead
+        int nextValidCheckpointIndex = -1;
 
-        if (other.gameObject == checkpointList[(checkpointId + 1) % checkpointList.Count])
+        // Loop through the next `maxSkip` checkpoints
+        for (int i = 1; i <= maxSkip; i++)
         {
-            canPass = true;
+            int index = (checkpointId + i) % checkpointList.Count;
+            if (other.gameObject == checkpointList[index])
+            {
+                canPass = true;
+                nextValidCheckpointIndex = index;
+                break;
+            }
         }
 
         if (other.CompareTag("Checkpoint") && canPass)
         {
-            checkpointId++;
+            checkpointId = nextValidCheckpointIndex;
         }
         else if (other.CompareTag("Startpoint"))
         {
-            if (checkpointId == checkpointList.Count - 1)
+            if (checkpointId >= checkpointList.Count - 10 && checkpointId < checkpointList.Count)
             {
                 lap++;
                 checkpointId = 0;
-                if (this.GetComponent<NPCDriver>() == null)
+                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
                     lapDisplay.text = "Lap: " + (lap + 1);
                 }
-                
 
-                // 3 laps finished assuming we start on lap 0
-                if (lap == 1)
+                if (lap == totalLaps)
                 {
-                    LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
-                    finishTime = leaderboardController.curTime;
-                    //leaderboardController.Finished(this); //this has been commented out due to causing an error with the assembly definition references
-                    
-                    StartCoroutine(GameOverWait());
+                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                    StartCoroutine(FinalizeFinish());
                 }
             }
         }
-    }  
-    
+    }
+
     IEnumerator GameOverWait()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10.5f);
         gameManager.GameFinished();
+    }
+
+    IEnumerator FinalizeFinish()
+    {
+        yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
+
+        LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
+        leaderboardController.Finished(this);
+        StartCoroutine(GameOverWait());
     }
 }

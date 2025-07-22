@@ -4,19 +4,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// OLD SCRIPT // REPLACED
+
 public class GameHandeler : MonoBehaviour
 {
     //too bad
     private GameManager gamemanagerObj;
-    private float targetTime = 5.0f;
+    private float targetTime = 10.0f;
+    [SerializeField]
     private float curTime;
-
-    private float tooBadTime = 8.0f;
     [SerializeField]
     private TextMeshProUGUI tooBad;
 
     [SerializeField]
     private Image leaderboard;
+
+    private bool targetReached = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,11 +34,19 @@ public class GameHandeler : MonoBehaviour
         if (leaderboard.gameObject.activeSelf)
         {
             NEWDriver[] karts = GameObject.FindObjectsOfType<NEWDriver>();
-            curTime = targetTime -= Time.deltaTime;
             // decrease time when the leaderboard appears, meaning someone finished the race
             if (targetTime <= 0.0f)
             {
-                curTime += Time.deltaTime;
+                targetReached = true;
+            }
+
+            if (!targetReached)
+            {
+                curTime = targetTime -= Time.deltaTime;
+                targetTime -= Time.deltaTime;
+            }
+            else
+            {
                 // check each player kart and if they finished the race in time 
                 foreach (NEWDriver driver in karts)
                 {
@@ -48,19 +59,7 @@ public class GameHandeler : MonoBehaviour
                         tooBad.gameObject.SetActive(true);
                     }
                 }
-                if (curTime >= tooBadTime)
-                {
-                    timerEnded();
-                }
             }
         }
-    }
-
-    /// <summary>
-    /// Tells the manager to load the game over scene
-    /// </summary>
-    void timerEnded()
-    {
-        gamemanagerObj.GetComponent<GameManager>().GameFinished();
     }
 }

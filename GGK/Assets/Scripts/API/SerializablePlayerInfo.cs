@@ -11,7 +11,7 @@ using UnityEngine;
 [System.Serializable]
 public class SerializablePlayerInfo : MonoBehaviour
 {
-    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed;
+    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public List<ItemUsageEntry> boostUsage = new List<ItemUsageEntry>();
     public List<ItemUsageEntry> offenceUsage = new List<ItemUsageEntry>();
     public List<ItemUsageEntry> trapUsage = new List<ItemUsageEntry>();

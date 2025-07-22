@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 1202850870765044277}
   - component: {fileID: 448603920475816632}
   - component: {fileID: 1726606873218015980}
+  - component: {fileID: 3752952258820976734}
   - component: {fileID: 4323936219153965337}
   m_Layer: 0
   m_Name: Shield
-  m_TagString: Untagged
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 7066896739593934355}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.433701, y: 13.5, z: -17.000544}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -50,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7066896739593934355}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -106,6 +107,27 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &3752952258820976734
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7066896739593934355}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 255
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4323936219153965337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,4 +145,9 @@ MonoBehaviour:
   itemCategory: Shield
   useCount: 1
   isTimed: 1
-  itemIcon: {fileID: 2800000, guid: d4af179105362874ab6377ae9550b2a6, type: 3}
+  itemIcon: {fileID: 2800000, guid: 23742be16381b6e4ca5e285b12452e7d, type: 3}
+  tierOneItemIcon: {fileID: 2800000, guid: 23742be16381b6e4ca5e285b12452e7d, type: 3}
+  tierTwoItemIcon: {fileID: 2800000, guid: e2ac44bbc8c63d946862bf72195a026a, type: 3}
+  tierThreeItemIcon: {fileID: 2800000, guid: f1c4e36e72b3de44f8ea08e03e01a611, type: 3}
+  tierFourItemIcon: {fileID: 2800000, guid: d3885e7dc1cd1e04099e5476bafe9881, type: 3}
+  shieldEffect: {fileID: 8339438600643687685, guid: 4aface2a6c044d44aa9d2697968857f3, type: 3}
