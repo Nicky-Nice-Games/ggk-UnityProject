@@ -4,7 +4,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class FakeItemBox : BaseItem
+/// <summary>
+/// Fake Item Box
+/// </summary>
+public class HazardTier4 : BaseItem
 {
     // [SerializeField]
     // AudioClip hazardSound;

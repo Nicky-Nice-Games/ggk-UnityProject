@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: HazardTier4
+  - Name: HazardTier2
   - Tag: Hazard
   - Layer: ItemBox
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

@@ -125,8 +125,10 @@ public class ItemHolder : NetworkBehaviour
 
         // new code 
         // InitItemArray();
+        ItemTier = 0;
+        Type = ItemType.NoItem;
         InitItemImageArray();
-        ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+        ApplyItemTween(defaultItemDisplay);
     }
 
     // Update is called once per frame
@@ -169,6 +171,7 @@ public class ItemHolder : NetworkBehaviour
                     // new code
                     ItemTier = 0;
                     Type = ItemType.NoItem;
+                    ApplyItemTween(defaultItemDisplay);
                 }
             }
             else if (item.UseCount == 1 && !item.isTimed) // hazards, lv1,lv3,lv4 puck
@@ -187,6 +190,7 @@ public class ItemHolder : NetworkBehaviour
                     // new code
                     ItemTier = 0;
                     Type = ItemType.NoItem;
+                    ApplyItemTween(defaultItemDisplay);
                 }
             }
             else if (item.UseCount > 1 && item.isTimed) //
@@ -206,6 +210,7 @@ public class ItemHolder : NetworkBehaviour
                     // new code
                     ItemTier = 0;
                     Type = ItemType.NoItem;
+                    ApplyItemTween(defaultItemDisplay);
                 }
             }
             else if (item.UseCount >= 1 && !item.isTimed) //
@@ -224,6 +229,7 @@ public class ItemHolder : NetworkBehaviour
                     // new code
                     ItemTier = 0;
                     Type = ItemType.NoItem;
+                    ApplyItemTween(defaultItemDisplay);
                 }
             }
         }
@@ -1006,7 +1012,6 @@ public class ItemHolder : NetworkBehaviour
     //     { "NoItemT4", "BoostT4", "ShieldT4", "HazardT4", "PuckT4" }
     // };
 
-    enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
     [Header("ItemArray")]
     [SerializeField] private Transform[] BoostArray;
     [SerializeField] private Transform[] ShieldArray;
@@ -1034,6 +1039,7 @@ public class ItemHolder : NetworkBehaviour
          }
     }
     const int maxTier = 3;
+    enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
     [SerializeField] private ItemType Type = ItemType.NoItem;
 
     private void InitItemArray()
