@@ -557,6 +557,7 @@ public class ItemHolder : MonoBehaviour
                 thisDriver.sphere.velocity /= 8;
             Destroy(collision.gameObject);
             ApplyIconSpin(gameObject, 1);
+            if (kartSounds != null) { kartSounds.PlayHitSpinout(); }
         }
         // kart uses a boost and is given the boost through a force
         if (collision.gameObject.CompareTag("Boost"))
@@ -677,6 +678,7 @@ public class ItemHolder : MonoBehaviour
                 
             }
             ApplyIconSpin(gameObject, 1);
+            if (kartSounds != null) { kartSounds.PlayHitSpinout(); }
             Destroy(collision.gameObject);
         }
 
