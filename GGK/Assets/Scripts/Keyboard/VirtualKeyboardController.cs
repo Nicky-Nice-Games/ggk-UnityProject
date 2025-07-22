@@ -217,7 +217,8 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             field.text = "";
         }
-        curField = -1;
+        curField = 0;
+        Debug.Log(curField);
     }
 }
 

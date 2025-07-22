@@ -28,6 +28,7 @@ public class SignInManager : MonoBehaviour
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
     PlayerInfo playerInfo;
+    APIManager apiManager;
 
     [SerializeField] private List<TMP_InputField> inputFieldsList = new List<TMP_InputField>();         // Holds all fields
     private Dictionary<string, TMP_InputField> inputFields = new Dictionary<string, TMP_InputField>();  // Organizes fields
@@ -36,6 +37,7 @@ public class SignInManager : MonoBehaviour
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
+        apiManager = FindAnyObjectByType<APIManager>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in continueButtons)
@@ -108,7 +110,7 @@ public class SignInManager : MonoBehaviour
 
                 case "Confirm Password":
                     // TODO: Add functionality to validate password
-                    gameManager.LoggedIn();
+                    apiManager.CreatePlayer(playerInfo);
                     return;
 
                 default:

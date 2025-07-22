@@ -98,18 +98,14 @@ public class GameManager : NetworkBehaviour
             {
                 ValidatePlayer(playerInfo);
             }
+            /*
             else
             {
                 // Checking if sign up data conflicts with existing data in backend
-                if (!apiManager.CreatePlayer(playerInfo)) 
-                {
-                    VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-                    kbController.ResetCurrentFields();
-                    return;
-                }
+                apiManager.CreatePlayer(playerInfo);
                 
             }
-            
+            */
         }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;

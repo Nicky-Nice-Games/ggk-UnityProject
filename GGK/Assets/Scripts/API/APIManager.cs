@@ -2,37 +2,50 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Unity.Services.Authentication;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class APIManager : MonoBehaviour
 {
+    private GameManager gameManager;
+
+
+    private void Start()
+    {
+        gameManager = GetComponent<GameManager>();
+    }
+
     /// <summary>
     /// Setting up the post request
     /// </summary>
     /// <param name="url">where to send the data</param>
     /// <param name="jsonData">json data</param>
     /// <returns></returns>
-    private IEnumerator PostJson(string url, string jsonData)
+    public async Task PostJsonAsync(string url, string json)
     {
-        // Sets up the unity request
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        // Sends back each data at a time
-        yield return request.SendWebRequest();
-
-        // Checks the result of the request 
-        if (request.result == UnityWebRequest.Result.Success)
+        using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
         {
-            Debug.Log("Data posted successfully!");
-        }
-        else
-        {
-            Debug.LogError("Error posting data: " + request.error);
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+            webRequest.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+
+            var operation = webRequest.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log("POST ERROR: " + webRequest.error);
+            }
+            else
+            {
+                Debug.Log("POST Success");
+            }
         }
     }
 
@@ -48,7 +61,7 @@ public class APIManager : MonoBehaviour
         serializable.ConvertToSerializable(thisPlayer);
         string json = JsonUtility.ToJson(serializable);
 
-        StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));
+        //StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));
     }
 
     /// <summary>
@@ -116,35 +129,30 @@ public class APIManager : MonoBehaviour
     /// </summary>
     /// <param name="thisPlayer"></param>
     /// <returns>True if player was created</returns>
-    public bool CreatePlayer(PlayerInfo thisPlayer)
+    public async Task<bool> CreatePlayerAsync(PlayerInfo thisPlayer)
     {
-        bool wasCreated = false;
-
-        WebUserData webUserData = new WebUserData();
-        webUserData.username = thisPlayer.playerName;
-        webUserData.password = thisPlayer.playerPassword;
-        webUserData.email = thisPlayer.playerEmail;
+        WebUserData webUserData = new WebUserData
+        {
+            username = thisPlayer.playerName,
+            password = thisPlayer.playerPassword,
+            email = thisPlayer.playerEmail
+        };
 
         string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
         string json = JsonUtility.ToJson(webUserData);
 
-        // Making sure there is no player with this existing data
-        StartCoroutine(CheckForPlayerInData(webUserData.email, (playerExists) =>
-        {
-            Debug.Log("Player found in server?: " + playerExists);
+        bool playerExists = await CheckForPlayerInDataAsync(webUserData.email);
+        Debug.Log("Player found in server?: " + playerExists);
 
-            if (!playerExists)
-            {
-                StartCoroutine(PostJson(path, json));
-                wasCreated = true;
-            }
-            else
-            {
-                wasCreated = false;
-            }
-        }));
-        Debug.Log("Was created: " + wasCreated);
-        return wasCreated;
+        if (!playerExists)
+        {
+            await PostJsonAsync(path, json);
+            Debug.Log("Player created");
+            return true;
+        }
+
+        Debug.Log("Player already exists");
+        return false;
     }
 
     /// <summary>
@@ -153,27 +161,51 @@ public class APIManager : MonoBehaviour
     /// <param name="email">email</param>
     /// <param name="callback">the bool that will be returned as a callback</param>
     /// <returns></returns>
-    public IEnumerator CheckForPlayerInData(string email, Action<bool> callback)
+    public async Task<bool> CheckForPlayerInDataAsync(string email)
     {
-        // uri = gameservice/playerlog/{email} when checking with email
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(
-            "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email))
-        {
-            yield return webRequest.SendWebRequest();
+        string url = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email;
 
-            // Checking good request
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            var operation = webRequest.SendWebRequest();
+
+            while (!operation.isDone)
+                await Task.Yield(); // Let Unity update frame
+
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
                 string json = webRequest.downloadHandler.text;
-
-                // Getting the bool out of the returned data
-                callback(bool.Parse(json.ToLower()));
+                return bool.Parse(json.ToLower());
             }
             else
             {
                 Debug.Log("GET ERROR FOR PLAYER CHECK: " + webRequest.error);
-                callback(false);
+                return false;
             }
         }
+    }
+
+    // Wrapper to call async from non-async
+    public void CreatePlayer(PlayerInfo thisPlayer)
+    {
+        _ = CallAsyncFromNonAsync(thisPlayer);
+    }
+
+    private async Task CallAsyncFromNonAsync(PlayerInfo thisPlayer)
+    {
+        bool wasCreated = await CreatePlayerAsync(thisPlayer);
+        Debug.Log("Was created (async): " + wasCreated);
+
+        if (!wasCreated)
+        {
+            VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+            kbController.ResetCurrentFields();
+            return;
+        }
+        else
+        {
+            gameManager.LoggedIn();
+        }
+        
     }
 }
