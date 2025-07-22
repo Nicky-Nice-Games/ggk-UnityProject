@@ -22,14 +22,6 @@ public class PuckTier3 : BaseItem
     {
 
         karts = GameObject.FindGameObjectsWithTag("Kart");
-        FindClosestKart(karts);
-
-        PuckTier3 additionalPuck = new PuckTier3();
-        additionalPuck.itemCount = itemCount - 1;
-        if (itemCount > 0)
-        {
-            kart.HeldItem = additionalPuck;
-        }
 
         // If the kart is looking backwards
         // sends puck backwards
@@ -79,6 +71,8 @@ public class PuckTier3 : BaseItem
 
     void FixedUpdate()
     {
+        FindClosestKart(karts);
+
         // Moves the puck towards the closest kart
         agent.SetDestination(kartTarget.transform.position);
         // Moves the puck straight normally but still follows pathing
