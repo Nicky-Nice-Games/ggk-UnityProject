@@ -7,6 +7,13 @@ using UnityEngine;
 /// </summary>
 public class HazardTier3 : BaseItem
 {
+    private void Start()
+    {
+        Vector3 behindPos = transform.position - transform.forward * 8;
+        behindPos.y += 3.0f;
+        transform.position = behindPos;
+    }
+
     private new void Update()
     {
         RotateBox();
