@@ -25,7 +25,14 @@ public class PostGameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        MakeClientsList();
+        NetworkManager.Singleton.OnClientConnectedCallback += ConnectClient;
+        NetworkManager.Singleton.OnClientDisconnectCallback += DisconnectClient;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback -= ConnectClient;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= DisconnectClient;
     }
 
     private void Update()
@@ -37,10 +44,10 @@ public class PostGameManager : NetworkBehaviour
         }
 
         // if the connectedclients count doesn't equal the playerdecisions count, update it
-        if(NetworkManager.Singleton.ConnectedClientsIds.ToList().Count != playerDecisions.Count)
-        {
-            MakeClientsList();
-        }
+        //if(NetworkManager.Singleton.ConnectedClientsIds.ToList().Count != playerDecisions.Count)
+        //{
+        //    MakeClientsList();
+        //}
     }
 
     // Stores each players decision and gives the host the ability to proceed when every player makes a decision
@@ -108,6 +115,16 @@ public class PostGameManager : NetworkBehaviour
                 }
             }
         }
+    }
+
+    private void ConnectClient(ulong clientId)
+    {
+        playerDecisions.Add(clientId, PlayerDecisions.Undecided);
+    }
+
+    private void DisconnectClient(ulong clientId)
+    {
+        playerDecisions.Remove(clientId);
     }
 
     public Dictionary<ulong, PlayerDecisions> GetClientsList()

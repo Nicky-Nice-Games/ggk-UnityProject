@@ -85,7 +85,14 @@ public class GameOverMenuHandeler : MonoBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer &&
             NetworkManager.Singleton.ConnectedClientsIds.Count != clientCount)
         {
-            ShowLeaver();
+            if (OnlyHostConnected())
+            {
+                StartCoroutine(HostExit());
+            }
+            else
+            {
+                ShowLeaver();
+            }
         }
         clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
     }
@@ -129,7 +136,9 @@ public class GameOverMenuHandeler : MonoBehaviour
     {
         postgamemanager.EnterDecisionRpc(PlayerDecisions.Leaving);
         MultiplayerManager.Instance.IsMultiplayer = false;
-        gamemanagerObj.LoggedIn(); // to multisingle select
+        // to multisingle select
+        gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
+        gamemanagerObj.curState = GameStates.multiSingle;
     }
 
     public void StayInLobby()
@@ -163,6 +172,7 @@ public class GameOverMenuHandeler : MonoBehaviour
 
     private IEnumerator HostExit()
     {
+        StartCoroutine(AnimateText("All Players Left. Returning to Mode Select. . ."));
         yield return new WaitForSeconds(3);
         LeaveLobby();
     }
