@@ -144,10 +144,11 @@ public class LeaderboardController : NetworkBehaviour
         //}
 
         // Add leaderboard entries in correct order
-        //for (int i = 0; i < finishedKarts.Count; i++)
-        //{
-        //KartCheckpoint k = finishedKarts[i];
-        //k.placement = i + 1;
+        for (int i = 0; i < finishedKarts.Count; i++)
+        {
+            KartCheckpoint k = finishedKarts[i];
+            k.placement = i + 1;
+        }
 
             if (!IsSpawned) // single player
             {
