@@ -161,6 +161,13 @@ public class VirtualKeyboardController : MonoBehaviour
             }
             */
             curField++;
+
+            //Activating OnSelect triggers for inputfield
+            if (curField < inputField.Count)
+            {
+                inputField[curField].ActivateInputField();
+                inputField[curField].Select();
+            }
         }
 
         // Letters and shift
