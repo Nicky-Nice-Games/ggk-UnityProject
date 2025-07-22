@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.VFX;
 
 public class BoostTier4 : BaseItem
@@ -12,6 +13,11 @@ public class BoostTier4 : BaseItem
 
     private void OnTriggerEnter(Collider collision)
     {
+        // set variables for boost
+        float boostMult;
+        float boostMaxSpeed;
+        float duration;
+
         NEWDriver driver = collision.gameObject.GetComponent<NEWDriver>();
         if (driver != null)
         {
@@ -22,10 +28,6 @@ public class BoostTier4 : BaseItem
             boostEffect = driver.transform.
                 Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
 
-            // set variables for boost
-            float boostMult;
-            float boostMaxSpeed;
-            float duration;
 
             GameObject kartParent = driver.transform.parent.gameObject;
             KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
@@ -70,6 +72,19 @@ public class BoostTier4 : BaseItem
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,
                            boostMult, duration, boostMaxSpeed));
+        }
+
+        // handles boosting for npcs
+        NPCDriver npcDriver = collision.gameObject.GetComponent<NPCDriver>();
+        if (npcDriver != null)
+        {
+            // disable collider so it doesnt interfere with other players in scene
+            this.gameObject.GetComponent<BoxCollider>().enabled = false;
+
+            boostMult = 1.5f;
+            duration = 3.0f;
+
+            StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
         }
     }
 
@@ -123,5 +138,31 @@ public class BoostTier4 : BaseItem
         boostEffect.Stop();
         //warpBoostEffect.SetActive(false);
         Destroy(this.gameObject);
+    }
+
+    IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
+    {
+        SplineAnimate spline = driver.followTarget.gameObject.GetComponent<SplineAnimate>();
+
+        // modify variables to increase balls max speed
+        float originalSpeed = spline.MaxSpeed;
+        float boostedSpeed = originalSpeed * boostForce;
+        float progress = spline.NormalizedTime;
+
+        // increase balls max speed
+        spline.MaxSpeed = boostedSpeed;
+        spline.NormalizedTime = progress;
+
+        // apply boost to npc
+        driver.maxSpeed = driver.TopMaxSpeed * boostForce;
+
+        yield return new WaitForSeconds(duration);
+
+        // set max speeds back to original values
+        driver.maxSpeed = driver.TopMaxSpeed;
+        spline.MaxSpeed = originalSpeed;
+        spline.NormalizedTime = spline.NormalizedTime;
+
+        driver.boosted = false;
     }
 }

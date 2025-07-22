@@ -12,9 +12,12 @@ public class ShieldTier3 : BaseItem
     {
         timer = 8.0f;
 
-        // find shield effect attached to the kart
-        shieldEffect = kart.transform.
-            Find("Normal/Parent/KartModel/ShieldVFX/Shield").GetComponent<VisualEffect>();
+        if (kart.GetComponent<NEWDriver>() != null)
+        {
+            // find shield effect attached to the kart
+            shieldEffect = kart.transform.
+                Find("Normal/Parent/KartModel/ShieldVFX/Shield").GetComponent<VisualEffect>();
+        }
 
         // play shield effect for timer duration
         shieldEffect.SetFloat("Duration", timer);
