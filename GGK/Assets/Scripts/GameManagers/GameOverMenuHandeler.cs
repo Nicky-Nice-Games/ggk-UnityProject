@@ -22,6 +22,10 @@ public class GameOverMenuHandeler : MonoBehaviour
     private GameObject playAgainPanel;
     [SerializeField]
     private TextMeshProUGUI waiting;
+    [SerializeField]
+    private TextMeshProUGUI playerLeft;
+
+    int clientCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -69,13 +73,21 @@ public class GameOverMenuHandeler : MonoBehaviour
             // if everyone else left EXCEPT the host then they leave too
             if (OnlyHostConnected())
             {
-                LeaveLobby();
+                waiting.text = "All Players Left. Returning to Mode Select. . .";
+                StartCoroutine(HostExit());
             }
             else
             {
                 playAgainPanel.SetActive(true);
             }
         }
+
+        if (MultiplayerManager.Instance.IsMultiplayer &&
+            NetworkManager.Singleton.ConnectedClientsIds.Count != clientCount)
+        {
+            ShowLeaver();
+        }
+        clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
     }
 
     public void ReplayButton()
@@ -143,9 +155,50 @@ public class GameOverMenuHandeler : MonoBehaviour
     }
 
     // helper method that checks if only the host is connected
-    bool OnlyHostConnected()
+    private bool OnlyHostConnected()
     {
         return NetworkManager.Singleton.ConnectedClientsIds.Count == 1 &&
                NetworkManager.Singleton.ConnectedClientsIds.Contains((ulong)0);
+    }
+
+    private IEnumerator HostExit()
+    {
+        yield return new WaitForSeconds(3);
+        LeaveLobby();
+    }
+
+    private void ShowLeaver()
+    {
+        Dictionary<ulong, PlayerDecisions> players = postgamemanager.GetClientsList();
+        for (int i = 0; i < players.Count; i++)
+        {
+            PlayerDecisions decision;
+            players.TryGetValue((ulong)i, out decision);
+            if (decision == PlayerDecisions.Leaving)
+            {
+                StartCoroutine(AnimateText($"client {i} has left."));
+            }
+        }
+    }
+
+    private IEnumerator AnimateText(string txt)
+    {
+        if (playerLeft != null)
+        {
+            playerLeft.text = txt;
+            playerLeft.gameObject.SetActive(true);
+            playerLeft.color = new Color(playerLeft.color.r, playerLeft.color.g, playerLeft.color.b, 1);
+            float dt;
+            while (playerLeft.color.a > 0)
+            {
+                dt = Time.deltaTime;
+                playerLeft.color = new Color(playerLeft.color.r, playerLeft.color.g, playerLeft.color.b, Mathf.Max(0, playerLeft.color.a - dt));
+                yield return new WaitForSeconds(dt);
+            }
+
+            playerLeft.gameObject.SetActive(false);
+            playerLeft.color = new Color(playerLeft.color.r, playerLeft.color.g, playerLeft.color.b, 1);
+        }
+
     }
 }
