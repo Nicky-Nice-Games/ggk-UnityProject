@@ -150,37 +150,32 @@ public class LeaderboardController : NetworkBehaviour
             k.placement = i + 1;
         }
 
-            if (!IsSpawned) // single player
-            {
+        if (!IsSpawned) // single player
+        {
             Debug.Log("single player");
-                GameObject tempItem = Instantiate(leaderboardItem);
-                TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-                tempArray[0].text = kart.placement.ToString();
-                tempArray[1].text = kart.name;
-                tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
+            GameObject tempItem = Instantiate(leaderboardItem);
+            TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+            tempArray[0].text = kart.placement.ToString();
+            tempArray[1].text = kart.name;
+            tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
-                tempItem.transform.SetParent(leaderboard.transform);
-                tempItem.transform.localScale = Vector3.one;
-            }
-            else if (IsServer)
-            {
+            tempItem.transform.SetParent(leaderboard.transform);
+            tempItem.transform.localScale = Vector3.one;
+        }
+        else if (IsServer)
+        {
             Debug.Log("multiplayer");
-                int tempPlacement = kart.placement;
-                string tempName = kart.name;
-                float tempFinishTime = kart.finishTime;
+            int tempPlacement = kart.placement;
+            string tempName = kart.name;
+            float tempFinishTime = kart.finishTime;
 
-                SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
-            }          
-            else
-            {
-                Debug.Log("this is client");
-            }
-            
-        //}
+            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
+        }
+        else
+        {
+            Debug.Log("this is client");
+        }
 
-        
-
-        
     }
 
     /// <summary>
