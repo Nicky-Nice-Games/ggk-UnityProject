@@ -4,6 +4,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -32,23 +33,32 @@ public class PlayerSpawner : NetworkBehaviour
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
-            Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
-            kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
-            spawnedKartCount++;
-
-            while (spawnedKartCount < 8)
-            {
-                kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
-                
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                spawnedKartCount++;
-            }
+            StartCoroutine(DelayedLocalSpawn());
         }
-        else
+        else if (IsServer)
         {
-            FillGrid();
+            StartCoroutine(DelayedServerSpawn());
         }
+
+        //if (!IsSpawned)
+        //{
+        //    Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
+        //    kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+        //    spawnedKartCount++;
+        //
+        //    while (spawnedKartCount < 8)
+        //    {
+        //        kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+        //        NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
+        //        
+        //        kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+        //        spawnedKartCount++;
+        //    }
+        //}
+        //else
+        //{
+        //    FillGrid();
+        //}
 
     }
 
@@ -81,5 +91,27 @@ public class PlayerSpawner : NetworkBehaviour
             kartNetworkObject.Spawn();
             spawnedKartCount++;
         }
+    }
+
+
+    private IEnumerator DelayedLocalSpawn()
+    {
+        yield return new WaitForSeconds(0.2f); // slight delay
+        Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
+        kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+        spawnedKartCount++;
+
+        while (spawnedKartCount < 8)
+        {
+            kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            spawnedKartCount++;
+        }
+    }
+
+    private IEnumerator DelayedServerSpawn()
+    {
+        yield return new WaitForSeconds(0.2f); // slight delay
+        FillGrid();
     }
 }
