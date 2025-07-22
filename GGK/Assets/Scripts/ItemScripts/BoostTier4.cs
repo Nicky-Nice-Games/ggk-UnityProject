@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class BoostTier4 : BaseItem
 {
     [Header("Tier 4 Boost Settings")]
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
+    private VisualEffect boostEffect;
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -16,6 +18,10 @@ public class BoostTier4 : BaseItem
             // disable collider so it doesnt interfere with other players in scene
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
+            // grab boost effect from driver prefab
+            boostEffect = driver.transform.
+                Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
+
             // set variables for boost
             float boostMult;
             float boostMaxSpeed;
@@ -23,9 +29,13 @@ public class BoostTier4 : BaseItem
 
             GameObject kartParent = driver.transform.parent.gameObject;
             KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
+
+            // set boost variables
             boostMult = 1.25f;
             boostMaxSpeed = boostMult * 60;
             duration = 3.0f;
+
+            // find wormhole effect from player prefab
             warpBoostEffect = driver.transform.Find("Wormhole Effect").gameObject;
 
             int currentCheckpointId = kartCheck.checkpointId;
@@ -99,7 +109,7 @@ public class BoostTier4 : BaseItem
     /// <returns></returns>
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        //boostEffect.Play();
+        boostEffect.Play();
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -110,7 +120,7 @@ public class BoostTier4 : BaseItem
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        //boostEffect.Stop();
+        boostEffect.Stop();
         //warpBoostEffect.SetActive(false);
         Destroy(this.gameObject);
     }

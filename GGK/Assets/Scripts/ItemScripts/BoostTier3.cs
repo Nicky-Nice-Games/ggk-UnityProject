@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.VFX;
 
 public class BoostTier3 : BaseItem
 {
@@ -10,6 +11,7 @@ public class BoostTier3 : BaseItem
     private float lastHitDistance;
     public float strength = 4.0f;
     public float dampening = 40.0f;
+    private List<VisualEffect> effects = new List<VisualEffect>();
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -18,6 +20,16 @@ public class BoostTier3 : BaseItem
         {
             // disable collider so it doesnt interfere with other players in scene
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
+
+            // find all the wheel effects in the player prefab
+            effects.Add(driver.transform.
+                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph").GetComponent<VisualEffect>());
+            effects.Add(driver.transform.
+                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (1)").GetComponent<VisualEffect>());
+            effects.Add(driver.transform.
+                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (2)").GetComponent<VisualEffect>());
+            effects.Add(driver.transform.
+                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (3)").GetComponent<VisualEffect>());
 
             // set variables for boost
             float boostMult;
@@ -30,8 +42,6 @@ public class BoostTier3 : BaseItem
 
             // start boost
             StartCoroutine(ApplyBoostUpward(driver, boostMult, duration, boostMaxSpeed));
-
-            Destroy(this.gameObject);
         }
     }
 
@@ -62,8 +72,8 @@ public class BoostTier3 : BaseItem
             wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
 
             // start wind effects
-            //effects[i].SetFloat("Duration", duration + 0.5f);
-            //effects[i].Play();
+            effects[i].SetFloat("Duration", duration + 0.5f);
+            effects[i].Play();
         }
 
         // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);
@@ -109,6 +119,8 @@ public class BoostTier3 : BaseItem
         driver.canDrift = true;
         driver.doGroundCheck = true;
         driver.turnWheels = true;
+
+        Destroy(this.gameObject);
     }
 
     /// <summary>
