@@ -143,10 +143,10 @@ public class KartCheckpoint : NetworkBehaviour
         leaderboardController.Finished(this);
         Debug.Log(gameObject.transform.parent.GetChild(0));
         Debug.Log(gameObject.transform.parent.GetChild(0).gameObject);
-        if (leaderboardController.allPlayerKartsFinished.Value && 
-            gameObject.transform.parent.GetChild(0).gameObject.GetComponent<NEWDriver>() != null)
+        if (leaderboardController.allPlayerKartsFinished.Value /*&& 
+            gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null*/)
         {
-            
+            Debug.Log("Inside");
             StartCoroutine(GameOverWait());
         }
     }
