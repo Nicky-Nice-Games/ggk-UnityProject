@@ -156,13 +156,6 @@ public class VirtualKeyboardController : MonoBehaviour
             signInScript.SetPlayerLoginData(inputField[curField].name, curText);
             curText = "";
 
-            /*
-            if(curField == inputField.Count -1)
-            {
-                gameManager.LoggedIn();
-                return;
-            }
-            */
             curField++;
 
             //Activating OnSelect triggers for inputfield
@@ -224,6 +217,18 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             holdingBackspace = false;
         }
+    }
+
+    public void ResetCurrentFields()
+    {
+        Debug.Log("Resetting input fields");
+        
+        foreach(TMP_InputField field in inputField)
+        {
+            field.text = "";
+        }
+        curField = 0;
+        Debug.Log(curField);
     }
 }
 

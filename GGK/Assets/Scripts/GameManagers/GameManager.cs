@@ -90,20 +90,6 @@ public class GameManager : NetworkBehaviour
             Debug.Log("Guest mode on");
         }
 
-        // Set validate player info
-        else
-        {
-            // Checking for Log in or sign up
-            if(playerInfo.playerEmail == "")
-            {
-                ValidatePlayer(playerInfo);
-            }
-            else
-            {
-                apiManager.CreatePlayer(playerInfo);
-            }
-            
-        }
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
@@ -359,12 +345,6 @@ public class GameManager : NetworkBehaviour
     public void ExitGame()
     {
         Application.Quit();
-    }
-
-    private void ValidatePlayer(PlayerInfo player)
-    {
-        // Getting the players data
-        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
 
     /// <summary>
