@@ -32,16 +32,16 @@ public class PlayerSpawner : NetworkBehaviour
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
-            Transform kartObject = Instantiate(playerKartPrefab);
-            kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+            Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
+            //kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
             spawnedKartCount++;
 
             while (spawnedKartCount < 8)
             {
-                kartObject = Instantiate(npcKartPrefab);
+                kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
                 
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 spawnedKartCount++;
             }
         }
@@ -65,8 +65,8 @@ public class PlayerSpawner : NetworkBehaviour
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
-                Transform kartObject = Instantiate(playerKartPrefab);
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
@@ -75,8 +75,8 @@ public class PlayerSpawner : NetworkBehaviour
         
         while(spawnedKartCount < 8){
             Debug.Log("Spawning NPC");
-            Transform kartObject = Instantiate(multiplayerNPC);
-            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
             kartNetworkObject.Spawn();
             spawnedKartCount++;

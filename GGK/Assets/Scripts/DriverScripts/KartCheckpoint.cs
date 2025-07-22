@@ -124,7 +124,7 @@ public class KartCheckpoint : NetworkBehaviour
                     //lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
-                if (lap == totalLaps)
+                if (lap >= totalLaps)
                 {                    
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
                     Debug.Log("this is the if where it should call FinalizeFinish");

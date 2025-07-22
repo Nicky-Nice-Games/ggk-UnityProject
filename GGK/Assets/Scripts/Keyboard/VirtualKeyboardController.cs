@@ -9,7 +9,10 @@ using UnityEngine.InputSystem;
 public class VirtualKeyboardController : MonoBehaviour
 {
     public List<TMP_InputField> inputField = new List<TMP_InputField>();    // Ordered list according to screen visuals
-    private int curField = 0;
+
+    [HideInInspector]
+    public int curField = 0;
+
     [SerializeField] private List<Button> keyButtons;
     private int selectedIndex = 0;
     private int rowSize = 10;
@@ -154,6 +157,13 @@ public class VirtualKeyboardController : MonoBehaviour
             curText = "";
 
             curField++;
+
+            //Activating OnSelect triggers for inputfield
+            if (curField < inputField.Count)
+            {
+                inputField[curField].ActivateInputField();
+                inputField[curField].Select();
+            }
         }
 
         // Letters and shift

@@ -109,7 +109,12 @@ public class SignInManager : MonoBehaviour
                     break;
 
                 case "Confirm Password":
-                    // TODO: Add functionality to validate password
+                    if(data != playerInfo.playerPassword)
+                    {
+                        Debug.Log("Passwords do not match!");
+                        keyboard.curField --;
+                        return;
+                    }
                     apiManager.CreatePlayer(playerInfo);
                     return;
 

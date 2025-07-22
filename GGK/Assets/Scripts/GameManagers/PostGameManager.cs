@@ -53,10 +53,7 @@ public class PostGameManager : NetworkBehaviour
         Debug.Log($"Client {clientId} chose: {decision}");
 
         allSelected = AllPlayersDecided();
-        if (AllPlayersDecided())
-        {
-            ProcessDecisions();
-        }
+        ProcessDecisions();
     }
 
     // Checks if all players have chosen between Staying or Leaving
@@ -111,5 +108,10 @@ public class PostGameManager : NetworkBehaviour
                 }
             }
         }
+    }
+
+    public Dictionary<ulong, PlayerDecisions> GetClientsList()
+    {
+        return playerDecisions;
     }
 }
