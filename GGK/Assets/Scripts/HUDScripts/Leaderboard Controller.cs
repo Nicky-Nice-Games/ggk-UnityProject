@@ -146,11 +146,12 @@ public class LeaderboardController : NetworkBehaviour
         // Add leaderboard entries in correct order
         //for (int i = 0; i < finishedKarts.Count; i++)
         //{
-            //KartCheckpoint k = finishedKarts[i];
-            //k.placement = i + 1;
+        //KartCheckpoint k = finishedKarts[i];
+        //k.placement = i + 1;
 
             if (!IsSpawned) // single player
             {
+            Debug.Log("single player");
                 GameObject tempItem = Instantiate(leaderboardItem);
                 TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
                 tempArray[0].text = kart.placement.ToString();
@@ -162,6 +163,7 @@ public class LeaderboardController : NetworkBehaviour
             }
             else if (IsServer)
             {
+            Debug.Log("multiplayer");
                 int tempPlacement = kart.placement;
                 string tempName = kart.name;
                 float tempFinishTime = kart.finishTime;
