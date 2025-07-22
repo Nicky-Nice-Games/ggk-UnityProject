@@ -20,5 +20,14 @@ public class HazardTier2 : BaseItem
         {
             rb.constraints = RigidbodyConstraints.FreezePositionY;
         }
+        if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
+        {
+            Rigidbody kartRigidbody;
+            if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
+            {
+                kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+                Destroy(gameObject);
+            }
+        }
     }
 }

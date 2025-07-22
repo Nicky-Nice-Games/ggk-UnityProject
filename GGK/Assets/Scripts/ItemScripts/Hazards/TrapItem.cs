@@ -78,9 +78,20 @@ public class TrapItem : BaseItem
     {
         // stop the trap from falling when they reach the ground/road
         // for every tier except fake item box (it naturally floats a little)
-        if(itemTier < 4 && (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road")))
+        if (itemTier < 4 && (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road")))
         {
             rb.constraints = RigidbodyConstraints.FreezePositionY;
+        }
+        Debug.Log($"{collision.ToString()} in {collision.gameObject.ToString()}");
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            Rigidbody kartRigidbody;
+            if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody))
+            {
+                //this slows a kart down to an eighth of its speed
+                kartRigidbody.velocity *= 0.125f;
+                Destroy(gameObject);
+            }
         }
     }
 

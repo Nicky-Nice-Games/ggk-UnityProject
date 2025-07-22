@@ -9,9 +9,6 @@ using UnityEngine.UIElements;
 /// </summary>
 public class HazardTier4 : BaseItem
 {
-    // [SerializeField]
-    // AudioClip hazardSound;
-
     // Start is called before the first frame update
     void Start()
     {

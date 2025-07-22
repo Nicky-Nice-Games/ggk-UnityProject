@@ -7,19 +7,39 @@ using UnityEngine;
 /// </summary>
 public class HazardTier3 : BaseItem
 {
-    private void Start()
-    {
-
-    }
-
     private new void Update()
     {
         RotateBox();
     }
 
-    // Code for fake item box & Confused Ritchie
     private void RotateBox()
     {
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        // stop the trap from falling when they reach the ground/road
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road"))
+        {
+            rb.constraints = RigidbodyConstraints.FreezePositionY;
+        }
+        if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
+        {
+            Rigidbody kartRigidbody;
+            if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
+            {
+                kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+            }
+            NEWDriver playerKart = collision.gameObject.gameObject.GetComponentInChildren<NEWDriver>();
+            // if (collision.gameObject.gameObject.TryGetComponent<NEWDriver>(out playerKart))
+            if (playerKart)
+            {
+                playerKart.confusedTimer = 10;
+                playerKart.isConfused = true;
+                playerKart.movementDirection *= -1;
+            }
+            Destroy(gameObject);
+        }
     }
 }

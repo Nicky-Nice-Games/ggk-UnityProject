@@ -124,9 +124,9 @@ public class ItemHolder : NetworkBehaviour
         }
 
         // new code 
-        // InitItemArray();
+        InitItemArray();
         ItemTier = 0;
-        Type = ItemType.NoItem;
+        itemType = ItemType.NoItem;
         InitItemImageArray();
         ApplyItemTween(defaultItemDisplay);
     }
@@ -170,7 +170,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    Type = ItemType.NoItem;
+                    itemType = ItemType.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -189,7 +189,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    Type = ItemType.NoItem;
+                    itemType = ItemType.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -209,7 +209,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    Type = ItemType.NoItem;
+                    itemType = ItemType.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -228,7 +228,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    Type = ItemType.NoItem;
+                    itemType = ItemType.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -237,71 +237,76 @@ public class ItemHolder : NetworkBehaviour
 
     private bool IsHoldingItem()
     {
-        if (heldItem != null)
-        {
-            // heldItemText.text = $"Held Item: {heldItem}";
-            return true;
-        }
-        else
-        {
-            // heldItemText.text = $"Held Item:";
-            return false;
-        }
+        return itemType != ItemType.NoItem;
+        // if (heldItem != null)
+        // {
+        //     // heldItemText.text = $"Held Item: {heldItem}";
+        //     return true;
+        // }
+        // else
+        // {
+        //     // heldItemText.text = $"Held Item:";
+        //     return false;
+        // }
     }
 
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
+        Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation);
+        itemType = ItemType.NoItem;
+        ItemTier = 0;
+        ApplyItemTween(defaultItemDisplay);
+ 
+        // if (uses > 0 && context.phase == InputActionPhase.Performed)
+        // {
+        //     // grab the kart's shield effect before instantiating
+        //     if (heldItem.ItemCategory == "Shield")
+        //     {
+        //         heldItem.shieldEffect = shieldEffect;
+        //     }
 
-        if (uses > 0 && context.phase == InputActionPhase.Performed)
-        {
-            // grab the kart's shield effect before instantiating
-            if (heldItem.ItemCategory == "Shield")
-            {
-                heldItem.shieldEffect = shieldEffect;
-            }
+        //     itemDisplay.rectTransform.position = itemDisplayPosition;
+        //     itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
-            itemDisplay.rectTransform.position = itemDisplayPosition;
-            itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
+        //     // spawn all items except boost for multiplayer to see
+        //     if (!MultiplayerManager.Instance.IsMultiplayer || heldItem.ItemCategory == "Boost")
+        //     {
+        //         item = Instantiate(heldItem, transform.position, transform.rotation);
+        //     }
+        //     else if (MultiplayerManager.Instance.IsMultiplayer)
+        //     {
+        //         SpawnItemRpc();
+        //     }
 
-            // spawn all items except boost for multiplayer to see
-            if (!MultiplayerManager.Instance.IsMultiplayer || heldItem.ItemCategory == "Boost")
-            {
-                item = Instantiate(heldItem, transform.position, transform.rotation);
-            }
-            else if (MultiplayerManager.Instance.IsMultiplayer)
-            {
-                SpawnItemRpc();
-            }
+        //     if (MultiplayerManager.Instance.IsMultiplayer)
+        //     {
+        //         //if (NetworkManager.Singleton.IsHost)
+        //         //{
 
-            if (MultiplayerManager.Instance.IsMultiplayer)
-            {
-                //if (NetworkManager.Singleton.IsHost)
-                //{
+        //         //}
+        //         //else
+        //         //{
+        //         //    heldItem = null;
+        //         //    holdingItem = false;
+        //         //    itemDisplay.texture = defaultItemDisplay;
+        //         //}
+        //     }
+        //     else
+        //     {
+        //         //soundPlayer.PlayOneShot(throwSound);
+        //         item.gameObject.SetActive(true);
+        //         item.Kart = this;
+        //         item.ItemTier = heldItem.ItemTier;
 
-                //}
-                //else
-                //{
-                //    heldItem = null;
-                //    holdingItem = false;
-                //    itemDisplay.texture = defaultItemDisplay;
-                //}
-            }
-            else
-            {
-                //soundPlayer.PlayOneShot(throwSound);
-                item.gameObject.SetActive(true);
-                item.Kart = this;
-                item.ItemTier = heldItem.ItemTier;
+        //         if (heldItem.ItemTier > 1)
+        //         {
+        //             item.OnLevelUp(item.ItemTier);
+        //         }
 
-                if (heldItem.ItemTier > 1)
-                {
-                    item.OnLevelUp(item.ItemTier);
-                }
-
-                uses--; // Decrease after successful use
-            }
-        }
+        //         uses--; // Decrease after successful use
+        //     }
+        // }
     }
 
     public void OnThrow() // for npcs
@@ -401,14 +406,14 @@ public class ItemHolder : NetworkBehaviour
                         uses = heldItem.UseCount;
 
                         // new code
-                        Type = ItemType.Puck;
+                        itemType = ItemType.Puck;
 
                         // Item Box Shake
                         if (thisDriver)
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
 
                         }
 
@@ -431,7 +436,7 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
                     }
                     break;
@@ -446,14 +451,14 @@ public class ItemHolder : NetworkBehaviour
                         uses = heldItem.UseCount;
 
                         // new code
-                        Type = ItemType.Boost;
+                        itemType = ItemType.Boost;
 
                         // Item Box Shake
                         if (thisDriver)
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
 
                     }
@@ -475,7 +480,7 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
                     }
                     break;
@@ -490,14 +495,14 @@ public class ItemHolder : NetworkBehaviour
                         uses = heldItem.UseCount;
 
                         // new code
-                        Type = ItemType.Shield;
+                        itemType = ItemType.Shield;
 
                         // Item Box Shake
                         if (thisDriver)
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
 
                     }
@@ -522,7 +527,7 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                             }
                         }
                     }
@@ -538,14 +543,14 @@ public class ItemHolder : NetworkBehaviour
                         uses = heldItem.UseCount;
 
                         // new code
-                        Type = ItemType.Hazard;
+                        itemType = ItemType.Hazard;
 
                         // Item Box Shake
                         if (thisDriver)
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
 
                     }
@@ -567,7 +572,7 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }   
                     }
                     break;
@@ -604,7 +609,7 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                             }
                         }
                         else if (uses == 1)
@@ -625,7 +630,7 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                             }
                         }
                     }
@@ -646,7 +651,7 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)Type][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                         }
                     }
                     break;
@@ -1040,7 +1045,7 @@ public class ItemHolder : NetworkBehaviour
     }
     const int maxTier = 3;
     enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
-    [SerializeField] private ItemType Type = ItemType.NoItem;
+    [SerializeField] private ItemType itemType = ItemType.NoItem;
 
     private void InitItemArray()
     {
@@ -1060,8 +1065,8 @@ public class ItemHolder : NetworkBehaviour
 
     private void SpawnItem()
     {
-        if (Type == ItemType.NoItem) return; /* dont spawn the item*/
-        Instantiate(ItemArray[(int)Type][ItemTier]);
+        if (itemType == ItemType.NoItem) return; /* dont spawn the item*/
+        Instantiate(ItemArray[(int)itemType][ItemTier]);
     }
     #endregion
 }
