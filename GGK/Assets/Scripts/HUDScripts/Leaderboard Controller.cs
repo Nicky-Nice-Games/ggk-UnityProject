@@ -22,7 +22,7 @@ public class LeaderboardController : NetworkBehaviour
     public NetworkVariable<bool> allPlayerKartsFinished = new NetworkVariable<bool>(false);
     public List<KartCheckpoint> finishedPlayerKarts = new List<KartCheckpoint>();
 
-
+    private List<LeaderboardDisplayCard> finishedKartInfo = new List<LeaderboardDisplayCard>();
     private void Awake()
     {
         instance = this;
@@ -207,6 +207,93 @@ public class LeaderboardController : NetworkBehaviour
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
         Debug.Log("added card to leaderboard");
+    }
+
+
+    /// <summary>
+    /// Adds kart to finish list
+    /// </summary>
+    /// <param name="kartInfo"></param>
+    public void AddKartToFinishList(LeaderboardDisplayCard kartInfo)
+    {
+        finishedKartInfo.Add(kartInfo);
+    }
+
+    /// <summary>
+    /// Adds kart to finish list across clients
+    /// </summary>
+    /// <param name="kartInfo"></param>
+    [Rpc(SendTo.ClientsAndHost)]
+    public void AddKartToFinishListRpc(LeaderboardDisplayCard kartInfo)
+    {
+        finishedKartInfo.Add(kartInfo);
+    }
+
+
+    /// <summary>
+    /// Added kart to leaderboard
+    /// </summary>
+    /// <param name="kartInfo"></param>
+    public void AddKartToBoard(LeaderboardDisplayCard kartInfo)
+    {
+        GameObject tempItem = Instantiate(leaderboardItem);
+        TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+
+        tempArray[0].text = kartInfo.Placement.ToString();
+        tempArray[1].text = kartInfo.Name;
+        tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kartInfo.Time / 60, kartInfo.Time % 60);
+
+        tempItem.transform.SetParent(leaderboard.transform);
+        tempItem.transform.localScale = Vector3.one;
+    }
+
+
+    /// <summary>
+    /// Added kart to leaderboard across clients
+    /// </summary>
+    /// <param name="kartInfo"></param>
+    [Rpc(SendTo.ClientsAndHost)]
+    public void AddKartToBoardRpc(LeaderboardDisplayCard kartInfo)
+    {
+        AddKartToBoard(kartInfo);
+    }
+
+
+    /// <summary>
+    /// Clears leaderboard and fills out with finished kart info
+    /// </summary>
+    public void RefreshKartsOnBoard()
+    {
+        // Clear old entries (optional, if leaderboard is visual only)
+        for (int i = 1; i < leaderboard.transform.childCount; i++)
+        {
+            Destroy(leaderboard.transform.GetChild(i).gameObject);
+        }
+
+        for(int i = 0; i < finishedKartInfo.Count; i++)
+        {
+            AddKartToBoard(finishedKartInfo[i]);
+        }
+    }
+
+    /// <summary>
+    /// Clears out leaderboard and fills out with finished kart info
+    /// </summary>
+    [Rpc(SendTo.ClientsAndHost)]
+    public void RefreshKartsOnBoardRpc()
+    {
+        RefreshKartsOnBoard();
+    }
+
+    public void ShowLeaderboard()
+    {
+        leaderboard.SetActive(true);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ShowLeaderboardRpc()
+    {
+        leaderboard.SetActive(true);
     }
 
     public struct LeaderboardDisplayCard : INetworkSerializable
