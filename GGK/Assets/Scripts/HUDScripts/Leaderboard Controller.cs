@@ -137,34 +137,34 @@ public class LeaderboardController : NetworkBehaviour
         // Sort by actual finish time
         finishedKarts.Sort((a, b) => a.finishTime.CompareTo(b.finishTime));
 
-        // Clear old entries (optional, if leaderboard is visual only)
-        for (int i = 1; i < leaderboard.transform.childCount; i++)
-        {
-            Destroy(leaderboard.transform.GetChild(i).gameObject);
-        }
+        //// Clear old entries (optional, if leaderboard is visual only)
+        //for (int i = 1; i < leaderboard.transform.childCount; i++)
+        //{
+        //    Destroy(leaderboard.transform.GetChild(i).gameObject);
+        //}
 
         // Add leaderboard entries in correct order
-        for (int i = 0; i < finishedKarts.Count; i++)
-        {
-            KartCheckpoint k = finishedKarts[i];
-            k.placement = i + 1;
+        //for (int i = 0; i < finishedKarts.Count; i++)
+        //{
+            //KartCheckpoint k = finishedKarts[i];
+            //k.placement = i + 1;
 
             if (!IsSpawned) // single player
             {
                 GameObject tempItem = Instantiate(leaderboardItem);
                 TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-                tempArray[0].text = k.placement.ToString();
-                tempArray[1].text = k.name;
-                tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)k.finishTime / 60, k.finishTime % 60);
+                tempArray[0].text = kart.placement.ToString();
+                tempArray[1].text = kart.name;
+                tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
                 tempItem.transform.SetParent(leaderboard.transform);
                 tempItem.transform.localScale = Vector3.one;
             }
             else if (IsServer)
             {
-                int tempPlacement = k.placement;
-                string tempName = k.name;
-                float tempFinishTime = k.finishTime;
+                int tempPlacement = kart.placement;
+                string tempName = kart.name;
+                float tempFinishTime = kart.finishTime;
 
                 SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
             }          
@@ -173,7 +173,9 @@ public class LeaderboardController : NetworkBehaviour
                 Debug.Log("this is client");
             }
             
-        }
+        //}
+
+        
 
         
     }
