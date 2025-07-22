@@ -15,7 +15,6 @@ public class KartCheckpoint : NetworkBehaviour
     public string name;
     [SerializeField] public List<GameObject> checkpointList;
     [SerializeField] private GameObject checkPointParent;
-    GameManager gameManager;
     public GameObject parent;
     public NPCPhysics physicsNPC;
 
@@ -47,24 +46,7 @@ public class KartCheckpoint : NetworkBehaviour
         if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
-        }
-
-        GameObject gameManagerGO = GameObject.FindGameObjectWithTag("GameManager");
-
-        if (gameManagerGO == null)
-        {
-            Debug.LogError("GameManager not found in the scene. Please ensure it is present.");
-            return;
-        }
-        else
-        {
-            gameManager = gameManagerGO.GetComponent<GameManager>();
-
-
-        }
-
-
-        
+        }   
     }
 
 
@@ -139,11 +121,11 @@ public class KartCheckpoint : NetworkBehaviour
         yield return new WaitForSeconds(10.5f);
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            gameManager.GameFinishedRpc();
+            GameManager.thisManagerInstance.GameFinishedRpc();
         }
         else
         {
-            gameManager.GameFinished();
+            GameManager.thisManagerInstance.GameFinished();
         }
     }
 
