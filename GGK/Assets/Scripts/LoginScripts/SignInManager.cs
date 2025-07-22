@@ -54,14 +54,14 @@ public class SignInManager : MonoBehaviour
         // Organizing fields list into dict
         foreach (TMP_InputField field in inputFieldsList)
         {
-            inputFields[field.name] = field;
+            inputFields[field.name] = field; 
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-
+             
     }
 
     /// <summary>
