@@ -212,13 +212,13 @@ public class MultiplayerManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void AddPlayerToPanelRpc(ulong clientId, string name)
+    public void AddPlayerToPanelRpc(ulong clientId, FixedString128Bytes name)
     {
         if (!playerPanelItems.ContainsKey(clientId))
         {
             GameObject tempPanelItem = Instantiate(playerPanelItemTemplate);
 
-            tempPanelItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
+            tempPanelItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name.ToString();
 
             tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Selecting";
 
@@ -259,9 +259,10 @@ public class MultiplayerManager : NetworkBehaviour
         {
             multiplayerPanel.SetActive(true);
 
-            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            int childCount = multiplayerPanel.transform.childCount;
+            for (int i = childCount - 1; i > 0; i--)
             {
-                playerPanelItems[clientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Selecting";
+               multiplayerPanel.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "Selecting";
             }
         }
         else
@@ -354,7 +355,7 @@ public class MultiplayerManager : NetworkBehaviour
         player.CharacterColor = characterColor;
         player.CharacterName = characterName; //DELETE IF NOT WORKY
         players[senderClientId] = player;
-        playerPanelItems[senderClientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Confirmed";
+        UpdatePlayerPanelRpc(senderClientId);
         Debug.Log($"Client {senderClientId} chose {characterName} in color {characterColor}");
 
         //checking if all players have made a selection
@@ -380,6 +381,12 @@ public class MultiplayerManager : NetworkBehaviour
         // Auto picks the kart they are hovering
         PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor); // Most recently selected character and color for now
     }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void UpdatePlayerPanelRpc(ulong clientId)
+    {
+        playerPanelItems[clientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Confirmed";
+    }
     #endregion
 
     #region map votes
@@ -391,7 +398,7 @@ public class MultiplayerManager : NetworkBehaviour
         Debug.Log($"Rpc called by clientid: {senderClientId}");
         playerMapSelectionChecks[senderClientId] = true;
         playerMapSelections[senderClientId] = map;
-        playerPanelItems[senderClientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = map.ToString();
+        UpdateMapPanelRpc(senderClientId, map);
         if (AllPlayerMapVotesIn())
         {
             // pick random map
@@ -450,6 +457,12 @@ public class MultiplayerManager : NetworkBehaviour
             if (!playerChoice.Value) allVoted = false;
         }
         return allVoted;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void UpdateMapPanelRpc(ulong clientId, Map map)
+    {
+        playerPanelItems[clientId].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = map.ToString();
     }
     #endregion
 
