@@ -10,6 +10,7 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// MultiplayerManager class by Phillip Brown
@@ -110,12 +111,21 @@ public class MultiplayerManager : NetworkBehaviour
 
     public void ResetDictionaries()
     {
-        //clear dictionaries
+        // clear dictionaries
         playerKartSelectionChecks.Clear();
         playerMapSelectionChecks.Clear();
         playerMapSelections.Clear();
         playerPanelItems.Clear();
         players.Clear();
+
+        // clear multiplayer panel
+        int childCount = multiplayerPanel.transform.childCount;
+        for (int i = childCount - 1; i > 0; i++)
+        {
+            Destroy(multiplayerPanel.transform.GetChild(i).gameObject);
+        }
+
+        // Initilization
         InitPlayerDataRpc();
         Debug.Log($"number of connected clients {NetworkManager.ConnectedClientsIds.Count}");
         foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
@@ -123,7 +133,6 @@ public class MultiplayerManager : NetworkBehaviour
             playerKartSelectionChecks.Add(clientId, false);
             playerMapSelectionChecks.Add(clientId, false);
             playerMapSelections.Add(clientId, Map.RITOuterLoop);
-            AddPlayerToPanelRpc(clientId);
         }
     }
 
@@ -142,6 +151,9 @@ public class MultiplayerManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsMultiplayer) return;
+
+        // Timers
         if (runKartSelectionTimer)
         {
             kartSelectionTimer -= Time.deltaTime;
@@ -165,6 +177,19 @@ public class MultiplayerManager : NetworkBehaviour
                 OnMapSelectionTimerEnd();
             }
         }
+
+        // Toggle multiplayer panel
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (multiplayerPanel.activeSelf)
+            {
+                multiplayerPanel.SetActive(false);
+            }
+            else
+            {
+                multiplayerPanel.SetActive(true);
+            }
+        }
     }
 
     // Show Gamemode select to host, show Clients a waiting screen
@@ -177,23 +202,42 @@ public class MultiplayerManager : NetworkBehaviour
     }
 
     // player panel stuff
-    [Rpc(SendTo.ClientsAndHost)]
-    private void AddPlayerToPanelRpc(ulong clientId)
+    [Rpc(SendTo.Server)]
+    public void AddPlayerToPanelRpc()
     {
-        GameObject tempPanelItem = Instantiate(playerPanelItemTemplate);
-        tempPanelItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[clientId].PlayerName;
-        if (IsHost)
+        foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
         {
-            tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Choosing GameMode";
+            AddPlayerToPanelRpc(clientId, players[clientId].PlayerName);
         }
-        else
-        {
-            tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Waiting";
-        }
-        tempPanelItem.transform.parent = multiplayerPanel.transform;
-        tempPanelItem.transform.localScale = Vector3.one;
+    }
 
-        playerPanelItems[clientId] = tempPanelItem;
+    [Rpc(SendTo.ClientsAndHost)]
+    public void AddPlayerToPanelRpc(ulong clientId, string name)
+    {
+        if (!playerPanelItems.ContainsKey(clientId))
+        {
+            GameObject tempPanelItem = Instantiate(playerPanelItemTemplate);
+
+            tempPanelItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
+
+            tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Selecting";
+
+            /* Turn this on if multiplayer panel should be built during game mode select
+            if (clientId == 0)
+            {
+                tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Choosing GameMode";
+            }
+            else
+            {
+                tempPanelItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Waiting";
+            }
+            */
+
+            tempPanelItem.transform.parent = multiplayerPanel.transform;
+            tempPanelItem.transform.localScale = Vector3.one;
+
+            playerPanelItems[clientId] = tempPanelItem;
+        }
     }
 
     private void SceneTransitionPanelUpdate(Scene s, LoadSceneMode l)
