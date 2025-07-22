@@ -105,6 +105,7 @@ public class GameManager : NetworkBehaviour
                 {
                     VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
                     kbController.ResetCurrentFields();
+                    return;
                 }
                 
             }

@@ -212,7 +212,12 @@ public class VirtualKeyboardController : MonoBehaviour
     public void ResetCurrentFields()
     {
         Debug.Log("Resetting input fields");
-        // Add resetting logic
+        
+        foreach(TMP_InputField field in inputField)
+        {
+            field.text = "";
+        }
+        curField = -1;
     }
 }
 

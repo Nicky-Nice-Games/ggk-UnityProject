@@ -143,7 +143,7 @@ public class APIManager : MonoBehaviour
                 wasCreated = false;
             }
         }));
-
+        Debug.Log("Was created: " + wasCreated);
         return wasCreated;
     }
 
