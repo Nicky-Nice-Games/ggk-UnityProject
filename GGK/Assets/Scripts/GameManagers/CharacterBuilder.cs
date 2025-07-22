@@ -24,11 +24,12 @@ public static class CharacterBuilder
     private static int characterCount;
 
     private static int lastPlayerAdded;
+    private static int lastColorAdded;
     private static List<Sprite> icons;
 
     private static List<Color> colors;
 
-    //the loadout of NPC characters
+    //the loadout of characters
     private static List<KeyValuePair<Character, Color>> characterLoadout;
 
     //a dictionary of the amount of times a character appears in the loadout
@@ -38,7 +39,7 @@ public static class CharacterBuilder
     {
         characterCount = Enum.GetNames(typeof(Character)).Length;
 
-        lastPlayerAdded = UnityEngine.Random.Range(0, characterCount - 1);
+        
 
         icons = new List<Sprite>() {
             Resources.Load<Sprite>("Characters/MapIcons/gizmo"),
@@ -66,6 +67,8 @@ public static class CharacterBuilder
             //red
             new Color(0.854902f, 0.1568628f, 0.1098039f)
         };
+        lastPlayerAdded = UnityEngine.Random.Range(0, characterCount - 1);
+        lastColorAdded = UnityEngine.Random.Range(0, colors.Count - 1);
 
         characterLoadout = new List<KeyValuePair<Character, Color>>();
         characterInstances = new Dictionary<Character, int>();
@@ -74,12 +77,17 @@ public static class CharacterBuilder
     //------------------------------------------------------------------------------------------
     // DATA TRANSlATION
     //------------------------------------------------------------------------------------------
+
+    //returns a character's sprite from their character enum.
     public static Sprite EnumToSprite(Character icon)
     {
         if ((int)icon < 0 || (int)icon > (icons.Count - 1)) return icons[0];
         return icons[(int)icon];
     }
 
+    /// <summary>
+    /// Returns a character's sprite from their name.
+    /// </summary>
     public static Sprite NameToSprite(string name)
     {
         if (name == null) name = "gizmo";
@@ -92,6 +100,7 @@ public static class CharacterBuilder
         return icons[0];
     }
 
+    //DEPRECATED--NPCS USE UPDATED MODELS
     public static string NameToModel(string name)
     {
         switch (name)
@@ -111,6 +120,9 @@ public static class CharacterBuilder
         }
     }
 
+    /// <summary>
+    /// Translates a character's beta model name into the updated model name.
+    /// </summary>
     public static string ModelToName(string model)
     {
         switch (model)
@@ -150,14 +162,13 @@ public static class CharacterBuilder
     /// <summary>
     /// Creates a Key-value pair representing a new randomly-generated chartacter.
     /// </summary>
-    /// <param name="character">A pre-set character.</param>
-    /// <returns></returns>
     private static KeyValuePair<Character, Color> CycleNewCharacter()
     {
+        //cycles characters through to the next character and next color, looping back around if it reaches the max possible index 
         lastPlayerAdded = (lastPlayerAdded + 1) % characterCount;
-        int c = UnityEngine.Random.Range(0, colors.Count - 1);
-        //                                         v character enum   v random color
-        return new KeyValuePair<Character, Color>((Character)lastPlayerAdded, colors[c]);
+        lastColorAdded = (lastColorAdded + 1) % colors.Count;
+        //                                         v character enum             v random color
+        return new KeyValuePair<Character, Color>((Character)lastPlayerAdded, colors[lastColorAdded]);
         
     }
 
@@ -194,7 +205,7 @@ public static class CharacterBuilder
 
             if (loopcount >= colors.Count)
             {
-                Debug.Log("hello");
+                Debug.Log("Possible infinite loop detected in CharacterBuilder--breaking while-loop early");
             }
         }
 
@@ -218,9 +229,13 @@ public static class CharacterBuilder
     public static void StartCharacterBatch()
     {
         characterLoadout.Clear();
+        characterInstances.Clear();
         lastPlayerAdded = UnityEngine.Random.Range(0, characterCount - 1);
     }
 
+    /// <summary>
+    /// Adds a character to the character loadout.
+    /// </summary>
     public static void AddCharacter(KeyValuePair<Character, Color> character)
     {
         characterLoadout.Add(character);
