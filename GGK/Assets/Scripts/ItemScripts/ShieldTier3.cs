@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ShieldTier3 : BaseItem
 {
+    private VisualEffect shieldEffect;
+
     // Start is called before the first frame update
     void Start()
     {
         timer = 8.0f;
+
+        // find shield effect attached to the kart
+        shieldEffect = kart.transform.
+            Find("Normal/Parent/KartModel/ShieldVFX/Shield").GetComponent<VisualEffect>();
+
+        // play shield effect for timer duration
+        shieldEffect.SetFloat("Duration", timer);
+        shieldEffect.Play();
     }
 
     // Update is called once per frame
