@@ -79,7 +79,7 @@ public class PostGameManager : NetworkBehaviour
     // If a player decides to leave, disconnect them
     private void ProcessDecisions()
     {
-        foreach(var pair in playerDecisions)
+        foreach(KeyValuePair <ulong, PlayerDecisions> pair in playerDecisions)
         {
             ulong clientId = pair.Key;
             // if the player is leaving, disconnect them
@@ -93,28 +93,11 @@ public class PostGameManager : NetworkBehaviour
     // resets all decisions to Undecided so they don't carry over into a second or following race
     private void ResetDecisions()
     {
-        foreach (var pair in playerDecisions.ToList())
+        foreach (KeyValuePair <ulong, PlayerDecisions> pair in playerDecisions.ToList())
         {
             playerDecisions[pair.Key] = PlayerDecisions.Undecided;
         }
         allSelected = false;
-    }
-
-    // Adds all connected clients to the list for player decisions
-    private void MakeClientsList()
-    {
-        if (IsServer)
-        {
-            // set each player to undecided
-            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds.ToList())
-            {
-                // check that the key isn't already added from the network spawning
-                if (!playerDecisions.ContainsKey(clientId))
-                {
-                    playerDecisions.Add(clientId, PlayerDecisions.Undecided);
-                }
-            }
-        }
     }
 
     private void ConnectClient(ulong clientId)
