@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO.Pipes;
+using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -139,7 +140,6 @@ public class ItemHolder : NetworkBehaviour
     void Update()
     {
         holdingItem = IsHoldingItem();
-
 
         if (npcDriver != null && holdingItem)
         {
@@ -664,13 +664,14 @@ public class ItemHolder : NetworkBehaviour
                     // Gives kart an item if they don't already have one
                     if (!holdingItem)
                     {
-                        itemBox.RandomizeItem(this.gameObject);
+                        //itemBox.RandomizeItem(this.gameObject);
+                        itemType = RandomItemType();
 
                         // Initialize use count if first use
-                        if (uses == 0)
-                        {
-                            uses = heldItem.UseCount;
-                        }
+                        // if (uses == 0)
+                        // {
+                        //     uses = heldItem.UseCount;
+                        // }
                         Debug.Log(uses);
                         if (thisDriver)
                         {
@@ -820,6 +821,8 @@ public class ItemHolder : NetworkBehaviour
             Destroy(collision.gameObject);
         }
     }
+
+    
 
     //Waits a certain number of seconds then activates the warp boost
     IEnumerator WaitThenBoost(GameObject warpCheckpoint, KartCheckpoint kartCheck, int warpCheckpointId,
@@ -1079,19 +1082,19 @@ public class ItemHolder : NetworkBehaviour
         ItemArray.Add(HazardArray);
         ItemArray.Add(PuckArray);
     }
+    
     private void InitItemImageArray()
-    { 
+    {
         ItemImageArray.Add(BoostImageArray);
         ItemImageArray.Add(ShieldImageArray);
         ItemImageArray.Add(HazardImageArray);
         ItemImageArray.Add(PuckImageArray);
-        
+
     }
 
-    private void SpawnItem()
+    private ItemType RandomItemType()
     {
-        if (itemType == ItemType.NoItem) return; /* dont spawn the item*/
-        Instantiate(ItemArray[(int)itemType][ItemTier]);
+        return (ItemType)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Max() + 1);
     }
     #endregion
 }
