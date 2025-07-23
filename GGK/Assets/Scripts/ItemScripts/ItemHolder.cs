@@ -293,6 +293,7 @@ public class ItemHolder : NetworkBehaviour
             else
             {
                 SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
+                ClearItem(); // temp fix
             }
         }
 
@@ -351,7 +352,7 @@ public class ItemHolder : NetworkBehaviour
     /// Rpc for client to ask the network to spawn an item for it
     /// </summary>
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SpawnItemRpc(ItemType itemType, int itemTier, Vector3 position, Quaternion rotation)
+    private void SpawnItemRpc(ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
         GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
         NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
