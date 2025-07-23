@@ -15,7 +15,19 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private Transform spawnPointParent;
     [SerializeField] private List<Transform> spawnPoints;
 
+    public static PlayerSpawner instance;
+
+    public Dictionary<ulong, ItemHolder> kartAndID = new Dictionary<ulong, ItemHolder>();
+
     private int spawnedKartCount = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     private void LoadSpawnPoints()
     {
@@ -70,6 +82,9 @@ public class PlayerSpawner : NetworkBehaviour
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
+
+                // get a list of itemholder scripts and each karts id
+                kartAndID.Add(connectedClient.Key, kartObject.GetComponentInChildren<ItemHolder>());
             }
         }
         

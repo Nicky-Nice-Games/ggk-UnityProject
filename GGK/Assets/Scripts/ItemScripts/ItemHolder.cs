@@ -299,7 +299,6 @@ public class ItemHolder : NetworkBehaviour
 
                 // get the baseitem script from the thrown item and set proper variables
                 BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-                thrownItemScript.Kart = this;
                 thrownItemScript.UseCount -= useCounter;
                 thrownItemScript.timerEndCallback = ClearItem;
 
@@ -375,6 +374,14 @@ public class ItemHolder : NetworkBehaviour
         GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
         NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
         thrownItemNetworkObject.Spawn();
+
+        ulong senderClientID = rpcParams.Receive.SenderClientId;
+
+        ItemHolder kartScript = PlayerSpawner.instance.kartAndID[senderClientID];
+
+        // get the baseitem script from the thrown item and set proper variables
+        BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+        thrownItemScript.Kart = kartScript;
     }
 
     public void OnThrow() // for npcs
