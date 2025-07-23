@@ -219,7 +219,7 @@ public class Countdown : NetworkBehaviour
 
         UpdateCountdownRpc(0); // Show "GO!"
         EndCountdownRpc();
-        //yield return new WaitForSecondsRealtime(countdownSpeed);
+        yield return new WaitForSecondsRealtime(countdownSpeed);
     }
 
     IEnumerator LocalCountdownRoutine()
@@ -235,7 +235,7 @@ public class Countdown : NetworkBehaviour
 
         ShowCountdown(0); // Show "GO!"
         FinishCountdown();
-        //yield return new WaitForSecondsRealtime(countdownSpeed);
+        yield return new WaitForSecondsRealtime(countdownSpeed);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
