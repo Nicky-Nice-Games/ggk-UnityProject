@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -8,6 +9,7 @@ public class BaseItem : NetworkBehaviour
 {
     #region old variables
     [SerializeField] protected float timer;    // Seconds until the item disappears
+    public Action timerEndCallback; 
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
     protected ItemHolder kart;                 // The kart holding the item
     [SerializeField] protected string itemCategory;
@@ -80,10 +82,8 @@ public class BaseItem : NetworkBehaviour
         // Destroys the item
         else
         {
-            //if (itemCategory != "Shield")
-            //{
+            timerEndCallback();
             Destroy(this.gameObject);
-            //}
         }
     }
 

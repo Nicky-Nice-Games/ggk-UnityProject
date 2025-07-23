@@ -254,6 +254,15 @@ public class ItemHolder : NetworkBehaviour
         // }
     }
 
+    private void ClearItem()
+    {
+        itemType = ItemType.NoItem;
+        ItemTier = 0;
+        ApplyItemTween(defaultItemDisplay);
+        canUpgrade = true;
+        useCounter = 1;
+    }
+
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
@@ -266,15 +275,12 @@ public class ItemHolder : NetworkBehaviour
             BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
             thrownItemScript.Kart = this;
             thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.timerEndCallback = ClearItem;
 
 
-            if (thrownItemScript.UseCount == 0) // get rid of item if use count is 0
+            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
             {
-                itemType = ItemType.NoItem;
-                ItemTier = 0;
-                ApplyItemTween(defaultItemDisplay);
-                canUpgrade = true;
-                useCounter = 1;
+                ClearItem();
             }
             else // disable upgrading if use count is more than one and the item has already been used
             {
@@ -282,7 +288,7 @@ public class ItemHolder : NetworkBehaviour
                 useCounter++;
             }
         }
- 
+
         // if (uses > 0 && context.phase == InputActionPhase.Performed)
         // {
         //     // grab the kart's shield effect before instantiating
@@ -425,10 +431,10 @@ public class ItemHolder : NetworkBehaviour
                     if (!holdingItem)
                     {
                         // Get projectile and intialize level
-                        projBrick.GiveProjectile(this.gameObject);
-                        heldItem.ItemTier = driverItemTier;
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
+                        // projBrick.GiveProjectile(this.gameObject);
+                        // heldItem.ItemTier = driverItemTier;
+                        // heldItem.OnLevelUp(heldItem.ItemTier);
+                        // uses = heldItem.UseCount;
 
                         // new code
                         itemType = ItemType.Puck;
@@ -443,15 +449,15 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                     }
-                    else if (heldItem.ItemCategory == "Puck")
+                    else if (itemType == ItemType.Puck)
                     {
                         // Increase item tier & apply upgrades
-                        if (driverItemTier < 4)
+                        if (ItemTier < 4)
                         {
-                            driverItemTier++;
-                            heldItem.ItemTier = driverItemTier;
-                            heldItem.OnLevelUp(heldItem.ItemTier);
-                            uses = heldItem.UseCount;
+                            // driverItemTier++;
+                            // heldItem.ItemTier = driverItemTier;
+                            // heldItem.OnLevelUp(heldItem.ItemTier);
+                            // uses = heldItem.UseCount;
 
                             // new code
                             if (canUpgrade) ItemTier++;
@@ -470,10 +476,10 @@ public class ItemHolder : NetworkBehaviour
                     if (!holdingItem)
                     {
                         // Get boost and intialize level
-                        boostBrick.GiveBoost(this.gameObject);
-                        heldItem.ItemTier = driverItemTier;
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
+                        // boostBrick.GiveBoost(this.gameObject);
+                        // heldItem.ItemTier = driverItemTier;
+                        // heldItem.OnLevelUp(heldItem.ItemTier);
+                        // uses = heldItem.UseCount;
 
                         // new code
                         itemType = ItemType.Boost;
@@ -487,15 +493,15 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                     }
-                    else if (heldItem.ItemCategory == "Boost")
+                    else if (itemType == ItemType.Boost)
                     {
                         // Increase item tier & apply upgrades
-                        if (driverItemTier < 4)
+                        if (ItemTier < 4)
                         {
-                            driverItemTier++;
-                            heldItem.ItemTier = driverItemTier;
-                            heldItem.OnLevelUp(heldItem.ItemTier);
-                            uses = heldItem.UseCount;
+                            // driverItemTier++;
+                            // heldItem.ItemTier = driverItemTier;
+                            // heldItem.OnLevelUp(heldItem.ItemTier);
+                            // uses = heldItem.UseCount;
 
                             // new code
                             if (canUpgrade) ItemTier++;
@@ -514,10 +520,10 @@ public class ItemHolder : NetworkBehaviour
                     if (!holdingItem)
                     {
                         // Get shield and intialize level
-                        defBrick.GiveShield(this.gameObject);
-                        heldItem.ItemTier = driverItemTier;
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
+                        // defBrick.GiveShield(this.gameObject);
+                        // heldItem.ItemTier = driverItemTier;
+                        // heldItem.OnLevelUp(heldItem.ItemTier);
+                        // uses = heldItem.UseCount;
 
                         // new code
                         itemType = ItemType.Shield;
@@ -531,18 +537,18 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                     }
-                    else if (heldItem.ItemCategory == "Shield")
+                    else if (itemType == ItemType.Shield)
                     {
                         // Do not upgrade if shield is being used
                         if (uses > 0)
                         {
                             // Increase item tier & apply upgrades
-                            if (driverItemTier < 4)
+                            if (ItemTier < 4)
                             {
-                                driverItemTier++;
-                                heldItem.ItemTier = driverItemTier;
-                                heldItem.OnLevelUp(heldItem.ItemTier);
-                                uses = heldItem.UseCount;
+                                // driverItemTier++;
+                                // heldItem.ItemTier = driverItemTier;
+                                // heldItem.OnLevelUp(heldItem.ItemTier);
+                                // uses = heldItem.UseCount;
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
@@ -562,10 +568,10 @@ public class ItemHolder : NetworkBehaviour
                     if (!holdingItem)
                     {
                         // Get hazard and intialize level
-                        hazBrick.GiveHazard(this.gameObject);
-                        heldItem.ItemTier = driverItemTier;
-                        heldItem.OnLevelUp(heldItem.ItemTier);
-                        uses = heldItem.UseCount;
+                        // hazBrick.GiveHazard(this.gameObject);
+                        // heldItem.ItemTier = driverItemTier;
+                        // heldItem.OnLevelUp(heldItem.ItemTier);
+                        // uses = heldItem.UseCount;
 
                         // new code
                         itemType = ItemType.Hazard;
@@ -579,15 +585,15 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                     }
-                    else if (heldItem.ItemCategory == "Hazard")
+                    else if (itemType == ItemType.Hazard)
                     {
                         // Increase item tier & apply upgrades
-                        if (driverItemTier < 4)
+                        if (ItemTier < 4)
                         {
-                            driverItemTier++;
-                            heldItem.ItemTier = driverItemTier;
-                            heldItem.OnLevelUp(heldItem.ItemTier);
-                            uses = heldItem.UseCount;
+                            // driverItemTier++;
+                            // heldItem.ItemTier = driverItemTier;
+                            // heldItem.OnLevelUp(heldItem.ItemTier);
+                            // uses = heldItem.UseCount;
 
                             // new code
                             if (canUpgrade) ItemTier++;
@@ -605,7 +611,7 @@ public class ItemHolder : NetworkBehaviour
                     if (!holdingItem)
                     {
                         // Increase item tier if not max
-                        if (driverItemTier < 4)
+                        if (ItemTier < 4)
                         {
                             driverItemTier++;
                         }
@@ -616,15 +622,15 @@ public class ItemHolder : NetworkBehaviour
                     else
                     {
                         // shield can't be upgraded while being used
-                        if (heldItem.ItemCategory != "Shield")
+                        if (itemType != ItemType.Shield)
                         {
                             // Increase item tier if not max & apply upgrades
-                            if (driverItemTier < 4)
+                            if (ItemTier < 4)
                             {
-                                driverItemTier++;
-                                heldItem.ItemTier = driverItemTier;
-                                heldItem.OnLevelUp(heldItem.ItemTier);
-                                uses = heldItem.UseCount;
+                                // driverItemTier++;
+                                // heldItem.ItemTier = driverItemTier;
+                                // heldItem.OnLevelUp(heldItem.ItemTier);
+                                // uses = heldItem.UseCount;
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
@@ -640,12 +646,12 @@ public class ItemHolder : NetworkBehaviour
                         else if (uses == 1)
                         {
                             // Increase item tier if not max & apply upgrades
-                            if (driverItemTier < 4)
+                            if (ItemTier < 4)
                             {
-                                driverItemTier++;
-                                heldItem.ItemTier = driverItemTier;
-                                heldItem.OnLevelUp(heldItem.ItemTier);
-                                uses = heldItem.UseCount;
+                                // driverItemTier++;
+                                // heldItem.ItemTier = driverItemTier;
+                                // heldItem.OnLevelUp(heldItem.ItemTier);
+                                // uses = heldItem.UseCount;
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
