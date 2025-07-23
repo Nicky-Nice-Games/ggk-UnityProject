@@ -23,6 +23,8 @@ public class ItemHolder : NetworkBehaviour
 
     private int useCounter = 1;
 
+    private GameObject thrownItem;
+
     [SerializeField]
     private NEWDriver thisDriver;
 
@@ -272,7 +274,7 @@ public class ItemHolder : NetworkBehaviour
         {
             if (!IsSpawned)
             {
-                GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
+                thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
 
                 // get the baseitem script from the thrown item and set proper variables
                 BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
@@ -293,7 +295,23 @@ public class ItemHolder : NetworkBehaviour
             else
             {
                 SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
-                ClearItem(); // temp fix
+
+
+                // get the baseitem script from the thrown item and set proper variables
+                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                thrownItemScript.Kart = this;
+                thrownItemScript.UseCount -= useCounter;
+                thrownItemScript.timerEndCallback = ClearItem;
+
+                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                {
+                    ClearItem();
+                }
+                else // disable upgrading if use count is more than one and the item has already been used
+                {
+                    canUpgrade = false;
+                    useCounter++;
+                }
             }
         }
 
