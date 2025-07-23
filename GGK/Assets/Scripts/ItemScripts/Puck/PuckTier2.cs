@@ -111,6 +111,7 @@ public class PuckTier2 : BaseItem
             else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
             {
                 this.NetworkObject.Despawn();
+                Destroy(this.gameObject);
             }
         }
 
@@ -171,6 +172,7 @@ public class PuckTier2 : BaseItem
                 else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
                 {
                     this.NetworkObject.Despawn();
+                    Destroy(this.gameObject);
                 }
             }
         }
@@ -188,6 +190,7 @@ public class PuckTier2 : BaseItem
                 else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
                 {
                     this.NetworkObject.Despawn();
+                    Destroy(this.gameObject);
                 }
             }
         }
@@ -207,6 +210,7 @@ public class PuckTier2 : BaseItem
             else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
             {
                 this.NetworkObject.Despawn();
+                Destroy(this.gameObject);
             }
         }
     }

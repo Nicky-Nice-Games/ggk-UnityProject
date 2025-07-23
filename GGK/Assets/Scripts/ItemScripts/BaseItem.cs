@@ -83,7 +83,15 @@ public class BaseItem : NetworkBehaviour
         else
         {
             timerEndCallback();
-            Destroy(this.gameObject);
+            if (IsServer)
+            {
+                GetComponent<NetworkObject>().Despawn();
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 
