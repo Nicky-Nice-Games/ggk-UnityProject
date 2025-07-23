@@ -77,7 +77,10 @@ public class PlayerSpawner : NetworkBehaviour
             {
                 Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+                GameObject colliderGO = kartObject.GetChild(1).gameObject;
+                colliderGO.GetComponent<SpawnHandler>().spawnPoint = spawnPoints[spawnedKartCount];
                 kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
+                
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
