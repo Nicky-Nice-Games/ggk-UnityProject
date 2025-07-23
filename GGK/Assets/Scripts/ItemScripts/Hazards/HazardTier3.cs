@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -46,6 +47,10 @@ public class HazardTier3 : BaseItem
                 playerKart.isConfused = true;
                 playerKart.movementDirection *= -1;
             }
+            if (IsServer)
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                }
             Destroy(gameObject);
         }
     }

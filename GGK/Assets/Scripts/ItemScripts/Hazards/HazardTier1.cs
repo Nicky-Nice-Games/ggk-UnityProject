@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -28,6 +29,10 @@ public class HazardTier1 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+                if (IsServer)
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                }
                 Destroy(gameObject);
             }
         }
