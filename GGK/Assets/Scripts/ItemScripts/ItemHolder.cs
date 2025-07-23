@@ -8,6 +8,7 @@ using System.Linq;
 using Unity.Mathematics;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
@@ -266,6 +267,12 @@ public class ItemHolder : NetworkBehaviour
         useCounter = 1;
     }
 
+    [ClientRpc]
+    private void ClearItemClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        ClearItem();
+    }
+
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
@@ -297,20 +304,20 @@ public class ItemHolder : NetworkBehaviour
                 SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
 
 
-                //// get the baseitem script from the thrown item and set proper variables
-                //BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-                //thrownItemScript.UseCount -= useCounter;
-                //thrownItemScript.timerEndCallback = ClearItem;
+                // get the baseitem script from the thrown item and set proper variables
+                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                thrownItemScript.UseCount -= useCounter;
+                thrownItemScript.timerEndCallback = ClearItem;
 
-                //if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
-                //{
-                //    ClearItem();
-                //}
-                //else // disable upgrading if use count is more than one and the item has already been used
-                //{
-                //    canUpgrade = false;
-                //    useCounter++;
-                //}
+                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                {
+                    ClearItem();
+                }
+                else // disable upgrading if use count is more than one and the item has already been used
+                {
+                    canUpgrade = false;
+                    useCounter++;
+                }
             }
         }
 
@@ -387,7 +394,15 @@ public class ItemHolder : NetworkBehaviour
 
         if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
         {
-            ClearItem();
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { senderClientID }
+                }
+            }; 
+
+            ClearItemClientRpc(clientRpcParams);
         }
         else // disable upgrading if use count is more than one and the item has already been used
         {
