@@ -17,6 +17,10 @@ public class ItemHolder : NetworkBehaviour
     #region previous code
     private bool holdingItem;
 
+    private bool canUpgrade = true;
+
+    private int useCounter = 1;
+
     [SerializeField]
     private NEWDriver thisDriver;
 
@@ -253,11 +257,31 @@ public class ItemHolder : NetworkBehaviour
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
-        GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
-        thrownItem.GetComponent<BaseItem>().Kart = this;
-        itemType = ItemType.NoItem;
-        ItemTier = 0;
-        ApplyItemTween(defaultItemDisplay);
+
+        if (context.performed) // make sure input is only being read once
+        {
+            GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
+
+            // get the baseitem script from the thrown item and set proper variables
+            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+            thrownItemScript.Kart = this;
+            thrownItemScript.UseCount -= useCounter;
+
+
+            if (thrownItemScript.UseCount == 0) // get rid of item if use count is 0
+            {
+                itemType = ItemType.NoItem;
+                ItemTier = 0;
+                ApplyItemTween(defaultItemDisplay);
+                canUpgrade = true;
+                useCounter = 1;
+            }
+            else // disable upgrading if use count is more than one and the item has already been used
+            {
+                canUpgrade = false;
+                useCounter++;
+            }
+        }
  
         // if (uses > 0 && context.phase == InputActionPhase.Performed)
         // {
@@ -430,7 +454,7 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            ItemTier++;
+                            if (canUpgrade) ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -474,7 +498,7 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            ItemTier++;
+                            if (canUpgrade) ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -521,7 +545,7 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -566,7 +590,7 @@ public class ItemHolder : NetworkBehaviour
                             uses = heldItem.UseCount;
 
                             // new code
-                            ItemTier++;
+                            if (canUpgrade) ItemTier++;
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -587,7 +611,7 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                         // new code
-                        ItemTier++;  
+                        if (canUpgrade) ItemTier++;  
                     }
                     else
                     {
@@ -603,7 +627,7 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -624,7 +648,7 @@ public class ItemHolder : NetworkBehaviour
                                 uses = heldItem.UseCount;
 
                                 // new code
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                             // Item Box Shake
                             if (thisDriver)

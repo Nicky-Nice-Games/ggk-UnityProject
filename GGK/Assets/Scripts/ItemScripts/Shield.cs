@@ -19,6 +19,8 @@ public class Shield : BaseItem
     // the time when the shield should indicate it's ending
     private float indicatorTime = 1.0f;
 
+    private VisualEffect shieldEffect;
+
     // Start is called before the first frame update
     void Start()
     {

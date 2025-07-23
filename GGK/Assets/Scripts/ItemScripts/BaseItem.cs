@@ -28,7 +28,7 @@ public class BaseItem : NetworkBehaviour
     [SerializeField]
     public Texture tierFourItemIcon;
 
-    public VisualEffect shieldEffect;
+    protected VisualEffect shieldEffect;
 
     /// <summary>
     /// Read and write property for the upgrade tier

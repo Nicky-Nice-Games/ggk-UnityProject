@@ -5,8 +5,6 @@ using UnityEngine.VFX;
 
 public class ShieldTier1 : BaseItem
 {
-    private VisualEffect shieldEffect;
-
     // Start is called before the first frame update
     void Start()
     {
