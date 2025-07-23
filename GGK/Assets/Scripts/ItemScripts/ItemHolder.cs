@@ -305,19 +305,19 @@ public class ItemHolder : NetworkBehaviour
 
 
                 // get the baseitem script from the thrown item and set proper variables
-                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-                thrownItemScript.UseCount -= useCounter;
-                thrownItemScript.timerEndCallback = ClearItem;
+                //BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                //thrownItemScript.UseCount -= useCounter;
+                //thrownItemScript.timerEndCallback = ClearItem;
 
-                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
-                {
-                    ClearItem();
-                }
-                else // disable upgrading if use count is more than one and the item has already been used
-                {
-                    canUpgrade = false;
-                    useCounter++;
-                }
+                //if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                //{
+                //    ClearItem();
+                //}
+                //else // disable upgrading if use count is more than one and the item has already been used
+                //{
+                //    canUpgrade = false;
+                //    useCounter++;
+                //}
             }
         }
 
