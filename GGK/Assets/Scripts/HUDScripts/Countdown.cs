@@ -208,6 +208,8 @@ public class Countdown : NetworkBehaviour
 
     IEnumerator ServerCountdownRoutine()
     {
+        yield return new WaitForSecondsRealtime(countdownSpeed);
+
         int count = countdownStart;
 
         while (count > 0)
@@ -224,6 +226,8 @@ public class Countdown : NetworkBehaviour
 
     IEnumerator LocalCountdownRoutine()
     {
+        yield return new WaitForSecondsRealtime(countdownSpeed);
+
         int count = countdownStart;
 
         while (count > 0)
