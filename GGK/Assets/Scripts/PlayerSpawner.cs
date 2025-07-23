@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
@@ -72,42 +71,21 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsServer) return;
 
         // spawn a kart for each player
-        if(spawnPoints != null && spawnPoints.Count > 0)
+        if (spawnPoints != null && spawnPoints.Count > 0)
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
-
-                Transform kartObject = Instantiate(
-                    playerKartPrefab,
-                    spawnPoints[spawnedKartCount].position,
-                    spawnPoints[spawnedKartCount].rotation
-                );
-
-                // Temporarily disable sync
-                ClientNetworkTransform netTransformKart = kartObject.GetChild(0).GetComponent<ClientNetworkTransform>();
-                ClientNetworkTransform netTransformCollider = kartObject.GetChild(0).GetComponent<ClientNetworkTransform>();
-                if (netTransformKart != null && netTransformCollider != null)
-                {
-                    netTransformKart.enabled = false;
-                    netTransformCollider.enabled = false;
-                }
-
-                // Set position
-                kartObject.position = spawnPoints[spawnedKartCount].position;
-                kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
-
-                // Spawn
+                Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+                kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
-
-                // Re-enable sync next frame
-                StartCoroutine(EnableNetworkTransformNextFrame(kartObject));
-
                 spawnedKartCount++;
             }
         }
-        
-        while(spawnedKartCount < 8){
+
+        while (spawnedKartCount < 8)
+        {
             Debug.Log("Spawning NPC");
             Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
@@ -137,18 +115,5 @@ public class PlayerSpawner : NetworkBehaviour
     {
         yield return new WaitForSeconds(0.2f); // slight delay
         FillGrid();
-    }
-
-    private IEnumerator EnableNetworkTransformNextFrame(Transform kartObject)
-    {
-        yield return null; // Wait one frame
-
-        ClientNetworkTransform netTransformKart = kartObject.GetChild(0).GetComponent<ClientNetworkTransform>();
-        ClientNetworkTransform netTransformCollider = kartObject.GetChild(0).GetComponent<ClientNetworkTransform>();
-        if (netTransformKart != null && netTransformCollider != null)
-        {
-            netTransformKart.enabled = true;
-            netTransformCollider.enabled = true;
-        }
     }
 }
