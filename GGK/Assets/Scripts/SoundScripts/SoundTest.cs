@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SoundTest : MonoBehaviour
 {
+    //This class is not intended as anything permanent.
+    //It's just a way to test out Wwise functionality of some kind.
+    
     // Start is called before the first frame update
     void Start()
     {

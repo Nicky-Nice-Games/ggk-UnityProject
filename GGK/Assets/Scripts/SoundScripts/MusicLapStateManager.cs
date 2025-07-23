@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Adjusts the Wwise lap state.
+/// </summary>
 public class MusicLapStateManager : MonoBehaviour
 {
     public static MusicLapStateManager instance;
 
+    [Header("Wwise Lap States")]
     [SerializeField] AK.Wwise.State lap1State;
     [SerializeField] AK.Wwise.State lap2State;
     [SerializeField] AK.Wwise.State lap3State;
@@ -28,8 +32,14 @@ public class MusicLapStateManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Changes the Wwise lap state to the value of the enum passed in.
+    /// </summary>
+    /// <param name="newState"></param>
     public void SetLapState(LapState newState)
     {
+        //If newState matches one of these values,
+        //we set the respective state value for the music.
         if (newState == LapState.Lap1)
         {
             lap1State.SetValue();
