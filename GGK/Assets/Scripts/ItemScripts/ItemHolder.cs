@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO.Pipes;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -269,23 +270,29 @@ public class ItemHolder : NetworkBehaviour
 
         if (context.performed) // make sure input is only being read once
         {
-            GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
-
-            // get the baseitem script from the thrown item and set proper variables
-            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-            thrownItemScript.Kart = this;
-            thrownItemScript.UseCount -= useCounter;
-            thrownItemScript.timerEndCallback = ClearItem;
-
-
-            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+            if (!IsSpawned)
             {
-                ClearItem();
+                GameObject thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
+
+                // get the baseitem script from the thrown item and set proper variables
+                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                thrownItemScript.Kart = this;
+                thrownItemScript.UseCount -= useCounter;
+                thrownItemScript.timerEndCallback = ClearItem;
+
+                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                {
+                    ClearItem();
+                }
+                else // disable upgrading if use count is more than one and the item has already been used
+                {
+                    canUpgrade = false;
+                    useCounter++;
+                }
             }
-            else // disable upgrading if use count is more than one and the item has already been used
+            else
             {
-                canUpgrade = false;
-                useCounter++;
+                SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
             }
         }
 
@@ -338,6 +345,17 @@ public class ItemHolder : NetworkBehaviour
         //         uses--; // Decrease after successful use
         //     }
         // }
+    }
+
+    /// <summary>
+    /// Rpc for client to ask the network to spawn an item for it
+    /// </summary>
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void SpawnItemRpc(ItemType itemType, int itemTier, Vector3 position, Quaternion rotation)
+    {
+        GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
+        NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
+        thrownItemNetworkObject.Spawn();
     }
 
     public void OnThrow() // for npcs
@@ -753,27 +771,7 @@ public class ItemHolder : NetworkBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc()
-    {
-        item = Instantiate(heldItem, transform.position, transform.rotation);
-        item.gameObject.SetActive(true);
-        //soundPlayer.PlayOneShot(throwSound);
-
-        item.Kart = this;
-        item.ItemTier = heldItem.ItemTier;
-
-        if (heldItem.ItemTier > 1)
-        {
-            item.OnLevelUp(item.ItemTier);
-        }
-
-        uses--; // Decrease after successful use
-        Debug.Log(item.ItemTier);
-
-        NetworkObject netItem = item.GetComponent<NetworkObject>();
-        netItem.Spawn();
-    }
+    
     #endregion
     #region new code
     // private Transform[,] ItemArray = {
