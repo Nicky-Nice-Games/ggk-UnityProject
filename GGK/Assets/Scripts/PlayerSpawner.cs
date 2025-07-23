@@ -76,7 +76,8 @@ public class PlayerSpawner : NetworkBehaviour
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
                 Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+                kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
