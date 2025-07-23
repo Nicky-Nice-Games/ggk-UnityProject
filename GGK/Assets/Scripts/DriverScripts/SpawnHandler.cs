@@ -21,8 +21,18 @@ public class SpawnHandler : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Coroutine to correct the position of the kart if it is not at the spawn point. 
+    /// Runs for 20 frames after spawnPoint gets populated.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PositionCorrector()
     {
+        while(spawnPoint == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
         rb.isKinematic = true;
         for (int i = 0; i < 20; i++)
         {
@@ -34,11 +44,8 @@ public class SpawnHandler : MonoBehaviour
             }
 
             yield return new WaitForEndOfFrame();
-        }
-
+        } 
         
-        rb.isKinematic = false;
-
-
+        rb.isKinematic = false;       
     }
 }
