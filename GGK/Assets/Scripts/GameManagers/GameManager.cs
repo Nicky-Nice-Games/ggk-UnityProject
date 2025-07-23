@@ -159,9 +159,6 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        curState = GameStates.playerKart;
-        sceneLoader.LoadScene("PlayerKartScene");
-        curState = GameStates.playerKart;
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
@@ -174,6 +171,7 @@ public class GameManager : NetworkBehaviour
         { 
             SceneManager.LoadScene("PlayerKartScene");
         }
+        curState = GameStates.playerKart;
     }
 
     [Rpc(SendTo.NotServer)]

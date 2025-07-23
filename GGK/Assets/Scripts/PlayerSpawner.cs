@@ -4,6 +4,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -44,12 +45,14 @@ public class PlayerSpawner : NetworkBehaviour
                 //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 spawnedKartCount++;
             }
+
+            //print(kartObject.transform.GetChild(0).position);
         }
         else
         {
             FillGrid();
         }
-
+        
     }
 
     /// <summary>
@@ -60,8 +63,9 @@ public class PlayerSpawner : NetworkBehaviour
         // only the server can spawn karts
         if (!IsServer) return;
 
+        CharacterBuilder.StartCharacterBatch();
         // spawn a kart for each player
-        if(spawnPoints != null && spawnPoints.Count > 0)
+        if (spawnPoints != null && spawnPoints.Count > 0)
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
@@ -78,6 +82,11 @@ public class PlayerSpawner : NetworkBehaviour
             Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            AppearanceSettings settings = kartObject.GetComponentInChildren<AppearanceSettings>();
+            if (settings)
+            {
+                CharacterBuilder.RandomizeUniqueAppearance(settings);
+            }
             kartNetworkObject.Spawn();
             spawnedKartCount++;
         }

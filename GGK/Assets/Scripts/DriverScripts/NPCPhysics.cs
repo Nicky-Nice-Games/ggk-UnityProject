@@ -168,6 +168,7 @@ public class NPCPhysics : NetworkBehaviour
         KC = childTransform.GetComponent<KartCheckpoint>();
         if (!IsSpawned)
         {
+            CharacterBuilder.RandomizeUniqueAppearance(GetComponent<AppearanceSettings>());
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, KC);
         }
@@ -177,9 +178,15 @@ public class NPCPhysics : NetworkBehaviour
         Debug.Log("NetworkNPC");
         Transform childTransform = parent.transform.GetChild(1);
         KC = childTransform.GetComponent<KartCheckpoint>();
-        PlacementManager.instance.AddKart(gameObject, KC);
         MiniMapHud.instance.AddKart(gameObject);
-        
+
+        if (IsOwner)
+        {
+            AppearanceSettings settings = GetComponent<AppearanceSettings>();
+            settings.SetKartAppearanceRpc(settings.name, settings.color);
+        }
+
+        PlacementManager.instance.AddKart(gameObject, KC);
     }
 
     public void StopParticles()
@@ -401,10 +408,11 @@ public class NPCPhysics : NetworkBehaviour
         {
             destinationID = 0;
         }
-        destination = KC.checkpointList[destinationID];
-        randomizedTarget = destination.transform.position + checkpointOffset;
-
-
+        if (KC.checkpointList.Count > 0)
+        {
+            destination = KC.checkpointList[destinationID];
+            randomizedTarget = destination.transform.position + checkpointOffset;
+        }
 
         if (isGrounded)
         {
