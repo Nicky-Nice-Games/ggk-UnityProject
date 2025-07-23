@@ -73,7 +73,6 @@ public class GameOverMenuHandeler : MonoBehaviour
             // if everyone else left EXCEPT the host then they leave too
             if (OnlyHostConnected())
             {
-                waiting.text = "All Players Left. Returning to Mode Select. . .";
                 StartCoroutine(HostExit());
             }
             else
