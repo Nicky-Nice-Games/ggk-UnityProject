@@ -33,6 +33,7 @@ public class GameManager : NetworkBehaviour
     public PlayerInfo playerInfo;
     public PostGameManager postGameManager;
     private APIManager apiManager;
+    private LobbyManager lobbyManager;
 
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
@@ -58,6 +59,7 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.start;
         apiManager = thisManagerObjInstance.GetComponent<APIManager>();
         postGameManager = thisManagerObjInstance.GetComponent<PostGameManager>();
+        lobbyManager = FindAnyObjectByType<LobbyManager>();
 
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
@@ -90,20 +92,7 @@ public class GameManager : NetworkBehaviour
             Debug.Log("Guest mode on");
         }
 
-        // Set validate player info
-        else
-        {
-            // Checking for Log in or sign up
-            if(playerInfo.playerEmail == "")
-            {
-                ValidatePlayer(playerInfo);
-            }
-            else
-            {
-                apiManager.CreatePlayer(playerInfo);
-            }
-            
-        }
+        lobbyManager.AssignPlayerName(playerInfo.playerName);
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
@@ -173,9 +162,6 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
-        curState = GameStates.playerKart;
-        sceneLoader.LoadScene("PlayerKartScene");
-        curState = GameStates.playerKart;
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             MultiplayerManager.Instance.Reset();
@@ -188,6 +174,7 @@ public class GameManager : NetworkBehaviour
         { 
             SceneManager.LoadScene("PlayerKartScene");
         }
+        curState = GameStates.playerKart;
     }
 
     [Rpc(SendTo.NotServer)]
@@ -361,12 +348,6 @@ public class GameManager : NetworkBehaviour
     public void ExitGame()
     {
         Application.Quit();
-    }
-
-    private void ValidatePlayer(PlayerInfo player)
-    {
-        // Getting the players data
-        apiManager.GetPlayerWithNamePass(player.playerName, player.playerPassword, player);
     }
 
     /// <summary>

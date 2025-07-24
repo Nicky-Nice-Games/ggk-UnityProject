@@ -327,6 +327,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 6b2a1e2e908f76343ad9ee78a674e850, type: 3}
+    - target: {fileID: 3983723317960878426, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7014209292422214074, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
       propertyPath: m_Name
       value: MiniMap
@@ -349,6 +353,22 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 591483451582181634, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
   m_PrefabInstance: {fileID: 8797104}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8797106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3983723317960878426, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+  m_PrefabInstance: {fileID: 8797104}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8797107 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1041506153920354169, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+  m_PrefabInstance: {fileID: 8797104}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &63029999
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1186,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1716925573}
     m_Modifications:
+    - target: {fileID: -2367733819248507835, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 728693222
+      objectReference: {fileID: 0}
     - target: {fileID: 3764642559374090144, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
       propertyPath: m_Name
       value: StartPanel
@@ -3421,6 +3445,10 @@ MonoBehaviour:
   curTime: 0
   networkTime:
     m_InternalValue: 0
+  numOfPlayerKarts: 0
+  allPlayerKartsFinished:
+    m_InternalValue: 0
+  finishedPlayerKarts: []
 --- !u!4 &604657646
 Transform:
   m_ObjectHideFlags: 0
@@ -9207,6 +9235,8 @@ MonoBehaviour:
   showDebug: 0
   iconSpinoutSpeed: 1
   trackingPlayer: {fileID: 0}
+  miniMap: {fileID: 8797107}
+  iconRef: {fileID: 8797106}
 --- !u!114 &1716925570
 MonoBehaviour:
   m_ObjectHideFlags: 0

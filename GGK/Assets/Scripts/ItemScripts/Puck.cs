@@ -25,7 +25,7 @@ public class Puck : BaseItem
 
         // If the kart is looking backwards
         // sends puck backwards
-        if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
+        if (kart.GetComponent<SpeedCameraEffect>() && kart.GetComponent<SpeedCameraEffect>().IsHoldingTab && itemTier < 2)
         {
             // The puck spawns 15 units behind of the kart
             transform.position = new Vector3(transform.position.x -transform.forward.x * 10f,

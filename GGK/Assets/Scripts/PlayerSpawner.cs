@@ -5,6 +5,7 @@ using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -34,6 +35,20 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsSpawned)
         {
             StartCoroutine(DelayedLocalSpawn());
+            Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
+            //kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+            spawnedKartCount++;
+
+            while (spawnedKartCount < 8)
+            {
+                kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
+                
+                //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                spawnedKartCount++;
+            }
+
+            //print(kartObject.transform.GetChild(0).position);
         }
         else if (IsServer)
         {
@@ -58,8 +73,6 @@ public class PlayerSpawner : NetworkBehaviour
         //else
         //{
         //    FillGrid();
-        //}
-
     }
 
     /// <summary>
@@ -70,6 +83,7 @@ public class PlayerSpawner : NetworkBehaviour
         // only the server can spawn karts
         if (!IsServer) return;
 
+        CharacterBuilder.StartCharacterBatch();
         // spawn a kart for each player
         if (spawnPoints != null && spawnPoints.Count > 0)
         {
@@ -96,6 +110,11 @@ public class PlayerSpawner : NetworkBehaviour
             Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            AppearanceSettings settings = kartObject.GetComponentInChildren<AppearanceSettings>();
+            if (settings)
+            {
+                CharacterBuilder.RandomizeUniqueAppearance(settings);
+            }
             kartNetworkObject.Spawn();
             spawnedKartCount++;
         }
