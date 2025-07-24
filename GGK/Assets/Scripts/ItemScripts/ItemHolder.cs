@@ -98,6 +98,13 @@ public class ItemHolder : NetworkBehaviour
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
+
+    public NetworkVariable<int> currentUseCounter =
+        new NetworkVariable<int>(
+            1,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
     #endregion
 
     public override void OnNetworkSpawn()
@@ -105,6 +112,7 @@ public class ItemHolder : NetworkBehaviour
         currentItemType.OnValueChanged += OnItemTypeChange;
         currentItemTier.OnValueChanged += OnItemTierChange;
         currentCanUpgrade.OnValueChanged += OnCanUpgradeChange;
+        currentUseCounter.OnValueChanged += OnUseCounterChange;
     }
 
     public override void OnNetworkDespawn()
@@ -112,7 +120,10 @@ public class ItemHolder : NetworkBehaviour
         currentItemType.OnValueChanged -= OnItemTypeChange;
         currentItemTier.OnValueChanged -= OnItemTierChange;
         currentCanUpgrade.OnValueChanged -= OnCanUpgradeChange;
+        currentUseCounter.OnValueChanged -= OnUseCounterChange;
+
     }
+
 
     // Start is called before the first frame update
     void Start()
@@ -289,6 +300,7 @@ public class ItemHolder : NetworkBehaviour
             currentItemType.Value = ItemType.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
+            currentUseCounter.Value = 1;
         }
     }
 
@@ -333,32 +345,28 @@ public class ItemHolder : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = true)]
     private void SpawnItemRpc(NetworkBehaviourReference itemHolder, ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
-        GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
-        NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
-        thrownItemNetworkObject.Spawn();
-
-        ulong senderClientID = rpcParams.Receive.SenderClientId;
-
         // ItemHolder kartScript = PlayerSpawner.instance.kartAndID[senderClientID];
         if (itemHolder.TryGet(out ItemHolder kartScript))
         {
+            GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
+            NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
+            thrownItemNetworkObject.Spawn();
+            
             // get the baseitem script from the thrown item and set proper variables
             BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
             thrownItemScript.Kart = kartScript;
             thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.timerEndCallback = kartScript.ClearItem;
 
-            // shield subscribes to timer end callback while other items remove from inventory right away
-            if (thrownItemScript.ItemCategory == "Shield")
+            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
             {
-                thrownItemScript.timerEndCallback = kartScript.ClearItem;
+                ClearItem();
             }
-            else
+            else // disable upgrading if use count is more than one and the item has already been used
             {
-                currentItemType.Value = ItemType.NoItem;
+                kartScript.currentCanUpgrade.Value = false;
+                kartScript.currentUseCounter.Value++;
             }
-
-            //currentItemType.Value = ItemType.NoItem;
-            //currentItemTier.Value = 0;
         }
     }
 
@@ -803,6 +811,11 @@ public class ItemHolder : NetworkBehaviour
     {
         canUpgrade = newValue;
     }
+    
+    private void OnUseCounterChange(int previousValue, int newValue)
+    {
+        useCounter = newValue;
+    }
 
     #region New Item Variables
     [Header("ItemArray")]
@@ -867,11 +880,11 @@ public class ItemHolder : NetworkBehaviour
         {
             ApplyItemTween(defaultItemDisplay);
 
-            // makes sure clear item doesn't get called infinitely
-            if (previousValue != ItemType.NoItem)
-            {
-                ClearItem();
-            }
+            // // makes sure clear item doesn't get called infinitely
+            // if (previousValue != ItemType.NoItem)
+            // {
+            //     ClearItem();
+            // }
         }
         else
         {
