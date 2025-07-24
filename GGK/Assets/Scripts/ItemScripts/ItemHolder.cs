@@ -323,75 +323,9 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (!IsOwner) return;
 
-                SpawnItemRpc(this,itemType, ItemTier, transform.position, transform.rotation);
-
-
-                // get the baseitem script from the thrown item and set proper variables
-                // BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-                // thrownItemScript.UseCount -= useCounter;
-                // thrownItemScript.timerEndCallback = ClearItem;
-
-                //if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
-                //{
-                //    ClearItem();
-                //}
-                //else // disable upgrading if use count is more than one and the item has already been used
-                //{
-                //    canUpgrade = false;
-                //    useCounter++;
-                //}
+                SpawnItemRpc(this, itemType, ItemTier, transform.position, transform.rotation);
             }
         }
-
-        // if (uses > 0 && context.phase == InputActionPhase.Performed)
-        // {
-        //     // grab the kart's shield effect before instantiating
-        //     if (heldItem.ItemCategory == "Shield")
-        //     {
-        //         heldItem.shieldEffect = shieldEffect;
-        //     }
-
-        //     itemDisplay.rectTransform.position = itemDisplayPosition;
-        //     itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
-
-        //     // spawn all items except boost for multiplayer to see
-        //     if (!MultiplayerManager.Instance.IsMultiplayer || heldItem.ItemCategory == "Boost")
-        //     {
-        //         item = Instantiate(heldItem, transform.position, transform.rotation);
-        //     }
-        //     else if (MultiplayerManager.Instance.IsMultiplayer)
-        //     {
-        //         SpawnItemRpc();
-        //     }
-
-        //     if (MultiplayerManager.Instance.IsMultiplayer)
-        //     {
-        //         //if (NetworkManager.Singleton.IsHost)
-        //         //{
-
-        //         //}
-        //         //else
-        //         //{
-        //         //    heldItem = null;
-        //         //    holdingItem = false;
-        //         //    itemDisplay.texture = defaultItemDisplay;
-        //         //}
-        //     }
-        //     else
-        //     {
-        //         //soundPlayer.PlayOneShot(throwSound);
-        //         item.gameObject.SetActive(true);
-        //         item.Kart = this;
-        //         item.ItemTier = heldItem.ItemTier;
-
-        //         if (heldItem.ItemTier > 1)
-        //         {
-        //             item.OnLevelUp(item.ItemTier);
-        //         }
-
-        //         uses--; // Decrease after successful use
-        //     }
-        // }
     }
 
     /// <summary>
@@ -448,55 +382,6 @@ public class ItemHolder : NetworkBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        /* Checks if kart hits an item box
-        //if (collision.gameObject.CompareTag("ItemBox"))
-        //{
-        //    ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
-
-        //    // Gives kart an item if they don't already have one
-        //    if (!holdingItem)
-        //    {
-        //        itemBox.RandomizeItem(this.gameObject);
-
-        //        // Initialize use count if first use
-        //        if (uses == 0)
-        //        {
-        //            uses = heldItem.UseCount;
-        //        }
-        //        Debug.Log(uses);
-        //        if (thisDriver)
-        //        {
-        //            ApplyItemTween(heldItem.itemIcon);
-        //        }
-        //    }
-        //    // Disables the item box
-        //    itemBox.gameObject.SetActive(false);
-        //    //heldItemText.text = $"Held Item: {baseItem}";
-        //}
-        //else if (collision.gameObject.CompareTag("UpgradeBox"))
-        //{
-        //    UpgradeBox upgradeBox = collision.gameObject.GetComponent<UpgradeBox>();
-        //    // itemDisplay.texture = heldItem.itemIcon;
-
-        // if player missing item, gives random level 2 item or upgrades current item
-        //upgradeBox.UpgradeItem(this.gameObject);
-        //heldItem.OnLevelUp(heldItem.ItemTier);
-        //uses = heldItem.UseCount;
-
-        // Either upgrades the current item or gives the kart a random upgraded item
-        //baseItem = upgradeBox.UpgradeItem(this);
-
-        // displays item in the HUD
-        //if (thisDriver)
-        //{
-        //    ApplyItemTween(heldItem.itemIcon);
-        //}
-
-        //    // Disables the upgrade box
-        //    upgradeBox.gameObject.SetActive(false);
-        //    //heldItemText.text = $"Held Item: {baseItem}+";
-        //}*/
-
         // Checks if kart hits an item box
         if (collision.gameObject.CompareTag("ItemBox"))
         {
