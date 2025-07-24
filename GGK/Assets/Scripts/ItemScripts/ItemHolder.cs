@@ -93,6 +93,32 @@ public class ItemHolder : NetworkBehaviour
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
 
+    // variables for multiplayer
+
+    public NetworkVariable<ItemType> currentItemType = 
+        new NetworkVariable<ItemType>(
+            ItemType.NoItem,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+    public NetworkVariable<int> currentItemTier =
+        new NetworkVariable<int>(
+            0,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+    public override void OnNetworkSpawn()
+    {
+        currentItemType.OnValueChanged += OnItemTypeChange;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        currentItemType.OnValueChanged -= OnItemTypeChange;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -267,12 +293,6 @@ public class ItemHolder : NetworkBehaviour
         useCounter = 1;
     }
 
-    [ClientRpc]
-    private void ClearItemClientRpc(ClientRpcParams clientRpcParams = default)
-    {
-        ClearItem();
-    }
-
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!holdingItem) return;
@@ -301,13 +321,15 @@ public class ItemHolder : NetworkBehaviour
             }
             else
             {
+                if (!IsOwner) return;
+
                 SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
 
 
                 // get the baseitem script from the thrown item and set proper variables
-                //BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
                 //thrownItemScript.UseCount -= useCounter;
-                //thrownItemScript.timerEndCallback = ClearItem;
+                thrownItemScript.timerEndCallback = ClearItem;
 
                 //if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
                 //{
@@ -375,7 +397,7 @@ public class ItemHolder : NetworkBehaviour
     /// <summary>
     /// Rpc for client to ask the network to spawn an item for it
     /// </summary>
-    [Rpc(SendTo.Server, RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = true)]
     private void SpawnItemRpc(ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
         GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
@@ -390,25 +412,11 @@ public class ItemHolder : NetworkBehaviour
         BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
         thrownItemScript.Kart = kartScript;
         thrownItemScript.UseCount -= useCounter;
-        thrownItemScript.timerEndCallback = ClearItem;
 
-        if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
-        {
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { senderClientID }
-                }
-            }; 
+        currentItemType.Value = ItemType.NoItem;
+        currentItemTier.Value = 0;
 
-            ClearItemClientRpc(clientRpcParams);
-        }
-        else // disable upgrading if use count is more than one and the item has already been used
-        {
-            canUpgrade = false;
-            useCounter++;
-        }
+        
     }
 
     public void OnThrow() // for npcs
@@ -510,13 +518,20 @@ public class ItemHolder : NetworkBehaviour
                         // new code
                         itemType = ItemType.Puck;
 
-                        // Item Box Shake
-                        if (thisDriver)
+                        if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            //ApplyItemTween(heldItem.itemIcon);
-                            // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            currentItemType.Value = ItemType.Puck;
+                        }
+                        else
+                        {
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
 
+                            }
                         }
 
                     }
@@ -532,6 +547,10 @@ public class ItemHolder : NetworkBehaviour
 
                             // new code
                             if (canUpgrade) ItemTier++;
+                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                currentItemTier.Value++;
+                            }
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -555,12 +574,20 @@ public class ItemHolder : NetworkBehaviour
                         // new code
                         itemType = ItemType.Boost;
 
-                        // Item Box Shake
-                        if (thisDriver)
+                        if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            //ApplyItemTween(heldItem.itemIcon);
-                            // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            currentItemType.Value = ItemType.Puck;
+                        }
+                        else
+                        {
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+
+                            }
                         }
 
                     }
@@ -576,6 +603,10 @@ public class ItemHolder : NetworkBehaviour
 
                             // new code
                             if (canUpgrade) ItemTier++;
+                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                currentItemTier.Value++;
+                            }
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -599,12 +630,20 @@ public class ItemHolder : NetworkBehaviour
                         // new code
                         itemType = ItemType.Shield;
 
-                        // Item Box Shake
-                        if (thisDriver)
+                        if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            //ApplyItemTween(heldItem.itemIcon);
-                            // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            currentItemType.Value = ItemType.Puck;
+                        }
+                        else
+                        {
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+
+                            }
                         }
 
                     }
@@ -623,6 +662,10 @@ public class ItemHolder : NetworkBehaviour
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
+                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    currentItemTier.Value++;
+                                }
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -647,12 +690,20 @@ public class ItemHolder : NetworkBehaviour
                         // new code
                         itemType = ItemType.Hazard;
 
-                        // Item Box Shake
-                        if (thisDriver)
+                        if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            //ApplyItemTween(heldItem.itemIcon);
-                            // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            currentItemType.Value = ItemType.Puck;
+                        }
+                        else
+                        {
+                            // Item Box Shake
+                            if (thisDriver)
+                            {
+                                //ApplyItemTween(heldItem.itemIcon);
+                                // new code
+                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+
+                            }
                         }
 
                     }
@@ -668,6 +719,10 @@ public class ItemHolder : NetworkBehaviour
 
                             // new code
                             if (canUpgrade) ItemTier++;
+                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                currentItemTier.Value++;
+                            }
                         }
                         // Item Box Shake
                         if (thisDriver)
@@ -705,6 +760,10 @@ public class ItemHolder : NetworkBehaviour
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
+                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    currentItemTier.Value++;
+                                }
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -726,6 +785,10 @@ public class ItemHolder : NetworkBehaviour
 
                                 // new code
                                 if (canUpgrade) ItemTier++;
+                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    currentItemTier.Value++;
+                                }
                             }
                             // Item Box Shake
                             if (thisDriver)
@@ -861,7 +924,7 @@ public class ItemHolder : NetworkBehaviour
          }
     }
     const int maxTier = 3;
-    enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
+    public enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
     [SerializeField] private ItemType itemType = ItemType.NoItem;
 
     private void InitItemArray()
@@ -884,6 +947,21 @@ public class ItemHolder : NetworkBehaviour
     private ItemType RandomItemType()
     {
         return (ItemType)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Max() + 1);
+    }
+
+    private void OnItemTypeChange(ItemType oldType, ItemType newType)
+    {
+        // make sure only the client who changes an item calls this
+        if (!IsOwner) return;
+
+        if (newType == ItemType.NoItem)
+        {
+            ClearItem();
+        }
+        else
+        {
+            ApplyItemTween(ItemImageArray[(int)newType][ItemTier]);
+        }
     }
     #endregion
 }
