@@ -440,10 +440,13 @@ public class ItemHolder : NetworkBehaviour
                             // uses = heldItem.UseCount;
 
                             // new code
-                            if (canUpgrade) ItemTier++;
                             if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                             {
                                 currentItemTier.Value++;
+                            }
+                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                ItemTier++;
                             }
                         }
                         // Item Box Shake
@@ -496,10 +499,13 @@ public class ItemHolder : NetworkBehaviour
                             // uses = heldItem.UseCount;
 
                             // new code
-                            if (canUpgrade) ItemTier++;
                             if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                             {
                                 currentItemTier.Value++;
+                            }
+                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                ItemTier++;
                             }
                         }
                         // Item Box Shake
@@ -555,10 +561,13 @@ public class ItemHolder : NetworkBehaviour
                                 // uses = heldItem.UseCount;
 
                                 // new code
-                                if (canUpgrade) ItemTier++;
                                 if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                                 {
                                     currentItemTier.Value++;
+                                }
+                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    ItemTier++;
                                 }
                             }
                             // Item Box Shake
@@ -612,10 +621,13 @@ public class ItemHolder : NetworkBehaviour
                             // uses = heldItem.UseCount;
 
                             // new code
-                            if (canUpgrade) ItemTier++;
                             if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                             {
                                 currentItemTier.Value++;
+                            }
+                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            {
+                                ItemTier++;
                             }
                         }
                         // Item Box Shake
@@ -653,10 +665,13 @@ public class ItemHolder : NetworkBehaviour
                                 // uses = heldItem.UseCount;
 
                                 // new code
-                                if (canUpgrade) ItemTier++;
                                 if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                                 {
                                     currentItemTier.Value++;
+                                }
+                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    ItemTier++;
                                 }
                             }
                             // Item Box Shake
@@ -678,10 +693,13 @@ public class ItemHolder : NetworkBehaviour
                                 // uses = heldItem.UseCount;
 
                                 // new code
-                                if (canUpgrade) ItemTier++;
                                 if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
                                 {
                                     currentItemTier.Value++;
+                                }
+                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                                {
+                                    ItemTier++;
                                 }
                             }
                             // Item Box Shake
