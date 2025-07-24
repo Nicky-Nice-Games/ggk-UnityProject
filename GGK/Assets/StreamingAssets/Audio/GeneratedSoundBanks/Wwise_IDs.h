@@ -56,6 +56,7 @@ namespace AK
             {
                 static const AkUniqueID DORM = 2196622405U;
                 static const AkUniqueID FBR = 1167025705U;
+                static const AkUniqueID GOLISANO = 2912031299U;
                 static const AkUniqueID MENU = 2607556080U;
                 static const AkUniqueID NONE = 748895195U;
                 static const AkUniqueID OUTERLOOP = 1139287912U;

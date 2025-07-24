@@ -89,6 +89,13 @@
 											</ReferenceList>
 											<TransitionInfo>
 												<TransitionObjectRef Name="final_lap" ID="{49B3C283-F46D-4E25-A5E3-6703079952BD}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												<TransitionFadeOut>
+													<MusicFade Name="Transition Fade-out" ID="{20EDA540-9A5F-4815-BC33-0546537D214F}">
+														<PropertyList>
+															<Property Name="FadeType" Type="int16" Value="1"/>
+														</PropertyList>
+													</MusicFade>
+												</TransitionFadeOut>
 											</TransitionInfo>
 										</MusicTransition>
 										<MusicTransition Name="Transition" ID="{91605C99-05EC-4FE1-9561-E457E5F9D4B2}">
@@ -216,6 +223,27 @@
 														</PropertyList>
 													</MusicFade>
 												</SourceFadeOut>
+											</TransitionInfo>
+										</MusicTransition>
+										<MusicTransition Name="Transition" ID="{D36DDF05-7BB4-4A25-81E0-E419E3452D28}">
+											<PropertyList>
+												<Property Name="DestinationContextType" Type="int16" Value="2"/>
+												<Property Name="EnableTransitionFadeOut" Type="bool" Value="True"/>
+												<Property Name="ExitSourceAt" Type="int16" Value="0"/>
+												<Property Name="PlayTransitionPostExit" Type="bool" Value="False"/>
+												<Property Name="SourceContextType" Type="int16" Value="2"/>
+												<Property Name="UseTransitionObject" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="DestinationContextObject">
+													<ObjectRef Name="GolisanoFinalLap" ID="{09D3A6F2-E671-4916-B6D9-4C27CD9864E3}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												</Reference>
+												<Reference Name="SourceContextObject">
+													<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												</Reference>
+											</ReferenceList>
+											<TransitionInfo>
+												<TransitionObjectRef Name="final_lap" ID="{49B3C283-F46D-4E25-A5E3-6703079952BD}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
 											</TransitionInfo>
 										</MusicTransition>
 									</ChildrenList>
@@ -4131,9 +4159,6 @@
 										<Reference Name="PlaylistRoot">
 											<Custom>
 												<MusicPlaylistItem Name="" ID="{4F2EEA45-83D3-48AF-8403-520D875A5BA8}" ShortID="944811344">
-													<PropertyList>
-														<Property Name="PlayMode" Type="int16" Value="1"/>
-													</PropertyList>
 													<ChildrenList>
 														<MusicPlaylistItem Name="" ID="{4D338F44-DFFE-4756-95C1-26A6B5241EFB}" ShortID="937347658">
 															<PropertyList>
@@ -10247,6 +10272,1331 @@
 								</ObjectList>
 							</ObjectLists>
 						</MusicSwitchContainer>
+						<MusicSwitchContainer Name="Golisano" ID="{AD6F42FF-6B5D-46C7-8B06-D43EE90DE61F}" ShortID="293708500">
+							<PropertyList>
+								<Property Name="OverrideClockSettings" Type="bool" Value="True"/>
+								<Property Name="Tempo" Type="Real64" Value="164"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+								</Reference>
+								<Reference Name="TransitionRoot">
+									<Custom>
+										<MusicTransition Name="Root" ID="{D91EACB9-89DB-48A2-9EE3-01F9E61B7368}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<ChildrenList>
+												<MusicTransition Name="Transition" ID="{58079E41-2B09-494B-8CCC-9F871D117A67}">
+													<TransitionInfo/>
+												</MusicTransition>
+												<MusicTransition Name="Transition" ID="{20C41E0D-8D17-4DBD-A4AE-FC458450B784}">
+													<PropertyList>
+														<Property Name="DestinationContextType" Type="int16" Value="2"/>
+														<Property Name="ExitSourceAt" Type="int16" Value="0"/>
+														<Property Name="PlaySourcePostExit" Type="bool" Value="False"/>
+														<Property Name="SourceContextType" Type="int16" Value="2"/>
+														<Property Name="UseTransitionObject" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="DestinationContextObject">
+															<ObjectRef Name="GolisanoFinalLap" ID="{09D3A6F2-E671-4916-B6D9-4C27CD9864E3}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+														</Reference>
+														<Reference Name="SourceContextObject">
+															<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+														</Reference>
+													</ReferenceList>
+													<TransitionInfo>
+														<TransitionObjectRef Name="final_lap" ID="{49B3C283-F46D-4E25-A5E3-6703079952BD}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</TransitionInfo>
+												</MusicTransition>
+											</ChildrenList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</Custom>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicPlaylistContainer Name="GolisanoFinalLap" ID="{09D3A6F2-E671-4916-B6D9-4C27CD9864E3}" ShortID="633079772">
+									<PropertyList>
+										<Property Name="Tempo" Type="Real64" Value="164"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+										</Reference>
+										<Reference Name="PlaylistRoot">
+											<Custom>
+												<MusicPlaylistItem Name="" ID="{60CD38AF-71BB-49A7-8621-135F6B1CF09E}" ShortID="491320628">
+													<ChildrenList>
+														<MusicPlaylistItem Name="" ID="{70EB6CFC-EB34-4044-8F67-EB14FFEB79A5}" ShortID="717800803">
+															<PropertyList>
+																<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Segment">
+																	<ObjectRef Name="Golisano_Transistion_164bpm4-4_L8M" ID="{38D09159-7121-4FBD-968C-E8EB83F27790}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+																</Reference>
+															</ReferenceList>
+														</MusicPlaylistItem>
+														<MusicPlaylistItem Name="" ID="{5853DC06-84A2-454E-ADA8-D59A55E67E8B}" ShortID="416289152">
+															<PropertyList>
+																<Property Name="LoopCount" Type="int16" Value="0"/>
+															</PropertyList>
+															<ChildrenList>
+																<MusicPlaylistItem Name="" ID="{A3FFB07E-91C5-489F-869D-D25AFD6DA729}" ShortID="330930498">
+																	<PropertyList>
+																		<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+																	</PropertyList>
+																	<ReferenceList>
+																		<Reference Name="Segment">
+																			<ObjectRef Name="Golisano_Lap3_164bpm4-4_L8M" ID="{E9AFCA46-6BBB-4CBF-B449-DBA9F9EEACFD}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+																		</Reference>
+																	</ReferenceList>
+																</MusicPlaylistItem>
+															</ChildrenList>
+														</MusicPlaylistItem>
+													</ChildrenList>
+												</MusicPlaylistItem>
+											</Custom>
+										</Reference>
+										<Reference Name="TransitionRoot">
+											<Custom>
+												<MusicTransition Name="Root" ID="{82DD3F1D-8BC6-40E8-9EE2-33B0ECD637ED}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<ChildrenList>
+														<MusicTransition Name="Transition" ID="{D56C7866-CFB5-478F-A4D9-D9E2E080011E}">
+															<TransitionInfo/>
+														</MusicTransition>
+													</ChildrenList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</Custom>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<MusicSegment Name="Golisano_Lap3_164bpm4-4_L8M" ID="{E9AFCA46-6BBB-4CBF-B449-DBA9F9EEACFD}" ShortID="58479311">
+											<PropertyList>
+												<Property Name="EndPosition" Type="Real64" Value="11997.5010640956"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<MusicTrack Name="Golisano_Lap3_Bass_164bpm4-4_L8M" ID="{F22EB43A-F65B-466F-98A0-779F117FF459}" ShortID="88571444">
+													<ReferenceList>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{B8ADCA21-D78A-4AC0-A074-BDED11558B05}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap3_Bass_164bpm4-4_L8M" ID="{C9F8AB3C-AF0E-46D6-AA40-F4DEE74AE2D5}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap3_Bass_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1003029130"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{1E973250-79EA-452A-8BE7-9F9412105C62}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap3_Bass_164bpm4-4_L8M" ID="{9293A032-F02D-4AA2-8622-07DF2A619C84}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap3_Bass_164bpm4-4_L8M" ID="{C9F8AB3C-AF0E-46D6-AA40-F4DEE74AE2D5}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Lap3_Sax_164bpm4-4_L8M" ID="{8071E326-B0FF-4D71-8DC8-6BD114A5F254}" ShortID="561671307">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{C9AC94B4-DCAA-4C30-860A-E65E073B8698}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap3_Sax_164bpm4-4_L8M" ID="{8EB6CEDD-7ECD-4F42-82E5-42AACAD707E2}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap3_Sax_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="931454360"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{48B6B426-45AE-497E-B214-B74D41CDDDBF}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap3_Sax_164bpm4-4_L8M" ID="{BCF6F80A-2C24-439E-B616-1B08229D026F}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap3_Sax_164bpm4-4_L8M" ID="{8EB6CEDD-7ECD-4F42-82E5-42AACAD707E2}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Perc_164bpm4-4_L2M" ID="{43C072F3-AEB0-47E8-955A-D3DB087ADF97}" ShortID="985928403">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{C73FE20B-AE4A-4B7A-8880-012F15924D27}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Perc_164bpm4-4_L2M" ID="{50F76E6C-0E43-49F0-BC09-A31F64067A99}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Perc_164bpm4-4_L2M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="704207295"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{2642E170-CDF6-4AC0-97AF-1960FE6B76E4}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Perc_164bpm4-4_L2M" ID="{C3F48143-6B86-4BD4-BFFF-AA911BFB181C}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3922902494"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Perc_164bpm4-4_L2M" ID="{50F76E6C-0E43-49F0-BC09-A31F64067A99}"/>
+																							<PropertyCurveList>
+																								<PropertyCurve PropertyName="Highpass">
+																									<Curve Name="" ID="{082DDB57-F160-4631-BCA4-3AE89C688161}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Lowpass">
+																									<Curve Name="" ID="{B38991E8-98A2-4802-B24B-009DA89F3B14}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Volume">
+																									<Curve Name="" ID="{DE357E1B-E5AC-4453-844A-9C874F4375C8}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="3"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																							</PropertyCurveList>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Lap3_Lead_164bpm4-4_L8M" ID="{26B20FD8-B5D1-4FB4-A686-3827924751A7}" ShortID="864346782">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{73BDCBA2-E505-4BC5-8AD9-8478BE76E8D5}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap3_Lead_164bpm4-4_L8M" ID="{59C1A025-56EB-4875-B8AC-ABF1A40C10D3}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap3_Lead_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="31855031"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{AECFC285-3FE5-4652-8996-6FEBE62AF655}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap3_Lead_164bpm4-4_L8M" ID="{2C2BC735-5325-44E4-90A5-DFC46002D186}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap3_Lead_164bpm4-4_L8M" ID="{59C1A025-56EB-4875-B8AC-ABF1A40C10D3}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Cues">
+													<Reference>
+														<Local>
+															<MusicCue Name="Entry Cue" ID="{EFDBF93F-07FD-4E81-83C2-037E9A253FB7}"/>
+														</Local>
+													</Reference>
+													<Reference>
+														<Local>
+															<MusicCue Name="Exit Cue" ID="{D475F7EA-4F82-430A-8D2B-724032FC238B}">
+																<PropertyList>
+																	<Property Name="CueType" Type="int16" Value="1"/>
+																	<Property Name="TimeMs" Type="Real64" Value="11707.3242630385"/>
+																</PropertyList>
+															</MusicCue>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicSegment>
+										<MusicSegment Name="Golisano_Transistion_164bpm4-4_L8M" ID="{38D09159-7121-4FBD-968C-E8EB83F27790}" ShortID="802176447">
+											<PropertyList>
+												<Property Name="EndPosition" Type="Real64" Value="11707.3242630385"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<MusicTrack Name="Golisano_Transistion_Bass_164bpm4-4_L8M" ID="{CDDA2E10-E177-4403-9C2B-933FDB6149A6}" ShortID="486352342">
+													<ReferenceList>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{F47132B6-1AB4-436C-85F0-DBBE4C107467}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Transistion_Bass_164bpm4-4_L8M" ID="{F9FD1E7B-79D9-4B0E-9366-4CEB8ECB21B8}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Transistion_Bass_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="296826302"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{E76571E0-BACE-409B-AAC1-41F8CB4C6F48}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Transistion_Bass_164bpm4-4_L8M" ID="{CB364ABD-BABC-4A5C-9F17-BA5F579F2C59}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Transistion_Bass_164bpm4-4_L8M" ID="{F9FD1E7B-79D9-4B0E-9366-4CEB8ECB21B8}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Transistion_Horns_164bpm4-4_L8M" ID="{853C309F-03EA-46FE-AA42-2E450D51E6E3}" ShortID="319263902">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{EB02C178-43BD-4DFF-B291-26C464100015}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Transistion_Horns_164bpm4-4_L8M" ID="{4A262ECF-8C08-46CB-9818-8E00FA399ED9}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Transistion_Horns_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="161481275"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{4545612A-DEEB-45D4-9DE4-ADE8910C6106}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Transistion_Horns_164bpm4-4_L8M" ID="{A634D9B8-26C9-49AF-AC99-40041A501C18}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Transistion_Horns_164bpm4-4_L8M" ID="{4A262ECF-8C08-46CB-9818-8E00FA399ED9}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Transistion_Lead_164bpm4-4_L8M" ID="{6F901ED3-E148-42A4-8FA8-CA5CB8E22E34}" ShortID="417684879">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{6C1DCA01-3AAB-4430-BFE0-94FF0D1A62A8}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Transistion_Lead_164bpm4-4_L8M" ID="{0B7B39A5-8A45-451E-B66F-D258E04D7D36}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Transistion_Lead_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="846395956"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{07FF13C3-C2D9-4F76-8450-D6F678CC9E65}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Transistion_Lead_164bpm4-4_L8M" ID="{AC7D19B3-5DB5-435A-8299-B3FBC8FC62ED}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Transistion_Lead_164bpm4-4_L8M" ID="{0B7B39A5-8A45-451E-B66F-D258E04D7D36}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Cues">
+													<Reference>
+														<Local>
+															<MusicCue Name="Entry Cue" ID="{D2656FC3-DE84-4C2A-8913-4B1ABA8ACB6B}"/>
+														</Local>
+													</Reference>
+													<Reference>
+														<Local>
+															<MusicCue Name="Exit Cue" ID="{696DB955-9E1C-429C-92A9-EA652238F68F}">
+																<PropertyList>
+																	<Property Name="CueType" Type="int16" Value="1"/>
+																	<Property Name="TimeMs" Type="Real64" Value="11707.3242630385"/>
+																</PropertyList>
+															</MusicCue>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicSegment>
+									</ChildrenList>
+								</MusicPlaylistContainer>
+								<MusicPlaylistContainer Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" ShortID="42910670">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+										</Reference>
+										<Reference Name="PlaylistRoot">
+											<Custom>
+												<MusicPlaylistItem Name="" ID="{3EEC89CD-25EB-4147-9686-516393C3F5F2}" ShortID="629300077">
+													<ChildrenList>
+														<MusicPlaylistItem Name="" ID="{D0514A3C-FBE5-4124-BA95-37560CE3DC78}" ShortID="310312280">
+															<PropertyList>
+																<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Segment">
+																	<ObjectRef Name="Golisano_Intro_120bpm4-4_L2M" ID="{3A3DBF78-13EE-44B4-BCDF-AC331C58D2D7}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+																</Reference>
+															</ReferenceList>
+														</MusicPlaylistItem>
+														<MusicPlaylistItem Name="" ID="{7517ABBC-844E-4ABE-8931-28AF52DDF112}" ShortID="328212214">
+															<PropertyList>
+																<Property Name="LoopCount" Type="int16" Value="0"/>
+															</PropertyList>
+															<ChildrenList>
+																<MusicPlaylistItem Name="" ID="{35335C41-72BA-418F-B80C-9741CBABC4E6}" ShortID="1025658979">
+																	<PropertyList>
+																		<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+																	</PropertyList>
+																	<ReferenceList>
+																		<Reference Name="Segment">
+																			<ObjectRef Name="Golisano_Main_164bpm4-4_L8M" ID="{410FAE73-BDED-4F66-9B81-49B13DC11546}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+																		</Reference>
+																	</ReferenceList>
+																</MusicPlaylistItem>
+															</ChildrenList>
+														</MusicPlaylistItem>
+													</ChildrenList>
+												</MusicPlaylistItem>
+											</Custom>
+										</Reference>
+										<Reference Name="TransitionRoot">
+											<Custom>
+												<MusicTransition Name="Root" ID="{A212CAFC-9609-4F8D-B5B8-F7A10164BA30}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<ChildrenList>
+														<MusicTransition Name="Transition" ID="{F37CC733-950C-4264-9C66-A94F93E1F49A}">
+															<TransitionInfo/>
+														</MusicTransition>
+													</ChildrenList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</Custom>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<MusicSegment Name="Golisano_Intro_120bpm4-4_L2M" ID="{3A3DBF78-13EE-44B4-BCDF-AC331C58D2D7}" ShortID="694210541">
+											<PropertyList>
+												<Property Name="OverrideClockSettings" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<MusicTrack Name="Golisano_Intro_Bass_120bpm4-4_L2M" ID="{DF12A573-F4D0-4FFE-B96B-913AA287595A}" ShortID="831376634">
+													<ReferenceList>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{7BA883CF-B02E-4748-9DA8-B500EDF42A6B}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Intro_Bass_120bpm4-4_L2M" ID="{5AF22EDD-D9D3-43F0-884E-94598D8A2F91}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Intro_Bass_120bpm4-4_L2M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="362675742"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{10B7A352-0CE8-4520-9D3D-E6BA64797F9C}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Intro_Bass_120bpm4-4_L2M" ID="{F4888514-8515-4A8B-951D-F8AD867DA7A8}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="3903.99092970522"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Intro_Bass_120bpm4-4_L2M" ID="{5AF22EDD-D9D3-43F0-884E-94598D8A2F91}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Intro_Horns_120bpm4-4_L2M" ID="{3430237E-6F63-4A5C-904F-A2FE06515575}" ShortID="530616323">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{69E7BF27-3E28-4357-8DFC-E0A0F47791EC}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Intro_Horns_120bpm4-4_L2M" ID="{E247E20A-7714-453F-B70F-8BC4AA18C8E4}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Intro_Horns_120bpm4-4_L2M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1038726259"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{E7D8D7DC-B5CB-4EF9-AF69-267293DD6FB6}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Intro_Horns_120bpm4-4_L2M" ID="{E4C27A85-8BDB-453E-A43E-B3E744216697}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="3903.99092970522"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Intro_Horns_120bpm4-4_L2M" ID="{E247E20A-7714-453F-B70F-8BC4AA18C8E4}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Cues">
+													<Reference>
+														<Local>
+															<MusicCue Name="Entry Cue" ID="{41A0D1F6-0B32-4138-B4FC-68B05BACEEFD}"/>
+														</Local>
+													</Reference>
+													<Reference>
+														<Local>
+															<MusicCue Name="Exit Cue" ID="{C6D6B0A1-DF3F-4CE5-85E2-D00EF24EBFC0}">
+																<PropertyList>
+																	<Property Name="CueType" Type="int16" Value="1"/>
+																	<Property Name="TimeMs" Type="Real64" Value="3903.99092970522"/>
+																</PropertyList>
+															</MusicCue>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicSegment>
+										<MusicSegment Name="Golisano_Main_164bpm4-4_L8M" ID="{410FAE73-BDED-4F66-9B81-49B13DC11546}" ShortID="964816278">
+											<PropertyList>
+												<Property Name="EndPosition" Type="Real64" Value="20824.6778386102"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<MusicTrack Name="Golisano_Main_Bass_164bpm4-4_L8M" ID="{F90CFB3E-94AE-4AA3-8E10-356C65E76EC6}" ShortID="597616715">
+													<ReferenceList>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{77BDBAAD-68E1-42B9-B87B-CFB1D11CB0D5}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap1&amp;2_Bass_164bpm4-4_L8M" ID="{C014FD5E-B51B-48AC-95EB-BDC87BBA8E3E}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap1&amp;2_Bass_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="915604384"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{B268F12D-0A33-4198-ABD2-AFFC4D440881}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap1&amp;2_Bass_164bpm4-4_L8M" ID="{B9FFDDD9-6986-4563-B948-2C976B2A20E9}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap1&amp;2_Bass_164bpm4-4_L8M" ID="{C014FD5E-B51B-48AC-95EB-BDC87BBA8E3E}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Main_Horns_164bpm4-4_L8M" ID="{9FC92604-B8F2-4B2C-AB40-E7ED4283CD43}" ShortID="674348742">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{70853682-BDFC-48F1-8DC4-C0132DCCD3DA}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap1&amp;2_Horns_164bpm4-4_L8M" ID="{A115138A-61C9-44AF-91CC-7275E93C68A5}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap1&amp;2_Horns_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="393404064"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{E0CD80A3-4526-4B20-BC6A-969EE6324FA1}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap1&amp;2_Horns_164bpm4-4_L8M" ID="{B08E730F-C47E-42E4-88CB-76707BE30C5F}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap1&amp;2_Horns_164bpm4-4_L8M" ID="{A115138A-61C9-44AF-91CC-7275E93C68A5}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Perc_164bpm4-4_L2M" ID="{27060AEB-B6C2-4EDB-BCFE-FFAED8289348}" ShortID="341922474">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{B874AD3B-423C-4878-83C8-CED44442E70F}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Perc_164bpm4-4_L2M" ID="{2E6E9583-BE32-4925-BB48-42A69595F175}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Perc_164bpm4-4_L2M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="704207295"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{7F87F87B-652F-410B-A3F0-925835A9824E}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Perc_164bpm4-4_L2M" ID="{45F13D84-BC26-4209-8914-C83A10DDFEBB}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3922902494"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Perc_164bpm4-4_L2M" ID="{2E6E9583-BE32-4925-BB48-42A69595F175}"/>
+																							<PropertyCurveList>
+																								<PropertyCurve PropertyName="Highpass">
+																									<Curve Name="" ID="{19DA9B21-D95F-41F8-9B43-5B2D038CB8B6}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Lowpass">
+																									<Curve Name="" ID="{4EA138AE-F142-4BAE-8F9E-CD5750E0AE91}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Volume">
+																									<Curve Name="" ID="{1B2EFAA0-E9F0-4EA9-8BD8-29BDEB26A1BB}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="3"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70739</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																							</PropertyCurveList>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+												<MusicTrack Name="Golisano_Main_Lead_164bpm4-4_L8M" ID="{C68C985F-EA72-4CC4-916E-32E29E5D370A}" ShortID="428295443">
+													<PropertyList>
+														<Property Name="MusicTrackType" Type="int16" Value="1"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{BB72E874-0E65-4B44-A80E-A64D3D6281F0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FCFD6221-C774-4F61-815E-E622303DEC83}"/>
+														</Reference>
+														<Reference Name="TransitionRoot">
+															<Custom>
+																<MusicTransition Name="Root" ID="{93CF6EB6-4B4A-4EDC-A33B-FB4B05D34306}">
+																	<PropertyList>
+																		<Property Name="IsFolder" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<TransitionInfo/>
+																</MusicTransition>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Golisano_Lap1&amp;2_Lead_A_164bpm4-4_L8M" ID="{E40799FB-6C56-4284-95CC-B4D17F082E5E}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap1&amp;2_Lead_A_164bpm4-4_L8M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="890677088"/>
+															</MediaIDList>
+														</AudioFileSource>
+														<AudioFileSource Name="Golisano_Lap1&amp;2_Lead_B_164bpm4-4_L4M" ID="{5CBF5D52-4A45-4EDF-81DB-E882ACBFECB8}">
+															<Language>SFX</Language>
+															<AudioFile>Golisano_Lap1&amp;2_Lead_B_164bpm4-4_L4M.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="612837153"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists>
+														<ObjectList Name="Sequences">
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{8AF26776-D709-4EA0-8099-F0F2D6944369}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap1&amp;2_Lead_A_164bpm4-4_L8M" ID="{205C0955-4825-4222-B597-533A2A7B543A}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3242630385"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap1&amp;2_Lead_A_164bpm4-4_L8M" ID="{E40799FB-6C56-4284-95CC-B4D17F082E5E}"/>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+															<Reference>
+																<Local>
+																	<MusicTrackSequence Name="" ID="{5784D60B-CE84-4304-A8D0-5CFE7BA343CB}">
+																		<ObjectLists>
+																			<ObjectList Name="Clips">
+																				<Reference>
+																					<Local>
+																						<MusicClip Name="Golisano_Lap1&amp;2_Lead_B_164bpm4-4_L4M" ID="{58868295-6381-4675-A433-41B126A69270}">
+																							<PropertyList>
+																								<Property Name="EndTrimOffset" Type="Real64" Value="11707.3469387755"/>
+																								<Property Name="FadeInMode" Type="int16" Value="0"/>
+																								<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																							</PropertyList>
+																							<AudioSourceRef Name="Golisano_Lap1&amp;2_Lead_B_164bpm4-4_L4M" ID="{5CBF5D52-4A45-4EDF-81DB-E882ACBFECB8}"/>
+																							<PropertyCurveList>
+																								<PropertyCurve PropertyName="Highpass">
+																									<Curve Name="" ID="{E6120D05-B241-4A86-B331-E371260D8782}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70735</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Lowpass">
+																									<Curve Name="" ID="{FFCF8066-2A75-4637-9F76-3D3F666B5783}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="1"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70735</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																								<PropertyCurve PropertyName="Volume">
+																									<Curve Name="" ID="{99991B18-00BD-43D3-9AEC-E41509AFDF32}">
+																										<PropertyList>
+																											<Property Name="Flags" Type="int32" Value="3"/>
+																										</PropertyList>
+																										<PointList>
+																											<Point>
+																												<XPos>0</XPos>
+																												<YPos>0</YPos>
+																												<Flags>5</Flags>
+																											</Point>
+																											<Point>
+																												<XPos>11.70735</XPos>
+																												<YPos>0</YPos>
+																												<Flags>37</Flags>
+																											</Point>
+																										</PointList>
+																									</Curve>
+																								</PropertyCurve>
+																							</PropertyCurveList>
+																						</MusicClip>
+																					</Local>
+																				</Reference>
+																			</ObjectList>
+																		</ObjectLists>
+																	</MusicTrackSequence>
+																</Local>
+															</Reference>
+														</ObjectList>
+													</ObjectLists>
+												</MusicTrack>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Cues">
+													<Reference>
+														<Local>
+															<MusicCue Name="Entry Cue" ID="{40825C8B-A76B-4018-9B1B-0063A7F68A11}"/>
+														</Local>
+													</Reference>
+													<Reference>
+														<Local>
+															<MusicCue Name="Exit Cue" ID="{7307D927-5E98-4CDB-9A26-37CD292CAEE7}">
+																<PropertyList>
+																	<Property Name="CueType" Type="int16" Value="1"/>
+																	<Property Name="TimeMs" Type="Real64" Value="11707.3242630385"/>
+																</PropertyList>
+															</MusicCue>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicSegment>
+									</ChildrenList>
+								</MusicPlaylistContainer>
+							</ChildrenList>
+							<ObjectLists>
+								<ObjectList Name="Arguments">
+									<Reference>
+										<ObjectRef Name="Map_States" ID="{2ED17946-9FCB-4C14-821A-CA4AB396656A}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+									</Reference>
+								</ObjectList>
+								<ObjectList Name="Entries">
+									<Reference>
+										<Local>
+											<MultiSwitchEntry Name="" ID="{CF5CD4CD-C042-4AF9-8B55-E2A9930EA0A9}">
+												<ReferenceList>
+													<Reference Name="AudioNode">
+														<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</Reference>
+												</ReferenceList>
+												<ObjectLists>
+													<ObjectList Name="EntryPath">
+														<Reference>
+															<ObjectRef Name="Lap1" ID="{355BCDA5-10D0-4D9B-8B16-1FCA88DBCD05}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MultiSwitchEntry>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MultiSwitchEntry Name="" ID="{4A8FB0C6-734B-457B-BF23-AE1C1250DC22}">
+												<ReferenceList>
+													<Reference Name="AudioNode">
+														<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</Reference>
+												</ReferenceList>
+												<ObjectLists>
+													<ObjectList Name="EntryPath">
+														<Reference>
+															<ObjectRef Name="Lap2" ID="{6C8EEBD6-7CD1-49E3-AF81-25D2545828DF}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MultiSwitchEntry>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MultiSwitchEntry Name="" ID="{F8B9C663-C75D-40EC-AA94-69F474916C92}">
+												<ReferenceList>
+													<Reference Name="AudioNode">
+														<ObjectRef Name="GolisanoFinalLap" ID="{09D3A6F2-E671-4916-B6D9-4C27CD9864E3}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</Reference>
+												</ReferenceList>
+												<ObjectLists>
+													<ObjectList Name="EntryPath">
+														<Reference>
+															<ObjectRef Name="Lap3" ID="{19C5DE74-BCD9-4FED-9B4D-91334971A2BD}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MultiSwitchEntry>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MultiSwitchEntry Name="" ID="{E30A2B55-44D3-48F4-8A5D-CFD7598340FB}">
+												<ReferenceList>
+													<Reference Name="AudioNode">
+														<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</Reference>
+												</ReferenceList>
+												<ObjectLists>
+													<ObjectList Name="EntryPath">
+														<Reference>
+															<ObjectRef Name="None" ID="{26A3461A-1B45-4365-8E4F-17FDD8AB524C}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MultiSwitchEntry>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MultiSwitchEntry Name="" ID="{9E3C4370-DBE6-436D-A5A2-B563D062E86B}">
+												<ReferenceList>
+													<Reference Name="AudioNode">
+														<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+													</Reference>
+												</ReferenceList>
+												<ObjectLists>
+													<ObjectList Name="EntryPath">
+														<Reference>
+															<ObjectRef Name="Map_States" ID="{2ED17946-9FCB-4C14-821A-CA4AB396656A}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MultiSwitchEntry>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicSwitchContainer>
 					</ChildrenList>
 					<ObjectLists>
 						<ObjectList Name="Arguments">
@@ -10783,6 +12133,126 @@
 												</Reference>
 												<Reference>
 													<ObjectRef Name="Map_States" ID="{2ED17946-9FCB-4C14-821A-CA4AB396656A}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{74A67ED5-94C4-445E-85D3-6B7596174DE2}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="mapIntro" ID="{BE997FAB-57BE-444A-97FD-6668C00F1096}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Golisano" ID="{9D572035-83B1-47D3-A146-DEE67A767AAE}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Starting" ID="{A707DA7C-37F2-41D9-9BD0-46FEF6695D4D}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Lap1" ID="{355BCDA5-10D0-4D9B-8B16-1FCA88DBCD05}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{A27A5C6C-7E05-4999-B262-FDAA3AA4E87C}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="Golisano" ID="{AD6F42FF-6B5D-46C7-8B06-D43EE90DE61F}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Golisano" ID="{9D572035-83B1-47D3-A146-DEE67A767AAE}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="InProgress" ID="{851EE0E2-C3FE-4444-A8CD-8DF083D46F31}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Map_States" ID="{2ED17946-9FCB-4C14-821A-CA4AB396656A}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{F3B5B065-D378-4E77-A4C7-2AA39ECC26F4}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Golisano" ID="{9D572035-83B1-47D3-A146-DEE67A767AAE}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="InProgress" ID="{851EE0E2-C3FE-4444-A8CD-8DF083D46F31}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Lap1" ID="{355BCDA5-10D0-4D9B-8B16-1FCA88DBCD05}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{C4A4C895-0AB7-47DB-AF29-1B9AFCEA2809}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="GolisanoMain" ID="{56D1B623-07FA-401B-80CA-31CB41E2509C}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Golisano" ID="{9D572035-83B1-47D3-A146-DEE67A767AAE}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="InProgress" ID="{851EE0E2-C3FE-4444-A8CD-8DF083D46F31}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Lap2" ID="{6C8EEBD6-7CD1-49E3-AF81-25D2545828DF}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{BBA4D12A-E9D0-4161-B71B-E5ECEDC3E612}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="GolisanoFinalLap" ID="{09D3A6F2-E671-4916-B6D9-4C27CD9864E3}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Golisano" ID="{9D572035-83B1-47D3-A146-DEE67A767AAE}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="InProgress" ID="{851EE0E2-C3FE-4444-A8CD-8DF083D46F31}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Lap3" ID="{19C5DE74-BCD9-4FED-9B4D-91334971A2BD}" WorkUnitID="{8EC4E9D9-ECDA-444A-AA5A-BDD962141B35}"/>
 												</Reference>
 											</ObjectList>
 										</ObjectLists>
