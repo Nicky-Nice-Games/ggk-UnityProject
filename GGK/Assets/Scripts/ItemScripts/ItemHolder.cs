@@ -286,7 +286,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
-            // currentItemType.Value = ItemType.NoItem;
+            currentItemType.Value = ItemType.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
         }
@@ -298,7 +298,7 @@ public class ItemHolder : NetworkBehaviour
 
         if (context.performed) // make sure input is only being read once
         {
-            if (!IsSpawned)
+            if (!IsSpawned || itemType == ItemType.Boost)
             {
                 thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
 
@@ -848,7 +848,12 @@ public class ItemHolder : NetworkBehaviour
         if (newValue == ItemType.NoItem)
         {
             ApplyItemTween(defaultItemDisplay);
-            ClearItem();
+
+            // makes sure clear item doesn't get called infinitely
+            if (previousValue != ItemType.NoItem)
+            {
+                ClearItem();
+            }
         }
         else
         {
