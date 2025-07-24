@@ -13,6 +13,8 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID LAP_MADE = 365509512U;
+        static const AkUniqueID MUSIC = 3991942870U;
         static const AkUniqueID PLAY_DRIFTSCREECH = 3158137442U;
         static const AkUniqueID PLAY_ENGINE_HIGH = 3755593723U;
         static const AkUniqueID PLAY_ENGINE_HIGH_FULL = 1413651457U;
@@ -54,6 +56,7 @@ namespace AK
             {
                 static const AkUniqueID DORM = 2196622405U;
                 static const AkUniqueID FBR = 1167025705U;
+                static const AkUniqueID GOLISANO = 2912031299U;
                 static const AkUniqueID MENU = 2607556080U;
                 static const AkUniqueID NONE = 748895195U;
                 static const AkUniqueID OUTERLOOP = 1139287912U;

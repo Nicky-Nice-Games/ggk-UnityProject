@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
     public void MapSelected()
     {
         curState = GameStates.game;
+        MusicStateManager.instance.ResetToLimbo();
         // Loads the race based on the name of the button clicked
         switch (GetComponent<ButtonBehavior>().buttonClickedName)
         {

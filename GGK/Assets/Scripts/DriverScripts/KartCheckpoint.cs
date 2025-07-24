@@ -123,6 +123,18 @@ public class KartCheckpoint : MonoBehaviour
                     lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
+                if (MusicLapStateManager.instance != null && this.GetComponent<NPCDriver>() == null)
+                {
+                    if (lap + 1 == 2)
+                    {
+                        MusicLapStateManager.instance.SetLapState(LapState.Lap2);
+                    }
+                    else if (lap + 1 == 3)
+                    {
+                        MusicLapStateManager.instance.SetLapState(LapState.Lap3);
+                    }
+                }
+
                 if (lap == totalLaps)
                 {
                     finishTime = FindAnyObjectByType<LeaderboardController>().curTime;

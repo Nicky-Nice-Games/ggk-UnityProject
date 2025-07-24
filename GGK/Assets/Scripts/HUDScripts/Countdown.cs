@@ -18,9 +18,19 @@ public class Countdown : MonoBehaviour
     public float countdownSpeed = 1f;
     public bool finished = false;
 
+    [Header("Wwise Music State")]
+    [SerializeField] MusicState musicState = MusicState.OuterLoop;
+
     // Start is called before the first frame update
     void Start()
     {
+        if(MusicStateManager.instance != null)
+        {
+            MusicStateManager.instance.ResetToLimbo();
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
+            MusicLapStateManager.instance.SetLapState(LapState.Lap1);
+            MusicStateManager.instance.SetMusicState(musicState);
+        }
         // Pause stuff using scaled time
         Time.timeScale = 0;
 
@@ -54,7 +64,7 @@ public class Countdown : MonoBehaviour
         // Change text depending on countdownCount
         if (countdownCount > 0)
         {
-            countdownText.text = countdownCount.ToString();   
+            countdownText.text = countdownCount.ToString();
         }
         else
         {
