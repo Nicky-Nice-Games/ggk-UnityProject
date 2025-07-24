@@ -13,6 +13,15 @@ public class SpawnHandler : NetworkBehaviour
 
     void Start()
     {
+        //transform.parent.position = spawnPoints[spawnIndex.Value].position;
+        //transform.parent.rotation = spawnPoints[spawnIndex.Value].rotation;
+        //rb = GetComponent<Rigidbody>();
+        //StartCoroutine(PositionCorrector());
+    }
+
+
+    public override void OnNetworkSpawn()
+    {
         transform.parent.position = spawnPoints[spawnIndex.Value].position;
         transform.parent.rotation = spawnPoints[spawnIndex.Value].rotation;
         rb = GetComponent<Rigidbody>();
