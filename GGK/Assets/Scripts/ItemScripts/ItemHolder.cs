@@ -357,6 +357,9 @@ public class ItemHolder : NetworkBehaviour
     {
         if (!IsHoldingItem()) return;
 
+        // prevent player from spamming shield while it's active
+        if (useCounter > 1 && itemType == ItemType.Shield) return;
+
         if (context.performed) // make sure input is only being read once
         {
             if (!IsSpawned || itemType == ItemType.Boost)
@@ -607,7 +610,7 @@ public class ItemHolder : NetworkBehaviour
                     else if (itemType == ItemType.Shield)
                     {
                         // Do not upgrade if shield is being used
-                        if (uses > 0)
+                        if (useCounter == 1)
                         {
                             // Increase item tier & apply upgrades
                             if (ItemTier < 4)
@@ -739,7 +742,7 @@ public class ItemHolder : NetworkBehaviour
                                 ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
                             }
                         }
-                        else if (uses == 1)
+                        else if (useCounter == 1)
                         {
                             // Increase item tier if not max & apply upgrades
                             if (ItemTier < 4)
