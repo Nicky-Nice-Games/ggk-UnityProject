@@ -323,7 +323,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (!IsOwner) return;
 
-                SpawnItemRpc(itemType, ItemTier, transform.position, transform.rotation);
+                SpawnItemRpc(this,itemType, ItemTier, transform.position, transform.rotation);
 
 
                 // get the baseitem script from the thrown item and set proper variables
@@ -398,7 +398,7 @@ public class ItemHolder : NetworkBehaviour
     /// Rpc for client to ask the network to spawn an item for it
     /// </summary>
     [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc(ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
+    private void SpawnItemRpc(NetworkBehaviourReference itemHolder, ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
         GameObject thrownItem = Instantiate(ItemArray[(int)itemType][itemTier], position, rotation).gameObject;
         NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
@@ -406,17 +406,17 @@ public class ItemHolder : NetworkBehaviour
 
         ulong senderClientID = rpcParams.Receive.SenderClientId;
 
-        ItemHolder kartScript = PlayerSpawner.instance.kartAndID[senderClientID];
+        // ItemHolder kartScript = PlayerSpawner.instance.kartAndID[senderClientID];
+        if (itemHolder.TryGet(out ItemHolder kartScript))
+        {
+            // get the baseitem script from the thrown item and set proper variables
+            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+            thrownItemScript.Kart = kartScript;
+            thrownItemScript.UseCount -= useCounter;
 
-        // get the baseitem script from the thrown item and set proper variables
-        BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-        thrownItemScript.Kart = kartScript;
-        thrownItemScript.UseCount -= useCounter;
-
-        currentItemType.Value = ItemType.NoItem;
-        currentItemTier.Value = 0;
-
-        
+            currentItemType.Value = ItemType.NoItem;
+            currentItemTier.Value = 0;
+        }
     }
 
     public void OnThrow() // for npcs
