@@ -86,7 +86,11 @@ public class PlayerSpawner : NetworkBehaviour
             // spawn a kart for each player
             if (spawnPoints != null && spawnPoints.Count > 0)
             {
-                FillGridRPC();
+                foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
+                {
+                    FillGridRPC(connectedClient);
+                }
+                    
             }
 
             while (spawnedKartCount < 8)
@@ -125,21 +129,20 @@ public class PlayerSpawner : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    public void FillGridRPC()
+    public void FillGridRPC(KeyValuePair<ulong, NetworkClient> _connectedClient)
     {
-        foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
-        {
-            Transform kartObject = Instantiate(playerKartPrefab);
 
-            kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
-            GameObject colliderGO = kartObject.GetChild(1).gameObject;
-            colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
-            kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
-            kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
-            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
-            colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
-            kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
-            spawnedKartCount++;
-        }
+        Transform kartObject = Instantiate(playerKartPrefab);
+
+        kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+        GameObject colliderGO = kartObject.GetChild(1).gameObject;
+        colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
+        kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
+        kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
+        NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+        colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
+        kartNetworkObject.SpawnAsPlayerObject(_connectedClient.Key);
+        spawnedKartCount++;
+
     }
 }
