@@ -327,9 +327,9 @@ public class ItemHolder : NetworkBehaviour
 
 
                 // get the baseitem script from the thrown item and set proper variables
-                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
-                //thrownItemScript.UseCount -= useCounter;
-                thrownItemScript.timerEndCallback = ClearItem;
+                // BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                // thrownItemScript.UseCount -= useCounter;
+                // thrownItemScript.timerEndCallback = ClearItem;
 
                 //if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
                 //{
@@ -576,7 +576,7 @@ public class ItemHolder : NetworkBehaviour
 
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Puck;
+                            currentItemType.Value = ItemType.Boost;
                         }
                         else
                         {
@@ -632,7 +632,7 @@ public class ItemHolder : NetworkBehaviour
 
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Puck;
+                            currentItemType.Value = ItemType.Shield;
                         }
                         else
                         {
@@ -692,7 +692,7 @@ public class ItemHolder : NetworkBehaviour
 
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Puck;
+                            currentItemType.Value = ItemType.Hazard;
                         }
                         else
                         {
@@ -960,7 +960,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
-            ApplyItemTween(ItemImageArray[(int)newType][ItemTier]);
+            ApplyItemTween(ItemImageArray[(int)newType][currentItemTier.Value]);
         }
     }
     #endregion
