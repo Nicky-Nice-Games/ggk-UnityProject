@@ -18,7 +18,7 @@ using UnityEngine.VFX;
 public class ItemHolder : NetworkBehaviour
 {
     #region variables
-    private bool holdingItem;
+
     private bool canUpgrade = true;
 
     private int useCounter = 1;
@@ -45,15 +45,9 @@ public class ItemHolder : NetworkBehaviour
     public int uses;
     public SpeedCameraEffect camera;
 
-    public float gravityForce;
-
     //the current coroutine animating spinning, to prevent double-ups
     private IEnumerator currentSpinCoroutine;
     public MiniMapHud miniMap;
-
-    [SerializeField] private ParticleSystem hoverEffect;
-
-    private ParticleSystem hoverParticleInstance;
 
     public List<VisualEffect> effects;
 
@@ -61,18 +55,7 @@ public class ItemHolder : NetworkBehaviour
 
     public VisualEffect boostEffect;
 
-    // [SerializeField]
-    // private TextMesh heldItemText;
-
-    // audio variables
-    //private AudioSource soundPlayer;
-
-    // [SerializeField]
-    //AudioClip throwSound;
-
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
-    public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
-    public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
 
     #endregion
 
@@ -84,13 +67,36 @@ public class ItemHolder : NetworkBehaviour
         get { return tier; }
         set
         {
-            if (tier + value > maxTier) tier = maxTier;
-            else tier = value;
+            if (tier + value > maxTier) {
+                tier = maxTier;
+            }
+            else {
+                tier = value;
+            }
+            if (type == ItemTypeEnum.NoItem) {
+                ApplyItemTween(defaultItemDisplay);
+            }
+            else {
+                ApplyItemTween(ItemImageArray[(int)type][tier]);
+            }
         }
     }
     const int maxTier = 3;
-    public enum ItemType { NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3 }
-    [SerializeField] private ItemType itemType = ItemType.NoItem;
+    public enum ItemTypeEnum { NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3 }
+    [SerializeField] private ItemTypeEnum type = ItemTypeEnum.NoItem;
+    public ItemTypeEnum ItemType
+    {
+        get { return type; }
+        set
+        {
+            type = value;
+            if (value == ItemTypeEnum.NoItem) {
+                ApplyItemTween(defaultItemDisplay);
+            } else {
+                ApplyItemTween(ItemImageArray[(int)type][tier]);
+            }
+        }
+    }
     #endregion
 
     #region ItemArray Variables
@@ -111,9 +117,9 @@ public class ItemHolder : NetworkBehaviour
     
     // variables for multiplayer
     #region NetworkVariables
-    public NetworkVariable<ItemType> currentItemType =
-        new NetworkVariable<ItemType>(
-            ItemType.NoItem,
+    public NetworkVariable<ItemTypeEnum> currentItemType =
+        new NetworkVariable<ItemTypeEnum>(
+            ItemTypeEnum.NoItem,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
@@ -157,7 +163,6 @@ public class ItemHolder : NetworkBehaviour
         }
 
         DOTween.Init();
-        holdingItem = IsHoldingItem();
 
         timer = UnityEngine.Random.Range(5, 8);
 
@@ -179,7 +184,7 @@ public class ItemHolder : NetworkBehaviour
         InitItemArray();
         InitItemImageArray();
         ItemTier = 0;
-        itemType = ItemType.NoItem;
+        ItemType = ItemTypeEnum.NoItem;
         ApplyItemTween(defaultItemDisplay);
     }
 
@@ -219,9 +224,7 @@ public class ItemHolder : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
-        holdingItem = IsHoldingItem();
-
-        if (npcDriver != null && holdingItem)
+        if (npcDriver != null && IsHoldingItem())
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
@@ -236,14 +239,12 @@ public class ItemHolder : NetworkBehaviour
         }
 
 
-        if (holdingItem && item)
+        if (IsHoldingItem() && item)
         {
             if (item.isTimed) // for shield
             {
                 if (item.Timer <= 0.0f)
                 {
-                    // heldItem = null;
-                    holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
@@ -254,7 +255,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    itemType = ItemType.NoItem;
+                    ItemType = ItemTypeEnum.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -262,8 +263,6 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (uses == 0)
                 {
-                    // heldItem = null;
-                    holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
@@ -273,7 +272,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    itemType = ItemType.NoItem;
+                    ItemType = ItemTypeEnum.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -281,8 +280,6 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (item.Timer <= 0.0f || uses == 0)
                 {
-                    // heldItem = null;
-                    holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
@@ -293,7 +290,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    itemType = ItemType.NoItem;
+                    ItemType = ItemTypeEnum.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -301,8 +298,6 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (uses == 0)
                 {
-                    // heldItem = null;
-                    holdingItem = false;
                     if (thisDriver)
                     {
                         itemDisplay.texture = defaultItemDisplay;
@@ -312,7 +307,7 @@ public class ItemHolder : NetworkBehaviour
 
                     // new code
                     ItemTier = 0;
-                    itemType = ItemType.NoItem;
+                    ItemType = ItemTypeEnum.NoItem;
                     ApplyItemTween(defaultItemDisplay);
                 }
             }
@@ -321,24 +316,14 @@ public class ItemHolder : NetworkBehaviour
 
     private bool IsHoldingItem()
     {
-        return itemType != ItemType.NoItem;
-        // if (heldItem != null)
-        // {
-        //     // heldItemText.text = $"Held Item: {heldItem}";
-        //     return true;
-        // }
-        // else
-        // {
-        //     // heldItemText.text = $"Held Item:";
-        //     return false;
-        // }
+        return ItemType != ItemTypeEnum.NoItem;
     }
 
     private void ClearItem()
     {
         if (!IsSpawned)
         {
-            itemType = ItemType.NoItem;
+            ItemType = ItemTypeEnum.NoItem;
             ItemTier = 0;
             ApplyItemTween(defaultItemDisplay);
             canUpgrade = true;
@@ -346,7 +331,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
-            currentItemType.Value = ItemType.NoItem;
+            currentItemType.Value = ItemTypeEnum.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
             currentUseCounter.Value = 1;
@@ -358,13 +343,13 @@ public class ItemHolder : NetworkBehaviour
         if (!IsHoldingItem()) return;
 
         // prevent player from spamming shield while it's active
-        if (useCounter > 1 && itemType == ItemType.Shield) return;
+        if (useCounter > 1 && ItemType == ItemTypeEnum.Shield) return;
 
         if (context.performed) // make sure input is only being read once
         {
-            if (!IsSpawned || itemType == ItemType.Boost)
+            if (!IsSpawned || ItemType == ItemTypeEnum.Boost)
             {
-                thrownItem = Instantiate(ItemArray[(int)itemType][ItemTier], transform.position, transform.rotation).gameObject;
+                thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
 
                 // get the baseitem script from the thrown item and set proper variables
                 BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
@@ -386,7 +371,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (!IsOwner) return;
 
-                SpawnItemRpc(this, itemType, ItemTier, transform.position, transform.rotation);
+                SpawnItemRpc(this, ItemType, ItemTier, transform.position, transform.rotation);
             }
         }
     }
@@ -395,7 +380,7 @@ public class ItemHolder : NetworkBehaviour
     /// Rpc for client to ask the network to spawn an item for it
     /// </summary>
     [Rpc(SendTo.Server, RequireOwnership = true)]
-    private void SpawnItemRpc(NetworkBehaviourReference itemHolder, ItemType itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
+    private void SpawnItemRpc(NetworkBehaviourReference itemHolder, ItemTypeEnum itemType, int itemTier, Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
         // ItemHolder kartScript = PlayerSpawner.instance.kartAndID[senderClientID];
         if (itemHolder.TryGet(out ItemHolder kartScript))
@@ -407,7 +392,7 @@ public class ItemHolder : NetworkBehaviour
             // get the baseitem script from the thrown item and set proper variables
             BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
             thrownItemScript.Kart = kartScript;
-            thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.UseCount -= kartScript.currentUseCounter.Value;
             thrownItemScript.timerEndCallback = kartScript.ClearItem;
 
             if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
@@ -425,7 +410,7 @@ public class ItemHolder : NetworkBehaviour
     public void OnThrow() // for npcs
     {
         // handles item usage
-        if (holdingItem)
+        if (IsHoldingItem())
         {
             if (uses == 0)
             {
@@ -461,20 +446,12 @@ public class ItemHolder : NetworkBehaviour
             {
                 case "Projectile":
                     ProjectileBrick projBrick = collision.gameObject.GetComponent<ProjectileBrick>();
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
-                        // Get projectile and intialize level
-                        // projBrick.GiveProjectile(this.gameObject);
-                        // heldItem.ItemTier = driverItemTier;
-                        // heldItem.OnLevelUp(heldItem.ItemTier);
-                        // uses = heldItem.UseCount;
-
-                        // new code
-                        itemType = ItemType.Puck;
-
+                        ItemType = ItemTypeEnum.Puck;
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Puck;
+                            currentItemType.Value = ItemTypeEnum.Puck;
                         }
                         else
                         {
@@ -483,13 +460,13 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)type][ItemTier]);
 
                             }
                         }
 
                     }
-                    else if (itemType == ItemType.Puck)
+                    else if (ItemType == ItemTypeEnum.Puck)
                     {
                         // Increase item tier & apply upgrades
                         if (ItemTier < 4)
@@ -514,26 +491,18 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                         }
                     }
                     break;
                 case "Boost":
                     BoostBrick boostBrick = collision.gameObject.GetComponent<BoostBrick>();
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
-                        // Get boost and intialize level
-                        // boostBrick.GiveBoost(this.gameObject);
-                        // heldItem.ItemTier = driverItemTier;
-                        // heldItem.OnLevelUp(heldItem.ItemTier);
-                        // uses = heldItem.UseCount;
-
-                        // new code
-                        itemType = ItemType.Boost;
-
+                        ItemType = ItemTypeEnum.Boost;
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Boost;
+                            currentItemType.Value = ItemTypeEnum.Boost;
                         }
                         else
                         {
@@ -542,13 +511,13 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
 
                             }
                         }
 
                     }
-                    else if (itemType == ItemType.Boost)
+                    else if (ItemType == ItemTypeEnum.Boost)
                     {
                         // Increase item tier & apply upgrades
                         if (ItemTier < 4)
@@ -573,26 +542,19 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                         }
                     }
                     break;
                 case "Defense":
                     DefenseBrick defBrick = collision.gameObject.GetComponent<DefenseBrick>();
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
-                        // Get shield and intialize level
-                        // defBrick.GiveShield(this.gameObject);
-                        // heldItem.ItemTier = driverItemTier;
-                        // heldItem.OnLevelUp(heldItem.ItemTier);
-                        // uses = heldItem.UseCount;
-
-                        // new code
-                        itemType = ItemType.Shield;
+                        ItemType = ItemTypeEnum.Shield;
 
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Shield;
+                            currentItemType.Value = ItemTypeEnum.Shield;
                         }
                         else
                         {
@@ -601,13 +563,13 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
 
                             }
                         }
 
                     }
-                    else if (itemType == ItemType.Shield)
+                    else if (ItemType == ItemTypeEnum.Shield)
                     {
                         // Do not upgrade if shield is being used
                         if (useCounter == 1)
@@ -635,27 +597,20 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                             }
                         }
                     }
                     break;
                 case "Hazard":
                     HazardBrick hazBrick = collision.gameObject.GetComponent<HazardBrick>();
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
-                        // Get hazard and intialize level
-                        // hazBrick.GiveHazard(this.gameObject);
-                        // heldItem.ItemTier = driverItemTier;
-                        // heldItem.OnLevelUp(heldItem.ItemTier);
-                        // uses = heldItem.UseCount;
-
-                        // new code
-                        itemType = ItemType.Hazard;
+                        ItemType = ItemTypeEnum.Hazard;
 
                         if (MultiplayerManager.Instance.IsMultiplayer)
                         {
-                            currentItemType.Value = ItemType.Hazard;
+                            currentItemType.Value = ItemTypeEnum.Hazard;
                         }
                         else
                         {
@@ -664,13 +619,13 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
 
                             }
                         }
 
                     }
-                    else if (itemType == ItemType.Hazard)
+                    else if (ItemType == ItemTypeEnum.Hazard)
                     {
                         // Increase item tier & apply upgrades
                         if (ItemTier < 4)
@@ -695,26 +650,20 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                         }
                     }
                     break;
                 case "Upgrade":
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
                         // Increase item tier if not max
-                        if (ItemTier < 4)
-                        {
-                            driverItemTier++;
-                        }
-
-                        // new code
                         if (canUpgrade) ItemTier++;
                     }
                     else
                     {
                         // shield can't be upgraded while being used
-                        if (itemType != ItemType.Shield)
+                        if (ItemType != ItemTypeEnum.Shield)
                         {
                             // Increase item tier if not max & apply upgrades
                             if (ItemTier < 4)
@@ -739,7 +688,7 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                             }
                         }
                         else if (useCounter == 1)
@@ -767,17 +716,17 @@ public class ItemHolder : NetworkBehaviour
                             {
                                 //ApplyItemTween(heldItem.itemIcon);
                                 // new code
-                                ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                                ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                             }
                         }
                     }
                     break;
                 default:
                     // Gives kart an item if they don't already have one
-                    if (!holdingItem)
+                    if (!IsHoldingItem())
                     {
                         //itemBox.RandomizeItem(this.gameObject);
-                        itemType = RandomItemType();
+                        ItemType = RandomItemType();
 
                         // Initialize use count if first use
                         // if (uses == 0)
@@ -789,7 +738,7 @@ public class ItemHolder : NetworkBehaviour
                         {
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
-                            ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
+                            ApplyItemTween(ItemImageArray[(int)ItemType][ItemTier]);
                         }
                     }
                     break;
@@ -859,24 +808,24 @@ public class ItemHolder : NetworkBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
 
-    private ItemType RandomItemType()
+    private ItemTypeEnum RandomItemType()
     {
-        return (ItemType)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Max() + 1);
+        return (ItemTypeEnum)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().Max() + 1);
     }
 
-    private void OnItemTypeChange(ItemType previousValue, ItemType newValue)
+    private void OnItemTypeChange(ItemTypeEnum previousValue, ItemTypeEnum newValue)
     {
         // make sure only the client who changes an item calls this
         if (!IsOwner) return;
-        itemType = newValue;
-        if (newValue == ItemType.NoItem)
-        {
-            ApplyItemTween(defaultItemDisplay);
-        }
-        else
-        {
-            ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
-        }
+        ItemType = newValue;
+        // if (newValue == ItemTypeEnum.NoItem)
+        // {
+        //     ApplyItemTween(defaultItemDisplay);
+        // }
+        // else
+        // {
+        //     ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
+        // }
     }
 
     private void OnItemTierChange(int previousValue, int newValue)
@@ -884,14 +833,14 @@ public class ItemHolder : NetworkBehaviour
         // make sure only the client who changes an item calls this
         if (!IsOwner) return;
         ItemTier = newValue;
-        if (itemType == ItemType.NoItem)
-        {
-            ApplyItemTween(defaultItemDisplay);
-        }
-        else
-        {
-            ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
-        }
+        // if (type == ItemTypeEnum.NoItem)
+        // {
+        //     ApplyItemTween(defaultItemDisplay);
+        // }
+        // else
+        // {
+        //     ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
+        // }
     }
 
     private void OnCanUpgradeChange(bool previousValue, bool newValue)

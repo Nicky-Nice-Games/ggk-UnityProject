@@ -57,19 +57,6 @@ public class BaseItem : NetworkBehaviour
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    public void Update()
-    {
-
-
-    }
-
     /// <summary>
     /// Counts down 1 second until the item disappears
     /// </summary>
@@ -217,7 +204,6 @@ public class BaseItem : NetworkBehaviour
     //}
 
     #region new code
-
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void DestroyItemRpc(NetworkBehaviourReference itemToDestroy)
     {
@@ -226,11 +212,6 @@ public class BaseItem : NetworkBehaviour
             itemScript.gameObject.GetComponent<NetworkObject>().Despawn();
             Destroy(itemScript.gameObject);
         }
-    }
-
-    public virtual void UseItem()
-    {
-
     }
     #endregion
 }
