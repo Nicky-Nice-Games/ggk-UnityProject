@@ -234,11 +234,13 @@ public class GameManager : NetworkBehaviour
                 case "RIT Woods Greybox":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
                     break;
-                case "RIT Quarter Mile ":
+                case "RIT Quarter Mile":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
                     break;
-                case "Finals Brick Road ":
+                case "Finals Brick Road":
+                    Debug.Log("GameManager: Before Finals Brick Road");
                     MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
+                    Debug.Log("GameManager: After Finals Brick Road");
                     break;
                 default:
                     break;
