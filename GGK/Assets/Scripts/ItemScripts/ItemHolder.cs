@@ -286,7 +286,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
-            currentItemType.Value = ItemType.NoItem;
+            // currentItemType.Value = ItemType.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
         }
@@ -346,7 +346,16 @@ public class ItemHolder : NetworkBehaviour
             BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
             thrownItemScript.Kart = kartScript;
             thrownItemScript.UseCount -= useCounter;
-            thrownItemScript.timerEndCallback = kartScript.ClearItem;
+
+            // shield subscribes to timer end callback while other items remove from inventory right away
+            if (thrownItemScript.ItemCategory == "Shield")
+            {
+                thrownItemScript.timerEndCallback = kartScript.ClearItem;
+            }
+            else
+            {
+                currentItemType.Value = ItemType.NoItem;
+            }
 
             //currentItemType.Value = ItemType.NoItem;
             //currentItemTier.Value = 0;
@@ -838,8 +847,8 @@ public class ItemHolder : NetworkBehaviour
         itemType = newValue;
         if (newValue == ItemType.NoItem)
         {
-            //ClearItem();
             ApplyItemTween(defaultItemDisplay);
+            ClearItem();
         }
         else
         {

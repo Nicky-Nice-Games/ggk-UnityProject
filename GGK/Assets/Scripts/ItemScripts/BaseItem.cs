@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
+using static ItemHolder;
 
 public class BaseItem : NetworkBehaviour
 {
@@ -74,6 +75,8 @@ public class BaseItem : NetworkBehaviour
     /// </summary>
     public void DecreaseTimer()
     {
+        if (IsSpawned && !IsServer) return;
+
         // Subtracts the timer by 1 second
         if (timer >= 0)
         {
