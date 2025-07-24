@@ -76,6 +76,39 @@ public class ItemHolder : NetworkBehaviour
 
     #endregion
 
+    #region ItemTracking Variables
+    [Header("Held Item")]
+    [SerializeField] private int tier = 0;
+    public int ItemTier
+    {
+        get { return tier; }
+        set
+        {
+            if (tier + value > maxTier) tier = maxTier;
+            else tier = value;
+        }
+    }
+    const int maxTier = 3;
+    public enum ItemType { NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3 }
+    [SerializeField] private ItemType itemType = ItemType.NoItem;
+    #endregion
+
+    #region ItemArray Variables
+    [Header("ItemArray")]
+    [SerializeField] private Transform[] BoostArray;
+    [SerializeField] private Transform[] ShieldArray;
+    [SerializeField] private Transform[] HazardArray;
+    [SerializeField] private Transform[] PuckArray;
+    private List<Transform[]> ItemArray = new List<Transform[]>();
+
+    [Header("ItemImageArray")]
+    [SerializeField] private Texture[] BoostImageArray;
+    [SerializeField] private Texture[] ShieldImageArray;
+    [SerializeField] private Texture[] HazardImageArray;
+    [SerializeField] private Texture[] PuckImageArray;
+    private List<Texture[]> ItemImageArray = new List<Texture[]>();
+    #endregion
+    
     // variables for multiplayer
     #region NetworkVariables
     public NetworkVariable<ItemType> currentItemType =
@@ -106,27 +139,10 @@ public class ItemHolder : NetworkBehaviour
             NetworkVariableWritePermission.Server
         );
     #endregion
-
-    public override void OnNetworkSpawn()
-    {
-        currentItemType.OnValueChanged += OnItemTypeChange;
-        currentItemTier.OnValueChanged += OnItemTierChange;
-        currentCanUpgrade.OnValueChanged += OnCanUpgradeChange;
-        currentUseCounter.OnValueChanged += OnUseCounterChange;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        currentItemType.OnValueChanged -= OnItemTypeChange;
-        currentItemTier.OnValueChanged -= OnItemTierChange;
-        currentCanUpgrade.OnValueChanged -= OnCanUpgradeChange;
-        currentUseCounter.OnValueChanged -= OnUseCounterChange;
-
-    }
-
-
+    
+    #region Initialization functions
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
 
         if (thisDriver)
@@ -161,14 +177,47 @@ public class ItemHolder : NetworkBehaviour
 
         // new code 
         InitItemArray();
+        InitItemImageArray();
         ItemTier = 0;
         itemType = ItemType.NoItem;
-        InitItemImageArray();
         ApplyItemTween(defaultItemDisplay);
     }
 
+    public override void OnNetworkSpawn()
+    {
+        currentItemType.OnValueChanged += OnItemTypeChange;
+        currentItemTier.OnValueChanged += OnItemTierChange;
+        currentCanUpgrade.OnValueChanged += OnCanUpgradeChange;
+        currentUseCounter.OnValueChanged += OnUseCounterChange;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        currentItemType.OnValueChanged -= OnItemTypeChange;
+        currentItemTier.OnValueChanged -= OnItemTierChange;
+        currentCanUpgrade.OnValueChanged -= OnCanUpgradeChange;
+        currentUseCounter.OnValueChanged -= OnUseCounterChange;
+    }
+
+    private void InitItemArray()
+    {
+        ItemArray.Add(BoostArray);
+        ItemArray.Add(ShieldArray);
+        ItemArray.Add(HazardArray);
+        ItemArray.Add(PuckArray);
+    }
+
+    private void InitItemImageArray()
+    {
+        ItemImageArray.Add(BoostImageArray);
+        ItemImageArray.Add(ShieldImageArray);
+        ItemImageArray.Add(HazardImageArray);
+        ItemImageArray.Add(PuckImageArray);
+    }
+    #endregion
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         holdingItem = IsHoldingItem();
 
@@ -807,65 +856,6 @@ public class ItemHolder : NetworkBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
 
-    private void OnCanUpgradeChange(bool previousValue, bool newValue)
-    {
-        canUpgrade = newValue;
-    }
-    
-    private void OnUseCounterChange(int previousValue, int newValue)
-    {
-        useCounter = newValue;
-    }
-
-    #region New Item Variables
-    [Header("ItemArray")]
-    [SerializeField] private Transform[] BoostArray;
-    [SerializeField] private Transform[] ShieldArray;
-    [SerializeField] private Transform[] HazardArray;
-    [SerializeField] private Transform[] PuckArray;
-    private List<Transform[]> ItemArray = new List<Transform[]>();
-
-
-    [Header("ItemImageArray")]
-    [SerializeField] private Texture[] BoostImageArray;
-    [SerializeField] private Texture[] ShieldImageArray;
-    [SerializeField] private Texture[] HazardImageArray;
-    [SerializeField] private Texture[] PuckImageArray;
-    private List<Texture[]> ItemImageArray = new List<Texture[]>();
-
-    [Header("Held Item")]
-    [SerializeField] private int tier = 0;
-    public int ItemTier
-    {
-        get { return tier; }
-        set
-        {
-            if (tier + value > maxTier) tier = maxTier;
-            else tier = value;
-        }
-    }
-    const int maxTier = 3;
-    public enum ItemType { NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3 }
-    [SerializeField] private ItemType itemType = ItemType.NoItem;
-    #endregion
-
-    private void InitItemArray()
-    {
-        ItemArray.Add(BoostArray);
-        ItemArray.Add(ShieldArray);
-        ItemArray.Add(HazardArray);
-        ItemArray.Add(PuckArray);
-    }
-
-    private void InitItemImageArray()
-    {
-        ItemImageArray.Add(BoostImageArray);
-        ItemImageArray.Add(ShieldImageArray);
-        ItemImageArray.Add(HazardImageArray);
-        ItemImageArray.Add(PuckImageArray);
-
-    }
-
     private ItemType RandomItemType()
     {
         return (ItemType)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Max() + 1);
@@ -879,12 +869,6 @@ public class ItemHolder : NetworkBehaviour
         if (newValue == ItemType.NoItem)
         {
             ApplyItemTween(defaultItemDisplay);
-
-            // // makes sure clear item doesn't get called infinitely
-            // if (previousValue != ItemType.NoItem)
-            // {
-            //     ClearItem();
-            // }
         }
         else
         {
@@ -905,6 +889,15 @@ public class ItemHolder : NetworkBehaviour
         {
             ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
         }
-        
+    }
+
+    private void OnCanUpgradeChange(bool previousValue, bool newValue)
+    {
+        canUpgrade = newValue;
+    }
+    
+    private void OnUseCounterChange(int previousValue, int newValue)
+    {
+        useCounter = newValue;
     }
 }
