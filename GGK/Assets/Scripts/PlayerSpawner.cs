@@ -75,13 +75,15 @@ public class PlayerSpawner : NetworkBehaviour
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
-                Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                Transform kartObject = Instantiate(playerKartPrefab);
+                
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
                 GameObject colliderGO = kartObject.GetChild(1).gameObject;
-                colliderGO.GetComponent<SpawnHandler>().spawnPoint = spawnPoints[spawnedKartCount];
+                colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
                 kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
-                
+                kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+                colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
                 spawnedKartCount++;
             }
@@ -116,7 +118,7 @@ public class PlayerSpawner : NetworkBehaviour
 
     private IEnumerator DelayedServerSpawn()
     {
-        yield return new WaitForSeconds(0.2f); // slight delay
+        yield return new WaitForSeconds(0.0f); // slight delay
         FillGrid();
     }
 }

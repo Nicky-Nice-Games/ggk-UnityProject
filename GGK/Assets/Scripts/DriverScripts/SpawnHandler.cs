@@ -1,51 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnHandler : MonoBehaviour
+public class SpawnHandler : NetworkBehaviour
 {
-    Rigidbody rb;
+    private Rigidbody rb;
 
-    [HideInInspector]
-    public Transform spawnPoint;
-    // Start is called before the first frame update
+    public NetworkVariable<int> spawnIndex = new NetworkVariable<int>(-1); // Default to -1
+
+    public List<Transform> spawnPoints; // You must assign this list elsewhere (e.g., in the scene or via manager)
+
     void Start()
     {
+        transform.parent.position = spawnPoints[spawnIndex.Value].position;
+        transform.parent.rotation = spawnPoints[spawnIndex.Value].rotation;
         rb = GetComponent<Rigidbody>();
         StartCoroutine(PositionCorrector());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    /// <summary>
-    /// Coroutine to correct the position of the kart if it is not at the spawn point. 
-    /// Runs for 20 frames after spawnPoint gets populated.
-    /// </summary>
-    /// <returns></returns>
     private IEnumerator PositionCorrector()
     {
-        while(spawnPoint == null)
+        // Wait until we get a valid spawn index
+        while (spawnIndex.Value < 0 || spawnIndex.Value >= spawnPoints.Count)
         {
             yield return new WaitForEndOfFrame();
         }
 
+        // Temporarily disable physics to snap to position
         rb.isKinematic = true;
+
         for (int i = 0; i < 20; i++)
         {
-            if (rb.transform != spawnPoint)
-            {
-                rb.transform.position = spawnPoint.position;
-                gameObject.transform.position = spawnPoint.position;
+            Vector3 targetPos = spawnPoints[spawnIndex.Value].position;
+            Quaternion targetRot = spawnPoints[spawnIndex.Value].rotation;
 
-            }
-
+            // Snap position and rotation
+            rb.transform.SetPositionAndRotation(targetPos, targetRot);
             yield return new WaitForEndOfFrame();
-        } 
-        
-        rb.isKinematic = false;       
+        }
+
+        rb.isKinematic = false;
     }
 }
