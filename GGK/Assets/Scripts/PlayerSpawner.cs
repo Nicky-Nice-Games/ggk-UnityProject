@@ -35,20 +35,7 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsSpawned)
         {
             StartCoroutine(DelayedLocalSpawn());
-            Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
-            //kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
-            spawnedKartCount++;
-
-            while (spawnedKartCount < 8)
-            {
-                kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
-                
-                //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                spawnedKartCount++;
-            }
-
-            //print(kartObject.transform.GetChild(0).position);
+            
         }
         else if (IsServer)
         {
