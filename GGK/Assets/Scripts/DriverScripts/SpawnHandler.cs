@@ -33,7 +33,11 @@ public class SpawnHandler : NetworkBehaviour
         // Wait until we get a valid spawn index
         while (spawnIndex.Value < 0 || spawnIndex.Value >= spawnPoints.Count)
         {
+            spawnIndex.Value = 0; // Default to the first spawn point if invalid
+            Debug.Log("SPAWNINDEX IS INVALID, SETTING TO 0");
             yield return new WaitForEndOfFrame();
+
+
         }
 
         // Temporarily disable physics to snap to position
