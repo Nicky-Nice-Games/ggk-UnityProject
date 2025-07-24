@@ -10,7 +10,7 @@ public class ShieldTier1 : BaseItem
     {
         timer = 4.0f;
 
-        if (kart.GetComponent<NEWDriver>() != null)
+        if (kart.gameObject.GetComponent<NEWDriver>() != null)
         {
             // find shield effect attached to the kart
             shieldEffect = kart.transform.
