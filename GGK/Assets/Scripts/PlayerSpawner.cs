@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 public class PlayerSpawner : NetworkBehaviour
 {
+    public static PlayerSpawner instance;
+
     // prefab to be spawned
     [SerializeField] private Transform playerKartPrefab;
     [SerializeField] private Transform npcKartPrefab;
@@ -18,6 +20,13 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private List<Transform> spawnPoints;
 
     private int spawnedKartCount = 0;
+
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
 
     private void LoadSpawnPoints()
     {
@@ -35,26 +44,13 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsSpawned)
         {
             StartCoroutine(DelayedLocalSpawn());
-            Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
-            //kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
-            spawnedKartCount++;
-
-            while (spawnedKartCount < 8)
-            {
-                kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
-                
-                //kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                spawnedKartCount++;
-            }
-
-            //print(kartObject.transform.GetChild(0).position);
         }
         else if (IsServer)
         {
             StartCoroutine(DelayedServerSpawn());
         }
 
+        #region old code comment
         //if (!IsSpawned)
         //{
         //    Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
@@ -73,6 +69,8 @@ public class PlayerSpawner : NetworkBehaviour
         //else
         //{
         //    FillGrid();
+        //}
+        #endregion
     }
 
     /// <summary>
@@ -81,43 +79,27 @@ public class PlayerSpawner : NetworkBehaviour
     private void FillGrid()
     {
         // only the server can spawn karts
-        if (!IsServer) return;
+        //if (!IsServer) return;
 
-        CharacterBuilder.StartCharacterBatch();
-        // spawn a kart for each player
-        if (spawnPoints != null && spawnPoints.Count > 0)
+        if (IsServer)
         {
-            foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
+            // spawn a kart for each player
+            if (spawnPoints != null && spawnPoints.Count > 0)
             {
-                Transform kartObject = Instantiate(playerKartPrefab);
-                
-                kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
-                GameObject colliderGO = kartObject.GetChild(1).gameObject;
-                colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
-                //kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
-                //kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
+                FillGridRPC();
+            }
+
+            while (spawnedKartCount < 8)
+            {
+                Debug.Log("Spawning NPC");
+                Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
-                colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
-                kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
-                colliderGO.GetComponent<SpawnHandler>().TeleportToSpawnClientRpc(spawnedKartCount);
+                kartNetworkObject.Spawn();
                 spawnedKartCount++;
             }
         }
 
-        while (spawnedKartCount < 8)
-        {
-            Debug.Log("Spawning NPC");
-            Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
-            AppearanceSettings settings = kartObject.GetComponentInChildren<AppearanceSettings>();
-            if (settings)
-            {
-                CharacterBuilder.RandomizeUniqueAppearance(settings);
-            }
-            kartNetworkObject.Spawn();
-            spawnedKartCount++;
-        }
     }
 
 
@@ -140,5 +122,24 @@ public class PlayerSpawner : NetworkBehaviour
     {
         yield return new WaitForSeconds(0.0f); // slight delay
         FillGrid();
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    public void FillGridRPC()
+    {
+        foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
+        {
+            Transform kartObject = Instantiate(playerKartPrefab);
+
+            kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+            GameObject colliderGO = kartObject.GetChild(1).gameObject;
+            colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
+            kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
+            kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
+            NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
+            kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
+            spawnedKartCount++;
+        }
     }
 }
