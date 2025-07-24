@@ -17,35 +17,28 @@ using UnityEngine.VFX;
 
 public class ItemHolder : NetworkBehaviour
 {
-    #region previous code
+    #region variables
     private bool holdingItem;
-
     private bool canUpgrade = true;
 
     private int useCounter = 1;
 
     private GameObject thrownItem;
 
-    [SerializeField]
-    private NEWDriver thisDriver;
+    [SerializeField] private NEWDriver thisDriver;
 
-    [SerializeField]
-    private NPCDriver npcDriver;
+    [SerializeField] private NPCDriver npcDriver;
 
-    [SerializeField]
-    private BaseItem heldItem;
+    [SerializeField] private BaseItem heldItem;
 
-    [SerializeField]
-    private float timer = 5.0f;
+    [SerializeField] private float timer = 5.0f;
 
-    [SerializeField]
-    private RawImage itemDisplay;
+    [SerializeField] private RawImage itemDisplay;
 
     private Vector3 itemDisplayScale;
     private Vector2 itemDisplayPosition;
 
-    [SerializeField]
-    private Texture defaultItemDisplay;
+    [SerializeField] private Texture defaultItemDisplay;
 
     private BaseItem item;
     private int driverItemTier;
@@ -58,8 +51,7 @@ public class ItemHolder : NetworkBehaviour
     private IEnumerator currentSpinCoroutine;
     public MiniMapHud miniMap;
 
-    [SerializeField]
-    private ParticleSystem hoverEffect;
+    [SerializeField] private ParticleSystem hoverEffect;
 
     private ParticleSystem hoverParticleInstance;
 
@@ -78,24 +70,15 @@ public class ItemHolder : NetworkBehaviour
     // [SerializeField]
     //AudioClip throwSound;
 
-    // tier 3 boost variables
-    [Header("Tier 3 Boost Settings")]
-    public float length = 4.0f;
-    private float lastHitDistance;
-    public float strength = 5.0f;
-    public float dampening = 20.0f;
-
     public BaseItem HeldItem { get { return heldItem; } set { heldItem = value; } }
     public bool HoldingItem { get { return holdingItem; } set { holdingItem = value; } }
     public int DriverItemTier { get { return driverItemTier; } set { driverItemTier = value; } }
 
-    [Header("Tier 4 Boost Settings")]
-    [SerializeField] GameObject warpBoostEffect;
-    [SerializeField] float warpWaitTime;
+    #endregion
 
     // variables for multiplayer
-
-    public NetworkVariable<ItemType> currentItemType = 
+    #region NetworkVariables
+    public NetworkVariable<ItemType> currentItemType =
         new NetworkVariable<ItemType>(
             ItemType.NoItem,
             NetworkVariableReadPermission.Everyone,
@@ -109,14 +92,26 @@ public class ItemHolder : NetworkBehaviour
             NetworkVariableWritePermission.Server
         );
 
+    public NetworkVariable<bool> currentCanUpgrade =
+        new NetworkVariable<bool>(
+            true,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+    #endregion
+
     public override void OnNetworkSpawn()
     {
         currentItemType.OnValueChanged += OnItemTypeChange;
+        currentItemTier.OnValueChanged += OnItemTierChange;
+        currentCanUpgrade.OnValueChanged += OnCanUpgradeChange;
     }
 
     public override void OnNetworkDespawn()
     {
         currentItemType.OnValueChanged -= OnItemTypeChange;
+        currentItemTier.OnValueChanged -= OnItemTierChange;
+        currentCanUpgrade.OnValueChanged -= OnCanUpgradeChange;
     }
 
     // Start is called before the first frame update
@@ -152,11 +147,6 @@ public class ItemHolder : NetworkBehaviour
 
         //soundPlayer = GetComponent<AudioSource>();
         driverItemTier = 1;
-
-        if (thisDriver)
-        {
-            warpBoostEffect.SetActive(false);
-        }
 
         // new code 
         InitItemArray();
@@ -286,11 +276,20 @@ public class ItemHolder : NetworkBehaviour
 
     private void ClearItem()
     {
-        itemType = ItemType.NoItem;
-        ItemTier = 0;
-        ApplyItemTween(defaultItemDisplay);
-        canUpgrade = true;
-        useCounter = 1;
+        if (!IsSpawned)
+        {
+            itemType = ItemType.NoItem;
+            ItemTier = 0;
+            ApplyItemTween(defaultItemDisplay);
+            canUpgrade = true;
+            useCounter = 1;
+        }
+        else
+        {
+            currentItemType.Value = ItemType.NoItem;
+            currentItemTier.Value = 0;
+            currentCanUpgrade.Value = true;
+        }
     }
 
     public void OnThrow(InputAction.CallbackContext context) // for players
@@ -347,9 +346,10 @@ public class ItemHolder : NetworkBehaviour
             BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
             thrownItemScript.Kart = kartScript;
             thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.timerEndCallback = kartScript.ClearItem;
 
-            currentItemType.Value = ItemType.NoItem;
-            currentItemTier.Value = 0;
+            //currentItemType.Value = ItemType.NoItem;
+            //currentItemTier.Value = 0;
         }
     }
 
@@ -615,7 +615,7 @@ public class ItemHolder : NetworkBehaviour
                             //ApplyItemTween(heldItem.itemIcon);
                             // new code
                             ApplyItemTween(ItemImageArray[(int)itemType][ItemTier]);
-                        }   
+                        }
                     }
                     break;
                 case "Upgrade":
@@ -628,7 +628,7 @@ public class ItemHolder : NetworkBehaviour
                         }
 
                         // new code
-                        if (canUpgrade) ItemTier++;  
+                        if (canUpgrade) ItemTier++;
                     }
                     else
                     {
@@ -772,16 +772,12 @@ public class ItemHolder : NetworkBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
 
-    
-    #endregion
-    #region new code
-    // private Transform[,] ItemArray = {
-    //     { "NoItemT1", "BoostT1", "ShieldT1", "HazardT1", "PuckT1" },
-    //     { "NoItemT2", "BoostT2", "ShieldT2", "HazardT2", "PuckT2" },
-    //     { "NoItemT3", "BoostT3", "ShieldT3", "HazardT3", "PuckT3" },
-    //     { "NoItemT4", "BoostT4", "ShieldT4", "HazardT4", "PuckT4" }
-    // };
+    private void OnCanUpgradeChange(bool previousValue, bool newValue)
+    {
+        canUpgrade = newValue;
+    }
 
+    #region New Item Variables
     [Header("ItemArray")]
     [SerializeField] private Transform[] BoostArray;
     [SerializeField] private Transform[] ShieldArray;
@@ -806,11 +802,12 @@ public class ItemHolder : NetworkBehaviour
         {
             if (tier + value > maxTier) tier = maxTier;
             else tier = value;
-         }
+        }
     }
     const int maxTier = 3;
-    public enum ItemType {NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3}
+    public enum ItemType { NoItem = -1, Boost = 0, Shield = 1, Hazard = 2, Puck = 3 }
     [SerializeField] private ItemType itemType = ItemType.NoItem;
+    #endregion
 
     private void InitItemArray()
     {
@@ -819,7 +816,7 @@ public class ItemHolder : NetworkBehaviour
         ItemArray.Add(HazardArray);
         ItemArray.Add(PuckArray);
     }
-    
+
     private void InitItemImageArray()
     {
         ItemImageArray.Add(BoostImageArray);
@@ -834,19 +831,35 @@ public class ItemHolder : NetworkBehaviour
         return (ItemType)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Max() + 1);
     }
 
-    private void OnItemTypeChange(ItemType oldType, ItemType newType)
+    private void OnItemTypeChange(ItemType previousValue, ItemType newValue)
     {
         // make sure only the client who changes an item calls this
         if (!IsOwner) return;
-
-        if (newType == ItemType.NoItem)
+        itemType = newValue;
+        if (newValue == ItemType.NoItem)
         {
-            ClearItem();
+            //ClearItem();
+            ApplyItemTween(defaultItemDisplay);
         }
         else
         {
-            ApplyItemTween(ItemImageArray[(int)newType][currentItemTier.Value]);
+            ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
         }
     }
-    #endregion
+
+    private void OnItemTierChange(int previousValue, int newValue)
+    {
+        // make sure only the client who changes an item calls this
+        if (!IsOwner) return;
+        ItemTier = newValue;
+        if (itemType == ItemType.NoItem)
+        {
+            ApplyItemTween(defaultItemDisplay);
+        }
+        else
+        {
+            ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
+        }
+        
+    }
 }
