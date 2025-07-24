@@ -317,6 +317,7 @@ public class ItemHolder : NetworkBehaviour
     {
         if (!IsSpawned)
         {
+            Debug.Log("single player clear item");
             ItemType = ItemTypeEnum.NoItem;
             ItemTier = 0;
             ApplyItemTween(defaultItemDisplay);
@@ -325,6 +326,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
+            Debug.Log("network clear item");
             currentItemType.Value = ItemTypeEnum.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
@@ -811,30 +813,16 @@ public class ItemHolder : NetworkBehaviour
     {
         // make sure only the client who changes an item calls this
         if (!IsOwner) return;
+        Debug.Log("OnItemTypeChange");
         ItemType = newValue;
-        // if (newValue == ItemTypeEnum.NoItem)
-        // {
-        //     ApplyItemTween(defaultItemDisplay);
-        // }
-        // else
-        // {
-        //     ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
-        // }
     }
 
     private void OnItemTierChange(int previousValue, int newValue)
     {
         // make sure only the client who changes an item calls this
         if (!IsOwner) return;
+        Debug.Log("OnItemTierChange");
         ItemTier = newValue;
-        // if (type == ItemTypeEnum.NoItem)
-        // {
-        //     ApplyItemTween(defaultItemDisplay);
-        // }
-        // else
-        // {
-        //     ApplyItemTween(ItemImageArray[(int)currentItemType.Value][currentItemTier.Value]);
-        // }
     }
 
     private void OnCanUpgradeChange(bool previousValue, bool newValue)
