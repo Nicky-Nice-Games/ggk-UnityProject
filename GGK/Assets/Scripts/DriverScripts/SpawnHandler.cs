@@ -40,6 +40,8 @@ public class SpawnHandler : NetworkBehaviour
 
         }
 
+        yield return new WaitForSeconds(0.1f); // allow spawn to settle
+
         // Temporarily disable physics to snap to position
         rb.isKinematic = true;
 
