@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Triggers Wwise sound events for kart-related sounds.
+/// </summary>
 public class KartSounds : MonoBehaviour
 {
     //These are Wwise events that must be assigned in the Inspector to work properly.
