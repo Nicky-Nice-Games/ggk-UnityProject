@@ -113,14 +113,24 @@ public class PuckTier4 : BaseItem
             // place kart
             if (collision.transform.root.gameObject == kartTarget)
             {
+                //if (!MultiplayerManager.Instance.IsMultiplayer)
+                //{
+                //    Destroy(this.gameObject);
+                //}
+                //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                //{
+                //    this.NetworkObject.Despawn();
+                //    Destroy(this.gameObject);
+                //}
+
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
                     Destroy(this.gameObject);
                 }
-                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                else
                 {
-                    this.NetworkObject.Despawn();
-                    Destroy(this.gameObject);
+                    DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
                 }
             }
         }
@@ -131,14 +141,24 @@ public class PuckTier4 : BaseItem
             if (collision.gameObject.GetComponent<PuckTier4>())
             {
                 Destroy(collision.gameObject);
+                //if (!MultiplayerManager.Instance.IsMultiplayer)
+                //{
+                //    Destroy(this.gameObject);
+                //}
+                //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                //{
+                //    this.NetworkObject.Despawn();
+                //    Destroy(this.gameObject);
+                //}
+
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
                     Destroy(this.gameObject);
                 }
-                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                else
                 {
-                    this.NetworkObject.Despawn();
-                    Destroy(this.gameObject);
+                    DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
                 }
             }
         }
@@ -151,14 +171,24 @@ public class PuckTier4 : BaseItem
         if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
         {
             Destroy(other.gameObject);
+            //if (!MultiplayerManager.Instance.IsMultiplayer)
+            //{
+            //    Destroy(this.gameObject);
+            //}
+            //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+            //{
+            //    this.NetworkObject.Despawn();
+            //    Destroy(this.gameObject);
+            //}
+
+            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
             if (!MultiplayerManager.Instance.IsMultiplayer)
             {
                 Destroy(this.gameObject);
             }
-            else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+            else
             {
-                this.NetworkObject.Despawn();
-                Destroy(this.gameObject);
+                DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
             }
         }
     }

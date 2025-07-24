@@ -217,6 +217,17 @@ public class BaseItem : NetworkBehaviour
     //}
 
     #region new code
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void DestroyItemRpc(NetworkBehaviourReference itemToDestroy)
+    {
+        if (itemToDestroy.TryGet(out BaseItem itemScript))
+        {
+            itemScript.gameObject.GetComponent<NetworkObject>().Despawn();
+            Destroy(itemScript.gameObject);
+        }
+    }
+
     public virtual void UseItem()
     {
 

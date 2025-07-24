@@ -355,7 +355,7 @@ public class ItemHolder : NetworkBehaviour
 
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
-        if (!holdingItem) return;
+        if (!IsHoldingItem()) return;
 
         if (context.performed) // make sure input is only being read once
         {

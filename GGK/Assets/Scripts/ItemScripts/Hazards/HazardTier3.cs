@@ -47,14 +47,24 @@ public class HazardTier3 : BaseItem
                 playerKart.isConfused = true;
                 playerKart.movementDirection *= -1;
             }
-            if (IsSpawned && IsServer)
+            //if (IsSpawned && IsServer)
+            //{
+            //    GetComponent<NetworkObject>().Despawn();
+            //    Destroy(gameObject);
+            //}
+            //else
+            //{
+            //    Destroy(gameObject);
+            //}
+
+            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+            if (!MultiplayerManager.Instance.IsMultiplayer)
             {
-                GetComponent<NetworkObject>().Despawn();
-                Destroy(gameObject);
+                Destroy(this.gameObject);
             }
             else
             {
-                Destroy(gameObject);
+                DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
             }
         }
     }

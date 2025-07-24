@@ -40,7 +40,14 @@ public class ShieldTier2 : BaseItem
         // destroys projectiles and hazards
         if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Hazard"))
         {
-            Destroy(collision.gameObject);
+            if (!MultiplayerManager.Instance.IsMultiplayer)
+            {
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                DestroyItemRpc(collision.gameObject.GetComponent<BaseItem>());
+            }
         }
     }
 }
