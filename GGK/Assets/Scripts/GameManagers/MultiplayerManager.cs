@@ -423,7 +423,7 @@ public class MultiplayerManager : NetworkBehaviour
                     break;
                 case Map.RITQuarterMile:
                     //GameManager.thisManagerInstance.LoadMapRpc("RIT Quarter Mile Greybox V2");
-                    MultiplayerSceneManager.Instance.ToRITQuarterMile();
+                    //MultiplayerSceneManager.Instance.ToRITQuarterMile();
                     break;
                 case Map.FinalsBrickRoad:
                     //GameManager.thisManagerInstance.LoadMapRpc("Finals Brick Road Greybox");
