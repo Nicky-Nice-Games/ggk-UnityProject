@@ -37,7 +37,7 @@ public class PlayerInfo : MonoBehaviour
         collisionWithWalls = 0;
         characterUsed = 0;
         fellOffMap = 0;
-        playerName = "Default";
+        playerName = "";
         playerPassword = "";
         playerEmail = "";
         PlayerCharacter = PlayerKart.Freddie;
