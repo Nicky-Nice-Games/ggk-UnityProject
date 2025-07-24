@@ -29,11 +29,15 @@ public class HazardTier1 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
-                if (IsServer)
+                if (IsSpawned && IsServer)
                 {
-                    GetComponent<NetworkObject>().Despawn();
+                        GetComponent<NetworkObject>().Despawn();
+                        Destroy(gameObject);
                 }
-                Destroy(gameObject);
+                else
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }

@@ -47,11 +47,15 @@ public class HazardTier3 : BaseItem
                 playerKart.isConfused = true;
                 playerKart.movementDirection *= -1;
             }
-            if (IsServer)
-                {
-                    GetComponent<NetworkObject>().Despawn();
-                }
-            Destroy(gameObject);
+            if (IsSpawned && IsServer)
+            {
+                GetComponent<NetworkObject>().Despawn();
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
