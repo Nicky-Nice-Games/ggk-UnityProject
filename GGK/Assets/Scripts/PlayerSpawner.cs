@@ -80,11 +80,12 @@ public class PlayerSpawner : NetworkBehaviour
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
                 GameObject colliderGO = kartObject.GetChild(1).gameObject;
                 colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
-                kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
-                kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
+                //kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
+                //kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
                 colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
+                colliderGO.GetComponent<SpawnHandler>().TeleportToSpawnClientRpc(spawnedKartCount);
                 spawnedKartCount++;
             }
         }

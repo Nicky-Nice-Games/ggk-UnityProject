@@ -55,4 +55,18 @@ public class SpawnHandler : NetworkBehaviour
 
         rb.isKinematic = false;
     }
+
+    [ClientRpc]
+    public void TeleportToSpawnClientRpc(int index)
+    {
+        if (spawnPoints == null || index < 0 || index >= spawnPoints.Count) return;
+
+        var pos = spawnPoints[index].position;
+        var rot = spawnPoints[index].rotation;
+
+        if (transform.parent != null)
+            transform.parent.SetPositionAndRotation(pos, rot);
+
+        rb.transform.SetPositionAndRotation(pos, rot);
+    }
 }
