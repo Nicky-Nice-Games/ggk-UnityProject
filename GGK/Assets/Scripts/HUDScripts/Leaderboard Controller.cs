@@ -30,26 +30,35 @@ public class LeaderboardController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsServer)
+        if (Countdown.instance.finished)
         {
-            // If server, update networkTme
-            curTime += Time.deltaTime;
-            networkTime.Value = curTime;
-            //Debug.Log(networkTime.Value);
-            //updating if all karts are finished
-            allPlayerKartsFinished.Value = NetworkManager.ConnectedClients.Count == numOfPlayerKarts;
+            if (IsServer)
+            {
+                // If server, update networkTme
+                curTime += Time.deltaTime;
+                networkTime.Value = curTime;
+                //Debug.Log(networkTime.Value);
+                //updating if all karts are finished
+                allPlayerKartsFinished.Value = NetworkManager.ConnectedClients.Count == numOfPlayerKarts;
+            }
+            // Otherwise, update single player time
+            else if (!IsSpawned)
+            {
+                curTime += Time.deltaTime;
+            }
+
+            // Format and display time
+            float seconds = curTime % 60;
+            int minutes = (int)curTime / 60;
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
-        // Otherwise, update single player time
-        else if (!IsSpawned)
+        else
         {
-            curTime += Time.deltaTime;
+            curTime = 0;
+            float seconds = curTime % 60;
+            int minutes = (int)curTime / 60;
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
-
-
-        // Format and display time
-        float seconds = curTime % 60;
-        int minutes = (int)curTime / 60;
-        timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 
     /// <summary>

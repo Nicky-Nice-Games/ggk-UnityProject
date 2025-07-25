@@ -33,6 +33,7 @@ public class GameManager : NetworkBehaviour
     public PlayerInfo playerInfo;
     public PostGameManager postGameManager;
     private APIManager apiManager;
+    private LobbyManager lobbyManager;
 
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
@@ -58,6 +59,7 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.start;
         apiManager = thisManagerObjInstance.GetComponent<APIManager>();
         postGameManager = thisManagerObjInstance.GetComponent<PostGameManager>();
+        lobbyManager = FindAnyObjectByType<LobbyManager>();
 
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
@@ -90,6 +92,7 @@ public class GameManager : NetworkBehaviour
             Debug.Log("Guest mode on");
         }
 
+        lobbyManager.AssignPlayerName(playerInfo.playerName);
         sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
     }
@@ -231,11 +234,13 @@ public class GameManager : NetworkBehaviour
                 case "RIT Woods Greybox":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
                     break;
-                case "RIT Quarter Mile ":
+                case "RIT Quarter Mile":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
                     break;
-                case "Finals Brick Road ":
+                case "Finals Brick Road":
+                    Debug.Log("GameManager: Before Finals Brick Road");
                     MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
+                    Debug.Log("GameManager: After Finals Brick Road");
                     break;
                 default:
                     break;

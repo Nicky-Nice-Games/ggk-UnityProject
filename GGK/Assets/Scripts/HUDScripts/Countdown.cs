@@ -171,6 +171,12 @@ public class Countdown : NetworkBehaviour
     public int countdownStart = 3;
     public float countdownSpeed = 1f;
     public bool finished = false;
+    public static Countdown instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()

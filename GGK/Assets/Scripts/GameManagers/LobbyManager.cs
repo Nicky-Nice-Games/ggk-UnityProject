@@ -25,6 +25,8 @@ public class LobbyManager : MonoBehaviour
     public event EventHandler<LobbyEventArgs> OnJoinedLobby;
     public event EventHandler<LobbyEventArgs> OnJoinedLobbyUpdate;
     public event EventHandler<LobbyEventArgs> OnKickedFromLobby;
+
+    private GameManager gameManager;
     public class LobbyEventArgs : EventArgs
     {
         public Lobby lobby;
@@ -77,6 +79,8 @@ public class LobbyManager : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
 
+        gameManager = FindAnyObjectByType<GameManager>();
+
         AuthenticationService.Instance.SignedIn += () =>
         {
             //Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
@@ -84,7 +88,8 @@ public class LobbyManager : MonoBehaviour
         if (!AuthenticationService.Instance.IsSignedIn)
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            playerName = $"RIT:{UnityEngine.Random.Range(10, 999)}";
+
+            playerName = $"RIT:{UnityEngine.Random.Range(10, 999)}"; 
         }
         //Debug.Log(playerName);
         //Authenticate(playerName);
@@ -547,6 +552,14 @@ public class LobbyManager : MonoBehaviour
             {
                 Debug.Log(e);
             }
+        }
+    }
+
+    public void AssignPlayerName(string name)
+    {
+        if(name != "")
+        {
+            playerName = name;
         }
     }
 }
