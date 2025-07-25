@@ -115,28 +115,28 @@ public class ItemHolder : NetworkBehaviour
         new NetworkVariable<ItemTypeEnum>(
             ItemTypeEnum.NoItem,
             NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server
+            NetworkVariableWritePermission.Owner
         );
 
     public NetworkVariable<int> currentItemTier =
         new NetworkVariable<int>(
             0,
             NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server
+            NetworkVariableWritePermission.Owner
         );
 
     public NetworkVariable<bool> currentCanUpgrade =
         new NetworkVariable<bool>(
             true,
             NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server
+            NetworkVariableWritePermission.Owner
         );
 
     public NetworkVariable<int> currentUseCounter =
         new NetworkVariable<int>(
             1,
             NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server
+            NetworkVariableWritePermission.Owner
         );
     #endregion
     
@@ -367,7 +367,7 @@ public class ItemHolder : NetworkBehaviour
             {
                 if (!IsOwner) return;
 
-                SpawnItemRpc(this, ItemType, ItemTier, transform.position, transform.rotation);
+                SpawnItemRpc(this, currentItemType.Value, currentItemTier.Value, transform.position, transform.rotation);
             }
         }
     }
