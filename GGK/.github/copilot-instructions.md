@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: morgan
+  - Name: Kart
   - Tag: Kart
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

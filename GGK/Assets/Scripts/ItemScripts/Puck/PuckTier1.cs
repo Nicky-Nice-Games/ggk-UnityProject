@@ -191,7 +191,7 @@ public class PuckTier1 : BaseItem
                 }
                 else
                 {
-                    DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
+                    DestroyItemRpc(this);
                 }
             }
         }
