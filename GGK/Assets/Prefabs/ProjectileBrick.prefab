@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3333143799551126755}
   - component: {fileID: 8421588603155202299}
   - component: {fileID: 3227973856724491536}
+  - component: {fileID: 1097178437796834359}
   - component: {fileID: 5579517559242711142}
   m_Layer: 3
   m_Name: ProjectileBrick
@@ -134,6 +135,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &1097178437796834359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610751871366115687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3123551907
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &5579517559242711142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,4 +170,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - {fileID: 2055685921588137374, guid: 2d9ffd843713ab44ea7ca3210ee15e1d, type: 3}
-  itemBoxType: Projectile
+  itemBoxType: 3
