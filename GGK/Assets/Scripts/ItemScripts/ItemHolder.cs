@@ -333,6 +333,11 @@ public class ItemHolder : NetworkBehaviour
         }
     }
 
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void ClearItemRpc(){
+        ClearItem();
+    }
+
     public void OnThrow(InputAction.CallbackContext context) // for players
     {
         if (!IsHoldingItem()) return;
@@ -342,8 +347,7 @@ public class ItemHolder : NetworkBehaviour
 
         if (context.performed) // make sure input is only being read once
         {
-            if (!IsSpawned || ItemType == ItemTypeEnum.Boost)
-            {
+            if (!IsSpawned) {
                 thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
 
                 // get the baseitem script from the thrown item and set proper variables
@@ -361,9 +365,25 @@ public class ItemHolder : NetworkBehaviour
                     canUpgrade = false;
                     useCounter++;
                 }
-            }
-            else
-            {
+            } else if(IsSpawned && ItemType == ItemTypeEnum.Boost){
+                thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
+
+                // get the baseitem script from the thrown item and set proper variables
+                BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+                thrownItemScript.Kart = this;
+                thrownItemScript.UseCount -= useCounter;
+                thrownItemScript.timerEndCallback = ClearItemRpc;
+
+                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                {
+                    ClearItemRpc();
+                }
+                else // disable upgrading if use count is more than one and the item has already been used
+                {
+                    canUpgrade = false;
+                    useCounter++;
+                }
+            } else {
                 if (!IsOwner) return;
 
                 SpawnItemRpc(this, ItemType, ItemTier, transform.position, transform.rotation);
@@ -443,165 +463,263 @@ public class ItemHolder : NetworkBehaviour
                     ProjectileBrick projBrick = collision.gameObject.GetComponent<ProjectileBrick>();
                     if (!IsHoldingItem())
                     {
-                        ItemType = ItemTypeEnum.Puck;
-                        if (MultiplayerManager.Instance.IsMultiplayer)
-                        {
+                        if(IsSpawned && !IsServer){
+                            return;
+                        } else if (IsSpawned && IsServer) {
                             currentItemType.Value = ItemTypeEnum.Puck;
+                        } else {
+                            ItemType = ItemTypeEnum.Puck;
                         }
+                        // ItemType = ItemTypeEnum.Puck;
+                        // if (MultiplayerManager.Instance.IsMultiplayer)
+                        // {
+                        //     currentItemType.Value = ItemTypeEnum.Puck;
+                        // }
                     }
                     else if (ItemType == ItemTypeEnum.Puck)
                     {
-                        // Increase item tier & apply upgrades
-                        if (ItemTier < 4)
-                        {
-                            // new code
-                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                        if(ItemTier < 4){
+                            if(IsSpawned && !IsServer){
+                                return;
+                            } else if (IsSpawned && IsServer) {
                                 currentItemTier.Value++;
-                            }
-                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                            } else {
                                 ItemTier++;
                             }
                         }
+                        // Increase item tier & apply upgrades
+                        // if (ItemTier < 4)
+                        // {
+                        // // new code
+                        // if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        // {
+                        //     currentItemTier.Value++;
+                        // }
+                        // else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        // {
+                        //     ItemTier++;
+                        // }
+                        //}
                     }
                     break;
                 case "Boost":
                     BoostBrick boostBrick = collision.gameObject.GetComponent<BoostBrick>();
                     if (!IsHoldingItem())
                     {
-                        ItemType = ItemTypeEnum.Boost;
-                        if (MultiplayerManager.Instance.IsMultiplayer)
-                        {
+                        if(IsSpawned && !IsServer){
+                            return;
+                        } else if (IsSpawned && IsServer) {
                             currentItemType.Value = ItemTypeEnum.Boost;
+                        } else {
+                            ItemType = ItemTypeEnum.Boost;
                         }
+                        // ItemType = ItemTypeEnum.Boost;
+                        // if (MultiplayerManager.Instance.IsMultiplayer)
+                        // {
+                        //     currentItemType.Value = ItemTypeEnum.Boost;
+                        // }
                     }
                     else if (ItemType == ItemTypeEnum.Boost)
                     {
-                        // Increase item tier & apply upgrades
-                        if (ItemTier < 4)
-                        {
-                            // new code
-                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                        if(ItemTier < 4){
+                            if(IsSpawned && !IsServer){
+                                return;
+                            } else if (IsSpawned && IsServer) {
                                 currentItemTier.Value++;
-                            }
-                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                            } else {
                                 ItemTier++;
                             }
                         }
+                        // // Increase item tier & apply upgrades
+                        // if (ItemTier < 4)
+                        // {
+                        //     // new code
+                        //     if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //     {
+                        //         currentItemTier.Value++;
+                        //     }
+                        //     else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //     {
+                        //         ItemTier++;
+                        //     }
+                        // }
                     }
                     break;
                 case "Defense":
                     DefenseBrick defBrick = collision.gameObject.GetComponent<DefenseBrick>();
                     if (!IsHoldingItem())
                     {
-                        ItemType = ItemTypeEnum.Shield;
-
-                        if (MultiplayerManager.Instance.IsMultiplayer)
-                        {
+                        if(IsSpawned && !IsServer){
+                            return;
+                        } else if (IsSpawned && IsServer) {
                             currentItemType.Value = ItemTypeEnum.Shield;
+                        } else {
+                            ItemType = ItemTypeEnum.Shield;
                         }
+                        // ItemType = ItemTypeEnum.Shield;
+                        // if (MultiplayerManager.Instance.IsMultiplayer)
+                        // {
+                        //     currentItemType.Value = ItemTypeEnum.Shield;
+                        // }
                     }
                     else if (ItemType == ItemTypeEnum.Shield)
                     {
-                        // Do not upgrade if shield is being used
-                        if (useCounter == 1)
-                        {
-                            // Increase item tier & apply upgrades
-                            if (ItemTier < 4)
-                            {
-                                // new code
-                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
-                                    currentItemTier.Value++;
-                                }
-                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
-                                    ItemTier++;
-                                }
+                        if(ItemTier < 4){
+                            if(IsSpawned && !IsServer){
+                                return;
+                            } else if (IsSpawned && IsServer) {
+                                currentItemTier.Value++;
+                            } else {
+                                ItemTier++;
                             }
                         }
+                        // // Do not upgrade if shield is being used
+                        // if (useCounter == 1)
+                        // {
+                        //     // Increase item tier & apply upgrades
+                        //     if (ItemTier < 4)
+                        //     {
+                        //         // new code
+                        //         if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //         {
+                        //             currentItemTier.Value++;
+                        //         }
+                        //         else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //         {
+                        //             ItemTier++;
+                        //         }
+                        //     }
+                        // }
                     }
                     break;
                 case "Hazard":
                     HazardBrick hazBrick = collision.gameObject.GetComponent<HazardBrick>();
                     if (!IsHoldingItem())
                     {
-                        ItemType = ItemTypeEnum.Hazard;
-
-                        if (MultiplayerManager.Instance.IsMultiplayer)
-                        {
+                        if(IsSpawned && !IsServer){
+                            return;
+                        } else if (IsSpawned && IsServer) {
                             currentItemType.Value = ItemTypeEnum.Hazard;
+                        } else {
+                            ItemType = ItemTypeEnum.Hazard;
                         }
+                        // ItemType = ItemTypeEnum.Hazard;
+                        // if (MultiplayerManager.Instance.IsMultiplayer)
+                        // {
+                        //     currentItemType.Value = ItemTypeEnum.Hazard;
+                        // }
                     }
                     else if (ItemType == ItemTypeEnum.Hazard)
                     {
-                        // Increase item tier & apply upgrades
-                        if (ItemTier < 4)
-                        {
-                            // new code
-                            if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                        if(ItemTier < 4){
+                            if(IsSpawned && !IsServer){
+                                return;
+                            } else if (IsSpawned && IsServer) {
                                 currentItemTier.Value++;
-                            }
-                            else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                            {
+                            } else {
                                 ItemTier++;
                             }
                         }
+                        // // Increase item tier & apply upgrades
+                        // if (ItemTier < 4)
+                        // {
+                        //     // new code
+                        //     if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //     {
+                        //         currentItemTier.Value++;
+                        //     }
+                        //     else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                        //     {
+                        //         ItemTier++;
+                        //     }
+                        // }
                     }
                     break;
                 case "Upgrade":
                     if (!IsHoldingItem())
                     {
-                        // Increase item tier if not max
-                        if (canUpgrade) ItemTier++;
+                        if (canUpgrade){
+                            if(IsSpawned && !IsServer){
+                                return;
+                            } else if (IsSpawned && IsServer) {
+                                currentItemTier.Value++;
+                            } else {
+                                ItemTier++;
+                            }
+                        }
+                        // // Increase item tier if not max
+                        // if (canUpgrade) ItemTier++;
                     }
                     else
                     {
                         // shield can't be upgraded while being used
                         if (ItemType != ItemTypeEnum.Shield)
                         {
-                            // Increase item tier if not max & apply upgrades
-                            if (ItemTier < 4)
-                            {
-                                // new code
-                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
+                            if(ItemTier < 4){
+                                if(IsSpawned && !IsServer){
+                                    return;
+                                } else if (IsSpawned && IsServer) {
                                     currentItemTier.Value++;
-                                }
-                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
+                                } else {
                                     ItemTier++;
                                 }
                             }
+                            // // Increase item tier if not max & apply upgrades
+                            // if (ItemTier < 4)
+                            // {
+                            //     // new code
+                            //     if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            //     {
+                            //         currentItemTier.Value++;
+                            //     }
+                            //     else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            //     {
+                            //         ItemTier++;
+                            //     }
+                            // }
                         }
                         else if (useCounter == 1)
                         {
-                            // Increase item tier if not max & apply upgrades
-                            if (ItemTier < 4)
-                            {
-                                // new code
-                                if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
+                            if(ItemTier < 4){
+                                if(IsSpawned && !IsServer){
+                                    return;
+                                } else if (IsSpawned && IsServer) {
                                     currentItemTier.Value++;
-                                }
-                                else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
-                                {
+                                } else {
                                     ItemTier++;
                                 }
                             }
+                            // // Increase item tier if not max & apply upgrades
+                            // if (ItemTier < 4)
+                            // {
+                            //     // new code
+                            //     if (MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            //     {
+                            //         currentItemTier.Value++;
+                            //     }
+                            //     else if (!MultiplayerManager.Instance.IsMultiplayer && canUpgrade)
+                            //     {
+                            //         ItemTier++;
+                            //     }
+                            // }
                         }
                     }
                     break;
                 default:
-                    // Gives kart an item if they don't already have one
-                    if (!IsHoldingItem())
-                    {
-                        ItemType = RandomItemType();
+                    if(!IsHoldingItem()){
+                        if(IsSpawned && !IsServer){
+                            return;
+                        } else if (IsSpawned && IsServer) {
+                            currentItemType.Value = RandomItemType();
+                        } else {
+                            ItemType = RandomItemType();
+                        }
                     }
+                    // // Gives kart an item if they don't already have one
+                    // if (!IsHoldingItem())
+                    // {
+                    //     ItemType = RandomItemType();
+                    // }
                     break;
             }
             // Disables the item box
@@ -676,16 +794,16 @@ public class ItemHolder : NetworkBehaviour
 
     private void OnItemTypeChange(ItemTypeEnum previousValue, ItemTypeEnum newValue)
     {
-        // make sure only the client who changes an item calls this
-        if (!IsOwner) return;
+        // // make sure only the client who changes an item calls this
+        // if (!IsOwner) return;
         Debug.Log("OnItemTypeChange");
         ItemType = newValue;
     }
 
     private void OnItemTierChange(int previousValue, int newValue)
     {
-        // make sure only the client who changes an item calls this
-        if (!IsOwner) return;
+        // // make sure only the client who changes an item calls this
+        // if (!IsOwner) return;
         Debug.Log("OnItemTierChange");
         ItemTier = newValue;
     }
