@@ -138,7 +138,7 @@ public class PostGameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DisconnectClientServerRpc(ulong clientId, ServerRpcParams rpcParams = default)
+    public void DisconnectClientServerRpc(ulong clientId)
     {
         NetworkManager.Singleton.DisconnectClient(clientId);
     }

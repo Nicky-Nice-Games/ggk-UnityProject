@@ -25,13 +25,15 @@ public class GameOverMenuHandeler : NetworkBehaviour
     [SerializeField]
     private TextMeshProUGUI playerLeft;
 
+    private int clientCount = 0;
+
+    private Dictionary<ulong, PlayerDecisions> players;
+
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
         postgamemanager = gamemanagerObj.postGameManager;
-
-        NetworkManager.Singleton.OnClientDisconnectCallback += ShowLeaver;
 
         // deactivate playagain panel in case this is the 2nd+ multiplayer game
         playAgainPanel.SetActive(false);
@@ -47,7 +49,8 @@ public class GameOverMenuHandeler : NetworkBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             multiplayerPanel.SetActive(true);
-            postgamemanager.ClientsListServerRpc();
+            clientCount = postgamemanager.GetClientsList().Count;
+            players = postgamemanager.GetClientsList();
         }
         else
         {
@@ -67,26 +70,30 @@ public class GameOverMenuHandeler : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        // all players selected to stay or leave and this is the host
-        if (postgamemanager.AllSelected &&
-            MultiplayerManager.Instance.NetworkManager.IsHost)
-        {
-            // if everyone else left EXCEPT the host then they leave too
-            if (OnlyHostConnected())
-            {
-                StartCoroutine(HostExit());
-            }
-            else
-            {
-                playAgainPanel.SetActive(true);
-            }
-        }
-
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            if (OnlyHostConnected())
+            postgamemanager.ClientsListServerRpc();
+            players = postgamemanager.GetClientsList();
+
+            // all players selected to stay or leave and this is the host
+            if (postgamemanager.AllSelected &&
+                MultiplayerManager.Instance.NetworkManager.IsHost)
             {
-                StartCoroutine(HostExit());
+                // if everyone else left EXCEPT the host then they leave too
+                if (OnlyHostConnected())
+                {
+                    StartCoroutine(HostExit());
+                }
+                else
+                {
+                    playAgainPanel.SetActive(true);
+                }
+            }
+
+            if(players.Count != clientCount)
+            {
+                ShowLeaver();
+                clientCount = players.Count;
             }
         }
     }
@@ -171,26 +178,17 @@ public class GameOverMenuHandeler : NetworkBehaviour
         LeaveLobby();
     }
 
-    private void ShowLeaver(ulong clientId)
+    private void ShowLeaver()
     {
-        ShowLeaverClientRpc(clientId);
-
-        //Dictionary<ulong, PlayerDecisions> players = postgamemanager.GetClientsList();
-        //for (int i = 0; i < players.Count; i++)
-        //{
-        //    PlayerDecisions decision;
-        //    players.TryGetValue((ulong)i, out decision);
-        //    if (decision == PlayerDecisions.Leaving)
-        //    {
-        //        StartCoroutine(AnimateText($"client {i} has left."));
-        //    }
-        //}
-    }
-
-    [ClientRpc]
-    private void ShowLeaverClientRpc(ulong clientId)
-    {
-        StartCoroutine(AnimateText($"client {clientId} has left."));
+        for (int i = 0; i < players.Count; i++)
+        {
+            PlayerDecisions decision;
+            players.TryGetValue((ulong)i, out decision);
+            if (decision == PlayerDecisions.Leaving)
+            {
+                StartCoroutine(AnimateText($"client {i} has left."));
+            }
+        }
     }
 
     private IEnumerator AnimateText(string txt)
