@@ -187,6 +187,7 @@ public class NEWDriver : NetworkBehaviour
             SpeedLineHandler.instance.trackingPlayer = this;
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
+            sphere.isKinematic = false;
         }
     }
 

@@ -29,6 +29,10 @@ public class DynamicRecovery : MonoBehaviour
 
     public MiniMapHud miniMap;
 
+    Transform kartVisual;
+    Vector3 originalScale;
+    Vector3 stretchedScale;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +66,11 @@ public class DynamicRecovery : MonoBehaviour
         kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
         kartPhysicsNPC = kartRoot.GetComponentInChildren<NPCPhysics>();
         particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
+
+
+        kartVisual = kartModel;
+        originalScale = kartVisual.localScale;
+        stretchedScale = new Vector3(originalScale.x * 0.2f, originalScale.y * 2.5f, originalScale.z * 0.2f);
 
     }
 
@@ -182,9 +191,7 @@ public class DynamicRecovery : MonoBehaviour
 
         isRecovering = true;
 
-        Transform kartVisual = kartModel;
-        Vector3 originalScale = kartVisual.localScale;
-        Vector3 stretchedScale = new Vector3(originalScale.x * 0.2f, originalScale.y * 2.5f, originalScale.z * 0.2f);
+        
 
         float duration = 0.3f;
 
