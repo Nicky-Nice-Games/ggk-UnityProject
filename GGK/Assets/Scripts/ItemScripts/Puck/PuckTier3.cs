@@ -134,7 +134,7 @@ public class PuckTier3 : BaseItem
                     }
                     else
                     {
-                        DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
+                        DestroyItemRpc(this);
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class PuckTier3 : BaseItem
                 }
                 else
                 {
-                    DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
+                    DestroyItemRpc(this);
                 }
             }
         }
@@ -193,7 +193,7 @@ public class PuckTier3 : BaseItem
             }
             else
             {
-                DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
+                DestroyItemRpc(this);
             }
         }
     }

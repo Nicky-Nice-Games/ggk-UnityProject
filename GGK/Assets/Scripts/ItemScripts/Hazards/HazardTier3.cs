@@ -64,7 +64,7 @@ public class HazardTier3 : BaseItem
             }
             else
             {
-                DestroyItemRpc(this.gameObject.GetComponent<BaseItem>());
+                DestroyItemRpc(this);
             }
         }
     }
