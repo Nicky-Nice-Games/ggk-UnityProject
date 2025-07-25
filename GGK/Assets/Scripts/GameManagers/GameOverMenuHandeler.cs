@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverMenuHandeler : MonoBehaviour
+public class GameOverMenuHandeler : NetworkBehaviour
 {
     [SerializeField]
     private List<GameObject> buttonOptions = new List<GameObject>();
@@ -25,13 +25,13 @@ public class GameOverMenuHandeler : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI playerLeft;
 
-    int clientCount = 0;
-
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
         postgamemanager = gamemanagerObj.postGameManager;
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += ShowLeaver;
 
         // deactivate playagain panel in case this is the 2nd+ multiplayer game
         playAgainPanel.SetActive(false);
@@ -47,6 +47,7 @@ public class GameOverMenuHandeler : MonoBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             multiplayerPanel.SetActive(true);
+            postgamemanager.ClientsListServerRpc();
         }
         else
         {
@@ -81,19 +82,13 @@ public class GameOverMenuHandeler : MonoBehaviour
             }
         }
 
-        if (MultiplayerManager.Instance.IsMultiplayer &&
-            NetworkManager.Singleton.ConnectedClientsIds.Count != clientCount)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
             if (OnlyHostConnected())
             {
                 StartCoroutine(HostExit());
             }
-            else
-            {
-                ShowLeaver();
-            }
         }
-        clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
     }
 
     public void ReplayButton()
@@ -176,18 +171,26 @@ public class GameOverMenuHandeler : MonoBehaviour
         LeaveLobby();
     }
 
-    private void ShowLeaver()
+    private void ShowLeaver(ulong clientId)
     {
-        Dictionary<ulong, PlayerDecisions> players = postgamemanager.GetClientsList();
-        for (int i = 0; i < players.Count; i++)
-        {
-            PlayerDecisions decision;
-            players.TryGetValue((ulong)i, out decision);
-            if (decision == PlayerDecisions.Leaving)
-            {
-                StartCoroutine(AnimateText($"client {i} has left."));
-            }
-        }
+        ShowLeaverClientRpc(clientId);
+
+        //Dictionary<ulong, PlayerDecisions> players = postgamemanager.GetClientsList();
+        //for (int i = 0; i < players.Count; i++)
+        //{
+        //    PlayerDecisions decision;
+        //    players.TryGetValue((ulong)i, out decision);
+        //    if (decision == PlayerDecisions.Leaving)
+        //    {
+        //        StartCoroutine(AnimateText($"client {i} has left."));
+        //    }
+        //}
+    }
+
+    [ClientRpc]
+    private void ShowLeaverClientRpc(ulong clientId)
+    {
+        StartCoroutine(AnimateText($"client {clientId} has left."));
     }
 
     private IEnumerator AnimateText(string txt)

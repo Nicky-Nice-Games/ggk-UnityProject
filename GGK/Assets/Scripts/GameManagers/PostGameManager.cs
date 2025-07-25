@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Linq;
 
 // options for the player post-game
 public enum PlayerDecisions
@@ -18,10 +18,14 @@ public class PostGameManager : NetworkBehaviour
 {
     private Dictionary<ulong, PlayerDecisions> playerDecisions = new();
 
+    private List<ulong> connectedClients = new List<ulong>();
+
     // Check if all players have selected to stay or leave
     private bool allSelected = false;
 
     public bool AllSelected {  get { return allSelected; } }
+
+    public List<ulong> ConnectedClients { get { return connectedClients; } }
 
     public override void OnNetworkSpawn()
     {
@@ -79,15 +83,23 @@ public class PostGameManager : NetworkBehaviour
     // If a player decides to leave, disconnect them
     private void ProcessDecisions()
     {
-        foreach(KeyValuePair <ulong, PlayerDecisions> pair in playerDecisions)
+        for(int i = 0; i < playerDecisions.Count; i++)
         {
-            ulong clientId = pair.Key;
-            // if the player is leaving, disconnect them
-            if(pair.Value == PlayerDecisions.Leaving)
+            if (playerDecisions[(ulong)i] == PlayerDecisions.Leaving)
             {
-                NetworkManager.Singleton.DisconnectClient(clientId);
+                DisconnectClient((ulong)i);
             }
         }
+
+        //foreach(KeyValuePair <ulong, PlayerDecisions> pair in playerDecisions)
+        //{
+        //    ulong clientId = pair.Key;
+        //    // if the player is leaving, disconnect them
+        //    if(pair.Value == PlayerDecisions.Leaving)
+        //    {
+        //        NetworkManager.Singleton.DisconnectClient(clientId);
+        //    }
+        //}
     }
 
     // resets all decisions to Undecided so they don't carry over into a second or following race
@@ -108,6 +120,27 @@ public class PostGameManager : NetworkBehaviour
     private void DisconnectClient(ulong clientId)
     {
         playerDecisions.Remove(clientId);
+        connectedClients.Remove(clientId);
+        DisconnectClientServerRpc(clientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ClientsListServerRpc()
+    {
+        foreach(ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            if (!connectedClients.Contains(clientId))
+            {
+                connectedClients.Add(clientId);
+            }
+        }
+        Debug.Log($"# of clients connected: {connectedClients.Count}");
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DisconnectClientServerRpc(ulong clientId, ServerRpcParams rpcParams = default)
+    {
+        NetworkManager.Singleton.DisconnectClient(clientId);
     }
 
     public Dictionary<ulong, PlayerDecisions> GetClientsList()
