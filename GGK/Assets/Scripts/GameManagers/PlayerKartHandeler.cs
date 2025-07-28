@@ -2,6 +2,7 @@ using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,6 +60,12 @@ public class PlayerKartHandeler : MonoBehaviour
             gameManager.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
             gameManager.GetComponentInChildren<GameManager>().PlayerSelected());
+        }
+
+        // During multiplayer build multiplayer panel
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.AddPlayerToPanelRpc();
         }
     }
 

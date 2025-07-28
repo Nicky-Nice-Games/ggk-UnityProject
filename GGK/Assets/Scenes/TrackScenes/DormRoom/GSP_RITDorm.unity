@@ -5337,6 +5337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 768516662}
+  - component: {fileID: 768516663}
   - component: {fileID: 768516661}
   m_Layer: 0
   m_Name: LeaderboardController
@@ -5359,7 +5360,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaderboard: {fileID: 1257110689}
   leaderboardItem: {fileID: 2025370594096732721, guid: 048e9d4df3668cd46b33144720f14e35, type: 3}
+  timeDisplay: {fileID: 484590535}
   curTime: 0
+  networkTime:
+    m_InternalValue: 0
+  numOfPlayerKarts: 0
+  allPlayerKartsFinished:
+    m_InternalValue: 0
+  finishedPlayerKarts: []
 --- !u!4 &768516662
 Transform:
   m_ObjectHideFlags: 0
@@ -5375,6 +5383,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &768516663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768516660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4140308998
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &770340340
 GameObject:
   m_ObjectHideFlags: 0
@@ -8694,6 +8723,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 6c74a776a01de474abb57aadd1954918, type: 3}
+    - target: {fileID: 3983723317960878426, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7014209292422214074, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
       propertyPath: m_Name
       value: MiniMap
@@ -8716,6 +8749,22 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 591483451582181634, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
   m_PrefabInstance: {fileID: 1210661278}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1210661280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3983723317960878426, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+  m_PrefabInstance: {fileID: 1210661278}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1210661281 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1041506153920354169, guid: 14b471bda8bbb7144961e0904c53c513, type: 3}
+  m_PrefabInstance: {fileID: 1210661278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1213897689
 GameObject:
   m_ObjectHideFlags: 0
@@ -9134,6 +9183,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1920549621}
     m_Modifications:
+    - target: {fileID: 471504874506883914, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3764642559374090144, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
       propertyPath: m_Name
       value: StartPanel
@@ -9221,7 +9274,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3764642559374090144, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1243641010}
   m_SourcePrefab: {fileID: 100100000, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
 --- !u!224 &1243641007 stripped
 RectTransform:
@@ -9233,12 +9289,38 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9047304405766018224, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
   m_PrefabInstance: {fileID: 1243641006}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1243641009}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 675078c898ad0f140bc05018c81aa148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1243641009 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3764642559374090144, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+  m_PrefabInstance: {fileID: 1243641006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1243641010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243641009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3993274067
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1248507762
 GameObject:
   m_ObjectHideFlags: 0
@@ -13900,7 +13982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1887206166
 Transform:
   m_ObjectHideFlags: 0
@@ -14278,6 +14360,8 @@ MonoBehaviour:
   showDebug: 0
   iconSpinoutSpeed: 1
   trackingPlayer: {fileID: 0}
+  miniMap: {fileID: 1210661281}
+  iconRef: {fileID: 1210661280}
 --- !u!114 &1920549618
 MonoBehaviour:
   m_ObjectHideFlags: 0

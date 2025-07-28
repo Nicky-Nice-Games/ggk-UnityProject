@@ -15,7 +15,6 @@ public class KartCheckpoint : NetworkBehaviour
     public string name;
     [SerializeField] public List<GameObject> checkpointList;
     [SerializeField] private GameObject checkPointParent;
-    GameManager gameManager;
     public GameObject parent;
     public NPCPhysics physicsNPC;
 
@@ -47,24 +46,7 @@ public class KartCheckpoint : NetworkBehaviour
         if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
-        }
-
-        GameObject gameManagerGO = GameObject.FindGameObjectWithTag("GameManager");
-
-        if (gameManagerGO == null)
-        {
-            Debug.LogError("GameManager not found in the scene. Please ensure it is present.");
-            return;
-        }
-        else
-        {
-            gameManager = gameManagerGO.GetComponent<GameManager>();
-
-
-        }
-
-
-        
+        }   
     }
 
 
@@ -80,7 +62,7 @@ public class KartCheckpoint : NetworkBehaviour
 
         if (passedWithWarp && lap == totalLaps)
         {
-            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
@@ -124,9 +106,10 @@ public class KartCheckpoint : NetworkBehaviour
                     //lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
-                if (lap == totalLaps)
-                {
-                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                if (lap >= totalLaps)
+                {                    
+                    finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -136,15 +119,35 @@ public class KartCheckpoint : NetworkBehaviour
     IEnumerator GameOverWait()
     {
         yield return new WaitForSeconds(10.5f);
-        gameManager.GameFinished();
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            GameManager.thisManagerInstance.GameFinishedRpc();
+        }
+        else
+        {
+            GameManager.thisManagerInstance.GameFinished();
+        }
     }
 
+
+    /// <summary>
+    /// Finishes the race once ALL the players finishes the race
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FinalizeFinish()
     {
+        Debug.Log("In FinalizeFinish");
         yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        StartCoroutine(GameOverWait());
+        Debug.Log(gameObject.transform.parent.GetChild(0));
+        Debug.Log(gameObject.transform.parent.GetChild(0).gameObject);
+        if (leaderboardController.allPlayerKartsFinished.Value /*&& 
+            gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null*/)
+        {
+            Debug.Log("Inside");
+            StartCoroutine(GameOverWait());
+        }
     }
 }

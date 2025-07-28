@@ -27,7 +27,7 @@ public class Puck : BaseItem
 
         // If the kart is looking backwards
         // sends puck backwards
-        if (!MultiplayerManager.Instance.IsMultiplayer)
+        if (kart.GetComponent<SpeedCameraEffect>() && kart.GetComponent<SpeedCameraEffect>().IsHoldingTab && itemTier < 2)
         {
             if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
             {

@@ -170,14 +170,24 @@ public class NEWDriver : NetworkBehaviour
         baseRotation = steeringWheel.transform.localRotation;
         if (!IsSpawned)
         {
+
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
-            
+
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
 
+            //if in singleplayer, update its appearance using CharacterData
+            AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
+            if (appearance)
+            {
+                appearance.UpdateAppearance();
+            }
+            SpeedLineHandler.instance.trackingPlayer = this;
+            MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
+            sphere.isKinematic = false;
         }
     }
 
@@ -189,6 +199,14 @@ public class NEWDriver : NetworkBehaviour
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
+            //if it's the owner, send its CharacterData settings over to other clients
+            AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
+            if (appearance)
+            {
+                appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
+            }
+            MiniMapHud.instance.trackingPlayer = gameObject;
+            SpeedLineHandler.instance.trackingPlayer = this;
         }
         if (IsServer)
         {
@@ -196,9 +214,7 @@ public class NEWDriver : NetworkBehaviour
         }
         PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
         
-        Debug.Log("Before");
         MiniMapHud.instance.AddKart(gameObject);
-        Debug.Log("After");
 
     }
 

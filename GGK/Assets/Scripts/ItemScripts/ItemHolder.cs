@@ -7,7 +7,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.VFX;
 
 public class ItemHolder : NetworkBehaviour
 {
@@ -172,7 +171,6 @@ public class ItemHolder : NetworkBehaviour
         }
 
         //soundPlayer = GetComponent<AudioSource>();
-        driverItemTier = 1;
 
         // new code 
         InitItemArray();

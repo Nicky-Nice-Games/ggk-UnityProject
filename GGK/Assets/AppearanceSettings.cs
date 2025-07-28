@@ -19,11 +19,14 @@ public class AppearanceSettings : NetworkBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    // OnNetworkSpawn is called when the GameObject is synced to all clients
+    public override void OnNetworkSpawn()
     {
-        //UPDATE ME LATER
-
+        if (!GetComponent<NEWDriver>()) return;
+        if (!IsServer) return;
+        string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
+        Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
+        SetKartAppearanceRpc(characterName, characterColor);
 
     }
 
@@ -34,78 +37,43 @@ public class AppearanceSettings : NetworkBehaviour
         {
             // Loading characterData
             characterData = FindAnyObjectByType<CharacterData>();
-        
+
             // Set correct character model active
             if (characterData != null)
             {
                 icon = characterData.characterSprite;
                 color = characterData.characterColor;
                 name = characterData.characterName.ToLower();
-        
-                if (models != null)
-                {
-                    if (models.Count > 0)
-                    {
-                        for (int i = 0; i < models.Count; i++)
-                        {
-                            //Setting active correct model
-                            if (name == models[i].name)
-                            {
-                                models[i].SetActive(true);
-                                continue;
-                            }
-        
-                            //deleting the models that are not supposed to be active
-                            Destroy(models[i]);
-                        }
-                    }
-                }
+
+                UpdateModel();
             }
             else
             {
                 // If no characterData found, set the last model in the list as active
-                models[models.Count - 1].SetActive(true); 
+                models[models.Count - 1].SetActive(true);
             }
         }
         // I think NPC icons and colors are currently manually set in scene,so
         // Else NPCDriver code when NPCDrivers get a new prefab?
     }
 
-    // OnNetworkSpawn is called when the GameObject is synced to all clients
-    public override void OnNetworkSpawn()
+    public void UpdateModel()
     {
-        if (!GetComponent<NEWDriver>()) return;
-        if (!IsServer) return;
-        string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
-        Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
-        SetKartAppearanceRpc(characterName, characterColor);
-        
-    }
-
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    public void SetKartAppearanceRpc(/*CharacterData characterData, */ string characterName, Color characterColor) // should use a struct or a simpler keyword that fully represents the look of the kart
-    {
-        // Loading characterData
-        characterData = FindAnyObjectByType<CharacterData>();
-        icon = characterData.characterSprite;
-        color = characterColor;
-        kartName = characterName.ToLower();
-        Debug.Log($"Setting {OwnerClientId}'s kart color to {color} and name/model to {kartName}");
-
         // Set correct character model active
-        if (characterData != null)
+        if (models != null)
         {
             for (int i = 0; i < models.Count; i++)
             {
                 //Setting active correct model
-                if (kartName == models[i].name)
+                if (name == models[i].name || kartName == models[i].name)
                 {
                     models[i].SetActive(true);
                     break;
                 }
-
                 //deleting the models that are not supposed to be active
-                Destroy(models[i]);
+
+                //bugs out in multiplayer :(
+                //Destroy(models[i])
             }
         }
         else
@@ -113,5 +81,18 @@ public class AppearanceSettings : NetworkBehaviour
             // If no characterData found, set the last model in the list as active
             models[models.Count - 1].SetActive(true);
         }
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    public void SetKartAppearanceRpc(/*CharacterData characterData, */ string characterName, Color characterColor) // should use a struct or a simpler keyword that fully represents the look of the kart
+    {
+        print(characterName);
+        color = characterColor;
+        kartName = characterName.ToLower();
+        icon = CharacterBuilder.NameToSprite(kartName);
+        name = characterName;
+        Debug.Log($"Setting {OwnerClientId}'s kart color to {color}, sprite to {icon.name} and name/model to {kartName}");
+        UpdateModel();
+        MiniMapHud.instance.UpdateIconAppearance(gameObject, this);
     }
 }

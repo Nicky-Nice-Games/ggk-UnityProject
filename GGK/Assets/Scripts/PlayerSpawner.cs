@@ -4,6 +4,8 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -44,24 +46,32 @@ public class PlayerSpawner : NetworkBehaviour
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
-            Transform kartObject = Instantiate(playerKartPrefab);
-            kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
-            spawnedKartCount++;
-
-            while (spawnedKartCount < 8)
-            {
-                kartObject = Instantiate(npcKartPrefab);
-                NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
-                
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                spawnedKartCount++;
-            }
+            StartCoroutine(DelayedLocalSpawn());
+            
         }
-        else
+        else if (IsServer)
         {
-            FillGrid();
+            StartCoroutine(DelayedServerSpawn());
         }
 
+        //if (!IsSpawned)
+        //{
+        //    Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0] .rotation);
+        //    kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+        //    spawnedKartCount++;
+        //
+        //    while (spawnedKartCount < 8)
+        //    {
+        //        kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+        //        NetworkRigidbody NetworkRb = kartObject.GetComponentInChildren<NetworkRigidbody>();
+        //        
+        //        kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+        //        spawnedKartCount++;
+        //    }
+        //}
+        //else
+        //{
+        //    FillGrid();
     }
 
     /// <summary>
@@ -72,29 +82,65 @@ public class PlayerSpawner : NetworkBehaviour
         // only the server can spawn karts
         if (!IsServer) return;
 
+        CharacterBuilder.StartCharacterBatch();
         // spawn a kart for each player
-        if(spawnPoints != null && spawnPoints.Count > 0)
+        if (spawnPoints != null && spawnPoints.Count > 0)
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
                 Transform kartObject = Instantiate(playerKartPrefab);
-                kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+                
+                kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
+                GameObject colliderGO = kartObject.GetChild(1).gameObject;
+                colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
+                //kartObject.GetChild(1).transform.position = spawnPoints[spawnedKartCount].position;
+                //kartObject.rotation = spawnPoints[spawnedKartCount].rotation;
                 NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+                colliderGO.GetComponent<SpawnHandler>().spawnIndex.Value = spawnedKartCount;
                 kartNetworkObject.SpawnAsPlayerObject(connectedClient.Key);
+                colliderGO.GetComponent<SpawnHandler>().TeleportToSpawnClientRpc(spawnedKartCount);
                 spawnedKartCount++;
 
                 // get a list of itemholder scripts and each karts id
                 kartAndID.Add(connectedClient.Key, kartObject.GetComponentInChildren<ItemHolder>());
             }
         }
-        
-        while(spawnedKartCount < 8){
+
+        while (spawnedKartCount < 8)
+        {
             Debug.Log("Spawning NPC");
-            Transform kartObject = Instantiate(multiplayerNPC);
+            Transform kartObject = Instantiate(multiplayerNPC, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
             NetworkObject kartNetworkObject = kartObject.GetComponent<NetworkObject>();
+            AppearanceSettings settings = kartObject.GetComponentInChildren<AppearanceSettings>();
+            if (settings)
+            {
+                CharacterBuilder.RandomizeUniqueAppearance(settings);
+            }
             kartNetworkObject.Spawn();
             spawnedKartCount++;
         }
+    }
+
+
+    private IEnumerator DelayedLocalSpawn()
+    {
+        yield return new WaitForSeconds(0.2f); // slight delay
+        Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
+        kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
+        spawnedKartCount++;
+
+        while (spawnedKartCount < 8)
+        {
+            kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            spawnedKartCount++;
+        }
+    }
+
+    private IEnumerator DelayedServerSpawn()
+    {
+        yield return new WaitForSeconds(0.0f); // slight delay
+        FillGrid();
     }
 }

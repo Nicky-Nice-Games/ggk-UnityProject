@@ -28,6 +28,7 @@ public class SignInManager : MonoBehaviour
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
     PlayerInfo playerInfo;
+    APIManager apiManager;
 
     [SerializeField] private List<TMP_InputField> inputFieldsList = new List<TMP_InputField>();         // Holds all fields
     private Dictionary<string, TMP_InputField> inputFields = new Dictionary<string, TMP_InputField>();  // Organizes fields
@@ -36,6 +37,7 @@ public class SignInManager : MonoBehaviour
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
+        apiManager = FindAnyObjectByType<APIManager>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in continueButtons)
@@ -54,14 +56,14 @@ public class SignInManager : MonoBehaviour
         // Organizing fields list into dict
         foreach (TMP_InputField field in inputFieldsList)
         {
-            inputFields[field.name] = field;
+            inputFields[field.name] = field; 
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-
+             
     }
 
     /// <summary>
@@ -82,7 +84,8 @@ public class SignInManager : MonoBehaviour
 
                 case "Password Login":
                     playerInfo.playerPassword = data;
-                    break;
+                    apiManager.CheckPlayer(playerInfo);
+                    return;
 
                 default:
                     break;
@@ -106,8 +109,14 @@ public class SignInManager : MonoBehaviour
                     break;
 
                 case "Confirm Password":
-                    // TODO: Add functionality to validate password
-                    break;
+                    if(data != playerInfo.playerPassword)
+                    {
+                        Debug.Log("Passwords do not match!");
+                        keyboard.curField --;
+                        return;
+                    }
+                    apiManager.CreatePlayer(playerInfo);
+                    return;
 
                 default:
                     break;
@@ -140,6 +149,7 @@ public class SignInManager : MonoBehaviour
         keyboard.inputField.Add(inputFields["Email Sign Up"]);
         keyboard.inputField.Add(inputFields["Username Sign Up"]);
         keyboard.inputField.Add(inputFields["Password Sign Up"]);
+        keyboard.inputField.Add(inputFields["Confirm Password"]);
     }
 
     /// <summary>

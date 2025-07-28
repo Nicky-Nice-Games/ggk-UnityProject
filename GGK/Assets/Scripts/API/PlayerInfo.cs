@@ -37,8 +37,9 @@ public class PlayerInfo : MonoBehaviour
         collisionWithWalls = 0;
         characterUsed = 0;
         fellOffMap = 0;
-        playerName = "Default";
+        playerName = "";
         playerPassword = "";
+        playerEmail = "";
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 
@@ -62,6 +63,8 @@ public class PlayerInfo : MonoBehaviour
         characterUsed = 0;
         fellOffMap = 0;
         playerName = "Default";
+        playerPassword = "";
+        playerEmail = "";
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 
