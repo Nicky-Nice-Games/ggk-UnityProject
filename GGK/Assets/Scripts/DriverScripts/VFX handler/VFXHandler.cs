@@ -133,7 +133,7 @@ public class VFXHandler : NetworkBehaviour
     public void PlayShieldVFX(float duration)
     {
         PlayShieldVFXLocal(duration);
-        if (IsServer)
+        if (IsOwner)
             PlayShieldVFXServerRpc(duration);
     }
 
