@@ -82,7 +82,7 @@ public class GameOverMenuHandeler : NetworkBehaviour
                 // if everyone else left EXCEPT the host then they leave too
                 if (OnlyHostConnected())
                 {
-                    StartCoroutine(HostExit());
+                    HostExit();
                 }
                 else
                 {
@@ -171,10 +171,9 @@ public class GameOverMenuHandeler : NetworkBehaviour
                NetworkManager.Singleton.ConnectedClientsIds.Contains((ulong)0);
     }
 
-    private IEnumerator HostExit()
+    private void HostExit()
     {
         StartCoroutine(AnimateText("All Players Left. Returning to Mode Select. . ."));
-        yield return new WaitForSeconds(3);
         LeaveLobby();
     }
 
