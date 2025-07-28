@@ -33,6 +33,11 @@ public class MultiplayerSceneManager : NetworkBehaviour
     public void SceneAnnouncementRpc(string sceneName){
         Debug.Log($"Server pulling client to {sceneName} scene");
     }
+    [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
+    public void SceneEventStartedAnnouncementRpc(string sceneName){
+        Debug.Log($"Server started scene event");
+    }
+
 
     public override void OnNetworkSpawn()
     {
@@ -71,9 +76,10 @@ public class MultiplayerSceneManager : NetworkBehaviour
         }
         SceneAnnouncementRpc(sceneName);
         SceneEventProgressStatus status = NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
-        if (status != SceneEventProgressStatus.Started)
-        {
+        if (status != SceneEventProgressStatus.Started) {
             Debug.LogWarning($"Failed to load {sceneName} with a {nameof(SceneEventProgressStatus)}: {status}");
+        } else {
+            SceneEventStartedAnnouncementRpc(sceneName);
         }
     }
     // Specific menu load functions
