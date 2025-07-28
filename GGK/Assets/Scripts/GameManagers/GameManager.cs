@@ -85,6 +85,7 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void LoggedIn()
     {
+        Debug.Log("Log in is called!");
         // Turn guest mode on
         if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
         {
