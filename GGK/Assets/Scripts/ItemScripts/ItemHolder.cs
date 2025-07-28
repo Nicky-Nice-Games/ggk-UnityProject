@@ -148,12 +148,12 @@ public class ItemHolder : NetworkBehaviour
         if (thisDriver)
         {
             // STOP
-            foreach (VisualEffect vs in effects)
-            {
-                vs.Stop();
-            }
-            shieldEffect.Stop();
-            boostEffect.Stop();
+            // foreach (VisualEffect vs in effects)
+            // {
+                // vs.Stop();
+            // }
+            // shieldEffect.Stop();
+            // boostEffect.Stop();
         }
 
         DOTween.Init();
