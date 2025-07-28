@@ -601,7 +601,7 @@ public class NEWDriver : NetworkBehaviour
         //--------------------Particles----------------                        
         ColorDrift();
 
-        if (isDriftingLeft && driftTier > 0)
+        if (isDriftingLeft)
         {
             if(driftTier > 0)
             {
@@ -614,7 +614,7 @@ public class NEWDriver : NetworkBehaviour
             }
             vfxHandler.TireScreechesL();
         }
-        else if (!isDriftingLeft && driftTier > 0)
+        else if (!isDriftingLeft)
         {
             if(driftTier > 0)
             {
