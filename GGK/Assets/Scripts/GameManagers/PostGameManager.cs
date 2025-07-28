@@ -27,6 +27,8 @@ public class PostGameManager : NetworkBehaviour
 
     public List<ulong> ConnectedClients { get { return connectedClients; } }
 
+    public Dictionary<ulong, PlayerDecisions> AllPlayerDecisions { get { return playerDecisions; } }
+
     public override void OnNetworkSpawn()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += ConnectClient;
@@ -134,13 +136,41 @@ public class PostGameManager : NetworkBehaviour
                 connectedClients.Add(clientId);
             }
         }
+        var clientIdsArray = NetworkManager.Singleton.ConnectedClientsIds.ToArray();
+        ClientsListClientRpc(clientIdsArray);
         Debug.Log($"# of clients connected: {connectedClients.Count}");
+    }
+
+    [ClientRpc]
+    private void ClientsListClientRpc(ulong[] clientIds)
+    {
+        connectedClients = new List<ulong>(clientIds);
+        Debug.Log("Clients List recieved BANG!!!");
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void DisconnectClientServerRpc(ulong clientId)
     {
         NetworkManager.Singleton.DisconnectClient(clientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void GetPlayersServerRpc()
+    {
+        if (IsServer)
+        {
+            playerDecisions = GetClientsList();
+        }
+        else
+        {
+            GetPlayersClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void GetPlayersClientRpc()
+    {
+        playerDecisions = GetClientsList();
     }
 
     public Dictionary<ulong, PlayerDecisions> GetClientsList()

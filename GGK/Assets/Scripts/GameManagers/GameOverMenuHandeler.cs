@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverMenuHandeler : NetworkBehaviour
+public class GameOverMenuHandeler : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> buttonOptions = new List<GameObject>();
@@ -49,8 +49,13 @@ public class GameOverMenuHandeler : NetworkBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             multiplayerPanel.SetActive(true);
-            clientCount = postgamemanager.GetClientsList().Count;
-            players = postgamemanager.GetClientsList();
+
+            postgamemanager.ClientsListServerRpc();
+            postgamemanager.GetPlayersServerRpc();
+
+            clientCount = postgamemanager.ConnectedClients.Count;
+            players = postgamemanager.AllPlayerDecisions;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
         }
         else
         {
@@ -67,14 +72,19 @@ public class GameOverMenuHandeler : NetworkBehaviour
         }
     }
 
+    private void OnClientDisconnected(ulong clientId)
+    {
+        if(clientId == 0)
+        {
+            ShowLeaver(clientId);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            postgamemanager.ClientsListServerRpc();
-            players = postgamemanager.GetClientsList();
-
             // all players selected to stay or leave and this is the host
             if (postgamemanager.AllSelected &&
                 MultiplayerManager.Instance.NetworkManager.IsHost)
@@ -90,10 +100,10 @@ public class GameOverMenuHandeler : NetworkBehaviour
                 }
             }
 
-            if(players.Count != clientCount)
+            if(postgamemanager.ConnectedClients.Count != clientCount)
             {
                 ShowLeaver();
-                clientCount = players.Count;
+                clientCount = postgamemanager.ConnectedClients.Count;
             }
         }
     }
@@ -179,6 +189,7 @@ public class GameOverMenuHandeler : NetworkBehaviour
 
     private void ShowLeaver()
     {
+        Debug.Log("Leaver Showing?");
         for (int i = 0; i < players.Count; i++)
         {
             PlayerDecisions decision;
@@ -188,6 +199,11 @@ public class GameOverMenuHandeler : NetworkBehaviour
                 StartCoroutine(AnimateText($"client {i} has left."));
             }
         }
+    }
+
+    private void ShowLeaver(ulong clientId)
+    {
+        StartCoroutine(AnimateText($"client {clientId} has left."));
     }
 
     private IEnumerator AnimateText(string txt)
