@@ -15,6 +15,9 @@ public class ShieldTier1 : BaseItem
         if (kart.gameObject.GetComponent<NEWDriver>() != null)
         {
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
+            
+            // play shield effect from VFXHandler script 
+            vfxScript.PlayShieldVFX(timer);
 
             // find shield effect attached to the kart
             //shieldEffect = kart.transform.
@@ -24,9 +27,6 @@ public class ShieldTier1 : BaseItem
         // play shield effect for timer duration
         //shieldEffect.SetFloat("Duration", timer);
         //shieldEffect.Play();
-
-        // play shield effect from VFXHandler script 
-        vfxScript.PlayShieldVFX(timer);
     }
 
     // Update is called once per frame
