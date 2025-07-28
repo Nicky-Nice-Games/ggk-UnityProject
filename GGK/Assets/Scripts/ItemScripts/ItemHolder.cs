@@ -588,12 +588,12 @@ public class ItemHolder : MonoBehaviour
                         default: // level 1
                             boostMult = 1.25f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
                             boostMaxSpeed = boostMult * 60;
-                            StartCoroutine(ApplyBoostUpward(thisDriver, boostMult, duration, boostMaxSpeed));
+                            StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;

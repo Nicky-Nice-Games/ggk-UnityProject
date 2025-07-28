@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
 
@@ -23,6 +24,9 @@ using UnityEngine.UIElements;
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
+//Can't load into another map (or scene?) when paused, it goes to a black screen but works after you
+//  unpause - make it auto-unpause/disable pause menu when load command happens
+//Change map names to updated names
 
 
 /// <summary>
@@ -30,11 +34,10 @@ using UnityEngine.UIElements;
 /// </summary>
 public enum MapName 
 { 
-    OuterLoop,
-    Golisano,
-    Dorm,
-    FinalsBrickRoad,
-    QuarterMile, //Remove?
+    CampusCircuit,
+    TechHouseTurnpike,
+    DormRoomDerby,
+    AllNighterExpressway,
     TestGrid,
     TestTube
 }
@@ -65,23 +68,39 @@ public enum GameMode
 }
 
 
+/// <summary>
+/// Enum for each item category keyword/command
+/// </summary>
+public enum ItemType
+{
+    Offense,
+    Defense,
+    Hazard,
+    Boost
+}
+
+
 public class DevTools : MonoBehaviour
 {
-
+    //Variables and references for setting up the DevTools object
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
     //[SerializeField] public GameObject gameManagerObj;
     //[SerializeField] public GameManager gameManager;
-
     private List<GameObject> listeners = new List<GameObject>();
 
+    //Variables and references for the visible command prompt game objects
     private string textLog;
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
-
     private bool isScrolling;
+
+    //Variables and references for GiveItem command
+    [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
+    private ItemHolder itemHolder;
+    private BaseItem baseItem;
 
 
     // Start is called before the first frame update
@@ -91,7 +110,7 @@ public class DevTools : MonoBehaviour
 
         commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for param options";
+                "or [methodName] Options for Param options";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -228,7 +247,7 @@ public class DevTools : MonoBehaviour
                 {
                     case "ShowMethods":
                         textLog += "\nMethod Options:\nShowMethods\nLoadMap" +
-                            "\nLoadScene\nGameModeChange\nClearLog";
+                            "\nLoadScene\nGameModeChange\nGiveItem\nClearLog";
                         break;
 
                     case "LoadMap":
@@ -269,9 +288,31 @@ public class DevTools : MonoBehaviour
                         textLog += "\nMethod not yet set up :)";
                         break;
 
+                    case "GiveItem":
+                        if (parts.Length > 2)
+                        {
+                            GiveItem(parts[1], parts[2]);
+                        }
+                        else if (parts[1] == "Options")
+                        {
+                            textLog += "\nOptions for Param 1 [ItemType]: ";
+                            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                            {
+                                textLog += "\n" + type;
+                            }
+                            textLog += "\nOptions for Param 2 [ItemTier]: " +
+                                "\nEnter a number 1-4";
+                            break;
+                        }             
+                        else
+                        {
+                            textLog += "\nError: No or Invalid Param 1 [ItemType] or Param 2 [ItemTier] was Entered.";
+                        }
+                        break;
+
                     case "ClearLog":
                         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or [methodName] Options for param options";
+                        "or [methodName] Options for Param options";
                         break;
 
                     default:
@@ -283,59 +324,62 @@ public class DevTools : MonoBehaviour
 
     }
 
- 
+
     /// <summary>
     /// Handles the LoadMap command based on the inputted paramater entered after it. 
     /// </summary>
-    /// <param name="mapName">The inputted parameter after the LoadMap command.</param>
+    /// <param name="mapName">The inputted parameter after the LoadMap command to 
+    /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
         switch (mapName)
         {
             //Displays all of the parameter options for the LoadMap method
             case "Options":
-                textLog += "\nOptions for param 1 [MapName]: ";
+                textLog += "\nOptions for Param 1 [MapName]: ";
                 foreach (MapName name in Enum.GetValues(typeof(MapName)))
                 {
                     textLog += "\n" + name;
                 }
                 break;
-            case "OuterLoop":
+
+            case "CampusCircuit":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "Golisano":
+
+            case "TechHouseTurnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "Dorm":
+
+            case "DormRoomDerby":
                 sceneLoader.LoadScene("GSP_RITDorm");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "FinalsBrickRoad":
+
+            case "AllNighterExpressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-            case "QuarterMile":
-                sceneLoader.LoadScene("GSP_RITQuarterMile");
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
-                break;
+
             case "TestGrid":
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
+
             case "TestTube":
                 sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
+
             case "":
                 textLog += "\nError: No Param 1 [MapName] was Entered.";
                 break;
@@ -349,18 +393,18 @@ public class DevTools : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Handles the LoadScene command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="sceneName">The inputted parameter after the LoadScene command.</param>
+    /// <param name="sceneName">The inputted parameter after the LoadScene command to 
+    /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
         switch (sceneName)
         {
             //Displays all of the parameter options for the LoadScene method
             case "Options":
-                textLog += "\nOptions for param 1 [SceneName]: ";
+                textLog += "\nOptions for Param 1 [SceneName]: ";
                 foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
                 {
                     textLog += "\n" + name;
@@ -411,11 +455,11 @@ public class DevTools : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Handles the GameModeChange command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="gameMode">The inputted parameter after the GameModeChange command.</param>
+    /// <param name="gameMode">The inputted parameter after the GameModeChange command to 
+    /// specify the game mode that the user wants to change to.</param>
     public void GameModeChange(string gameMode)
     {
 
@@ -423,7 +467,7 @@ public class DevTools : MonoBehaviour
         {
             //Displays all of the parameter options for the GameModeChange method
             case "Options":
-                textLog += "\nOptions for param 1 [GameMode]: ";
+                textLog += "\nOptions for Param 1 [GameMode]: ";
                 foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
                 {
                     textLog += "\n" + mode;
@@ -443,6 +487,117 @@ public class DevTools : MonoBehaviour
                 break;
         }
 
+    }
+
+
+    /// <summary>
+    /// Handles the GiveItem command based on the inputted paramaters entered after it.
+    /// </summary>
+    /// <param name="itemType">The first inputted parameter after the GiveItem command 
+    /// to specify the item type that the user wants.</param>
+    /// <param name="itemTier">The second inputted parameter after the GiveItem command 
+    /// to specify the item tier that the user wants.</param>
+    public void GiveItem(string itemType, string itemTier)
+    {
+        int tier;
+
+        //TODO remove? check moved to command; Check for options before tier to prevent check for tier
+        if (itemType == "Options")
+        {
+            textLog += "\nOptions for Param 1 [ItemType]: ";
+            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+            {
+                textLog += "\n" + type;
+            }
+            textLog += "\nOptions for Param 2 [ItemTier]: " +
+                "\nEnter a number 1-4";
+            return;
+        }
+        else
+        {
+            //Checks if you are in a track scene or not (such as a menu)
+            GameObject kart = GameObject.Find("Kart 1/Kart");
+            if (kart != null)
+            {
+                itemHolder = kart.GetComponent<ItemHolder>();
+            }
+            else
+            {
+                textLog += "\nError: No Kart found in scene, cannot use command.";
+                return;
+            }
+        }
+
+        
+
+        //Checks if the second parameter inputted is a number 1-4
+        if (Int32.TryParse(itemTier, out tier))
+        {
+            if(tier >= 1 && tier <= 4)
+            {
+                itemHolder.DriverItemTier = tier;
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [ItemTier] was Entered.";
+                return;
+            }
+        }
+        else
+        {
+            textLog += "\nError: Invalid Param 2 [ItemTier] was Entered.";
+            return;
+        }
+
+        switch (itemType)
+        {
+            //Displays all of the parameter options for the GiveItem method
+            case "Options":
+                textLog += "\nOptions for Param 1 [ItemType]: ";
+                foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                {
+                    textLog += "\n" + type;
+                }
+                textLog += "\nOptions for Param 2 [ItemTier]: " +
+                    "\nEnter a number 1-4";
+                break;
+
+            case "Offense":
+                itemHolder.HeldItem = baseItems[0];                
+                break;
+
+            case "Defense":
+                itemHolder.HeldItem = baseItems[1];
+                break;
+
+            case "Hazard":
+                itemHolder.HeldItem = baseItems[2];              
+                break;
+
+            case "Boost":
+                itemHolder.HeldItem = baseItems[3];
+                break;
+
+            case "":
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
+                return;
+
+            case null:
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
+                return;
+
+            default:
+                textLog += "\nError: No Param 1 [ItemType] was Entered.";
+                return;
+        }
+
+        //Setting appropriate variables for the held item, regardless of item type
+        //Note: Does not run if a parameter is invalid because of return statements
+        itemHolder.HoldingItem = true;
+        itemHolder.HeldItem.ItemTier = tier;
+        itemHolder.HeldItem.OnLevelUp(tier);
+        itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+        itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
 
 
