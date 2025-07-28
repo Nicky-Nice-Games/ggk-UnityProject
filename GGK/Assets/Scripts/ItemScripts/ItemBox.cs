@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class ItemBox : NetworkBehaviour
 {
-
-
     //[SerializeField]
     //protected List<BaseItem> items;   // List of items the box can give
     //[SerializeField] protected string itemBoxType;
@@ -24,14 +22,34 @@ public class ItemBox : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Rotates the box
-        if (isTimerActive)
+        if (IsSpawned && !IsServer)
         {
-            HandleTimer(Time.deltaTime);
+            if (!isTimerActive)
+            {
+                RotateBox();
+            }
+        }
+        else if (IsSpawned && IsServer)
+        {
+            if (isTimerActive)
+            {
+                HandleTimer(Time.deltaTime);
+            }
+            else
+            {
+                RotateBox();
+            }
         }
         else
         {
-            RotateBox();
+            if (isTimerActive)
+            {
+                HandleTimer(Time.deltaTime);
+            }
+            else
+            {
+                RotateBox();
+            }
         }
     }
 
@@ -70,6 +88,12 @@ public class ItemBox : NetworkBehaviour
         isActive = true;
     }
 
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void ShowAndEnableRpc()
+    {
+        ShowAndEnable();
+    }
+
     private void HideAndDisable()
     {
         GetComponent<MeshRenderer>().enabled = false;
@@ -77,19 +101,51 @@ public class ItemBox : NetworkBehaviour
         isActive = false;
     }
 
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void HideAndDisableRpc()
+    {
+        HideAndDisableRpc();
+    }
+
     public void StartTimer(float duration = defaultTimerDuration)
     {
-        timerDuration = defaultTimerDuration;
+        timerDuration = duration;
         isTimerActive = true;
         HideAndDisable();
     }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    public void StartTimerRpc(float duration = defaultTimerDuration)
+    {
+        isTimerActive = true;
+        if (IsServer)
+        {
+            timerDuration = duration;
+            HideAndDisableRpc();
+        }
+    }
+
     private void HandleTimer(float delta)
     {
         timerDuration -= delta;
         if (timerDuration < 0.0f)
         {
-            isTimerActive = false;
-            ShowAndEnable();
+            if (IsSpawned)
+            {
+                StopTimerRpc();
+                ShowAndEnableRpc();
+            }
+            else
+            {
+                isTimerActive = false;
+                ShowAndEnable();
+            }
         }
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void StopTimerRpc()
+    {
+        isTimerActive = false;
     }
 }

@@ -792,7 +792,18 @@ public class ItemHolder : NetworkBehaviour
             }
             // Disables the item box
             // itemBox.gameObject.SetActive(false);
-            itemBox.StartTimer();
+            if (IsSpawned && !IsServer)
+            {
+                return;
+            }
+            else if (IsSpawned && IsServer)
+            {
+                itemBox.StartTimerRpc();
+            }
+            else
+            {
+                itemBox.StartTimer();
+            }
         }
         // if (collision.gameObject.CompareTag("Projectile"))
         // {
