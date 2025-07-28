@@ -104,7 +104,7 @@ public class ItemBox : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     private void HideAndDisableRpc()
     {
-        HideAndDisableRpc();
+        HideAndDisable();
     }
 
     public void StartTimer(float duration = defaultTimerDuration)
