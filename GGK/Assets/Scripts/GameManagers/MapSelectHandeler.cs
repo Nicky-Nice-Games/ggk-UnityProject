@@ -9,11 +9,16 @@ public class MapSelectHandeler : MonoBehaviour
     [SerializeField]
     private List<GameObject> mapOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
+    private CharacterData characterData;
+
+    [SerializeField]
+    private Button continueButton;
 
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
+        characterData = FindAnyObjectByType<CharacterData>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in mapOptions)
@@ -22,8 +27,11 @@ public class MapSelectHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().MapSelected());
+            characterData.mapSelected = obj.name);
+            
         }
+
+        continueButton.onClick.AddListener(() => SelectMap());
     }
 
     // Update is called once per frame
@@ -33,4 +41,10 @@ public class MapSelectHandeler : MonoBehaviour
     }
 
     // Each button can ready its own map
+
+    public void SelectMap()
+    {
+        gamemanagerObj.MapSelected(characterData.mapSelected);
+        Debug.Log(characterData.mapSelected);
+    }
 }

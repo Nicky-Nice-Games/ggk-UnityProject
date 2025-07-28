@@ -120,25 +120,22 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Loads the game scene
     /// </summary>
-    public void MapSelected()
+    public void MapSelected(string map)
     {
         curState = GameStates.game;
         // Loads the race based on the name of the button clicked
-        switch (GetComponent<ButtonBehavior>().buttonClickedName)
+        switch (map)
         {
-            case "RIT Outer Loop":
+            case "Campus Circuit":
                 sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
-            case "Golisano":
+            case "Tech House Turnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "RIT Dorm":
+            case "Dorm Room Derby":
                 sceneLoader.LoadScene("GSP_RITDorm");
                 break;
-            case "RIT Quarter Mile":
-                sceneLoader.LoadScene("GSP_RITQuarterMile");
-                break;
-            case "Finals Brick Road":
+            case "All-Nighter Expressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
