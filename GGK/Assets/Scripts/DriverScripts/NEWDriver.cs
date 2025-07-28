@@ -106,6 +106,7 @@ public class NEWDriver : NetworkBehaviour
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
     public List<ParticleSystem> boostFlames;
+    public VFXHandler vfxHandler;
     int driftTier;
     int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
@@ -220,29 +221,31 @@ public class NEWDriver : NetworkBehaviour
 
     public void StopParticles()
     {
-        //-------------Particles----------------
-        foreach (ParticleSystem ps in particleSystemsBR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in particleSystemsBL)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in TireScreechesLtoR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in transitionSparksLtoR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in boostFlames)
-        {
-            ps.Stop();
-        }
+        ////-------------Particles----------------
+        //foreach (ParticleSystem ps in particleSystemsBR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in particleSystemsBL)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in TireScreechesLtoR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in transitionSparksLtoR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in boostFlames)
+        //{
+        //    ps.Stop();
+        //}
+        //
+        //airTrickParticles.Stop();
 
-        airTrickParticles.Stop();
+        vfxHandler.StopAllParticles();
     }
 
     // Update is called once per frame
@@ -599,83 +602,32 @@ public class NEWDriver : NetworkBehaviour
         //--------------------Particles----------------                        
         ColorDrift();
 
-        if (isDriftingLeft && driftTier > 0)
+        if (isDriftingLeft)
         {
-            if (!particleSystemsBL[0].isPlaying)
+            if(driftTier > 0)
             {
-                //Activate left drift sparks when we get the boost
-                foreach (ParticleSystem ps in particleSystemsBL)
+                vfxHandler.ParticleSystemsL();
+
+                if (driftTier > currentDriftTier)
                 {
-                    if (!ps.isPlaying)
-                    {
-                        ps.Play();
-                    }
+                    vfxHandler.TierTransitionSparksL();
                 }
             }
-
-            if (driftTier > currentDriftTier)
-            {
-                //Adding transition sparks
-                transitionSparksLtoR[0].Play();
-                transitionSparksLtoR[2].Play();
-                transitionSparksLtoR[4].Play();
-                transitionSparksLtoR[5].Play();
-            }
+            vfxHandler.TireScreechesL();
         }
-        else if (!isDriftingLeft && driftTier > 0)
+        else if (!isDriftingLeft)
         {
-
-            if (!particleSystemsBR[0].isPlaying)
+            if(driftTier > 0)
             {
-                //Activate right drift sparks when we get the boost
-                foreach (ParticleSystem ps in particleSystemsBR)
+                vfxHandler.ParticleSystemsR();
+                if (driftTier > currentDriftTier)
                 {
-                    if (!ps.isPlaying)
-                    {
-                        ps.Play();
-                    }
+                    vfxHandler.TierTransitionSparksR();
                 }
             }
+            vfxHandler.TireScreechesR();
 
-
-            if (driftTier > currentDriftTier)
-            {
-
-                //Adding transition sparks
-                transitionSparksLtoR[1].Play();
-                transitionSparksLtoR[3].Play();
-                transitionSparksLtoR[6].Play();
-                transitionSparksLtoR[7].Play();
-            }
-
-        }
-        //Tire Screech Particles
-        if (isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
-        {
-            TireScreechesLtoR[0].Play();
-            TireScreechesLtoR[2].Play();
-
-            if (TireScreechesLtoR[1].isPlaying)
-            {
-                TireScreechesLtoR[1].Stop();
-                TireScreechesLtoR[3].Stop();
-                particleSystemsBR.ForEach(ps => ps.Stop());
-
-            }
-        }
-        else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
-        {
-            TireScreechesLtoR[1].Play();
-            TireScreechesLtoR[3].Play();
-
-            if (TireScreechesLtoR[0].isPlaying)
-            {
-                TireScreechesLtoR[0].Stop();
-                TireScreechesLtoR[2].Stop();
-                particleSystemsBL.ForEach(ps => ps.Stop());
-            }
-        }
-
+        }       
         currentDriftTier = driftTier;
     }
 
@@ -718,12 +670,7 @@ public class NEWDriver : NetworkBehaviour
         driftRotationTween = kartModel.DOLocalMoveY(0f, driftTweenDuration/3f)
             .SetEase(Ease.InOutSine);
 
-
-        particleSystemsBL.ForEach(ps => ps.Stop());
-        particleSystemsBR.ForEach(ps => ps.Stop());
-        TireScreechesLtoR.ForEach(ps => ps.Stop());
-        transitionSparksLtoR.ForEach(ps => ps.Stop());
-
+        vfxHandler.StopDriftVFX();
     }
 
     public void ColorDrift()
@@ -756,27 +703,7 @@ public class NEWDriver : NetworkBehaviour
             driftTier = 0;
         }
 
-        foreach (ParticleSystem ps in particleSystemsBL)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
-        foreach (ParticleSystem ps in particleSystemsBR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
-        foreach (ParticleSystem ps in TireScreechesLtoR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-            
-        }
-        foreach (ParticleSystem ps in transitionSparksLtoR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
+        vfxHandler.ColorDrift(c);
 
     }
 
@@ -792,10 +719,7 @@ public class NEWDriver : NetworkBehaviour
                 //Perform right air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
-                var main = airTrickParticles.main;
-                main.flipRotation = 0; // Flip the rotation for left air trick
-
-                airTrickParticles.Play(); // Play air trick particles
+                vfxHandler.PlayAirTrickVFX(false);                
                 
                 airTrickTween = DOTween.Sequence() 
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
@@ -813,11 +737,8 @@ public class NEWDriver : NetworkBehaviour
                 airTrickInProgress = true;
                 //Perform left air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
-                
-                var main = airTrickParticles.main;
-                main.flipRotation = 1; // Flip the rotation for left air trick
 
-                airTrickParticles.Play(); // Play air trick particles
+                vfxHandler.PlayAirTrickVFX(true);                
 
                 airTrickTween = DOTween.Sequence()
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
@@ -850,13 +771,7 @@ public class NEWDriver : NetworkBehaviour
 
     public IEnumerator Boost(float boostForce, float duration)
     {
-        foreach(ParticleSystem ps in boostFlames)
-        {
-            if (!ps.isPlaying)
-            {
-                ps.Play();
-            }
-        }
+        vfxHandler.PlayBoostVFX();
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -869,13 +784,7 @@ public class NEWDriver : NetworkBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        foreach (ParticleSystem ps in boostFlames)
-        {
-            if (ps.isPlaying)
-            {
-                ps.Stop();
-            }
-        }
+        vfxHandler.StopBoostVFX();
     }
 
     public IEnumerator DriftHopEnabler()
