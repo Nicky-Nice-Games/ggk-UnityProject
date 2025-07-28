@@ -6,7 +6,7 @@ using UnityEngine.VFX;
 
 public class BoostTier1 : BaseItem
 {
-    private VisualEffect boostEffect;
+    private VFXHandler vfxScript;
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -22,8 +22,9 @@ public class BoostTier1 : BaseItem
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
             // grab boost effect from driver prefab
-            boostEffect = driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
+            //boostEffect = driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
+            vfxScript = driver.vfxHandler;
 
             boostMult = 1.25f;
             boostMaxSpeed = boostMult * 60.0f;
@@ -57,7 +58,8 @@ public class BoostTier1 : BaseItem
     /// <returns></returns>
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        boostEffect.Play();
+        //boostEffect.Play();
+        vfxScript.PlayItemBoostVFX(duration);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -68,7 +70,8 @@ public class BoostTier1 : BaseItem
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        boostEffect.Stop();
+        //boostEffect.Stop();
+        vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
         Destroy(this.gameObject);
     }

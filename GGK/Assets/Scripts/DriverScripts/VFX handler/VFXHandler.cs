@@ -16,9 +16,9 @@ public class VFXHandler : NetworkBehaviour
     public List<Color> turboColors;
 
     [Header("Item Effects")]
-    VisualEffect shield;
-    VisualEffect itemBoost;
-    List<VisualEffect> hover;
+    public VisualEffect shield;
+    public VisualEffect itemBoost;
+    public List<VisualEffect> hover;
 
 
     public List<ParticleSystem> boostFlames;
@@ -276,14 +276,14 @@ public class VFXHandler : NetworkBehaviour
     void PlayShieldVFXLocal(float duration)
     {
         if (shield == null) return;
-        shield.SetFloat("duration", duration);
+        shield.SetFloat("Duration", duration);
         shield.Play();
     }
 
     void PlayItemBoostVFXLocal(float duration)
     {
         if (itemBoost == null) return;
-        itemBoost.SetFloat("duration", duration);
+        //itemBoost.SetFloat("Duration", duration);
         itemBoost.Play();
     }
 
@@ -295,7 +295,7 @@ public class VFXHandler : NetworkBehaviour
         {
             if (vfx != null)
             {
-                vfx.SetFloat("duration", duration);
+                vfx.SetFloat("Duration", duration);
                 vfx.Play();
             }
         }

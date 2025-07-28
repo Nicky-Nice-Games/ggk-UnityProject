@@ -12,7 +12,7 @@ public class BoostTier3 : BaseItem
     private float lastHitDistance;
     public float strength = 4.0f;
     public float dampening = 40.0f;
-    private List<VisualEffect> effects = new List<VisualEffect>();
+    private VFXHandler vfxScript;
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -28,14 +28,17 @@ public class BoostTier3 : BaseItem
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
             // find all the wheel effects in the player prefab
-            effects.Add(driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph").GetComponent<VisualEffect>());
-            effects.Add(driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (1)").GetComponent<VisualEffect>());
-            effects.Add(driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (2)").GetComponent<VisualEffect>());
-            effects.Add(driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (3)").GetComponent<VisualEffect>());
+            //effects.Add(driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph").GetComponent<VisualEffect>());
+            //effects.Add(driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (1)").GetComponent<VisualEffect>());
+            //effects.Add(driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (2)").GetComponent<VisualEffect>());
+            //effects.Add(driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/TornadoVFXGraph (3)").GetComponent<VisualEffect>());
+
+            // grab vfx script from driver for wheel effects
+            vfxScript = driver.vfxHandler;
 
             boostMult = 1.75f;
             boostMaxSpeed = boostMult * 60.0f;
@@ -86,8 +89,10 @@ public class BoostTier3 : BaseItem
             wheels[i].transform.localRotation = Quaternion.Euler(0, 0, 90);
 
             // start wind effects
-            effects[i].SetFloat("Duration", duration + 0.5f);
-            effects[i].Play();
+            //effects[i].SetFloat("Duration", duration + 0.5f);
+            //effects[i].Play();
+
+            vfxScript.PlayHoverVFX(duration + 0.5f);
         }
 
         // driver.sphere.AddForce(driver.transform.up * 2, ForceMode.Impulse);

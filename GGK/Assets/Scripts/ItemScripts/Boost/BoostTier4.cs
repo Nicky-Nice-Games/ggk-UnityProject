@@ -9,7 +9,7 @@ public class BoostTier4 : BaseItem
     [Header("Tier 4 Boost Settings")]
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
-    private VisualEffect boostEffect;
+    private VFXHandler vfxScript;
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -25,8 +25,9 @@ public class BoostTier4 : BaseItem
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
             // grab boost effect from driver prefab
-            boostEffect = driver.transform.
-                Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
+            //boostEffect = driver.transform.
+            //    Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
+            vfxScript = driver.vfxHandler;
 
 
             GameObject kartParent = driver.transform.parent.gameObject;
@@ -124,7 +125,8 @@ public class BoostTier4 : BaseItem
     /// <returns></returns>
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        boostEffect.Play();
+        //boostEffect.Play();
+        vfxScript.PlayItemBoostVFX(duration);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -135,7 +137,8 @@ public class BoostTier4 : BaseItem
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
-        boostEffect.Stop();
+        //boostEffect.Stop();
+        vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
         Destroy(this.gameObject);
     }

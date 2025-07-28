@@ -5,6 +5,8 @@ using UnityEngine.VFX;
 
 public class ShieldTier1 : BaseItem
 {
+    private VFXHandler vfxScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -12,14 +14,19 @@ public class ShieldTier1 : BaseItem
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null)
         {
+            vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
+
             // find shield effect attached to the kart
-            shieldEffect = kart.transform.
-                Find("Normal/Parent/KartModel/ShieldVFX/Shield").GetComponent<VisualEffect>();
+            //shieldEffect = kart.transform.
+            //    Find("Normal/Parent/KartModel/ShieldVFX/Shield").GetComponent<VisualEffect>();
         }
 
         // play shield effect for timer duration
-        shieldEffect.SetFloat("Duration", timer);
-        shieldEffect.Play();
+        //shieldEffect.SetFloat("Duration", timer);
+        //shieldEffect.Play();
+
+        // play shield effect from VFXHandler script 
+        vfxScript.PlayShieldVFX(timer);
     }
 
     // Update is called once per frame
