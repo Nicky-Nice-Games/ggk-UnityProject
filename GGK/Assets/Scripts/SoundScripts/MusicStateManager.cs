@@ -18,6 +18,7 @@ public class MusicStateManager : MonoBehaviour
     [Header("Wwise Music States")]
     [SerializeField] AK.Wwise.State dormState;
     [SerializeField] AK.Wwise.State FBRState;
+    [SerializeField] AK.Wwise.State golisanoState;
     [SerializeField] AK.Wwise.State menuState;
     [SerializeField] AK.Wwise.State noneState;
     [SerializeField] AK.Wwise.State outerLoopState;
@@ -68,6 +69,10 @@ public class MusicStateManager : MonoBehaviour
         else if (newState == MusicState.FBR)
         {
             FBRState.SetValue();
+        }
+        else if (newState == MusicState.Golisano)
+        {
+            golisanoState.SetValue();
         }
         else if (newState == MusicState.Menu)
         {
