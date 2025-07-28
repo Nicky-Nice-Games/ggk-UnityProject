@@ -59,7 +59,7 @@ public class PlayerSpawner : NetworkBehaviour
         //}
         //else
         //{
-        //    FillGrid();
+        // FillGrid();
     }
 
     /// <summary>
@@ -111,6 +111,7 @@ public class PlayerSpawner : NetworkBehaviour
     private IEnumerator DelayedLocalSpawn()
     {
         yield return new WaitForSeconds(0.2f); // slight delay
+        CharacterBuilder.StartCharacterBatch();
         Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
         kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
         spawnedKartCount++;

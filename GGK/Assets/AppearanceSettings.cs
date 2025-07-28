@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,8 +66,19 @@ public class AppearanceSettings : NetworkBehaviour
             for (int i = 0; i < models.Count; i++)
             {
                 //Setting active correct model
-                if (name == models[i].name || kartName == models[i].name)
+                if (name == models[i].name || CharacterBuilder.ModelToName(name) == models[i].name)
                 {
+                    Animator nAnim = models[i].GetComponent<Animator>();
+                    if (nAnim && GetComponent<NEWDriver>())
+                    {
+                        //NetworkObject nO1 = models[i].GetComponent<NetworkObject>();
+                        //NetworkObject nO2 = transform.root.GetComponent<NetworkObject>();
+                        //if (IsSpawned && IsServer)
+                        //{
+                            //nAnim.OnNetworkSpawn();
+                        //}
+                        
+                    }
                     models[i].SetActive(true);
                     break;
                 }
@@ -90,7 +102,7 @@ public class AppearanceSettings : NetworkBehaviour
         color = characterColor;
         kartName = characterName.ToLower();
         icon = CharacterBuilder.NameToSprite(kartName);
-        name = characterName;
+        name = kartName;
         Debug.Log($"Setting {OwnerClientId}'s kart color to {color}, sprite to {icon.name} and name/model to {kartName}");
         UpdateModel();
         MiniMapHud.instance.UpdateIconAppearance(gameObject, this);
