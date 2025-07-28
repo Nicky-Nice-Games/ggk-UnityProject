@@ -188,6 +188,8 @@ public class NEWDriver : NetworkBehaviour
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
             sphere.isKinematic = false;
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
     }
 
@@ -207,6 +209,8 @@ public class NEWDriver : NetworkBehaviour
             }
             MiniMapHud.instance.trackingPlayer = gameObject;
             SpeedLineHandler.instance.trackingPlayer = this;
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
         if (IsServer)
         {
