@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.VFX;
 
 public class VFXHandler : NetworkBehaviour
 {
@@ -14,279 +15,387 @@ public class VFXHandler : NetworkBehaviour
     public List<ParticleSystem> transitionSparksLtoR;
     public List<Color> turboColors;
 
+    [Header("Item Effects")]
+    VisualEffect shield;
+    VisualEffect itemBoost;
+    List<VisualEffect> hover;
+
+
     public List<ParticleSystem> boostFlames;
 
     // ---------- Public Methods ----------
+    public void StopItemEffects()
+    {
+        StopItemEffectsLocal();
+
+        if (IsOwner)
+            StopItemEffectsServerRpc();
+    }
 
     public void PlayBoostVFX()
     {
         PlayBoostVFXLocal();
-        if (ShouldNetwork()) PlayBoostVFXClientRpc();
+
+        if (IsOwner)
+            PlayBoostVFXServerRpc();
     }
 
     public void StopBoostVFX()
     {
         StopBoostVFXLocal();
-        if (ShouldNetwork()) StopBoostVFXClientRpc();
+
+        if (IsOwner)
+            StopBoostVFXServerRpc();
     }
 
     public void PlayAirTrickVFX(bool isLeft)
     {
         PlayAirTrickVFXLocal(isLeft);
-        if (ShouldNetwork()) PlayAirTrickVFXClientRpc(isLeft);
+
+        if (IsOwner)
+            PlayAirTrickVFXServerRpc(isLeft);
     }
 
     public void ParticleSystemsL()
     {
         ParticleSystemsL_Local();
-        if (ShouldNetwork()) ParticleSystemsL_ClientRpc();
+
+        if (IsOwner)
+            ParticleSystemsL_ServerRpc();
     }
 
     public void ParticleSystemsR()
     {
         ParticleSystemsR_Local();
-        if (ShouldNetwork()) ParticleSystemsR_ClientRpc();
+
+        if (IsOwner)
+            ParticleSystemsR_ServerRpc();
     }
 
     public void TireScreechesL()
     {
         TireScreechesL_Local();
-        if (ShouldNetwork()) TireScreechesL_ClientRpc();
+
+        if (IsOwner)
+            TireScreechesL_ServerRpc();
     }
 
     public void TireScreechesR()
     {
         TireScreechesR_Local();
-        if (ShouldNetwork()) TireScreechesR_ClientRpc();
+
+        if (IsOwner)
+            TireScreechesR_ServerRpc();
     }
 
     public void TierTransitionSparksL()
     {
         TierTransitionSparksL_Local();
-        if (ShouldNetwork()) TierTransitionSparksL_ClientRpc();
+
+        if (IsOwner)
+            TierTransitionSparksL_ServerRpc();
     }
 
     public void TierTransitionSparksR()
     {
         TierTransitionSparksR_Local();
-        if (ShouldNetwork()) TierTransitionSparksR_ClientRpc();
+
+        if (IsOwner)
+            TierTransitionSparksR_ServerRpc();
     }
 
     public void ColorDrift(Color c)
     {
         ColorDriftLocal(c);
-        if (ShouldNetwork()) ColorDriftClientRpc(c);
+
+        if (IsOwner)
+            ColorDriftServerRpc(c);
     }
 
     public void StopAllParticles()
     {
-        StopParticles(particleSystemsBR);
-        StopParticles(particleSystemsBL);
-        StopParticles(TireScreechesLtoR);
-        StopParticles(transitionSparksLtoR);
-        StopParticles(boostFlames);
-        if (airTrickPS != null) airTrickPS.Stop();
+        particleSystemsBR?.ForEach(ps => ps?.Stop());
+        particleSystemsBL?.ForEach(ps => ps?.Stop());
+        TireScreechesLtoR?.ForEach(ps => ps?.Stop());
+        transitionSparksLtoR?.ForEach(ps => ps?.Stop());
+        boostFlames?.ForEach(ps => ps?.Stop());
+        airTrickPS?.Stop();
     }
 
     public void StopDriftVFX()
     {
         StopDriftVFXLocal();
-        if (ShouldNetwork()) StopDriftVFXClientRpc();
+
+        if (IsOwner)
+            StopDriftVFXServerRpc();
     }
+
+    public void PlayShieldVFX(float duration)
+    {
+        PlayShieldVFXLocal(duration);
+        if (IsOwner)
+            PlayShieldVFXServerRpc(duration);
+    }
+
+    public void PlayItemBoostVFX(float duration)
+    {
+        PlayItemBoostVFXLocal(duration);
+        if (IsOwner)
+            PlayItemBoostVFXServerRpc(duration);
+    }
+
+    public void PlayHoverVFX(float duration)
+    {
+        PlayHoverVFXLocal(duration);
+        if (IsOwner)
+            PlayHoverVFXServerRpc(duration);
+    }
+
 
     // ---------- Local Methods ----------
 
     void PlayBoostVFXLocal()
     {
-        if (boostFlames != null)
-        {
-            foreach (var ps in boostFlames)
-                if (ps != null && !ps.isPlaying) ps.Play();
-        }
+        boostFlames?.ForEach(ps => { if (ps != null && !ps.isPlaying) ps.Play(); });
     }
 
     void StopBoostVFXLocal()
     {
-        if (boostFlames != null)
-        {
-            foreach (var ps in boostFlames)
-                if (ps != null && ps.isPlaying) ps.Stop();
-        }
+        boostFlames?.ForEach(ps => { if (ps != null && ps.isPlaying) ps.Stop(); });
     }
 
     void PlayAirTrickVFXLocal(bool isLeft)
     {
-        if (airTrickPS != null)
-        {
-            var main = airTrickPS.main;
-            main.flipRotation = isLeft ? 1 : 0;
-            airTrickPS.Play();
-        }
+        if (airTrickPS == null) return;
+        var main = airTrickPS.main;
+        main.flipRotation = isLeft ? 1 : 0;
+        airTrickPS.Play();
     }
 
     void ParticleSystemsL_Local()
     {
-        foreach (var ps in particleSystemsBL)
-        {
-            if (!ps.isPlaying)
-                ps.Play();
-        }
-
-        foreach (var ps in particleSystemsBR)
-        {
-            if (ps.isPlaying)
-                ps.Stop();
-        }
+        particleSystemsBL?.ForEach(ps => { if (ps != null && !ps.isPlaying) ps.Play(); });
+        particleSystemsBR?.ForEach(ps => ps?.Stop());
     }
 
     void ParticleSystemsR_Local()
     {
-        foreach (var ps in particleSystemsBR)
-        {
-            if (!ps.isPlaying)
-                ps.Play();
-        }
-
-        foreach (var ps in particleSystemsBL)
-        {
-            if (ps.isPlaying)
-                ps.Stop();
-        }
+        particleSystemsBR?.ForEach(ps => { if (ps != null && !ps.isPlaying) ps.Play(); });
+        particleSystemsBL?.ForEach(ps => ps?.Stop());
     }
-
 
     void TireScreechesL_Local()
     {
-        if (TireScreechesLtoR != null && TireScreechesLtoR.Count >= 4)
-        {
-            if (TireScreechesLtoR[0] != null && !TireScreechesLtoR[0].isPlaying)
-            {
-                TireScreechesLtoR[0]?.Play();
-                TireScreechesLtoR[2]?.Play();
+        if (TireScreechesLtoR == null || TireScreechesLtoR.Count < 4) return;
 
-                if (TireScreechesLtoR[1]?.isPlaying == true)
-                {
-                    TireScreechesLtoR[1]?.Stop();
-                    TireScreechesLtoR[3]?.Stop();
-                    StopParticles(particleSystemsBR);
-                }
+        if (!TireScreechesLtoR[0].isPlaying)
+        {
+            TireScreechesLtoR[0].Play();
+            TireScreechesLtoR[2].Play();
+
+            if (TireScreechesLtoR[1].isPlaying)
+            {
+                TireScreechesLtoR[1].Stop();
+                TireScreechesLtoR[3].Stop();
+                particleSystemsBR?.ForEach(ps => ps?.Stop());
             }
         }
     }
 
     void TireScreechesR_Local()
     {
-        if (TireScreechesLtoR != null && TireScreechesLtoR.Count >= 4)
-        {
-            if (TireScreechesLtoR[1] != null && !TireScreechesLtoR[1].isPlaying)
-            {
-                TireScreechesLtoR[1]?.Play();
-                TireScreechesLtoR[3]?.Play();
+        if (TireScreechesLtoR == null || TireScreechesLtoR.Count < 4) return;
 
-                if (TireScreechesLtoR[0]?.isPlaying == true)
-                {
-                    TireScreechesLtoR[0]?.Stop();
-                    TireScreechesLtoR[2]?.Stop();
-                    StopParticles(particleSystemsBR);
-                }
+        if (!TireScreechesLtoR[1].isPlaying)
+        {
+            TireScreechesLtoR[1].Play();
+            TireScreechesLtoR[3].Play();
+
+            if (TireScreechesLtoR[0].isPlaying)
+            {
+                TireScreechesLtoR[0].Stop();
+                TireScreechesLtoR[2].Stop();
+                particleSystemsBL?.ForEach(ps => ps?.Stop());
             }
         }
     }
 
     void TierTransitionSparksL_Local()
     {
-        if (transitionSparksLtoR != null && transitionSparksLtoR.Count >= 6)
-        {
-            transitionSparksLtoR[0]?.Play();
-            transitionSparksLtoR[2]?.Play();
-            transitionSparksLtoR[4]?.Play();
-            transitionSparksLtoR[6]?.Play();
-        }
+        if (transitionSparksLtoR == null || transitionSparksLtoR.Count < 6) return;
+
+        transitionSparksLtoR[0].Play();
+        transitionSparksLtoR[2].Play();
+        transitionSparksLtoR[4].Play();
+        transitionSparksLtoR[5].Play();
     }
 
     void TierTransitionSparksR_Local()
     {
-        if (transitionSparksLtoR != null && transitionSparksLtoR.Count >= 7)
-        {
-            transitionSparksLtoR[1]?.Play();
-            transitionSparksLtoR[3]?.Play();
-            transitionSparksLtoR[5]?.Play();
-            transitionSparksLtoR[7]?.Play();
-        }
+        if (transitionSparksLtoR == null || transitionSparksLtoR.Count < 7) return;
+
+        transitionSparksLtoR[1].Play();
+        transitionSparksLtoR[3].Play();
+        transitionSparksLtoR[5].Play();
+        transitionSparksLtoR[6].Play();
     }
 
     void ColorDriftLocal(Color c)
     {
-        void SetColor(List<ParticleSystem> list)
+        void SetColor(ParticleSystem ps)
         {
-            if (list == null) return;
-
-            foreach (var ps in list)
-            {
-                if (ps != null)
-                {
-                    var main = ps.main;
-                    main.startColor = c;
-                }
-            }
+            if (ps == null) return;
+            var main = ps.main;
+            main.startColor = c;
         }
 
-        SetColor(particleSystemsBL);
-        SetColor(particleSystemsBR);
-        SetColor(TireScreechesLtoR);
-        SetColor(transitionSparksLtoR);
+        particleSystemsBL?.ForEach(SetColor);
+        particleSystemsBR?.ForEach(SetColor);
+        TireScreechesLtoR?.ForEach(SetColor);
+        transitionSparksLtoR?.ForEach(SetColor);
     }
 
     void StopDriftVFXLocal()
     {
-        StopParticles(particleSystemsBL);
-        StopParticles(particleSystemsBR);
-        StopParticles(TireScreechesLtoR);
-        StopParticles(transitionSparksLtoR);
+        particleSystemsBL?.ForEach(ps => ps?.Stop());
+        particleSystemsBR?.ForEach(ps => ps?.Stop());
+        TireScreechesLtoR?.ForEach(ps => ps?.Stop());
+        transitionSparksLtoR?.ForEach(ps => ps?.Stop());
     }
 
-    void PlayParticles(List<ParticleSystem> list)
+    void StopItemEffectsLocal()
     {
-        if (list == null) return;
+        if (shield != null && shield.isActiveAndEnabled)
+            shield.Stop();
+        if (itemBoost != null && itemBoost.isActiveAndEnabled)
+            itemBoost.Stop();
+        if (hover != null)
+            hover.ForEach(vfx => { if (vfx.isActiveAndEnabled) vfx.Stop(); });
+    }
 
-        foreach (var ps in list)
+    void PlayShieldVFXLocal(float duration)
+    {
+        if (shield == null) return;
+        shield.SetFloat("duration", duration);
+        shield.Play();
+    }
+
+    void PlayItemBoostVFXLocal(float duration)
+    {
+        if (itemBoost == null) return;
+        itemBoost.SetFloat("duration", duration);
+        itemBoost.Play();
+    }
+
+    void PlayHoverVFXLocal(float duration)
+    {
+        if (hover == null) return;
+
+        foreach (var vfx in hover)
         {
-            if (ps != null && !ps.isPlaying)
-                ps.Play();
+            if (vfx != null)
+            {
+                vfx.SetFloat("duration", duration);
+                vfx.Play();
+            }
         }
     }
 
-    void StopParticles(List<ParticleSystem> list)
-    {
-        if (list == null) return;
 
-        foreach (var ps in list)
-        {
-            if (ps != null && ps.isPlaying)
-                ps.Stop();
-        }
-    }
+    // ---------- ServerRPCs ----------
+
+    [ServerRpc]
+    void PlayBoostVFXServerRpc() => PlayBoostVFXClientRpc();
+
+    [ServerRpc]
+    void StopBoostVFXServerRpc() => StopBoostVFXClientRpc();
+
+    [ServerRpc]
+    void PlayAirTrickVFXServerRpc(bool isLeft) => PlayAirTrickVFXClientRpc(isLeft);
+
+    [ServerRpc]
+    void ParticleSystemsL_ServerRpc() => ParticleSystemsL_ClientRpc();
+
+    [ServerRpc]
+    void ParticleSystemsR_ServerRpc() => ParticleSystemsR_ClientRpc();
+
+    [ServerRpc]
+    void TireScreechesL_ServerRpc() => TireScreechesL_ClientRpc();
+
+    [ServerRpc]
+    void TireScreechesR_ServerRpc() => TireScreechesR_ClientRpc();
+
+    [ServerRpc]
+    void TierTransitionSparksL_ServerRpc() => TierTransitionSparksL_ClientRpc();
+
+    [ServerRpc]
+    void TierTransitionSparksR_ServerRpc() => TierTransitionSparksR_ClientRpc();
+
+    [ServerRpc]
+    void ColorDriftServerRpc(Color c) => ColorDriftClientRpc(c);
+
+    [ServerRpc]
+    void StopDriftVFXServerRpc() => StopDriftVFXClientRpc();
+
+    [ServerRpc]
+    void StopItemEffectsServerRpc() => StopItemEffectsClientRpc();
+
+    [ServerRpc]
+    void PlayShieldVFXServerRpc(float duration) => PlayShieldVFXClientRpc(duration);
+
+    [ServerRpc]
+    void PlayItemBoostVFXServerRpc(float duration) => PlayItemBoostVFXClientRpc(duration);
+
+    [ServerRpc]
+    void PlayHoverVFXServerRpc(float duration) => PlayHoverVFXClientRpc(duration);
+
 
     // ---------- ClientRPCs ----------
 
-    [ClientRpc] void PlayBoostVFXClientRpc() => PlayBoostVFXLocal();
-    [ClientRpc] void StopBoostVFXClientRpc() => StopBoostVFXLocal();
-    [ClientRpc] void PlayAirTrickVFXClientRpc(bool isLeft) => PlayAirTrickVFXLocal(isLeft);
-    [ClientRpc] void ParticleSystemsL_ClientRpc() => ParticleSystemsL_Local();
-    [ClientRpc] void ParticleSystemsR_ClientRpc() => ParticleSystemsR_Local();
-    [ClientRpc] void TireScreechesL_ClientRpc() => TireScreechesL_Local();
-    [ClientRpc] void TireScreechesR_ClientRpc() => TireScreechesR_Local();
-    [ClientRpc] void TierTransitionSparksL_ClientRpc() => TierTransitionSparksL_Local();
-    [ClientRpc] void TierTransitionSparksR_ClientRpc() => TierTransitionSparksR_Local();
-    [ClientRpc] void ColorDriftClientRpc(Color c) => ColorDriftLocal(c);
-    [ClientRpc] void StopDriftVFXClientRpc() => StopDriftVFXLocal();
+    [ClientRpc]
+    void PlayBoostVFXClientRpc() { if (!IsOwner) PlayBoostVFXLocal(); }
 
-    // ---------- Utility ----------
+    [ClientRpc]
+    void StopBoostVFXClientRpc() { if (!IsOwner) StopBoostVFXLocal(); }
 
-    bool ShouldNetwork()
-    {
-        return NetworkManager.Singleton != null &&
-               NetworkManager.Singleton.IsListening &&
-               IsOwner;
-    }
+    [ClientRpc]
+    void PlayAirTrickVFXClientRpc(bool isLeft) { if (!IsOwner) PlayAirTrickVFXLocal(isLeft); }
+
+    [ClientRpc]
+    void ParticleSystemsL_ClientRpc() { if (!IsOwner) ParticleSystemsL_Local(); }
+
+    [ClientRpc]
+    void ParticleSystemsR_ClientRpc() { if (!IsOwner) ParticleSystemsR_Local(); }
+
+    [ClientRpc]
+    void TireScreechesL_ClientRpc() { if (!IsOwner) TireScreechesL_Local(); }
+
+    [ClientRpc]
+    void TireScreechesR_ClientRpc() { if (!IsOwner) TireScreechesR_Local(); }
+
+    [ClientRpc]
+    void TierTransitionSparksL_ClientRpc() { if (!IsOwner) TierTransitionSparksL_Local(); }
+
+    [ClientRpc]
+    void TierTransitionSparksR_ClientRpc() { if (!IsOwner) TierTransitionSparksR_Local(); }
+
+    [ClientRpc]
+    void ColorDriftClientRpc(Color c) { if (!IsOwner) ColorDriftLocal(c); }
+
+    [ClientRpc]
+    void StopDriftVFXClientRpc() { if (!IsOwner) StopDriftVFXLocal(); }
+
+    [ClientRpc]
+    void StopItemEffectsClientRpc() { if (!IsOwner) StopItemEffectsLocal(); }
+
+    [ClientRpc]
+    void PlayShieldVFXClientRpc(float duration) { if (!IsOwner) PlayShieldVFXLocal(duration); }
+
+    [ClientRpc]
+    void PlayItemBoostVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostVFXLocal(duration); }
+
+    [ClientRpc]
+    void PlayHoverVFXClientRpc(float duration) { if (!IsOwner) PlayHoverVFXLocal(duration); }
+
 }
+
