@@ -12,7 +12,7 @@ public class BaseItem : NetworkBehaviour
     [SerializeField] protected float timer;    // Seconds until the item disappears
     public Action timerEndCallback; 
     [SerializeField] protected Rigidbody rb;   // The item's rigidbody
-    protected ItemHolder kart;                 // The kart holding the item
+    [SerializeField] protected ItemHolder kart;                 // The kart holding the item
     [SerializeField] protected string itemCategory;
 
     [SerializeField] protected int useCount;
