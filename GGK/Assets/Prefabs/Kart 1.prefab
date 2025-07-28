@@ -111089,6 +111089,7 @@ GameObject:
   - component: {fileID: 4107905189492007490}
   - component: {fileID: 8552696247647127666}
   - component: {fileID: 8019054329108714312}
+  - component: {fileID: 5017296300065448797}
   m_Layer: 0
   m_Name: Kart
   m_TagString: Kart
@@ -111234,6 +111235,7 @@ MonoBehaviour:
   boostFlames:
   - {fileID: 4943566234739806955}
   - {fileID: 654275368021250051}
+  vfxHandler: {fileID: 5017296300065448797}
   groundLayer:
     serializedVersion: 2
     m_Bits: 65
@@ -111373,6 +111375,55 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5017296300065448797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937854632911162198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ac8d3ed5c644040801c5f9def4f0af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  airTrickPS: {fileID: 7693987021511520043}
+  particleSystemsBR:
+  - {fileID: 7739990208082369229}
+  - {fileID: 8550313361559156252}
+  - {fileID: 6975979527107081777}
+  - {fileID: 8946870399594507434}
+  - {fileID: 3527990673118571633}
+  - {fileID: 5103720554356489310}
+  particleSystemsBL:
+  - {fileID: 5969006785367036484}
+  - {fileID: 329612678980654956}
+  - {fileID: 6057575405118228538}
+  - {fileID: 5489277676967758987}
+  - {fileID: 3268721230546058689}
+  - {fileID: 6733093519343167637}
+  TireScreechesLtoR:
+  - {fileID: 8130465362587206208}
+  - {fileID: 2689703055124727198}
+  - {fileID: 9128627446538071870}
+  - {fileID: 3755031148904600965}
+  transitionSparksLtoR:
+  - {fileID: 5214174894353754165}
+  - {fileID: 8332024107755276930}
+  - {fileID: 4489934917444797900}
+  - {fileID: 2026538022100863505}
+  - {fileID: 5844645930268968975}
+  - {fileID: 1128227826058726262}
+  - {fileID: 4681489341975520118}
+  - {fileID: 6331936264622270628}
+  turboColors:
+  - {r: 1, g: 0.961185, b: 0.2588235, a: 1}
+  - {r: 0.2784474, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.12549019, b: 0.74749434, a: 1}
+  - {r: 0.18396229, g: 1, b: 0.9583981, a: 1}
+  boostFlames:
+  - {fileID: 4943566234739806955}
+  - {fileID: 654275368021250051}
 --- !u!1 &8143935920720143253
 GameObject:
   m_ObjectHideFlags: 0
