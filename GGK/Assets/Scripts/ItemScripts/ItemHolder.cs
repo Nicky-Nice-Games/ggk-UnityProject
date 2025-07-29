@@ -898,6 +898,7 @@ public class ItemHolder : NetworkBehaviour
     public void ApplyItemTween(Texture item)
     {
         if (IsSpawned && !IsOwner) return;
+        if (npcDriver) return;
         itemDisplay.rectTransform.DOKill();
         itemDisplay.rectTransform.localScale = itemDisplayScale;
         itemDisplay.texture = item;
