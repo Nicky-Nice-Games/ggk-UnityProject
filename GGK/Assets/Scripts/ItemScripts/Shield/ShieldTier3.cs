@@ -12,10 +12,18 @@ public class ShieldTier3 : BaseItem
     {
         timer = 8.0f;
 
-        if (kart.GetComponent<NEWDriver>() != null)
+        if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
         {
             // find the visual effect script from the kart
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
+
+            // play shield effect from VFXHandler script 
+            vfxScript.PlayShieldVFX(timer);
+        }
+        else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
+        {
+            // find the visual effect script from the npc kart
+            vfxScript = kart.gameObject.GetComponent<VFXHandler>();
 
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
