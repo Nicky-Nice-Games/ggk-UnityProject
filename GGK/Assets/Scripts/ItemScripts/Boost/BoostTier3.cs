@@ -49,16 +49,17 @@ public class BoostTier3 : BaseItem
         }
 
         // handles boosting for npcs
-        NPCDriver npcDriver = collision.gameObject.GetComponent<NPCDriver>();
+        NPCPhysics npcDriver = collision.gameObject.GetComponent<NPCPhysics>();
         if (npcDriver != null)
         {
             // disable collider so it doesnt interfere with other players in scene
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
             boostMult = 1.5f;
+            boostMaxSpeed = boostMult * 60.0f;
             duration = 3.0f;
 
-            StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration));
+            StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration, boostMaxSpeed));
         }
     }
 
@@ -156,29 +157,19 @@ public class BoostTier3 : BaseItem
         return forceAmount;
     }
 
-    IEnumerator ApplyBoostNPC(NPCDriver driver, float boostForce, float duration)
+    IEnumerator ApplyBoostNPC(NPCPhysics driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        SplineAnimate spline = driver.followTarget.gameObject.GetComponent<SplineAnimate>();
-
-        // modify variables to increase balls max speed
-        float originalSpeed = spline.MaxSpeed;
-        float boostedSpeed = originalSpeed * boostForce;
-        float progress = spline.NormalizedTime;
-
-        // increase balls max speed
-        spline.MaxSpeed = boostedSpeed;
-        spline.NormalizedTime = progress;
-
-        // apply boost to npc
-        driver.maxSpeed = driver.TopMaxSpeed * boostForce;
-
-        yield return new WaitForSeconds(duration);
-
-        // set max speeds back to original values
-        driver.maxSpeed = driver.TopMaxSpeed;
-        spline.MaxSpeed = originalSpeed;
-        spline.NormalizedTime = spline.NormalizedTime;
-
-        driver.boosted = false;
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            Vector3 boostDirection = Vector3.zero;
+            if (driver.sphere.velocity.magnitude < boostMaxSpeed)
+            {
+                boostDirection = driver.kartNormal.forward * boostForce;
+            }
+            driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            Debug.Log("Applied npc boost");
+            yield return new WaitForFixedUpdate();
+        }
+        Destroy(this.gameObject);
     }
 }

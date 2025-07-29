@@ -48,6 +48,7 @@ public class BoostTier1 : BaseItem
             duration = 3.0f;
 
             StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration, boostMaxSpeed));
+            Debug.Log("Started npc Boost");
         }
     }
 
@@ -88,8 +89,8 @@ public class BoostTier1 : BaseItem
             {
                 boostDirection = driver.kartNormal.forward * boostForce;
             }
-
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
+            Debug.Log("Applied npc boost");
             yield return new WaitForFixedUpdate();
         }
         Destroy(this.gameObject);
