@@ -198,8 +198,9 @@ public class LeaderboardController : NetworkBehaviour
             int tempPlacement = kart.placement;
             string tempName = kart.name;
             float tempFinishTime = kart.finishTime;
+            bool isPlayerKart = kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null;
             ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
-            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId));
+            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
         {
@@ -237,7 +238,7 @@ public class LeaderboardController : NetworkBehaviour
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
 
-        if (card.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        if (card.IsPlayerKart && card.OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
             for (int i = 0; i < tempArray.Length; i++)
             {
@@ -261,13 +262,15 @@ public class LeaderboardController : NetworkBehaviour
         public string Name;
         public float Time;
         public ulong OwnerClientId;
+        public bool IsPlayerKart; 
 
-        public LeaderboardDisplayCard(int placement, string name, float time, ulong ownerClientId)
+        public LeaderboardDisplayCard(int placement, string name, float time, ulong ownerClientId, bool isPlayerKart)
         {
             Placement = placement;
             Name = name;
             Time = time;
             OwnerClientId = ownerClientId;
+            IsPlayerKart = isPlayerKart;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -276,6 +279,7 @@ public class LeaderboardController : NetworkBehaviour
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Time);
             serializer.SerializeValue(ref OwnerClientId);
+            serializer.SerializeValue(ref IsPlayerKart); 
         }
     }
 
