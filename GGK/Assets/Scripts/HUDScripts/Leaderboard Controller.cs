@@ -72,7 +72,7 @@ public class LeaderboardController : NetworkBehaviour
             networkTime.OnValueChanged += OnTimeChange;
             allPlayerKartsFinished.OnValueChanged += OnPlayersFinished;
         }
-        
+
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public class LeaderboardController : NetworkBehaviour
         if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
         {
             numOfPlayerKarts++;
-            Debug.Log("Player kart added, total: " + numOfPlayerKarts); 
+            Debug.Log("Player kart added, total: " + numOfPlayerKarts);
             if (!finishedPlayerKarts.Contains(kart))
             {
                 finishedPlayerKarts.Add(kart);
@@ -165,17 +165,17 @@ public class LeaderboardController : NetworkBehaviour
             Debug.Log("single player");
             GameObject tempItem = Instantiate(leaderboardItem);
             TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-               
+
             tempArray[0].text = kart.placement.ToString();
             tempArray[1].text = kart.name;
             tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
-            
+
 
             tempItem.transform.SetParent(leaderboard.transform);
             tempItem.transform.localScale = Vector3.one;
 
-            
+
 
             if (kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null) // local player
             {
@@ -223,13 +223,13 @@ public class LeaderboardController : NetworkBehaviour
     /// Sends leaderboard info to clients to display server information about the race
     /// </summary>
     /// <param name="card"></param>
-    [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void SendTimeDisplayRpc(LeaderboardDisplayCard card)
     {
         Debug.Log("SendTimeDisplayRPC called");
         GameObject tempItem = Instantiate(leaderboardItem);
         TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-        
+
         tempArray[0].text = card.Placement.ToString();
         tempArray[1].text = card.Name;
         tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)card.Time / 60, card.Time % 60);
