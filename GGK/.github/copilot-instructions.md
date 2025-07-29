@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: NPCKart
-  - Tag: Kart
+  - Name: ShieldTier4
+  - Tag: Shield
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

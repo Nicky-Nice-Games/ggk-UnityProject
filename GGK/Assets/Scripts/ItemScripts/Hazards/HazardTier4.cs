@@ -13,13 +13,11 @@ public class HazardTier4 : BaseItem
     void Start()
     {
         timer = 10.0f;
-        // sends the hazard slightly up and behind the player before landing on the ground
-        // Transform kartTransform = kart.transform; // assuming BaseItem has `kart` reference set by ItemHolder
 
+        // sends the hazard slightly up and behind the player before landing on the ground
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
-
     }
 
     // Update is called once per frame

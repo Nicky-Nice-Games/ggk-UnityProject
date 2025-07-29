@@ -46,8 +46,6 @@ public class BaseItem : NetworkBehaviour
     /// </summary>
     public float Timer { get { return timer; } set { timer = value; } }
 
-    public string ItemCategory { get { return itemCategory; } set { itemCategory = value; } }
-
     public NetworkVariable<Vector3> currentPos = new NetworkVariable<Vector3>();
 
 
@@ -196,14 +194,6 @@ public class BaseItem : NetworkBehaviour
         }
     }
 
-    //public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    //{
-    //    serializer.SerializeValue(ref timer);
-    //    serializer.SerializeValue(ref useCount);
-    //    serializer.SerializeValue(ref itemTier);
-    //}
-
-    #region new code
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void DestroyItemRpc(NetworkBehaviourReference itemToDestroy)
     {
@@ -213,5 +203,4 @@ public class BaseItem : NetworkBehaviour
             Destroy(itemScript.gameObject);
         }
     }
-    #endregion
 }

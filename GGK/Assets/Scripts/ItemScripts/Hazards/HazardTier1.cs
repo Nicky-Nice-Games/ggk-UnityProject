@@ -29,15 +29,6 @@ public class HazardTier1 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
-                //if (IsSpawned && IsServer)
-                //{
-                //        GetComponent<NetworkObject>().Despawn();
-                //        Destroy(gameObject);
-                //}
-                //else
-                //{
-                //    Destroy(gameObject);
-                //}
 
                 // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                 if (!MultiplayerManager.Instance.IsMultiplayer)

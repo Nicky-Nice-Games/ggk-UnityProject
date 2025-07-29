@@ -40,23 +40,13 @@ public class HazardTier3 : BaseItem
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
             }
             NEWDriver playerKart = collision.gameObject.gameObject.GetComponentInChildren<NEWDriver>();
-            // if (collision.gameObject.gameObject.TryGetComponent<NEWDriver>(out playerKart))
             if (playerKart)
             {
                 playerKart.confusedTimer = 10;
                 playerKart.isConfused = true;
                 playerKart.movementDirection *= -1;
             }
-            //if (IsSpawned && IsServer)
-            //{
-            //    GetComponent<NetworkObject>().Despawn();
-            //    Destroy(gameObject);
-            //}
-            //else
-            //{
-            //    Destroy(gameObject);
-            //}
-
+            
             // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
             if (!MultiplayerManager.Instance.IsMultiplayer)
             {
