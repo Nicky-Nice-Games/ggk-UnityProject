@@ -47,12 +47,20 @@ public class KartCheckpoint : NetworkBehaviour
         {
             lapDisplay.text = "Lap: " + (lap + 1);
         }   
+
+        name = transform.parent.GetChild(0).gameObject.name;
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        if(name.Length < 1)
+        {
+            name = transform.parent.GetChild(0).gameObject.name;
+        }
+
+
         distanceSquaredToNextCP = Mathf.Pow(transform.position.x - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.x, 2) +
             Mathf.Pow(transform.position.z - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.z, 2);
         if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
