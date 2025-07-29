@@ -45,6 +45,7 @@ public class MapSelectHandeler : MonoBehaviour
     public void SelectMap()
     {
         gamemanagerObj.MapSelected(characterData.mapSelected);
+        continueButton.interactable = false;
         Debug.Log(characterData.mapSelected);
     }
 }
