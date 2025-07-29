@@ -10,11 +10,6 @@ public class ShieldTier4 : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        if (IsSpawned)
-        {
-            currentPos.Value = kart.transform.position;
-        }
-
         timer = 10.0f;
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
@@ -44,21 +39,7 @@ public class ShieldTier4 : BaseItem
         // Sets shield position to the karts position
         if (kart)
         {
-            if (!IsSpawned)
-            {
-                transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
-            }
-            else
-            {
-                if (IsServer)
-                {
-                    currentPos.Value = kart.transform.position;
-                }
-                else
-                {
-                    transform.position = currentPos.Value;
-                }
-            }
+            transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
         }
     }
 
