@@ -21,8 +21,6 @@ public class ShieldTier1 : BaseItem
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
         }
-
-
     }
 
     // Update is called once per frame

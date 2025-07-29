@@ -140,7 +140,6 @@ public class VFXHandler : NetworkBehaviour
         {
             PlayShieldVFXServerRpc(duration);
         }
-        //if (IsOwner)
     }
 
     public void PlayItemBoostVFX(float duration)
@@ -395,7 +394,7 @@ public class VFXHandler : NetworkBehaviour
     void StopItemEffectsClientRpc() { if (!IsOwner) StopItemEffectsLocal(); }
 
     [Rpc(SendTo.ClientsAndHost)]
-    void PlayShieldVFXClientRpc(float duration) { /*if (!IsOwner)*/ PlayShieldVFXLocal(duration); }
+    void PlayShieldVFXClientRpc(float duration) { PlayShieldVFXLocal(duration); }
 
     [ClientRpc]
     void PlayItemBoostVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostVFXLocal(duration); }
