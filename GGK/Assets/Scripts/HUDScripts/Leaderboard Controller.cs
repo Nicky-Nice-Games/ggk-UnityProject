@@ -198,8 +198,8 @@ public class LeaderboardController : NetworkBehaviour
             int tempPlacement = kart.placement;
             string tempName = kart.name;
             float tempFinishTime = kart.finishTime;
-
-            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
+            ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
+            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId));
         }
         else
         {
@@ -229,13 +229,29 @@ public class LeaderboardController : NetworkBehaviour
         Debug.Log("SendTimeDisplayRPC called");
         GameObject tempItem = Instantiate(leaderboardItem);
         TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
-
+        
         tempArray[0].text = card.Placement.ToString();
         tempArray[1].text = card.Name;
         tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)card.Time / 60, card.Time % 60);
 
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
+
+        if (card.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i].color = Color.red;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i].color = Color.white;
+            }
+        }
+
         Debug.Log("added card to leaderboard");
     }
 
@@ -244,12 +260,14 @@ public class LeaderboardController : NetworkBehaviour
         public int Placement;
         public string Name;
         public float Time;
+        public ulong OwnerClientId;
 
-        public LeaderboardDisplayCard(int placement, string name, float time)
+        public LeaderboardDisplayCard(int placement, string name, float time, ulong ownerClientId)
         {
             Placement = placement;
             Name = name;
             Time = time;
+            OwnerClientId = ownerClientId;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -257,6 +275,7 @@ public class LeaderboardController : NetworkBehaviour
             serializer.SerializeValue(ref Placement);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Time);
+            serializer.SerializeValue(ref OwnerClientId);
         }
     }
 
