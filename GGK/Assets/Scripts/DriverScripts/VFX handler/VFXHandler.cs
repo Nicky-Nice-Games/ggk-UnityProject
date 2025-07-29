@@ -132,9 +132,15 @@ public class VFXHandler : NetworkBehaviour
 
     public void PlayShieldVFX(float duration)
     {
-        PlayShieldVFXLocal(duration);
-        if (IsOwner)
+        if (!IsSpawned)
+        {
+            PlayShieldVFXLocal(duration);
+        }
+        else
+        {
             PlayShieldVFXServerRpc(duration);
+        }
+        //if (IsOwner)
     }
 
     public void PlayItemBoostVFX(float duration)
@@ -340,7 +346,7 @@ public class VFXHandler : NetworkBehaviour
     [ServerRpc]
     void StopItemEffectsServerRpc() => StopItemEffectsClientRpc();
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     void PlayShieldVFXServerRpc(float duration) => PlayShieldVFXClientRpc(duration);
 
     [ServerRpc]
@@ -388,8 +394,8 @@ public class VFXHandler : NetworkBehaviour
     [ClientRpc]
     void StopItemEffectsClientRpc() { if (!IsOwner) StopItemEffectsLocal(); }
 
-    [ClientRpc]
-    void PlayShieldVFXClientRpc(float duration) { if (!IsOwner) PlayShieldVFXLocal(duration); }
+    [Rpc(SendTo.ClientsAndHost)]
+    void PlayShieldVFXClientRpc(float duration) { /*if (!IsOwner)*/ PlayShieldVFXLocal(duration); }
 
     [ClientRpc]
     void PlayItemBoostVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostVFXLocal(duration); }
