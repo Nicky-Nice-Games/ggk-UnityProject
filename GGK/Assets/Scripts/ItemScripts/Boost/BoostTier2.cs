@@ -41,6 +41,8 @@ public class BoostTier2 : BaseItem
             // disable collider so it doesnt interfere with other players in scene
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
+            vfxScript = npcDriver.gameObject.GetComponent<VFXHandler>();
+
             boostMult = 1.5f;
             boostMaxSpeed = boostMult * 60.0f;
             duration = 3.0f;
@@ -79,6 +81,7 @@ public class BoostTier2 : BaseItem
 
     IEnumerator ApplyBoostNPC(NPCPhysics driver, float boostForce, float duration, float boostMaxSpeed)
     {
+        vfxScript.PlayItemBoostVFX(duration);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -90,6 +93,7 @@ public class BoostTier2 : BaseItem
             Debug.Log("Applied npc boost");
             yield return new WaitForFixedUpdate();
         }
+        vfxScript.StopItemEffects();
         Destroy(this.gameObject);
     }
 }
