@@ -21,7 +21,7 @@ public class ItemHolder : NetworkBehaviour
 
     [SerializeField] private NEWDriver thisDriver;
 
-    [SerializeField] private NPCDriver npcDriver;
+    [SerializeField] private NPCPhysics npcDriver;
 
     [SerializeField] private BaseItem heldItem;
 
@@ -144,6 +144,11 @@ public class ItemHolder : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        // get the npc physics script off npcs
+        if (this.gameObject.GetComponent<NPCPhysics>() != null)
+        {
+            npcDriver = this.gameObject.GetComponent<NPCPhysics>();
+        }
 
         if (thisDriver)
         {
@@ -424,23 +429,70 @@ public class ItemHolder : NetworkBehaviour
     public void OnThrow() // for npcs
     {
         // handles item usage
-        if (IsHoldingItem())
+        if (!IsSpawned)
         {
-            if (uses == 0)
-            {
-                uses = heldItem.UseCount;
-            }
-            else
-            {
-                uses -= 1;
-            }
-            // sound effect when item thrown
-            //soundPlayer.PlayOneShot(throwSound);
+            thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
 
-            item = Instantiate(heldItem, transform.position, transform.rotation);
-            item.gameObject.SetActive(true);
-            item.Kart = this;
-            item.ItemTier = heldItem.ItemTier;
+            // get the baseitem script from the thrown item and set proper variables
+            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+            thrownItemScript.Kart = this;
+            thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.timerEndCallback = ClearItem;
+
+            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+            {
+                ClearItem();
+            }
+            else // disable upgrading if use count is more than one and the item has already been used
+            {
+                canUpgrade = false;
+                useCounter++;
+            }
+        }
+        else if (IsSpawned && ItemType == ItemTypeEnum.Boost)
+        {
+            thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
+
+            // get the baseitem script from the thrown item and set proper variables
+            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+            thrownItemScript.Kart = this;
+            thrownItemScript.UseCount -= useCounter;
+            thrownItemScript.timerEndCallback = ClearItemRpc;
+
+            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+            {
+                ClearItemRpc();
+            }
+            else // disable upgrading if use count is more than one and the item has already been used
+            {
+                canUpgrade = false;
+                useCounter++;
+            }
+        }
+        else
+        {
+            if (!IsOwner) return;
+
+            thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
+
+            NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
+            thrownItemNetworkObject.Spawn();
+
+            // get the baseitem script from the thrown item and set proper variables
+            BaseItem thrownItemScript = thrownItem.GetComponent<BaseItem>();
+            thrownItemScript.Kart = this;
+            thrownItemScript.UseCount -= this.currentUseCounter.Value;
+            thrownItemScript.timerEndCallback = this.ClearItem;
+
+            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+            {
+                ClearItem();
+            }
+            else // disable upgrading if use count is more than one and the item has already been used
+            {
+                this.currentCanUpgrade.Value = false;
+                this.currentUseCounter.Value++;
+            }
         }
         timer = UnityEngine.Random.Range(5, 8);
 
