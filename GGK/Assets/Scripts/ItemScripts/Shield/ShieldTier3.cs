@@ -8,9 +8,8 @@ public class ShieldTier3 : BaseItem
     private VFXHandler vfxScript;
 
     // Start is called before the first frame update
-    public override void Start()
+    void Start()
     {
-        base.Start();
         timer = 8.0f;
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players

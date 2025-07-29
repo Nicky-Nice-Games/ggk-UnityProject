@@ -55,18 +55,6 @@ public class BaseItem : NetworkBehaviour
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
     #endregion
 
-    public virtual void Start()
-    {
-        SyncKartReferenceRpc(kart);
-    }
-
-    [Rpc(SendTo.NotServer)]
-    private void SyncKartReferenceRpc(NetworkBehaviourReference kartReference)
-    {
-        kartReference.TryGet(out ItemHolder kart);
-        this.kart = kart;
-    }
-
     /// <summary>
     /// Counts down 1 second until the item disappears
     /// </summary>
