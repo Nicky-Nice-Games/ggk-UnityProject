@@ -48,17 +48,17 @@ public class ShieldTier4 : BaseItem
         if (collision.gameObject.CompareTag("Kart"))
         {
             // ensures that the shield is hitting a player or NPC kart
-            if (collision.gameObject.GetComponent<NEWDriver>() != null)
-            //&& collision.gameObject.GetComponent<NEWDriver>() != Kart)
+            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null
+            && collision.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() != Kart)
             {
-                NEWDriver playerKart = collision.gameObject.GetComponent<NEWDriver>();
+                NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
                 playerKart.Stun(2.0f);
             }
 
-            if (collision.gameObject.GetComponent<NPCPhysics>() != null)
-            //&& collision.gameObject.GetComponent<NPCDriver>() != Kart)
+            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null
+            && collision.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() != Kart)
             {
-                NPCPhysics npcKart = collision.gameObject.GetComponent<NPCPhysics>();
+                NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
                 npcKart.Stun(2.0f);
             }
         }
