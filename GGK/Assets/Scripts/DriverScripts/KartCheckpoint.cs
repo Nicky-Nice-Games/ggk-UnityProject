@@ -87,7 +87,6 @@ public class KartCheckpoint : MonoBehaviour
             }
             passedWithWarp = false;
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -123,7 +122,8 @@ public class KartCheckpoint : MonoBehaviour
                     lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
-                if (MusicLapStateManager.instance != null && this.GetComponent<NPCDriver>() == null)
+                if (MusicLapStateManager.instance != null &&
+                    this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
                     if (lap + 1 == 2)
                     {
@@ -138,6 +138,23 @@ public class KartCheckpoint : MonoBehaviour
                 if (lap == totalLaps)
                 {
                     finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+
+                    if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+                    {
+                        if (placement < 4)
+                        {
+                            Debug.Log("You Win");
+                            MusicResultsStateManager.instance.SetResultsState(ResultsState.Win);
+                        }
+                        else
+                        {
+                            Debug.Log("You Lose");
+                            MusicResultsStateManager.instance.SetResultsState(ResultsState.Loss);
+                        }
+                        MusicLapStateManager.instance.SetLapState(LapState.None);
+                        MusicStateManager.instance.SetMusicState(MusicState.PostRace);
+                    }
+
                     StartCoroutine(FinalizeFinish());
                 }
             }

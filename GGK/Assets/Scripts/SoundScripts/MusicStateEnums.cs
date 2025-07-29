@@ -11,6 +11,7 @@ public enum MusicState
 {
     Dorm,
     FBR,
+    Golisano,
     Menu,
     None,
     OuterLoop,
