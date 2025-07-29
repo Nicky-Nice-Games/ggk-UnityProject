@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -164,12 +165,32 @@ public class LeaderboardController : NetworkBehaviour
             Debug.Log("single player");
             GameObject tempItem = Instantiate(leaderboardItem);
             TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+               
             tempArray[0].text = kart.placement.ToString();
             tempArray[1].text = kart.name;
             tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
+            
+
             tempItem.transform.SetParent(leaderboard.transform);
             tempItem.transform.localScale = Vector3.one;
+
+            
+
+            if (kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null) // local player
+            {
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    tempArray[i].color = Color.red;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    tempArray[i].color = Color.white;
+                }
+            }
         }
         else if (IsServer)
         {
