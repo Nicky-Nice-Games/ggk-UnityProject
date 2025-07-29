@@ -2996,7 +2996,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.67826253, y: -0.19989975, z: 0.19989967, w: 0.67826265}
   m_LocalPosition: {x: 241, y: 24.9, z: 2060.8}
-  m_LocalScale: {x: 9.3086, y: 9.3086, z: 9.3086}
+  m_LocalScale: {x: 20.122402, y: 9.3086, z: 9.3086}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5899,6 +5899,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306591415}
   m_CullTransparentMesh: 1
+--- !u!1 &1329424372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1329424375}
+  - component: {fileID: 1329424374}
+  - component: {fileID: 1329424373}
+  m_Layer: 0
+  m_Name: Plane (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!64 &1329424373
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329424372}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &1329424374
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329424372}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1329424375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329424372}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.67826253, y: -0.19989975, z: 0.19989967, w: 0.67826265}
+  m_LocalPosition: {x: 366.6, y: 83.9, z: 1901.1}
+  m_LocalScale: {x: 9.935637, y: 9.3086, z: 10.483345}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 32.843}
 --- !u!1 &1395609722
 GameObject:
   m_ObjectHideFlags: 0
@@ -9337,3 +9400,4 @@ SceneRoots:
   - {fileID: 1068484926}
   - {fileID: 517307510}
   - {fileID: 569810459}
+  - {fileID: 1329424375}
