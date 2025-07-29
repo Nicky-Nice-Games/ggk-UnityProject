@@ -31,6 +31,7 @@ public class PostGameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        playerDecisions.Add(0, PlayerDecisions.Undecided);
         NetworkManager.Singleton.OnClientConnectedCallback += ConnectClient;
         NetworkManager.Singleton.OnClientDisconnectCallback += DisconnectClient;
     }
@@ -129,15 +130,22 @@ public class PostGameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ClientsListServerRpc()
     {
-        foreach(ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        connectedClients.Add(0);
+        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
             if (!connectedClients.Contains(clientId))
             {
                 connectedClients.Add(clientId);
             }
         }
-        var clientIdsArray = NetworkManager.Singleton.ConnectedClientsIds.ToArray();
-        ClientsListClientRpc(clientIdsArray);
+
+        if (!IsHost)
+        {
+
+            ulong[] clientIdsArray = NetworkManager.Singleton.ConnectedClientsIds.ToArray();
+            ClientsListClientRpc(clientIdsArray);
+        }
+
         Debug.Log($"# of clients connected: {connectedClients.Count}");
     }
 

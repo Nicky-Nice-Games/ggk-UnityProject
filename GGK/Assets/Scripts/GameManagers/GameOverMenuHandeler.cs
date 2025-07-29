@@ -55,7 +55,6 @@ public class GameOverMenuHandeler : MonoBehaviour
 
             clientCount = postgamemanager.ConnectedClients.Count;
             players = postgamemanager.AllPlayerDecisions;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
         }
         else
         {
@@ -69,14 +68,6 @@ public class GameOverMenuHandeler : MonoBehaviour
         else
         {
             waiting.text = "Waiting for host. . .";
-        }
-    }
-
-    private void OnClientDisconnected(ulong clientId)
-    {
-        if(clientId == 0)
-        {
-            ShowLeaver(clientId);
         }
     }
 
@@ -100,10 +91,10 @@ public class GameOverMenuHandeler : MonoBehaviour
                 }
             }
 
-            if(postgamemanager.ConnectedClients.Count != clientCount)
+            // if a player leaves after game
+            if(multiplayerPanel.activeSelf)
             {
                 ShowLeaver();
-                clientCount = postgamemanager.ConnectedClients.Count;
             }
         }
     }
@@ -159,6 +150,7 @@ public class GameOverMenuHandeler : MonoBehaviour
         waiting.gameObject.SetActive(true);
 
         postgamemanager.EnterDecisionRpc(PlayerDecisions.Staying);
+        ShowLeaver();
     }
 
     // helper method to get a specific button
@@ -187,9 +179,14 @@ public class GameOverMenuHandeler : MonoBehaviour
         LeaveLobby();
     }
 
+    //private void ClientExit()
+    //{
+    //    StartCoroutine(AnimateText("Host Left Lobby. Returning to Mode Select. . ."));
+    //    LeaveLobby();
+    //}
+
     private void ShowLeaver()
     {
-        Debug.Log("Leaver Showing?");
         for (int i = 0; i < players.Count; i++)
         {
             PlayerDecisions decision;
@@ -199,11 +196,6 @@ public class GameOverMenuHandeler : MonoBehaviour
                 StartCoroutine(AnimateText($"client {i} has left."));
             }
         }
-    }
-
-    private void ShowLeaver(ulong clientId)
-    {
-        StartCoroutine(AnimateText($"client {clientId} has left."));
     }
 
     private IEnumerator AnimateText(string txt)
