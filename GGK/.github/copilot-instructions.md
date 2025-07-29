@@ -4,11 +4,11 @@
 - Active scene:
   - Name: StartScene
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Ground, Checkpoint, Trigger, Startpoint, ItemBox, Kart, Projectile, Boost, Hazard, slowDown, GameManager, UpgradeBox, Options, DeathZone, Obstacle, Rock, Road
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Ground, Checkpoint, Trigger, Startpoint, ItemBox, Kart, Projectile, Boost, Hazard, slowDown, GameManager, UpgradeBox, Options, DeathZone, Obstacle, Rock, Road, Shield, ProjectileBrick
   - Layers:
-    - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle
+    - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: Crossfade
+  - Name: Canvas
   - Tag: Untagged
   - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
