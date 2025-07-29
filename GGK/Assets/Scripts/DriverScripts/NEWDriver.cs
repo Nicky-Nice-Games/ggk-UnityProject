@@ -130,6 +130,7 @@ public class NEWDriver : NetworkBehaviour
     float driftTweenDuration = 0.4f;
 
     //Stun Settings
+    [SerializeField]
     bool isStunned;
 
     [Header("Sound Settings")]
