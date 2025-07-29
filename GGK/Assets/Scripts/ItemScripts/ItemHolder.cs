@@ -479,15 +479,7 @@ public class ItemHolder : NetworkBehaviour
         {
             if (!IsOwner) return;
 
-            // make shield a child of the kart
-            if (ItemType == ItemTypeEnum.Shield)
-            {
-                thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], parent: transform).gameObject;
-            }
-            else
-            {
-                thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
-            }
+            thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
 
             NetworkObject thrownItemNetworkObject = thrownItem.GetComponent<NetworkObject>();
             thrownItemNetworkObject.Spawn();
