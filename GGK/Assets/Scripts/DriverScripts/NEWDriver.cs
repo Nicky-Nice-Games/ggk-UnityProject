@@ -214,7 +214,7 @@ public class NEWDriver : NetworkBehaviour
 
         MiniMapHud.instance.AddKart(gameObject);
         
-        TwoDAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDAnimMultiplayer>();
+        TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
 
     }

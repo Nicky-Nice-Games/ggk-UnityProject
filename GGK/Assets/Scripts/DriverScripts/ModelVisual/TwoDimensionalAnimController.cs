@@ -20,7 +20,7 @@ public class TwoDimensionalAnimController : NetworkBehaviour
         //Getting our animator :D
         animator = GetComponent<Animator>();
         playerObject = transform.root.GetComponent<NetworkObject>();
-        TwoDAnimMultiplayer multi = playerObject.GetComponent<TwoDAnimMultiplayer>();
+        TwoDimensionalAnimMultiplayer multi = playerObject.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multi)
         {
             multi.controller = this;
@@ -31,24 +31,12 @@ public class TwoDimensionalAnimController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if in singleplayer or in multiplayer and the owner..
         if (!playerObject.IsSpawned || (playerObject.IsSpawned && (IsOwner || playerObject.IsOwner)))
         {
             turningValue = Mathf.Lerp(turningValue, driver.movementDirection.x, Time.deltaTime * lerpSpeed);
         }
         
         animator.SetFloat("turningValue", turningValue);
-    }
-
-    [ServerRpc]
-    private void HandleAnimationServerRpc(float value)
-    {
-        animator.SetFloat("turningValue", value);
-    }
-    
-    [Rpc(SendTo.ClientsAndHost,  RequireOwnership = false)]
-    private void HandleAnimationRpc(float value, ulong testid)
-    {
-        print("hello from client " + testid + ", " + value);
-        animator.SetFloat("turningValue", value);
     }
 }

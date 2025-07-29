@@ -69,15 +69,11 @@ public class AppearanceSettings : NetworkBehaviour
                 if (name == models[i].name || CharacterBuilder.ModelToName(name) == models[i].name)
                 {
                     Animator nAnim = models[i].GetComponent<Animator>();
-                    if (nAnim && GetComponent<NEWDriver>())
+                    OwnerNetworkAnimator oNAnim = transform.parent.GetComponent<OwnerNetworkAnimator>();
+                    if (nAnim && oNAnim && transform.parent.GetComponent<NetworkObject>().IsSpawned)
                     {
-                        //NetworkObject nO1 = models[i].GetComponent<NetworkObject>();
-                        //NetworkObject nO2 = transform.root.GetComponent<NetworkObject>();
-                        //if (IsSpawned && IsServer)
-                        //{
-                            //nAnim.OnNetworkSpawn();
-                        //}
-                        
+                        oNAnim.Animator = nAnim;
+
                     }
                     models[i].SetActive(true);
                     break;
