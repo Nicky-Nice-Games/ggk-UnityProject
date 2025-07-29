@@ -71,7 +71,10 @@ public class ItemHolder : NetworkBehaviour
                 ApplyItemTween(defaultItemDisplay);
             }
             else {
-                ApplyItemTween(ItemImageArray[(int)type][tier]);
+                if (thisDriver) // only drivers can apply item display
+                {
+                    ApplyItemTween(ItemImageArray[(int)type][tier]);
+                }
             }
         }
     }
@@ -87,7 +90,10 @@ public class ItemHolder : NetworkBehaviour
             if (value == ItemTypeEnum.NoItem) {
                 ApplyItemTween(defaultItemDisplay);
             } else {
-                ApplyItemTween(ItemImageArray[(int)type][tier]);
+                if (thisDriver) // only drivers can apply item display
+                {
+                    ApplyItemTween(ItemImageArray[(int)type][tier]);
+                }
             }
         }
     }
@@ -495,8 +501,6 @@ public class ItemHolder : NetworkBehaviour
             }
         }
         timer = UnityEngine.Random.Range(5, 8);
-
-        Debug.Log(item.ItemTier);
 
     }
 
