@@ -53,7 +53,7 @@ public class TwoDimensionalAnimMultiplayer : NetworkBehaviour
             //if not the owner, smooth lerp recieved turn data
             else
             {
-                controller.turningValue = Mathf.Lerp(controller.turningValue, lastRecieved, Time.deltaTime * controller.lerpSpeed);
+                controller.turningValue = Mathf.Lerp(controller.turningValue, lastRecieved, Time.deltaTime / sendBuffer);
             }
            
         }
