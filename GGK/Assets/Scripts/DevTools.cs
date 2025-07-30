@@ -12,8 +12,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Gina Piccirilli
 
 //OTHER TODOs (not listed elsewhere)
-//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
-//  Update: can type if you close and reopen prompt but not initially even though cursor is there
+
 //Fix issue where when clicking a button with the mouse it thinks input has been
 //  entered (likely something to do with On End Edit)
 //If seen as an issue (which I think it probably is), make it so that the command
@@ -31,6 +30,11 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  the prompt or pause panel before it actually registers 
 //Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
 //  figure out how to only get it to stop if the player changes the value
+
+//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
+//  works when you load into a map and then open the prompt
+//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
+//  Update: can type if you close and reopen prompt but not initially even though cursor is there
 
 
 /// <summary>
@@ -100,6 +104,7 @@ public class DevTools : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private Scrollbar scrollBar;
     private bool isScrolling;
 
     //Variables and references for GiveItem command
@@ -175,6 +180,7 @@ public class DevTools : MonoBehaviour
             inputField.text = "";
             inputField.ActivateInputField();
             isScrolling = false;
+            //AutoScroll(scrollRect);
         }
 
         //Turns on auto-scroll when the user isn't scrolling
@@ -182,6 +188,10 @@ public class DevTools : MonoBehaviour
         {
             AutoScroll(scrollRect);
         }
+        //else
+        //{
+        //    StopAutoScroll();
+        //}
         
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
@@ -631,6 +641,7 @@ public class DevTools : MonoBehaviour
     public void AutoScroll(ScrollRect scrollRect)
     {
         scrollRect.verticalNormalizedPosition = 0;
+        //scrollBar.value = 0;
     }
 
 
