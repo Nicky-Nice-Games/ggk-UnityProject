@@ -114,7 +114,7 @@ public class GameOverMenuHandeler : MonoBehaviour
             {
                 if (!players.ContainsKey((ulong)i) || players[(ulong)i] == PlayerDecisions.Leaving)
                 {
-                    if (clientLeft[i] == false)
+                    if (i < clientLeft.Count && clientLeft[i] == false)
                     {
                         StartCoroutine(AnimateText($"client {i} has left the lobby."));
                         clientLeft[i] = true;
@@ -123,7 +123,8 @@ public class GameOverMenuHandeler : MonoBehaviour
             }
 
 
-            if (!MultiplayerManager.Instance.NetworkManager.IsHost && !players.ContainsKey(0))
+            if (!MultiplayerManager.Instance.NetworkManager.IsHost && 
+                (!players.ContainsKey(0) || players[0] == PlayerDecisions.Leaving))
             {
                 waiting.text = "Host exited. Please leave lobby.";
             }
