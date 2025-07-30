@@ -40,6 +40,7 @@ public enum MapName
     TechHouseTurnpike,
     DormRoomDerby,
     AllNighterExpressway,
+    QuarterMile,
     TestGrid,
     TestTube
 }
@@ -367,6 +368,12 @@ public class DevTools : MonoBehaviour
 
             case "AllNighterExpressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
+                break;
+
+            case "QuarterMile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
