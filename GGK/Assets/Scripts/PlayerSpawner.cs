@@ -30,7 +30,10 @@ public class PlayerSpawner : NetworkBehaviour
 
     private void Start()
     {
-        LoadSpawnPoints();
+        if (spawnPoints.Count < 1)
+        {
+            LoadSpawnPoints();
+        }
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
@@ -76,7 +79,7 @@ public class PlayerSpawner : NetworkBehaviour
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
-                Transform kartObject = Instantiate(playerKartPrefab);
+                Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
                 GameObject colliderGO = kartObject.GetChild(1).gameObject;
