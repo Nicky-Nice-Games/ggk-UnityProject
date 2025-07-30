@@ -2786,7 +2786,7 @@ MonoBehaviour:
   m_Container: {fileID: 3257586721231849968}
   m_ItemsToInstantiate:
   - prefab: {fileID: 0}
-    Prefab: {fileID: 2767237917840172188, guid: 0829e6ee48ad44047ad6b94715910a60, type: 3}
+    Prefab: {fileID: 4904003611851631690, guid: 29cfecb75fdfd734faeec81a11402b25, type: 3}
     probability: 0
     Probability: 100
   m_Method: 1
@@ -6990,7 +6990,7 @@ MonoBehaviour:
   m_Container: {fileID: 4124416308422759531}
   m_ItemsToInstantiate:
   - prefab: {fileID: 0}
-    Prefab: {fileID: 2767237917840172188, guid: 0829e6ee48ad44047ad6b94715910a60, type: 3}
+    Prefab: {fileID: 8653002378522897166, guid: e39bbb9e1b80cd94c98b8685ac8effc5, type: 3}
     probability: 0
     Probability: 100
   m_Method: 1
@@ -11656,8 +11656,8 @@ Transform:
   m_GameObject: {fileID: 1918806560621265893}
   serializedVersion: 2
   m_LocalRotation: {x: -7.1054274e-15, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.45049998, y: -0.627, z: 0.14999999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.45049998, y: -0.551, z: 0.15}
+  m_LocalScale: {x: 1, y: 0.87646025, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6175441817205419159}
@@ -21423,8 +21423,8 @@ Transform:
   m_GameObject: {fileID: 3909335871346243178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.61, y: -0.55372, z: 0.19799998}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.5327, y: -0.55372, z: 0.19799998}
+  m_LocalScale: {x: 1.7890435, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9080113466931614740}
@@ -23145,6 +23145,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.16, y: 0.20000999, z: 0.01}
   m_Center: {x: 0.00000011920929, y: -0.000000029802322, z: -0.005}
+--- !u!1 &4149893634782736701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3946182049890969055}
+  - component: {fileID: 2648651026117448559}
+  m_Layer: 6
+  m_Name: InvisbleCeiling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3946182049890969055
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4149893634782736701}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.101, y: -1.472, z: 0.311}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8375860754861852371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2648651026117448559
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4149893634782736701}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.115545, y: 0.8979361, z: 0.06703308}
+  m_Center: {x: -0.27030793, y: 0.43177596, z: 0.0015960777}
 --- !u!1 &4155070245237636070
 GameObject:
   m_ObjectHideFlags: 0
@@ -45012,6 +45065,7 @@ Transform:
   - {fileID: 6175441817205419159}
   - {fileID: 7982479118419172300}
   - {fileID: 3486564300533953020}
+  - {fileID: 3946182049890969055}
   m_Father: {fileID: 3065743558325918822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8463490049621629328
@@ -50786,7 +50840,7 @@ MonoBehaviour:
   m_Container: {fileID: 5836543479887596691}
   m_ItemsToInstantiate:
   - prefab: {fileID: 0}
-    Prefab: {fileID: 2767237917840172188, guid: 0829e6ee48ad44047ad6b94715910a60, type: 3}
+    Prefab: {fileID: 8653002378522897166, guid: e39bbb9e1b80cd94c98b8685ac8effc5, type: 3}
     probability: 0
     Probability: 100
   m_Method: 1
