@@ -42,7 +42,10 @@ public class PlayerSpawner : NetworkBehaviour
 
     private void Start()
     {
-        LoadSpawnPoints();
+        if (spawnPoints.Count < 1)
+        {
+            LoadSpawnPoints();
+        }
         spawnedKartCount = 0;
         if (!IsSpawned)
         {
@@ -71,7 +74,7 @@ public class PlayerSpawner : NetworkBehaviour
         //}
         //else
         //{
-        //    FillGrid();
+        // FillGrid();
     }
 
     /// <summary>
@@ -88,7 +91,7 @@ public class PlayerSpawner : NetworkBehaviour
         {
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
-                Transform kartObject = Instantiate(playerKartPrefab);
+                Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
                 
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
                 GameObject colliderGO = kartObject.GetChild(1).gameObject;
@@ -126,6 +129,7 @@ public class PlayerSpawner : NetworkBehaviour
     private IEnumerator DelayedLocalSpawn()
     {
         yield return new WaitForSeconds(0.2f); // slight delay
+        CharacterBuilder.StartCharacterBatch();
         Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
         kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
         spawnedKartCount++;

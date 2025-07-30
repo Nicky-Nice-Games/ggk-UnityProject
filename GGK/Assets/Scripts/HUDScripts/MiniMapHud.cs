@@ -90,9 +90,9 @@ public class MiniMapHud : MonoBehaviour
 
     [Header("Misc.")]
     //should debug things (line renderers, for example) show?
-    [SerializeField, Tooltip("TURN ME OFF IF IT'S NOT WORKING!!!!")] private bool showDebug;
-    [SerializeField, Tooltip("How fast the icons should spin when their respective object is stunned")] private float iconSpinoutSpeed;
-    [SerializeField, Tooltip("The object in the object list that represents the player's kart")] public GameObject trackingPlayer;
+    [SerializeField] private bool showDebug;
+    [SerializeField] private static float iconSpinoutSpeed = 1;
+    public GameObject trackingPlayer;
     //canvas
     private Canvas canvas;
     //the minimap that bounds should follow
