@@ -1,3 +1,6 @@
+// Script to handle api calls and basic logic that needs to be preformed within API async functions
+// Written by Logan Larrondo
+
 using JetBrains.Annotations;
 using System;
 using System.Collections;
@@ -5,6 +8,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
+using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -144,7 +148,7 @@ public class APIManager : MonoBehaviour
         string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
         string json = JsonUtility.ToJson(webUserData);
 
-        bool playerExists = await CheckForPlayerInDataAsync(webUserData.email);
+        bool playerExists = await CheckForPlayerInDataAsync(webUserData.email, webUserData.username);
         Debug.Log("Player found in server?: " + playerExists);
 
         if (!playerExists)
@@ -163,37 +167,42 @@ public class APIManager : MonoBehaviour
     /// </summary>
     /// <param name="email">email</param>
     /// <param name="callback">the bool that will be returned as a callback</param>
-    /// <returns></returns>
-    private async Task<bool> CheckForPlayerInDataAsync(string email)
+    /// <returns>True if player is found</returns>
+    private async Task<bool> CheckForPlayerInDataAsync(string email, string username)
     {
-        string url = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/" + email;
+        bool emailAvailable = await VerifyEmailAsync(email);
+        Debug.Log("Email is avalible: " + emailAvailable);
+        bool usernameAvailable = await VerifyUsernameAsync(username);
+        Debug.Log("Username is avalible: " + usernameAvailable);
+        SignInManager signInManager = FindAnyObjectByType<SignInManager>();
 
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        if (!emailAvailable && !usernameAvailable)
         {
-            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
-            while (!operation.isDone)
-                await Task.Yield();
-
-            if (webRequest.result == UnityWebRequest.Result.Success)
-            {
-                string json = webRequest.downloadHandler.text;
-                return bool.Parse(json.ToLower());
-            }
-            else
-            {
-                Debug.Log("GET ERROR FOR PLAYER CHECK: " + webRequest.error);
-                return false;
-            }
+            VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+            kbController.ResetCurrentFields();
+            signInManager.usernameError.SetActive(true);
+            signInManager.emailError.SetActive(true);
+            return true;
         }
-    }
-
-    /// <summary>
-    /// Wrapper to call async from non-async
-    /// </summary>
-    /// <param name="thisPlayer"></param>
-    public void CreatePlayer(PlayerInfo thisPlayer)
-    {
-        _ = CreatePlayerAsyncToNonAsync(thisPlayer);
+        if (!emailAvailable)
+        {
+            VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+            kbController.ResetCurrentFields();
+            signInManager.usernameError.SetActive(false);
+            signInManager.emailError.SetActive(true);
+            return true;
+        }
+        if(!usernameAvailable)
+        {
+            VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
+            kbController.ResetCurrentFields();
+            signInManager.usernameError.SetActive(true);
+            signInManager.emailError.SetActive(false);
+            return true;
+        }
+        signInManager.usernameError.SetActive(false);
+        signInManager.emailError.SetActive(false);
+        return false;
     }
 
     /// <summary>
@@ -201,7 +210,7 @@ public class APIManager : MonoBehaviour
     /// </summary>
     /// <param name="thisPlayer"></param>
     /// <returns></returns>
-    private async Task CreatePlayerAsyncToNonAsync(PlayerInfo thisPlayer)
+    public async Task CreatePlayer(PlayerInfo thisPlayer)
     {
         bool wasCreated = await CreatePlayerAsync(thisPlayer);
         Debug.Log("Was created (async): " + wasCreated);
@@ -220,21 +229,13 @@ public class APIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Wrapper to call async from non-async
-    /// </summary>
-    /// <param name="email"></param>
-    public void CheckPlayer(PlayerInfo playerInfo)
-    {
-        _ = CheckPlayerAsyncToNonAsync(playerInfo);
-    }
-
-    /// <summary>
     /// Async that will handle logic
     /// </summary>
     /// <param name="email"></param>
     /// <returns></returns>
-    private async Task CheckPlayerAsyncToNonAsync(PlayerInfo playerInfo)
+    public async Task CheckPlayer(PlayerInfo playerInfo)
     {
+        SignInManager signInManager = FindAnyObjectByType<SignInManager>();
         bool wasFound = await GetPlayerWithNamePassAsync(playerInfo.playerName, playerInfo.playerPassword, playerInfo);
         Debug.Log("Was found (async): " + wasFound);
 
@@ -242,11 +243,69 @@ public class APIManager : MonoBehaviour
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
             kbController.ResetCurrentFields();
+            signInManager.loginError.SetActive(true);
             return;
         }
         else
         {
+            signInManager.loginError.SetActive(false);
             gameManager.LoggedIn();
+        }
+    }
+
+    /// <summary>
+    /// Checking for username availability
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns>true if is available</returns>
+    private async Task<bool> VerifyUsernameAsync(string username)
+    {
+        string url = "https://maventest-a9cc74b8d5cf.herokuapp.com/webservice/playerinfo/verifyusername?username=" + username;
+
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                string json = webRequest.downloadHandler.text;
+                return !bool.Parse(json.ToLower());
+            }
+            else
+            {
+                Debug.Log("GET ERROR FOR USERNAME CHECK: " + webRequest.error);
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checking for email availability
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns>true if is available</returns>
+    private async Task<bool> VerifyEmailAsync(string email)
+    {
+        string url = "https://maventest-a9cc74b8d5cf.herokuapp.com/webservice/playerinfo/verifyemail?email=" + email;
+
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            UnityWebRequestAsyncOperation operation = webRequest.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                string json = webRequest.downloadHandler.text;
+                return !bool.Parse(json.ToLower());
+            }
+            else
+            {
+                Debug.Log("GET ERROR FOR EMAIL CHECK: " + webRequest.error);
+                return false;
+            }
         }
     }
 }

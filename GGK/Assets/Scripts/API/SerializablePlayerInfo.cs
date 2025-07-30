@@ -11,7 +11,9 @@ using UnityEngine;
 [System.Serializable]
 public class SerializablePlayerInfo : MonoBehaviour
 {
-    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public string raceStartTime;
+    public float raceTime;
     public List<ItemUsageEntry> boostUsage = new List<ItemUsageEntry>();
     public List<ItemUsageEntry> offenceUsage = new List<ItemUsageEntry>();
     public List<ItemUsageEntry> trapUsage = new List<ItemUsageEntry>();
@@ -19,12 +21,14 @@ public class SerializablePlayerInfo : MonoBehaviour
     public SerializablePlayerInfo ConvertToSerializable(PlayerInfo player)
     {
         playerID = player.playerID;
-        raceStartTime = player.raceStartTime;
+        raceStartTime = player.raceStartTime.ToString();
+        raceTime = player.raceTime;
         racePosition = player.racePosition;
         mapRaced = player.mapRaced;
         collisionsWithPlayers = player.collisionsWithPlayers;
         collisionWithWalls = player.collisionWithWalls;
         characterUsed = player.characterUsed;
+        fellOffMap = player.fellOffMap;
 
         // Serializing boost usage dict
         foreach (KeyValuePair<string, int> kvp in player.boostUsage)
