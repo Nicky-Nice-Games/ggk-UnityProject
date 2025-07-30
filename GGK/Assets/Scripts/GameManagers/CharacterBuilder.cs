@@ -167,9 +167,23 @@ public static class CharacterBuilder
         //cycles characters through to the next character and next color, looping back around if it reaches the max possible index 
         lastPlayerAdded = (lastPlayerAdded + 1) % characterCount;
         lastColorAdded = (lastColorAdded + 1) % colors.Count;
-        //                                         v character enum             v random color
-        return new KeyValuePair<Character, Color>((Character)lastPlayerAdded, colors[lastColorAdded]);
-        
+        int loopcount = 0;
+        KeyValuePair<Character, Color> newChar;
+        do
+        {
+            //                                                v character enum             v random color
+            newChar = new KeyValuePair<Character, Color>((Character)lastPlayerAdded, colors[lastColorAdded]);
+            loopcount++;
+
+            if (loopcount >= characterCount)
+            {
+                Debug.Log("Possible infinite loop detected in CharacterBuilder--breaking while-loop early");
+            }
+        }
+        while (loopcount >= characterCount && characterInstances.ContainsKey(newChar.Key) && characterInstances[newChar.Key] > 1);
+        //                                       ^change this to not hardcode later 
+
+        return newChar;
     }
 
     /// <summary>
@@ -240,6 +254,12 @@ public static class CharacterBuilder
     {
         characterLoadout.Add(character);
         AddToInstances(character);
+    }
+
+    public static void AddCharacter(AppearanceSettings settings)
+    {
+        KeyValuePair<Character, Color> character = new KeyValuePair<Character, Color>((Character)Enum.Parse(typeof(Character), settings.name), settings.color);
+        AddCharacter(character);
     }
 
     //generates a log of the amount of times each character appears in the character loadout

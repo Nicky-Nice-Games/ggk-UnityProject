@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -115,7 +115,7 @@ public class NEWDriver : NetworkBehaviour
     public LayerMask groundLayer;        
     // Ground snapping variables
     public bool isGrounded;
-    bool attemptingDrift;
+    public bool attemptingDrift;
     float airTime;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
@@ -178,14 +178,13 @@ public class NEWDriver : NetworkBehaviour
 
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
-
-            //if in singleplayer, update its appearance using CharacterData
+            SpeedLineHandler.instance.trackingPlayer = this;
             AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
             if (appearance)
             {
                 appearance.UpdateAppearance();
             }
-            SpeedLineHandler.instance.trackingPlayer = this;
+            CharacterBuilder.AddCharacter(appearance);
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
             sphere.isKinematic = false;
@@ -204,10 +203,8 @@ public class NEWDriver : NetworkBehaviour
             PlacementManager.instance.TrackKart(kartCheckpoint);
             //if it's the owner, send its CharacterData settings over to other clients
             AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
-            if (appearance)
-            {
-                appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
-            }
+            if (appearance) appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
+
             MiniMapHud.instance.trackingPlayer = gameObject;
             SpeedLineHandler.instance.trackingPlayer = this;
 
@@ -218,8 +215,11 @@ public class NEWDriver : NetworkBehaviour
             // PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
         }
         PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
-        
+
         MiniMapHud.instance.AddKart(gameObject);
+        
+        TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
+        if (multiplayerAnim) multiplayerAnim.driver = this;
 
     }
 
@@ -791,7 +791,7 @@ public class NEWDriver : NetworkBehaviour
         vfxHandler.StopBoostVFX();
     }
 
-    IEnumerator DriftHopEnabler()
+    public IEnumerator DriftHopEnabler()
     {
         //Disabling raycast
         attemptingDrift = true;
