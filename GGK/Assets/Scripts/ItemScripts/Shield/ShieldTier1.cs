@@ -7,16 +7,6 @@ public class ShieldTier1 : BaseItem
 {
     private VFXHandler vfxScript;
 
-    public override void OnNetworkSpawn()
-    {
-        currentPos.OnValueChanged += OnPositionChange;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        currentPos.OnValueChanged -= OnPositionChange;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -51,14 +41,6 @@ public class ShieldTier1 : BaseItem
         if (kart)
         {
             transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
-
-            if (IsSpawned)
-            {
-                if (IsOwner)
-                {
-                    currentPos.Value = kart.transform.position;
-                }
-            }
         }
     }
 
@@ -76,11 +58,5 @@ public class ShieldTier1 : BaseItem
                 DestroyItemRpc(collision.gameObject.GetComponent<BaseItem>());
             }
         }
-    }
-
-    public void OnPositionChange(Vector3 previousPos, Vector3 nextPos)
-    {
-        currentPos.Value = nextPos;
-        transform.position = currentPos.Value;
     }
 }
