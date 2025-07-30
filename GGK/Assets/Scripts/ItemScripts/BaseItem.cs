@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 using static ItemHolder;
@@ -9,10 +10,10 @@ using static ItemHolder;
 public class BaseItem : NetworkBehaviour
 {
     #region old variables
-    [SerializeField] protected float timer;    // Seconds until the item disappears
+    [SerializeField] protected float timer;         // Seconds until the item disappears
     public Action timerEndCallback; 
-    [SerializeField] protected Rigidbody rb;   // The item's rigidbody
-    [SerializeField] protected ItemHolder kart;                 // The kart holding the item
+    [SerializeField] protected Rigidbody rb;        // The item's rigidbody
+    [SerializeField] protected ItemHolder kart;     // The kart holding the item
     [SerializeField] protected string itemCategory;
 
     [SerializeField] protected int useCount;
@@ -53,7 +54,35 @@ public class BaseItem : NetworkBehaviour
     /// Read and write property for the kart holding the item
     /// </summary>
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
+
+    public NetworkVariable<NetworkBehaviourReference> networkKartReference = new NetworkVariable<NetworkBehaviourReference>();
     #endregion
+
+
+    public override void OnNetworkSpawn()
+    {
+        networkKartReference.OnValueChanged += OnKartReferenceChanged;
+    }
+    public override void OnNetworkDespawn()
+    {
+        networkKartReference.OnValueChanged -= OnKartReferenceChanged;
+    }
+
+    private void OnKartReferenceChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
+    {
+        if (IsServer) return;
+        newValue.TryGet(out ItemHolder kartReference);
+        Kart = kartReference;
+    }
+
+    public virtual void Start()
+    {
+        if (IsSpawned && IsServer)
+        {
+            networkKartReference.Value = Kart;
+        }
+    }
+
 
     /// <summary>
     /// Counts down 1 second until the item disappears
