@@ -7,10 +7,10 @@ public class ShieldTier4 : BaseItem
 {
     private VFXHandler vfxScript;
 
-    // Start is called before the first frame update
-    public override void Start()
+    public override void OnNetworkSpawn()
     {
         base.Start();
+
         timer = 10.0f;
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
@@ -28,6 +28,33 @@ public class ShieldTier4 : BaseItem
 
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
+        }
+    }
+
+    // Start is called before the first frame update
+    public override void Start()
+    {
+        if (!IsSpawned)
+        {
+            base.Start();
+            timer = 10.0f;
+
+            if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
+            {
+                // find the visual effect script from the kart
+                vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
+
+                // play shield effect from VFXHandler script 
+                vfxScript.PlayShieldVFX(timer);
+            }
+            else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
+            {
+                // find the visual effect script from the npc kart
+                vfxScript = kart.gameObject.GetComponent<VFXHandler>();
+
+                // play shield effect from VFXHandler script 
+                vfxScript.PlayShieldVFX(timer);
+            }
         }
     }
 
