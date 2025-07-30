@@ -25,15 +25,19 @@ public class GameOverMenuHandeler : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI playerLeft;
 
-    private int clientCount = 0;
-
     private Dictionary<ulong, PlayerDecisions> players;
+
+    // tracks which client id's have already been conveyed to leave
+    // avoids flickering text
+    private List<bool> clientLeft;
 
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
         postgamemanager = gamemanagerObj.postGameManager;
+
+        clientLeft = new List<bool>();
 
         // deactivate playagain panel in case this is the 2nd+ multiplayer game
         playAgainPanel.SetActive(false);
@@ -49,12 +53,20 @@ public class GameOverMenuHandeler : MonoBehaviour
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             multiplayerPanel.SetActive(true);
+            for(int i=0; i < clientLeft.Count; i++)
+            {
+                clientLeft[i] = false;
+            }
 
-            postgamemanager.ClientsListServerRpc();
             postgamemanager.GetPlayersServerRpc();
-
-            clientCount = postgamemanager.ConnectedClients.Count;
             players = postgamemanager.AllPlayerDecisions;
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                if (!players.ContainsKey(0))
+                {
+                    players.Add(0, PlayerDecisions.Undecided);
+                }
+            }
         }
         else
         {
@@ -91,10 +103,29 @@ public class GameOverMenuHandeler : MonoBehaviour
                 }
             }
 
-            // if a player leaves after game
-            if(multiplayerPanel.activeSelf)
+            //if (!MultiplayerManager.Instance.NetworkManager.IsHost &&
+            //    (!players.ContainsKey(0)) || (players[0] == PlayerDecisions.Leaving))
+            //{
+            //    waiting.text = "Host exited. Please leave lobby.";
+            //}
+
+            // Host or Client leaves post game
+            for(int i=0; i < players.Count; i++)
             {
-                ShowLeaver();
+                if (!players.ContainsKey((ulong)i) || players[(ulong)i] == PlayerDecisions.Leaving)
+                {
+                    if (clientLeft[i] == false)
+                    {
+                        StartCoroutine(AnimateText($"client {i} has left the lobby."));
+                        clientLeft[i] = true;
+                    }
+                }
+            }
+
+
+            if (!MultiplayerManager.Instance.NetworkManager.IsHost && !players.ContainsKey(0))
+            {
+                waiting.text = "Host exited. Please leave lobby.";
             }
         }
     }
@@ -178,12 +209,6 @@ public class GameOverMenuHandeler : MonoBehaviour
         StartCoroutine(AnimateText("All Players Left. Returning to Mode Select. . ."));
         LeaveLobby();
     }
-
-    //private void ClientExit()
-    //{
-    //    StartCoroutine(AnimateText("Host Left Lobby. Returning to Mode Select. . ."));
-    //    LeaveLobby();
-    //}
 
     private void ShowLeaver()
     {

@@ -31,7 +31,6 @@ public class PostGameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        playerDecisions.Add(0, PlayerDecisions.Undecided);
         NetworkManager.Singleton.OnClientConnectedCallback += ConnectClient;
         NetworkManager.Singleton.OnClientDisconnectCallback += DisconnectClient;
     }
@@ -58,7 +57,7 @@ public class PostGameManager : NetworkBehaviour
     }
 
     // Stores each players decision and gives the host the ability to proceed when every player makes a decision
-    [Rpc(SendTo.Server, RequireOwnership = false)]
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void EnterDecisionRpc(PlayerDecisions decision, RpcParams rpcParams = default)
     {
         ulong clientId = rpcParams.Receive.SenderClientId;
@@ -125,35 +124,6 @@ public class PostGameManager : NetworkBehaviour
         playerDecisions.Remove(clientId);
         connectedClients.Remove(clientId);
         DisconnectClientServerRpc(clientId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ClientsListServerRpc()
-    {
-        connectedClients.Add(0);
-        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-        {
-            if (!connectedClients.Contains(clientId))
-            {
-                connectedClients.Add(clientId);
-            }
-        }
-
-        if (!IsHost)
-        {
-
-            ulong[] clientIdsArray = NetworkManager.Singleton.ConnectedClientsIds.ToArray();
-            ClientsListClientRpc(clientIdsArray);
-        }
-
-        Debug.Log($"# of clients connected: {connectedClients.Count}");
-    }
-
-    [ClientRpc]
-    private void ClientsListClientRpc(ulong[] clientIds)
-    {
-        connectedClients = new List<ulong>(clientIds);
-        Debug.Log("Clients List recieved BANG!!!");
     }
 
     [ServerRpc(RequireOwnership = false)]
