@@ -21,6 +21,7 @@ public class SignInManager : MonoBehaviour
     [SerializeField] GameObject signUpUI;
     [SerializeField] GameObject loginOptions;
     [SerializeField] VirtualKeyboardController keyboard;
+    [SerializeField]GameObject successMessage;
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
@@ -46,7 +47,9 @@ public class SignInManager : MonoBehaviour
             button.onClick.AddListener(() =>
             gameManager.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gameManager.GetComponentInChildren<GameManager>().LoggedIn());
+            {
+                StartCoroutine(HandleLoginSuccess());
+            });
         }
 
         // Getting Client ID / creating player info
@@ -58,6 +61,16 @@ public class SignInManager : MonoBehaviour
         {
             inputFields[field.name] = field; 
         }
+    }
+
+    //Displays a success message after a login or sign up
+    private IEnumerator HandleLoginSuccess()
+    {
+        loginUI.SetActive(false);
+        signUpUI.SetActive(false);
+        successMessage.SetActive(true);
+        yield return new WaitForSeconds(1);
+        gameManager.GetComponentInChildren<GameManager>().LoggedIn();
     }
 
     // Update is called once per frame
@@ -85,6 +98,7 @@ public class SignInManager : MonoBehaviour
                 case "Password Login":
                     playerInfo.playerPassword = data;
                     await apiManager.CheckPlayer(playerInfo);
+                    StartCoroutine(HandleLoginSuccess());
                     return;
 
                 default:
@@ -116,6 +130,7 @@ public class SignInManager : MonoBehaviour
                         return;
                     }
                     await apiManager.CreatePlayer(playerInfo);
+                    StartCoroutine(HandleLoginSuccess());
                     return;
 
                 default:

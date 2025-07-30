@@ -87,7 +87,7 @@ public class MiniMapHud : MonoBehaviour
     [Header("Misc.")]
     //should debug things (line renderers, for example) show?
     [SerializeField] private bool showDebug;
-    [SerializeField] private float iconSpinoutSpeed;
+    [SerializeField] private static float iconSpinoutSpeed = 1;
     public GameObject trackingPlayer;
     //canvas
     private Canvas canvas;

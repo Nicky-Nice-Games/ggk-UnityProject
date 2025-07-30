@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -30,26 +31,35 @@ public class LeaderboardController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsServer)
+        if (Countdown.instance.finished)
         {
-            // If server, update networkTme
-            curTime += Time.deltaTime;
-            networkTime.Value = curTime;
-            //Debug.Log(networkTime.Value);
-            //updating if all karts are finished
-            allPlayerKartsFinished.Value = NetworkManager.ConnectedClients.Count == numOfPlayerKarts;
+            if (IsServer)
+            {
+                // If server, update networkTme
+                curTime += Time.deltaTime;
+                networkTime.Value = curTime;
+                //Debug.Log(networkTime.Value);
+                //updating if all karts are finished
+                allPlayerKartsFinished.Value = NetworkManager.ConnectedClients.Count == numOfPlayerKarts;
+            }
+            // Otherwise, update single player time
+            else if (!IsSpawned)
+            {
+                curTime += Time.deltaTime;
+            }
+
+            // Format and display time
+            float seconds = curTime % 60;
+            int minutes = (int)curTime / 60;
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
-        // Otherwise, update single player time
-        else if (!IsSpawned)
+        else
         {
-            curTime += Time.deltaTime;
+            curTime = 0;
+            float seconds = curTime % 60;
+            int minutes = (int)curTime / 60;
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
-
-
-        // Format and display time
-        float seconds = curTime % 60;
-        int minutes = (int)curTime / 60;
-        timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
     }
 
     /// <summary>
@@ -62,7 +72,7 @@ public class LeaderboardController : NetworkBehaviour
             networkTime.OnValueChanged += OnTimeChange;
             allPlayerKartsFinished.OnValueChanged += OnPlayersFinished;
         }
-        
+
     }
 
     /// <summary>
@@ -104,7 +114,7 @@ public class LeaderboardController : NetworkBehaviour
         if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
         {
             numOfPlayerKarts++;
-            Debug.Log("Player kart added, total: " + numOfPlayerKarts); 
+            Debug.Log("Player kart added, total: " + numOfPlayerKarts);
             if (!finishedPlayerKarts.Contains(kart))
             {
                 finishedPlayerKarts.Add(kart);
@@ -155,12 +165,32 @@ public class LeaderboardController : NetworkBehaviour
             Debug.Log("single player");
             GameObject tempItem = Instantiate(leaderboardItem);
             TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
+
             tempArray[0].text = kart.placement.ToString();
             tempArray[1].text = kart.name;
             tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
+
+
             tempItem.transform.SetParent(leaderboard.transform);
             tempItem.transform.localScale = Vector3.one;
+
+
+
+            if (kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null) // local player
+            {
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    tempArray[i].color = Color.red;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    tempArray[i].color = Color.white;
+                }
+            }
         }
         else if (IsServer)
         {
@@ -168,8 +198,9 @@ public class LeaderboardController : NetworkBehaviour
             int tempPlacement = kart.placement;
             string tempName = kart.name;
             float tempFinishTime = kart.finishTime;
-
-            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime));
+            bool isPlayerKart = kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null;
+            ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
+            SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
         {
@@ -193,7 +224,7 @@ public class LeaderboardController : NetworkBehaviour
     /// Sends leaderboard info to clients to display server information about the race
     /// </summary>
     /// <param name="card"></param>
-    [Rpc(SendTo.ClientsAndHost,RequireOwnership = false)]
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void SendTimeDisplayRpc(LeaderboardDisplayCard card)
     {
         Debug.Log("SendTimeDisplayRPC called");
@@ -206,6 +237,22 @@ public class LeaderboardController : NetworkBehaviour
 
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
+
+        if (card.IsPlayerKart && card.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i].color = Color.red;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i].color = Color.white;
+            }
+        }
+
         Debug.Log("added card to leaderboard");
     }
 
@@ -214,12 +261,16 @@ public class LeaderboardController : NetworkBehaviour
         public int Placement;
         public string Name;
         public float Time;
+        public ulong OwnerClientId;
+        public bool IsPlayerKart; 
 
-        public LeaderboardDisplayCard(int placement, string name, float time)
+        public LeaderboardDisplayCard(int placement, string name, float time, ulong ownerClientId, bool isPlayerKart)
         {
             Placement = placement;
             Name = name;
             Time = time;
+            OwnerClientId = ownerClientId;
+            IsPlayerKart = isPlayerKart;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -227,6 +278,8 @@ public class LeaderboardController : NetworkBehaviour
             serializer.SerializeValue(ref Placement);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Time);
+            serializer.SerializeValue(ref OwnerClientId);
+            serializer.SerializeValue(ref IsPlayerKart); 
         }
     }
 
