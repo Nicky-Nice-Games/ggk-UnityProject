@@ -10,6 +10,8 @@ public class BoostTier4 : BaseItem
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
     private VFXHandler vfxScript;
+    private VisualEffect warpEffect;
+
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -29,6 +31,8 @@ public class BoostTier4 : BaseItem
             //    Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
             vfxScript = driver.vfxHandler;
 
+            // get warp effect from scrip
+            warpEffect = vfxScript.warpBoost;
 
             GameObject kartParent = driver.transform.parent.gameObject;
             KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
@@ -69,6 +73,7 @@ public class BoostTier4 : BaseItem
 
             // Makes game object with wormhole effect appear
             warpBoostEffect.SetActive(true);
+            warpEffect.Play();
 
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,
@@ -113,6 +118,7 @@ public class BoostTier4 : BaseItem
         thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
         thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
         kartCheck.checkpointId = warpCheckpointId;
+        warpEffect.Stop();
         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
         yield return new WaitForFixedUpdate();
         warpBoostEffect.SetActive(false);

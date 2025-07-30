@@ -546,11 +546,11 @@ public class ItemHolder : NetworkBehaviour
                             }
                             else if (IsSpawned && IsServer)
                             {
-                                currentItemTier.Value++;
+                                if (currentCanUpgrade.Value) currentItemTier.Value++;
                             }
                             else
                             {
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                         }
                     }
@@ -582,11 +582,11 @@ public class ItemHolder : NetworkBehaviour
                             }
                             else if (IsSpawned && IsServer)
                             {
-                                currentItemTier.Value++;
+                                if (currentCanUpgrade.Value) currentItemTier.Value++;
                             }
                             else
                             {
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                         }
                     }
@@ -618,11 +618,11 @@ public class ItemHolder : NetworkBehaviour
                             }
                             else if (IsSpawned && IsServer)
                             {
-                                currentItemTier.Value++;
+                                if (currentCanUpgrade.Value) currentItemTier.Value++;
                             }
                             else
                             {
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                         }
                         // // Do not upgrade if shield is being used
@@ -671,11 +671,11 @@ public class ItemHolder : NetworkBehaviour
                             }
                             else if (IsSpawned && IsServer)
                             {
-                                currentItemTier.Value++;
+                                if (currentCanUpgrade.Value) currentItemTier.Value++;
                             }
                             else
                             {
-                                ItemTier++;
+                                if (canUpgrade) ItemTier++;
                             }
                         }
                     }

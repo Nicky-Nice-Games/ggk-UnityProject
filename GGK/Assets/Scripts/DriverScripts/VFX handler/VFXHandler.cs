@@ -19,9 +19,16 @@ public class VFXHandler : NetworkBehaviour
     public VisualEffect shield;
     public VisualEffect itemBoost;
     public List<VisualEffect> hover;
+    public VisualEffect warpBoost;
 
 
     public List<ParticleSystem> boostFlames;
+
+    // temporary fix to stop warp boost when loaded into the scene (can be deleted)
+    private void Awake()
+    {
+        warpBoost.Stop();
+    }
 
     // ---------- Public Methods ----------
     public void StopItemEffects()
@@ -276,6 +283,8 @@ public class VFXHandler : NetworkBehaviour
             itemBoost.Stop();
         if (hover != null)
             hover.ForEach(vfx => { if (vfx.isActiveAndEnabled) vfx.Stop(); });
+        if (warpBoost != null && warpBoost.isActiveAndEnabled)
+            warpBoost.Stop();
     }
 
     void PlayShieldVFXLocal(float duration)
