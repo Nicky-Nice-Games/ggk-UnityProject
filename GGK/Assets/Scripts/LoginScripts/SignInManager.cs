@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Lobbies.Models;
-using UnityEditor.UIElements;
+//using UnityEditor.UIElements; this is causing a conflict
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
