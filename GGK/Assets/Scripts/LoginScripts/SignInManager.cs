@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Lobbies.Models;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,19 +17,18 @@ public class SignInManager : MonoBehaviour
 {
 
     // UI elements for different parts of sign in scene
-    [SerializeField]
-    GameObject loginUI;
-    [SerializeField]
-    GameObject signUpUI;
-    [SerializeField]
-    GameObject loginOptions;
-    [SerializeField]
-    VirtualKeyboardController keyboard;
+    [SerializeField] GameObject loginUI;
+    [SerializeField] GameObject signUpUI;
+    [SerializeField] GameObject loginOptions;
+    [SerializeField] VirtualKeyboardController keyboard;
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
     PlayerInfo playerInfo;
     APIManager apiManager;
+    public GameObject emailError;
+    public GameObject usernameError;
+    public GameObject loginError;
 
     [SerializeField] private List<TMP_InputField> inputFieldsList = new List<TMP_InputField>();         // Holds all fields
     private Dictionary<string, TMP_InputField> inputFields = new Dictionary<string, TMP_InputField>();  // Organizes fields
@@ -71,7 +71,7 @@ public class SignInManager : MonoBehaviour
     /// </summary>
     /// <param name="fieldName">input field name</param>
     /// <param name="data">data from user input</param>
-    public void SetPlayerLoginData(string fieldName, string data)
+    public async void SetPlayerLoginData(string fieldName, string data)
     {
         if (logInOption == "Login")
         {
@@ -84,7 +84,7 @@ public class SignInManager : MonoBehaviour
 
                 case "Password Login":
                     playerInfo.playerPassword = data;
-                    apiManager.CheckPlayer(playerInfo);
+                    await apiManager.CheckPlayer(playerInfo);
                     return;
 
                 default:
@@ -115,7 +115,7 @@ public class SignInManager : MonoBehaviour
                         keyboard.curField --;
                         return;
                     }
-                    apiManager.CreatePlayer(playerInfo);
+                    await apiManager.CreatePlayer(playerInfo);
                     return;
 
                 default:

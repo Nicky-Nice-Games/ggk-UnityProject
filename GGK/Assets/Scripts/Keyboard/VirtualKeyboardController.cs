@@ -122,7 +122,7 @@ public class VirtualKeyboardController : MonoBehaviour
         for (int i = 0; i < keyButtons.Count; i++)
         {
             ColorBlock colors = keyButtons[i].colors;
-            colors.normalColor = (i == index) ? Color.yellow : Color.white;
+            colors.normalColor = (i == index) ? new Color(255, 255, 150, 52) : Color.white;
             keyButtons[i].colors = colors;
         }
     }

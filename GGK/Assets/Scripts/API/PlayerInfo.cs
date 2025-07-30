@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,9 @@ public class PlayerInfo : MonoBehaviour
 {
     // Basic player and match stats
     [Header("Do not Change")]
-    public int playerID, raceStartTime, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public DateTime raceStartTime;
+    public float raceTime;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
@@ -30,7 +33,8 @@ public class PlayerInfo : MonoBehaviour
     public PlayerInfo()
     {
         playerID = 0;
-        raceStartTime = 0;
+        raceStartTime = DateTime.Now;
+        raceTime = 0.0f;
         racePosition = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
@@ -55,7 +59,8 @@ public class PlayerInfo : MonoBehaviour
     {
         this.clientID = clientID;
         playerID = 0;
-        raceStartTime = 0;
+        raceStartTime = DateTime.Now;
+        raceTime = 0.0f;
         racePosition = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
@@ -81,6 +86,7 @@ public class PlayerInfo : MonoBehaviour
     {
         playerID = other.playerID;
         raceStartTime = other.raceStartTime;
+        raceTime = other.raceTime;
         racePosition = other.racePosition;
         mapRaced = other.mapRaced;
         collisionsWithPlayers = other.collisionsWithPlayers;
