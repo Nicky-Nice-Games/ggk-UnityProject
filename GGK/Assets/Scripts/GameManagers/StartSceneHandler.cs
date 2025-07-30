@@ -21,6 +21,13 @@ public class StartSceneHandler : MonoBehaviour
         startButton.onClick.AddListener(() => gamemanagerObj.StartGame());
         startButton.onClick.AddListener(() => gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
         quitButton.onClick.AddListener(() => gamemanagerObj.ExitGame());
+
+        if (MusicStateManager.instance != null)
+        {
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
+            MusicLapStateManager.instance.SetLapState(LapState.None);
+            MusicStateManager.instance.SetMusicState(MusicState.Menu);
+        }
     }
 
     // Update is called once per frame

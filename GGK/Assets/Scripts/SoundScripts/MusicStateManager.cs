@@ -46,12 +46,6 @@ public class MusicStateManager : MonoBehaviour
         //The Music event gets posted at the very start of the game.
         //This event keeps going perpetually until the game is closed.
         startMusic.Post(gameObject);
-
-        //Changes the music state to the menu, as it's where the game starts.
-        SetMusicState(MusicState.Menu);
-        //Both of these are set to None since they aren't relevant at the moment.
-        MusicLapStateManager.instance.SetLapState(LapState.None);
-        MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
     }
 
     /// <summary>
