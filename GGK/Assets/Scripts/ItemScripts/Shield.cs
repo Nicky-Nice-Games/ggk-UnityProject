@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Shield : BaseItem
 {
@@ -28,6 +29,9 @@ public class Shield : BaseItem
 
         timerColor = Color.red;
         timerColor.a = defaultColor.a;
+
+        shieldEffect.SetFloat("Duration", timer);
+        shieldEffect.Play();
     }
 
     // Update is called once per frame

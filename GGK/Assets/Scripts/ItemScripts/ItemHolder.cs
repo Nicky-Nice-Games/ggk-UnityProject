@@ -53,6 +53,10 @@ public class ItemHolder : MonoBehaviour
 
     public List<VisualEffect> effects;
 
+    public VisualEffect shieldEffect;
+
+    public VisualEffect boostEffect;
+
     // [SerializeField]
     // private TextMesh heldItemText;
 
@@ -80,10 +84,15 @@ public class ItemHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // STOP
-        foreach (VisualEffect vs in effects)
+        if (thisDriver)
         {
-            vs.Stop();
+            // STOP
+            foreach (VisualEffect vs in effects)
+            {
+                vs.Stop();
+            }
+            shieldEffect.Stop();
+            boostEffect.Stop();
         }
 
         DOTween.Init();
@@ -103,7 +112,10 @@ public class ItemHolder : MonoBehaviour
         //soundPlayer = GetComponent<AudioSource>();
         driverItemTier = 1;
 
-        warpBoostEffect.SetActive(false);
+        if (thisDriver)
+        {
+            warpBoostEffect.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -211,6 +223,12 @@ public class ItemHolder : MonoBehaviour
 
         if (uses > 0 && context.phase == InputActionPhase.Performed)
         {
+            // grab the kart's shield effect before instantiating
+            if (heldItem.ItemCategory == "Shield")
+            {
+                heldItem.shieldEffect = shieldEffect;
+            }
+
             itemDisplay.rectTransform.position = itemDisplayPosition;
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
@@ -710,6 +728,7 @@ public class ItemHolder : MonoBehaviour
 
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
+        boostEffect.Play();
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero; 
@@ -720,6 +739,7 @@ public class ItemHolder : MonoBehaviour
             driver.sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+        boostEffect.Stop();
         warpBoostEffect.SetActive(false);
     }
 

@@ -35,7 +35,7 @@ public class KartCheckpoint : MonoBehaviour
 
     void Start()
     {
-        totalLaps = 1;
+        totalLaps = 3;
         checkpointId = 0;
         Transform childTransform = parent.transform.GetChild(0);
         physicsNPC = childTransform.GetComponent<NPCPhysics>();
