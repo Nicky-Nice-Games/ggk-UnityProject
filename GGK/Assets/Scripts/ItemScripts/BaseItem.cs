@@ -56,6 +56,9 @@ public class BaseItem : NetworkBehaviour
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
 
     public NetworkVariable<NetworkBehaviourReference> networkKartReference = new NetworkVariable<NetworkBehaviourReference>();
+
+    public event EventHandler OnTimerEnd;
+
     #endregion
 
 
@@ -63,6 +66,7 @@ public class BaseItem : NetworkBehaviour
     {
         networkKartReference.OnValueChanged += OnKartReferenceChanged;
     }
+
     public override void OnNetworkDespawn()
     {
         networkKartReference.OnValueChanged -= OnKartReferenceChanged;
@@ -83,7 +87,6 @@ public class BaseItem : NetworkBehaviour
         }
     }
 
-
     /// <summary>
     /// Counts down 1 second until the item disappears
     /// </summary>
@@ -99,7 +102,7 @@ public class BaseItem : NetworkBehaviour
         // Destroys the item
         else
         {
-            timerEndCallback();
+            OnTimerEnd?.Invoke(this, EventArgs.Empty);
             if (IsServer)
             {
                 GetComponent<NetworkObject>().Despawn();

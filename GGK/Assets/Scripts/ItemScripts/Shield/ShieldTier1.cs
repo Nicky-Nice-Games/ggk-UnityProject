@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,11 @@ public class ShieldTier1 : BaseItem
     public override void Start()
     {
         base.Start();
+
+        // this line clears the inventory instantly and allows for new items to get picked up again
+        // timerEndCallback();
+        // this line makes inventory clear when the shield ends
+        OnTimerEnd += (object sender, EventArgs e) => { timerEndCallback(); };
 
         timer = 4.0f;
 

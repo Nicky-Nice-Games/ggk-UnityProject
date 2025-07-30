@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,12 @@ public class ShieldTier4 : BaseItem
     public override void Start()
     {
         base.Start();
+        
+        // this line clears the inventory instantly and allows for new items to get picked up again
+        // timerEndCallback();
+        // this line makes inventory clear when the shield ends
+        OnTimerEnd += (object sender, EventArgs e) => { timerEndCallback(); };
+        
         timer = 10.0f;
     
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
