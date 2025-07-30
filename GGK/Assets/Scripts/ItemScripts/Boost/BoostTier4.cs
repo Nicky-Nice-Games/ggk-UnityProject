@@ -118,9 +118,9 @@ public class BoostTier4 : BaseItem
         thisDriver.sphere.transform.position = warpCheckpoint.transform.position;
         thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
         kartCheck.checkpointId = warpCheckpointId;
-        warpEffect.Stop();
         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
         yield return new WaitForFixedUpdate();
+        warpEffect.Stop();
         warpBoostEffect.SetActive(false);
     }
 
