@@ -18,7 +18,7 @@
     "Type": "User",
     "GUID": "{50143547-9C91-4DE3-BF44-DADF8D5E3DE1}",
     "Language": "SFX",
-    "Hash": "{2BC4E813-0552-C7CC-50D2-B6AEFEF52B1A}",
+    "Hash": "{EA74B1A3-B6BB-0D47-EE05-F25B6798D0C7}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\SFX",
     "ShortName": "SFX",
     "Path": "SFX.bnk",
@@ -104,6 +104,30 @@
       "CachePath": "05/{053DF19A-A564-7C84-E7F8-20A51903360F}.wem"
      },
      {
+      "Id": "701571330",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Shield.wav",
+      "CachePath": "06/{06E5A9BB-53A2-5A61-8EC1-96E2470F85A1}.wem"
+     },
+     {
+      "Id": "729195561",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "can_open2.wav",
+      "CachePath": "ED/{ED7EA130-EA65-7D18-CC86-BD5B19849BFE}.wem"
+     },
+     {
+      "Id": "749855498",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "can_open1.wav",
+      "CachePath": "2F/{2F80578E-F6E5-F640-48E3-F623AD2903A0}.wem"
+     },
+     {
       "Id": "787860068",
       "Language": "SFX",
       "Streaming": "false",
@@ -118,6 +142,14 @@
       "Location": "Memory",
       "ShortName": "engine_high.wav",
       "CachePath": "97/{97D35552-E832-385F-B774-2DBBD1A14E3D}.wem"
+     },
+     {
+      "Id": "832686228",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "can_open3.wav",
+      "CachePath": "2D/{2DFB56B5-3667-F0D9-A503-423F7AFBB292}.wem"
      },
      {
       "Id": "860057301",
@@ -201,6 +233,26 @@
      }
     ],
     "Events": [
+     {
+      "Id": "1853968855",
+      "Name": "Play_Can_Open",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Can_Open",
+      "GUID": "{7F64D5BE-412D-40F7-891F-6B99454A4F41}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.9064375",
+      "DurationMax": "0.9064375",
+      "MediaRefs": [
+       {
+        "Id": "729195561"
+       },
+       {
+        "Id": "749855498"
+       },
+       {
+        "Id": "832686228"
+       }
+      ]
+     },
      {
       "Id": "3158137442",
       "Name": "Play_driftScreech",
@@ -402,6 +454,18 @@
       "MediaRefs": [
        {
         "Id": "879744155"
+       }
+      ]
+     },
+     {
+      "Id": "1988178265",
+      "Name": "Play_Shield",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Shield",
+      "GUID": "{E66A442D-995A-4292-B5B5-59FAE7F684E5}",
+      "DurationType": "Infinite",
+      "MediaRefs": [
+       {
+        "Id": "701571330"
        }
       ]
      },
@@ -2579,6 +2643,6 @@
     ]
    }
   ],
-  "FileHash": "{6DDB7C95-8EAB-593D-4E7C-AE48715E79B5}"
+  "FileHash": "{39FB5BC3-C254-4A30-C71B-FF3DAA67C375}"
  }
 }

@@ -15,6 +15,7 @@ namespace AK
     {
         static const AkUniqueID LAP_MADE = 365509512U;
         static const AkUniqueID MUSIC = 3991942870U;
+        static const AkUniqueID PLAY_CAN_OPEN = 1853968855U;
         static const AkUniqueID PLAY_DRIFTSCREECH = 3158137442U;
         static const AkUniqueID PLAY_ENGINE_HIGH = 3755593723U;
         static const AkUniqueID PLAY_ENGINE_HIGH_FULL = 1413651457U;
@@ -30,6 +31,7 @@ namespace AK
         static const AkUniqueID PLAY_SELECT_RIGHT = 1756715325U;
         static const AkUniqueID PLAY_SELECT_START = 3240429611U;
         static const AkUniqueID PLAY_SELECT_UP = 3823515762U;
+        static const AkUniqueID PLAY_SHIELD = 1988178265U;
         static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
 
