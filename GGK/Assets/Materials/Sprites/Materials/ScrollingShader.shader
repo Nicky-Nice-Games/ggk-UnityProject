@@ -76,4 +76,3 @@ float4 frag(Interpolators i) : SV_Target
         }
     }
 }
-w
