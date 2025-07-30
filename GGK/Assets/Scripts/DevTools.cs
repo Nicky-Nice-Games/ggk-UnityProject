@@ -29,6 +29,8 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
 //  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
 //  the prompt or pause panel before it actually registers 
+//Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
+//  figure out how to only get it to stop if the player changes the value
 
 
 /// <summary>
@@ -111,9 +113,11 @@ public class DevTools : MonoBehaviour
     {
         AddListener(gameObject);
 
+        isScrolling = false;
+
         commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for Param options";
+                "or \n[MethodName] Options for Param options";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -154,6 +158,7 @@ public class DevTools : MonoBehaviour
             if (commandPromptCanvas.enabled == false)
             {
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
             }
             else
@@ -315,7 +320,7 @@ public class DevTools : MonoBehaviour
 
                     case "ClearLog":
                         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or [methodName] Options for Param options";
+                        "or \n[MethodName] Options for Param options";
                         break;
 
                     default:
@@ -427,30 +432,35 @@ public class DevTools : MonoBehaviour
                 sceneLoader.LoadScene("StartScene");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MultiSingle":
                 sceneLoader.LoadScene("MultiSinglePlayerScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "ModeSelect":
                 sceneLoader.LoadScene("GameModeSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "PlayerKart":
                 sceneLoader.LoadScene("PlayerKartScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MapSelect":
                 sceneLoader.LoadScene("MapSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
@@ -641,14 +651,14 @@ public class DevTools : MonoBehaviour
     }
 
 
-    public void DeactivatePause()
-    {
-        //Checks if pause panel is active and deactivates if so
-        GameObject pausePanel = GameObject.Find("PausePanel");
-        if (pausePanel != null && pausePanel.activeSelf)
-        {
-            pausePanel.SetActive(false);
-        }
-    }
+    //public void DeactivatePause()
+    //{
+    //    //Checks if pause panel is active and deactivates if so
+    //    GameObject pausePanel = GameObject.Find("PausePanel");
+    //    if (pausePanel != null && pausePanel.activeSelf)
+    //    {
+    //        pausePanel.SetActive(false);
+    //    }
+    //}
 
 }
