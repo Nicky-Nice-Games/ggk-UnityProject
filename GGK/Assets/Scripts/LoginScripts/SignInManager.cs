@@ -98,7 +98,7 @@ public class SignInManager : MonoBehaviour
                 case "Password Login":
                     playerInfo.playerPassword = data;
                     await apiManager.CheckPlayer(playerInfo);
-                    StartCoroutine(HandleLoginSuccess());
+                    //StartCoroutine(HandleLoginSuccess());
                     return;
 
                 default:
@@ -130,7 +130,7 @@ public class SignInManager : MonoBehaviour
                         return;
                     }
                     await apiManager.CreatePlayer(playerInfo);
-                    StartCoroutine(HandleLoginSuccess());
+                    //StartCoroutine(HandleLoginSuccess());
                     return;
 
                 default:
