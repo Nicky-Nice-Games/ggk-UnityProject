@@ -47,7 +47,7 @@ public class ShieldTier4 : BaseItem
     {
         if (collision.gameObject.CompareTag("Kart"))
         {
-            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() != kart)
+            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kart)
             {
                 return;
             }
