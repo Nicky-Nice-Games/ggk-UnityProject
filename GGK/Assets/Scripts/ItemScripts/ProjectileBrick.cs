@@ -22,9 +22,9 @@ public class ProjectileBrick : ItemBox
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
         Debug.Log("Collided!");
-        BaseItem bItem = Instantiate(items[0]);
-        itemScript.HeldItem = bItem;
-        itemScript.HeldItem.ItemTier = 1;
-        bItem.gameObject.SetActive(false);
+        // BaseItem bItem = Instantiate(items[0]);
+        // itemScript.HeldItem = bItem;
+        // itemScript.HeldItem.ItemTier = 1;
+        // bItem.gameObject.SetActive(false);
     }
 }
