@@ -166,8 +166,9 @@ public class NEWDriver : NetworkBehaviour
         }
 
         sphere.drag = 0.5f;
-
+        sphere.isKinematic = false;
         StopParticles();
+
 
         baseRotation = steeringWheel.transform.localRotation;
         if (!IsSpawned)
@@ -188,10 +189,11 @@ public class NEWDriver : NetworkBehaviour
             CharacterBuilder.AddCharacter(appearance);
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
-            sphere.isKinematic = false;
+            
 
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
+        
     }
 
     public override void OnNetworkSpawn()
