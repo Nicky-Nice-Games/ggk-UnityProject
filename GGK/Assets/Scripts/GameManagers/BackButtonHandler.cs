@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts;
+using Unity.Netcode;
 
 public class BackButtonHandler : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> backOption = new List<GameObject>();
+    private GameObject backOption;
     private GameManager gamemanagerObj;
 
     // Start is called before the first frame update
@@ -15,12 +16,19 @@ public class BackButtonHandler : MonoBehaviour
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
 
-        // Assigning the buttons their listeners
-        foreach (GameObject obj in backOption)
+        // assign back button
+        Button button = backOption.GetComponent<Button>();
+        button.onClick.AddListener(() =>
+            GetComponent<BackButtonHandler>().GoBack());
+
+        // back button is inactive during multiplayer
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
+            button.gameObject.SetActive(false);
+        }
+        else
+        {
+            button.gameObject.SetActive(true);
         }
     }
 
@@ -34,21 +42,67 @@ public class BackButtonHandler : MonoBehaviour
     {
         switch (gamemanagerObj.curState)
         {
+            case GameStates.login:
+                gamemanagerObj.sceneLoader.LoadScene("StartScene");
+                gamemanagerObj.curState = GameStates.start;
+                break;
             case GameStates.multiSingle:
-                gamemanagerObj.LoadStartMenu();
+                gamemanagerObj.sceneLoader.LoadScene("Login");
+                gamemanagerObj.curState = GameStates.login;
+                break;
+            case GameStates.lobby:
+                //if (MultiplayerManager.Instance.IsMultiplayer)
+                //{
+                //    // get the players in the lobby and kick all (except the host)
+                //    if (LobbyManager.Instance.IsLobbyHost())
+                //    {
+                //        Debug.Log("Kicking");
+                //        int players = LobbyManager.Instance.GetJoinedLobby().Players.Count;
+                //        for (int i = 0; i < players; i++)
+                //        {
+                //            LobbyManager.Instance.KickPlayer();
+                //        }
+                //    }
+                //    // end multiplayer and leave the lobby
+                //    Debug.Log("Leaving");
+                //    LobbyManager.Instance.LeaveLobby();
+                //    MultiplayerManager.Instance.IsMultiplayer = false;
+                //}
+                gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
+                gamemanagerObj.curState = GameStates.multiSingle;
                 break;
             case GameStates.gameMode:
-                gamemanagerObj.StartGame();
+                //if (MultiplayerManager.Instance.IsMultiplayer)
+                //{
+                //    // get the players in the lobby and kick all (except the host)
+                //    if (LobbyManager.Instance.IsLobbyHost())
+                //    {
+                //        Debug.Log("Kicking");
+                //        int players = LobbyManager.Instance.GetJoinedLobby().Players.Count;
+                //        for (int i = 0; i < players; i++)
+                //        {
+                //            LobbyManager.Instance.KickPlayer();
+                //        }
+                //    }
+                //    // end multiplayer and leave the lobby
+                //    Debug.Log("Leaving");
+                //    LobbyManager.Instance.LeaveLobby();
+                //    MultiplayerManager.Instance.IsMultiplayer = false;
+                //}
+                gamemanagerObj.sceneLoader.LoadScene("MultiSinglePlayerScene");
+                gamemanagerObj.curState = GameStates.multiSingle;
                 break;
             case GameStates.playerKart:
                 gamemanagerObj.sceneLoader.LoadScene("GameModeSelectScene");
                 gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
-                gamemanagerObj.LoadedGameMode();
+                gamemanagerObj.sceneLoader.LoadScene("PlayerKartScene");
+                gamemanagerObj.curState = GameStates.playerKart;
                 break;
             default:
                 break;
         }
     }
+
 }

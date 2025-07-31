@@ -21,18 +21,18 @@ public class ItemBoxManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (ItemBox item in itemBoxes)
-        {
-            if (item.gameObject.activeSelf == false)
-            {
-                // THIS SHOULD BE A METHOD IN THE ITEM BOX
-                item.RespawnTimer -= 1.0f * Time.deltaTime;
-                if (item.RespawnTimer < 0.0f)
-                {
-                    item.gameObject.SetActive(true);
-                    item.RespawnTimer = 5.0f;
-                }
-            }
-        }
+        // foreach (ItemBox item in itemBoxes)
+        // {
+        //     if (item.gameObject.activeSelf == false)
+        //     {
+        //         // THIS SHOULD BE A METHOD IN THE ITEM BOX
+        //         item.RespawnTimer -= 1.0f * Time.deltaTime;
+        //         if (item.RespawnTimer < 0.0f)
+        //         {
+        //             item.gameObject.SetActive(true);
+        //             item.RespawnTimer = 5.0f;
+        //         }
+        //     }
+        // }
     }
 }

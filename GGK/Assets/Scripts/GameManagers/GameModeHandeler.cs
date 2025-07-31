@@ -9,10 +9,18 @@ public class GameModeHandeler : MonoBehaviour
     [SerializeField]
     private List<GameObject> modeOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
+    // [SerializeField] private Transform gameModeButtons;
+    // [SerializeField] private Transform waitingScreen;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        /*
+        if single player show gamemode options
+        else if multiplayer host show gamemode options 
+        else if multiplayer client show waiting screen
+        */
         gamemanagerObj = FindAnyObjectByType<GameManager>();
 
         // Assigning the buttons their listeners
@@ -39,12 +47,26 @@ public class GameModeHandeler : MonoBehaviour
                 gamemanagerObj.sceneLoader.LoadScene("GrandPrixStub"));
             }
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
+        // this is to bring up the waiting screens for clients when in multiplayer
+        // if (!MultiplayerManager.Instance.IsMultiplayer)
+        // {
+        //     waitingScreen.gameObject.SetActive(false);
+        //     gameModeButtons.gameObject.SetActive(true);
+        // }
+        // else
+        // {
+        //     if (MultiplayerManager.Instance.IsHost)
+        //     {
+        //         waitingScreen.gameObject.SetActive(false);
+        //         gameModeButtons.gameObject.SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         gameModeButtons.gameObject.SetActive(false);
+        //         waitingScreen.gameObject.SetActive(true);
+        //     }
+        // }
     }
 
     // Each game mode can load their own stuff
