@@ -30,7 +30,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
 //  figure out how to only get it to stop if the player changes the value
 //Ability to adjust player and npc speed
-//Debug GiveItem
+//Debug GiveItem (implement with new item system)
 
 
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
@@ -187,15 +187,15 @@ public class DevTools : MonoBehaviour
         {
             inputField.text = "";
             inputField.ActivateInputField();
-            isScrolling = false;
-            //AutoScroll(scrollRect);
+            //isScrolling = false;
+            AutoScroll(scrollRect);
         }
 
         //Turns on auto-scroll when the user isn't scrolling
-        if(!isScrolling)
-        {
-            AutoScroll(scrollRect);
-        }
+        //if(!isScrolling)
+        //{
+        //    AutoScroll(scrollRect);
+        //}
         //else
         //{
         //    StopAutoScroll();
@@ -648,7 +648,8 @@ public class DevTools : MonoBehaviour
     /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
     public void AutoScroll(ScrollRect scrollRect)
     {
-        scrollRect.verticalNormalizedPosition = 0;
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;
         //scrollBar.value = 0;
     }
 
