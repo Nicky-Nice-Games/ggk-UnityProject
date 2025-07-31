@@ -42,6 +42,23 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Prompt persists through menu scenes
 
 
+
+
+/// <summary>
+/// Enum for every method command to simplify adding additional methods
+/// </summary>
+public enum MethodName 
+{
+    ShowMethods,
+    LoadMap,
+    LoadScene,
+    GameModeChange,
+    GiveItem,
+    ClearLog
+}
+
+
+
 /// <summary>
 /// Enum for each map name keyword/command
 /// </summary>
@@ -105,6 +122,7 @@ public class DevTools : MonoBehaviour
 
     //Variables and references for the visible command prompt game objects
     private string textLog;
+    private string defaultText;
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
@@ -129,8 +147,9 @@ public class DevTools : MonoBehaviour
         isScrolling = false;
 
         commandPromptCanvas.enabled = false;
-        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
+        defaultText = "Welcome to Command Prompt\nType ShowMethods for methods " +
                 "or \n[MethodName] Options for Param options";
+        textLog = defaultText;
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -268,12 +287,14 @@ public class DevTools : MonoBehaviour
 
             if (parts != null)
             {
-
                 switch (parts[0])
                 {
                     case "ShowMethods":
-                        textLog += "\nMethod Options:\nShowMethods\nLoadMap" +
-                            "\nLoadScene\nGameModeChange\nGiveItem\nClearLog";
+                        textLog += "\nMethod Command Options: ";
+                        foreach (MethodName method in Enum.GetValues(typeof(MethodName)))
+                        {
+                            textLog += "\n" + method;
+                        }
                         break;
 
                     case "LoadMap":
@@ -337,8 +358,7 @@ public class DevTools : MonoBehaviour
                         break;
 
                     case "ClearLog":
-                        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or \n[MethodName] Options for Param options";
+                        textLog = defaultText;
                         break;
 
                     default:
