@@ -17,8 +17,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  entered (likely something to do with On End Edit)
 //If seen as an issue (which I think it probably is), make it so that the command
 //  prompt is hidden when entering a map which happens when the prompt was already open
-//  and you go into a track not using a command (Update: now not working with command either)
-//  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
+//  and you go into a track not using a command
 //Add other commands (see dev keyboard shortcuts; restart command?)
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
@@ -30,11 +29,17 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  the prompt or pause panel before it actually registers 
 //Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
 //  figure out how to only get it to stop if the player changes the value
+//Ability to adjust player and npc speed
+//Debug GiveItem
 
-//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
-//  works when you load into a map and then open the prompt
+
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
 //  Update: can type if you close and reopen prompt but not initially even though cursor is there
+//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
+//  works when you load into a map and then open the prompt
+
+//Done (?)
+//Prompt persists through menu scenes
 
 
 /// <summary>
@@ -113,6 +118,9 @@ public class DevTools : MonoBehaviour
     private BaseItem baseItem;
 
 
+    //[SerializeField] private GameObject pausePanel;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,7 +139,7 @@ public class DevTools : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
+        //trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
         #region Commented out testing
         //Debug.Log("loading " + sceneLoader.loading);
@@ -665,11 +673,18 @@ public class DevTools : MonoBehaviour
     //public void DeactivatePause()
     //{
     //    //Checks if pause panel is active and deactivates if so
-    //    GameObject pausePanel = GameObject.Find("PausePanel");
-    //    if (pausePanel != null && pausePanel.activeSelf)
+    //    //GameObject pausePanel = GameObject.Find("PausePanel");
+    //    if (pausePanel != null)
     //    {
     //        pausePanel.SetActive(false);
+    //        Time.timeScale = 1;
     //    }
+
+    //    //if (pausePanel != null)
+    //    //{
+    //    //    //pausePanel.SetActive(true);
+    //    //    pausePanel.SetActive(false);
+    //    //}
     //}
 
 }
