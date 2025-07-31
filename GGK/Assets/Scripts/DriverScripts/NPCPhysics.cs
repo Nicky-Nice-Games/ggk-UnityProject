@@ -1,11 +1,12 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCPhysics : MonoBehaviour
+public class NPCPhysics : NetworkBehaviour
 {
     // Keep
     [Header("Do not Change")]
@@ -131,6 +132,7 @@ public class NPCPhysics : MonoBehaviour
     float driftTweenDuration = 0.4f;
 
     //Stun Settings
+    [SerializeField]
     bool isStunned;
 
     [Header("Sound Settings")]
@@ -145,7 +147,6 @@ public class NPCPhysics : MonoBehaviour
     public bool isConfused;
     public float confusedTimer;
     public Transform childNormal;
-
 
     // Start is called before the first frame update
     void Start()
@@ -166,7 +167,27 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
+        if (!IsSpawned)
+        {
+            CharacterBuilder.RandomizeUniqueAppearance(GetComponent<AppearanceSettings>());
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, KC);
+        }
+    }
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log("NetworkNPC");
+        Transform childTransform = parent.transform.GetChild(1);
+        KC = childTransform.GetComponent<KartCheckpoint>();
+        MiniMapHud.instance.AddKart(gameObject);
 
+        if (IsOwner)
+        {
+            AppearanceSettings settings = GetComponent<AppearanceSettings>();
+            settings.SetKartAppearanceRpc(settings.name, settings.color);
+        }
+
+        PlacementManager.instance.AddKart(gameObject, KC);
     }
 
     public void StopParticles()
@@ -199,10 +220,10 @@ public class NPCPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (IsSpawned)
-        //{
-        //    if (!IsOwner) return;
-        //}
+        if (IsSpawned)
+        {
+            if (!IsOwner) return;
+        }
         HandleGroundCheck();
         ApplyWheelVisuals();
 
@@ -214,7 +235,11 @@ public class NPCPhysics : MonoBehaviour
         //------------Movement stuff---------------------
 
         //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
+        if (isStunned)
+        { 
+            movementDirection = Vector3.zero;
+            return;
+        }
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -388,10 +413,11 @@ public class NPCPhysics : MonoBehaviour
         {
             destinationID = 0;
         }
-        destination = KC.checkpointList[destinationID];
-        randomizedTarget = destination.transform.position + checkpointOffset;
-
-
+        if (KC.checkpointList.Count > 0)
+        {
+            destination = KC.checkpointList[destinationID];
+            randomizedTarget = destination.transform.position + checkpointOffset;
+        }
 
         if (isGrounded)
         {
@@ -482,7 +508,7 @@ public class NPCPhysics : MonoBehaviour
             else
             {
                 // If both sides are blocked or both are open, pick a default direction
-                movementDirection.x += Random.value > 0.5f ? avoidStrength : -avoidStrength;
+                movementDirection.y -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -499,9 +525,6 @@ public class NPCPhysics : MonoBehaviour
         // Clamp for safety
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
-
-
-
 
     void HandleGroundCheck()
     {
@@ -896,5 +919,37 @@ public class NPCPhysics : MonoBehaviour
         turboTwisting = false; //Reset the turbo twisting state
     }
 
+    public void Stun(float duration)
+    {
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+
+        StartCoroutine(StunCoroutine(duration));
+
+
+
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
+        isStunned = false;
+    }
 
 }
