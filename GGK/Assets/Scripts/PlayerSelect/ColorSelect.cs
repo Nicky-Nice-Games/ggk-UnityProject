@@ -15,6 +15,16 @@ public class ColorSelect : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI colorDisplay;
 
+    [SerializeField]
+    private Sprite buttonDeselected;
+
+    [SerializeField]
+    private Sprite buttonSelectedSprite;
+
+    [SerializeField]
+    private List<GameObject> buttons;
+
+
     void Start()
     {
         // Get character data
@@ -23,10 +33,16 @@ public class ColorSelect : MonoBehaviour
 
     public void SelectColor(Button color)
     {
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].GetComponent<Image>().sprite = buttonDeselected;
+        }
         if (charData != null)
         {
             charData.characterColor = color.transform.GetChild(0).GetComponent<Image>().color;
         }
+        color.GetComponent<Image>().sprite = buttonSelectedSprite;
         colorDisplay.text = color.name;
     }
 }
+
