@@ -220,6 +220,12 @@ public class DynamicRecovery : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;
 
+        if(kartMovementScript != null)
+        {
+            kartMovementScript.Recover();
+        }
+
+
         yield return new WaitForSeconds(1.3f); // hold black screen for effect
 
         if (kartMovementScript != null)

@@ -1122,4 +1122,19 @@ public class NEWDriver : MonoBehaviour
         kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
         isStunned = false;
     }
+
+    public void Recover()
+    {
+        StopCoroutine(DriftHopEnabler());
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickCount = 0;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+    }
 }

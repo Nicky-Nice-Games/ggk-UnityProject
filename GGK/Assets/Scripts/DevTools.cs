@@ -12,8 +12,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Gina Piccirilli
 
 //OTHER TODOs (not listed elsewhere)
-//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
-//  Update: can type if you close and reopen prompt but not initially even though cursor is there
+
 //Fix issue where when clicking a button with the mouse it thinks input has been
 //  entered (likely something to do with On End Edit)
 //If seen as an issue (which I think it probably is), make it so that the command
@@ -24,9 +23,18 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
-//Can't load into another map (or scene?) when paused, it goes to a black screen but works after you
+//Can't load into another map or scene when paused, it goes to a black screen but works after you
 //  unpause - make it auto-unpause/disable pause menu when load command happens
-//Change map names to updated names
+//  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
+//  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
+//  the prompt or pause panel before it actually registers 
+//Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
+//  figure out how to only get it to stop if the player changes the value
+
+//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
+//  works when you load into a map and then open the prompt
+//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
+//  Update: can type if you close and reopen prompt but not initially even though cursor is there
 
 
 /// <summary>
@@ -38,6 +46,7 @@ public enum MapName
     TechHouseTurnpike,
     DormRoomDerby,
     AllNighterExpressway,
+    QuarterMile,
     TestGrid,
     TestTube
 }
@@ -95,6 +104,7 @@ public class DevTools : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private Scrollbar scrollBar;
     private bool isScrolling;
 
     //Variables and references for GiveItem command
@@ -108,9 +118,11 @@ public class DevTools : MonoBehaviour
     {
         AddListener(gameObject);
 
+        isScrolling = false;
+
         commandPromptCanvas.enabled = false;
         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for Param options";
+                "or \n[MethodName] Options for Param options";
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -121,29 +133,29 @@ public class DevTools : MonoBehaviour
     {
         //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
-
+        #region Commented out testing
         //Debug.Log("loading " + sceneLoader.loading);
         //if (sceneLoader.loading)
         //{
-            //inputField.ActivateInputField();
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
-            //Debug.Log("Length " + textLog.Length);
+        //inputField.ActivateInputField();
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //Debug.Log("Length " + textLog.Length);
 
-            //TODO FIX! won't work if log has been cleared, run secondary check?
-            //  ALSO overrides disabling when entering a map
-            //if (textLog.Length > 131)   
-            //{
-            //    commandPromptCanvas.enabled = true;
-            //    inputField.ActivateInputField();
-            //}
-            //else
-            //{
-            //    commandPromptCanvas.enabled = false;
-            //}
-            //sceneLoader.loading = false;
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //TODO FIX! won't work if log has been cleared, run secondary check?
+        //  ALSO overrides disabling when entering a map
+        //if (textLog.Length > 131)   
+        //{
+        //    commandPromptCanvas.enabled = true;
+        //    inputField.ActivateInputField();
         //}
-      
+        //else
+        //{
+        //    commandPromptCanvas.enabled = false;
+        //}
+        //sceneLoader.loading = false;
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //}
+        #endregion
 
         //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -151,6 +163,7 @@ public class DevTools : MonoBehaviour
             if (commandPromptCanvas.enabled == false)
             {
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
             }
             else
@@ -167,6 +180,7 @@ public class DevTools : MonoBehaviour
             inputField.text = "";
             inputField.ActivateInputField();
             isScrolling = false;
+            //AutoScroll(scrollRect);
         }
 
         //Turns on auto-scroll when the user isn't scrolling
@@ -174,6 +188,10 @@ public class DevTools : MonoBehaviour
         {
             AutoScroll(scrollRect);
         }
+        //else
+        //{
+        //    StopAutoScroll();
+        //}
         
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
@@ -312,7 +330,7 @@ public class DevTools : MonoBehaviour
 
                     case "ClearLog":
                         textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or [methodName] Options for Param options";
+                        "or \n[MethodName] Options for Param options";
                         break;
 
                     default:
@@ -332,6 +350,7 @@ public class DevTools : MonoBehaviour
     /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
+        //DeactivatePause();
         switch (mapName)
         {
             //Displays all of the parameter options for the LoadMap method
@@ -368,6 +387,12 @@ public class DevTools : MonoBehaviour
                 inputField.DeactivateInputField();
                 break;
 
+            case "QuarterMile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
+                break;
+
             case "TestGrid":
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
@@ -390,6 +415,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [MapName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -400,6 +426,7 @@ public class DevTools : MonoBehaviour
     /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
+        //DeactivatePause();
         switch (sceneName)
         {
             //Displays all of the parameter options for the LoadScene method
@@ -415,30 +442,35 @@ public class DevTools : MonoBehaviour
                 sceneLoader.LoadScene("StartScene");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MultiSingle":
                 sceneLoader.LoadScene("MultiSinglePlayerScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "ModeSelect":
                 sceneLoader.LoadScene("GameModeSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "PlayerKart":
                 sceneLoader.LoadScene("PlayerKartScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MapSelect":
                 sceneLoader.LoadScene("MapSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
@@ -452,6 +484,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [SceneName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -608,6 +641,7 @@ public class DevTools : MonoBehaviour
     public void AutoScroll(ScrollRect scrollRect)
     {
         scrollRect.verticalNormalizedPosition = 0;
+        //scrollBar.value = 0;
     }
 
 
@@ -626,5 +660,16 @@ public class DevTools : MonoBehaviour
             isScrolling = false;
         }
     }
+
+
+    //public void DeactivatePause()
+    //{
+    //    //Checks if pause panel is active and deactivates if so
+    //    GameObject pausePanel = GameObject.Find("PausePanel");
+    //    if (pausePanel != null && pausePanel.activeSelf)
+    //    {
+    //        pausePanel.SetActive(false);
+    //    }
+    //}
 
 }
