@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterSelect : MonoBehaviour
@@ -53,7 +54,7 @@ public class CharacterSelect : MonoBehaviour
     {
         if (characterData.characterName != null)
         {
-            gameManager.PlayerSelected();
+            SceneManager.LoadScene("ColorSelectMenu");
         }
     }
 }
