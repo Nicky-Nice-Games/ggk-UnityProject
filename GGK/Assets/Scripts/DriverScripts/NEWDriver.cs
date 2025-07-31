@@ -28,6 +28,8 @@ public class NEWDriver : MonoBehaviour
     public float gravity = 20;    
     float controllerX;
     float controllerZ;
+    public float inputLerpSpeed = 10f; //Lerp speed for input smoothing
+    float previousXInput = 0;
 
     [Header("Traction Settings")]
     public float tractionCoefficient = 6f;
@@ -967,7 +969,11 @@ public class NEWDriver : MonoBehaviour
 
         movementDirection.z = movementDirection.y;
 
+        movementDirection.x = Mathf.Lerp(movementDirection.x, previousXInput, inputLerpSpeed * Time.deltaTime);
+        previousXInput = movementDirection.x; // Store the previous X input for lerping
+
         movementDirection.y = 0; //We are not gonna jump duh
+               
 
         // determines when driving starts and when driving ends
         if (context.started)
