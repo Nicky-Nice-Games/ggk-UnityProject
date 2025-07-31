@@ -82,7 +82,8 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] float warpWaitTime;
 
     [Header("Wwise Kart Sounds")]
-    [SerializeField] KartSounds kartSounds;
+    public KartSounds kartSounds;
+    private uint shieldID = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -236,6 +237,12 @@ public class ItemHolder : MonoBehaviour
             itemDisplay.rectTransform.DOPunchPosition(new Vector3(0, 30, 0), 0.5f);
 
             item = Instantiate(heldItem, transform.position, transform.rotation);
+            if (heldItem.ItemCategory == "Shield")
+            {
+                shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", this.gameObject);
+
+                StartCoroutine(StopPlayingShieldNoise(heldItem.ItemTier));
+            }
             //soundPlayer.PlayOneShot(throwSound);
             item.gameObject.SetActive(true);
             item.Kart = this;
@@ -251,6 +258,32 @@ public class ItemHolder : MonoBehaviour
             Debug.Log(item.ItemTier);
 
         }
+    }
+
+    IEnumerator StopPlayingShieldNoise(int itemTier)
+    {
+        int activeSeconds = 0;
+
+        if(itemTier == 1)
+        {
+            activeSeconds = 4;
+        }
+        else if(itemTier == 2)
+        {
+            activeSeconds = 6;
+        }
+        else if(itemTier == 3)
+        {
+            activeSeconds = 8;
+        }
+        else if(itemTier == 4)
+        {
+            activeSeconds = 10;
+        }
+
+        yield return new WaitForSeconds(activeSeconds);
+
+        AkUnitySoundEngine.StopPlayingID(shieldID);
     }
 
     public void OnThrow()
@@ -578,7 +611,6 @@ public class ItemHolder : MonoBehaviour
                 //npcDriver.accelerationRate = 500;
                 //npcDriver.followTarget.GetComponent<SplineAnimate>().enabled = false;
             }
-
             duration = 3.0f;
                 if (thisDriver != null)
                 {
@@ -589,11 +621,19 @@ public class ItemHolder : MonoBehaviour
                             boostMult = 1.25f;
                             boostMaxSpeed = boostMult * 60;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            if (kartSounds != null)
+                            {
+                                kartSounds.PlayCanOpen();
+                            }
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
                             boostMaxSpeed = boostMult * 60;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+                            if (kartSounds != null)
+                            {
+                                kartSounds.PlayCanOpen();
+                            }
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
