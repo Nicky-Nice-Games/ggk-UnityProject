@@ -24,6 +24,13 @@ public class MapSelectHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<GameManager>().MapSelected());
         }
+
+        if (MusicStateManager.instance != null)
+        {
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
+            MusicLapStateManager.instance.SetLapState(LapState.None);
+            MusicStateManager.instance.SetMusicState(MusicState.Menu);
+        }
     }
 
     // Update is called once per frame

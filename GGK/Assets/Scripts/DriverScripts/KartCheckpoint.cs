@@ -139,7 +139,8 @@ public class KartCheckpoint : MonoBehaviour
                 {
                     finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
 
-                    if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+                    if (this.GetComponent<NPCDriver>() == null && physicsNPC == null
+                        && MusicStateManager.instance != null)
                     {
                         if (placement < 4)
                         {

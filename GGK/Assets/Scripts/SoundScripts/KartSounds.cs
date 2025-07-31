@@ -12,6 +12,8 @@ public class KartSounds : MonoBehaviour
     [SerializeField] AK.Wwise.Event ItemPickup;
     [SerializeField] AK.Wwise.Event HitSpinout;
     [SerializeField] AK.Wwise.Event Thud;
+    [SerializeField] AK.Wwise.Event CanOpen;
+
     public void PlayItemPickup()
     {
         ItemPickup.Post(gameObject);
@@ -25,5 +27,10 @@ public class KartSounds : MonoBehaviour
     public void PlayThud()
     {
         Thud.Post(gameObject);
+    }
+
+    public void PlayCanOpen()
+    {
+        CanOpen.Post(gameObject);
     }
 }
