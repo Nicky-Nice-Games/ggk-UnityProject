@@ -568,7 +568,7 @@ public class DevTools : MonoBehaviour
         {
             if(tier >= 1 && tier <= 4)
             {
-                itemHolder.DriverItemTier = tier;
+                itemHolder.ItemTier = tier;
             }
             else
             {
@@ -626,7 +626,7 @@ public class DevTools : MonoBehaviour
 
         //Setting appropriate variables for the held item, regardless of item type
         //Note: Does not run if a parameter is invalid because of return statements
-        itemHolder.HoldingItem = true;
+        //itemHolder.HoldingItem = true;
         itemHolder.HeldItem.ItemTier = tier;
         itemHolder.HeldItem.OnLevelUp(tier);
         itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
