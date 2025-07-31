@@ -73,7 +73,8 @@ public class BoostTier4 : BaseItem
 
             // Makes game object with wormhole effect appear
             warpBoostEffect.SetActive(true);
-            warpEffect.Play();
+            //warpEffect.Play();
+            vfxScript.PlayWarpVFX(duration);
 
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,
@@ -120,7 +121,7 @@ public class BoostTier4 : BaseItem
         kartCheck.checkpointId = warpCheckpointId;
         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
         yield return new WaitForFixedUpdate();
-        warpEffect.Stop();
+        //warpEffect.Stop();
         warpBoostEffect.SetActive(false);
     }
 

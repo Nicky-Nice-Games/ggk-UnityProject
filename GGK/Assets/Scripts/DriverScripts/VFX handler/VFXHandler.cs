@@ -163,6 +163,13 @@ public class VFXHandler : NetworkBehaviour
             PlayHoverVFXServerRpc(duration);
     }
 
+    public void PlayWarpVFX(float duration)
+    {
+        PlayWarpVFXLocal(duration);
+        if (IsOwner)
+            PlayWarpVFXServerRpc(duration);
+    }
+
 
     // ---------- Local Methods ----------
 
@@ -315,6 +322,13 @@ public class VFXHandler : NetworkBehaviour
         }
     }
 
+    void PlayWarpVFXLocal(float duration)
+    {
+        if (warpBoost == null) return;
+        warpBoost.SetFloat("Duration", duration);
+        warpBoost.Play();
+    }
+
 
     // ---------- ServerRPCs ----------
 
@@ -362,6 +376,9 @@ public class VFXHandler : NetworkBehaviour
 
     [ServerRpc]
     void PlayHoverVFXServerRpc(float duration) => PlayHoverVFXClientRpc(duration);
+
+    [ServerRpc]
+    void PlayWarpVFXServerRpc(float duration) => PlayWarpVFXClientRpc(duration);
 
 
     // ---------- ClientRPCs ----------
@@ -411,5 +428,8 @@ public class VFXHandler : NetworkBehaviour
     [ClientRpc]
     void PlayHoverVFXClientRpc(float duration) { if (!IsOwner) PlayHoverVFXLocal(duration); }
 
-}
+    [ClientRpc]
+    void PlayWarpVFXClientRpc(float duration) { if (!IsOwner) PlayWarpVFXLocal(duration); }
+
+    }
 
