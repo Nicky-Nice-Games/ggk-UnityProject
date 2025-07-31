@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     public void LoadedGameMode()
     {
         curState = GameStates.playerKart;
-        sceneLoader.LoadScene("PlayerKartScene");
+        sceneLoader.LoadScene("ColorSelectMenu");
     }
 
     /// <summary>

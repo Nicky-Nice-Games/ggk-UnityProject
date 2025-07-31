@@ -43,8 +43,17 @@ public class CharacterSelect : MonoBehaviour
         if (characterData != null)
         {
             characterData.characterName = character.name;
+            characterData.characterSprite = character.gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
         }
         character.GetComponent<Image>().sprite = buttonSelectedSprite;
         characterNameDisplay.text = character.name;
+    }
+
+    public void Confirm()
+    {
+        if (characterData.characterName != null)
+        {
+            gameManager.PlayerSelected();
+        }
     }
 }
