@@ -614,6 +614,10 @@ public class ItemHolder : MonoBehaviour
             duration = 3.0f;
                 if (thisDriver != null)
                 {
+                    if (kartSounds != null)
+                    {
+                        kartSounds.PlayCanOpen();
+                    }
                     // different values and functionality for different levels of boosts
                     switch (boost.ItemTier)
                     {
@@ -621,19 +625,11 @@ public class ItemHolder : MonoBehaviour
                             boostMult = 1.25f;
                             boostMaxSpeed = boostMult * 60;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
-                            if (kartSounds != null)
-                            {
-                                kartSounds.PlayCanOpen();
-                            }
                             break;
                         case 2: // level 2
                             boostMult = 1.5f;
                             boostMaxSpeed = boostMult * 60;
                             StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
-                            if (kartSounds != null)
-                            {
-                                kartSounds.PlayCanOpen();
-                            }
                             break;
                         case 3: // level 3
                             boostMult = 1.75f;
