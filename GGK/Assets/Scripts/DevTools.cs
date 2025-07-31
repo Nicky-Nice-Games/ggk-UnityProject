@@ -32,7 +32,6 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
 
-
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
 //  Update: can type if you close and reopen prompt but not initially even though cursor is there
 //UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
