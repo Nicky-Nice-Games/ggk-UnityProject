@@ -253,13 +253,13 @@ public class GameManager : NetworkBehaviour
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
             case "RIT Outer Loop":
-                sceneLoader.LoadScene("GSP_RITOuterLoop");
+                sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
-                sceneLoader.LoadScene("GSP_RITDorm");
+                sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
