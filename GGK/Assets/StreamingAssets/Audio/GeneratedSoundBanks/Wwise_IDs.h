@@ -13,7 +13,6 @@ namespace AK
 {
     namespace EVENTS
     {
-        static const AkUniqueID LAP_MADE = 365509512U;
         static const AkUniqueID MUSIC = 3991942870U;
         static const AkUniqueID PLAY_CAN_OPEN = 1853968855U;
         static const AkUniqueID PLAY_DRIFTSCREECH = 3158137442U;
@@ -35,8 +34,32 @@ namespace AK
         static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
 
+    namespace DIALOGUE_EVENTS
+    {
+        static const AkUniqueID HITCOLLISION = 727363240U;
+        static const AkUniqueID ITEMTHROWN = 1734928206U;
+        static const AkUniqueID LAPMADE = 2965185743U;
+        static const AkUniqueID RACERPASSED = 3766303136U;
+    } // namespace DIALOGUE_EVENTS
+
     namespace STATES
     {
+        namespace CHARACTERS
+        {
+            static const AkUniqueID GROUP = 1557941045U;
+
+            namespace STATE
+            {
+                static const AkUniqueID EMMA = 560601917U;
+                static const AkUniqueID GIZMO = 1114996413U;
+                static const AkUniqueID JAMSTER = 2542785911U;
+                static const AkUniqueID KAI = 1250178350U;
+                static const AkUniqueID MORGAN = 3330463761U;
+                static const AkUniqueID NONE = 748895195U;
+                static const AkUniqueID REESE = 3650613131U;
+            } // namespace STATE
+        } // namespace CHARACTERS
+
         namespace MAP_STATES
         {
             static const AkUniqueID GROUP = 218522918U;

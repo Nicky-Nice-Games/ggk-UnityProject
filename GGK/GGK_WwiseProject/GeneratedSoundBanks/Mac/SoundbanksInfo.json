@@ -11,14 +11,71 @@
    "ExternalSourcesInputFile": "",
    "ExternalSourcesOutputRoot": "."
   },
-  "DialogueEvents": [],
+  "DialogueEvents": [
+   {
+    "Id": "727363240",
+    "Name": "HitCollision",
+    "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\HitCollision",
+    "GUID": "{CB6ECA35-3345-457B-B33E-F173443340E1}",
+    "Arguments": [
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}"
+     }
+    ]
+   },
+   {
+    "Id": "1734928206",
+    "Name": "ItemThrown",
+    "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\ItemThrown",
+    "GUID": "{DCB2D0D4-4FD2-4F4D-A823-EEAA9DEB1D49}",
+    "Arguments": [
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}"
+     }
+    ]
+   },
+   {
+    "Id": "2965185743",
+    "Name": "LapMade",
+    "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\LapMade",
+    "GUID": "{DB5A61C5-BCC6-4D4E-80F0-2B5034511208}",
+    "Arguments": [
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}"
+     }
+    ]
+   },
+   {
+    "Id": "3766303136",
+    "Name": "RacerPassed",
+    "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\RacerPassed",
+    "GUID": "{F401AFE6-E4E2-4D22-90DE-829F89FAF5C3}",
+    "Arguments": [
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}"
+     }
+    ]
+   }
+  ],
   "SoundBanks": [
    {
     "Id": "393239870",
     "Type": "User",
     "GUID": "{50143547-9C91-4DE3-BF44-DADF8D5E3DE1}",
     "Language": "SFX",
-    "Hash": "{9CD7730A-D713-6A14-AAB9-683ADCC256A5}",
+    "Hash": "{F6329E3E-0223-AEA2-F072-79179B7899CB}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\SFX",
     "ShortName": "SFX",
     "Path": "SFX.bnk",
@@ -501,6 +558,84 @@
        }
       ]
      }
+    ],
+    "DialogueEvents": [
+     {
+      "Id": "727363240",
+      "Name": "HitCollision",
+      "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\HitCollision",
+      "GUID": "{CB6ECA35-3345-457B-B33E-F173443340E1}"
+     },
+     {
+      "Id": "1734928206",
+      "Name": "ItemThrown",
+      "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\ItemThrown",
+      "GUID": "{DCB2D0D4-4FD2-4F4D-A823-EEAA9DEB1D49}"
+     },
+     {
+      "Id": "2965185743",
+      "Name": "LapMade",
+      "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\LapMade",
+      "GUID": "{DB5A61C5-BCC6-4D4E-80F0-2B5034511208}"
+     },
+     {
+      "Id": "3766303136",
+      "Name": "RacerPassed",
+      "ObjectPath": "\\Dynamic Dialogue\\Default Work Unit\\RacerPassed",
+      "GUID": "{F401AFE6-E4E2-4D22-90DE-829F89FAF5C3}"
+     }
+    ],
+    "StateGroups": [
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}",
+      "States": [
+       {
+        "Id": "560601917",
+        "Name": "Emma",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Emma",
+        "GUID": "{65D6B884-0B50-4B06-8CE1-50AEFDF86AD5}"
+       },
+       {
+        "Id": "748895195",
+        "Name": "None",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\None",
+        "GUID": "{EC57FBF3-A953-445D-BF36-F4DBE8276307}"
+       },
+       {
+        "Id": "1114996413",
+        "Name": "Gizmo",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Gizmo",
+        "GUID": "{A3F4EDC4-56A7-4009-81BA-45E4E1905AF1}"
+       },
+       {
+        "Id": "1250178350",
+        "Name": "Kai",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Kai",
+        "GUID": "{16BE6027-CFB1-48D7-A636-9202E2F3817F}"
+       },
+       {
+        "Id": "2542785911",
+        "Name": "Jamster",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Jamster",
+        "GUID": "{F0BE6C0C-0EE2-407C-8225-AFC5B1D093DD}"
+       },
+       {
+        "Id": "3330463761",
+        "Name": "Morgan",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Morgan",
+        "GUID": "{290D9FB5-6934-438D-BB27-EC9CCA8D6EB4}"
+       },
+       {
+        "Id": "3650613131",
+        "Name": "Reese",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Reese",
+        "GUID": "{407EBFD2-32B4-421B-85B9-F2A5277EFB74}"
+       }
+      ]
+     }
     ]
    },
    {
@@ -508,7 +643,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{2EF3B4DD-2109-FA06-D106-46723549EAC6}",
+    "Hash": "{17FD14E1-A48F-59B2-135D-271FFF9338F5}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -570,6 +705,56 @@
         "Name": "None",
         "ObjectPath": "\\States\\Music\\Map_States\\None",
         "GUID": "{26A3461A-1B45-4365-8E4F-17FDD8AB524C}"
+       }
+      ]
+     },
+     {
+      "Id": "1557941045",
+      "Name": "Characters",
+      "ObjectPath": "\\States\\Default Work Unit\\Characters",
+      "GUID": "{DCE61C4D-8101-401A-BD54-694431C0E7BA}",
+      "States": [
+       {
+        "Id": "560601917",
+        "Name": "Emma",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Emma",
+        "GUID": "{65D6B884-0B50-4B06-8CE1-50AEFDF86AD5}"
+       },
+       {
+        "Id": "748895195",
+        "Name": "None",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\None",
+        "GUID": "{EC57FBF3-A953-445D-BF36-F4DBE8276307}"
+       },
+       {
+        "Id": "1114996413",
+        "Name": "Gizmo",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Gizmo",
+        "GUID": "{A3F4EDC4-56A7-4009-81BA-45E4E1905AF1}"
+       },
+       {
+        "Id": "1250178350",
+        "Name": "Kai",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Kai",
+        "GUID": "{16BE6027-CFB1-48D7-A636-9202E2F3817F}"
+       },
+       {
+        "Id": "2542785911",
+        "Name": "Jamster",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Jamster",
+        "GUID": "{F0BE6C0C-0EE2-407C-8225-AFC5B1D093DD}"
+       },
+       {
+        "Id": "3330463761",
+        "Name": "Morgan",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Morgan",
+        "GUID": "{290D9FB5-6934-438D-BB27-EC9CCA8D6EB4}"
+       },
+       {
+        "Id": "3650613131",
+        "Name": "Reese",
+        "ObjectPath": "\\States\\Default Work Unit\\Characters\\Reese",
+        "GUID": "{407EBFD2-32B4-421B-85B9-F2A5277EFB74}"
        }
       ]
      },
@@ -668,7 +853,7 @@
     "Type": "User",
     "GUID": "{DCBBE4E8-EE28-41F0-898A-B21CB45EB765}",
     "Language": "SFX",
-    "Hash": "{F535D9D1-FC3B-BF37-3DD3-88041EE406E4}",
+    "Hash": "{748FFEB8-8F92-C080-ECCA-901257901F33}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Music",
     "ShortName": "Music",
     "Path": "Music.bnk",
@@ -1070,16 +1255,6 @@
      }
     ],
     "Events": [
-     {
-      "Id": "365509512",
-      "Name": "Lap_Made",
-      "ObjectPath": "\\Events\\Music\\Lap_Made",
-      "GUID": "{24442CA3-DC84-44F9-A379-B4AE5928DECF}",
-      "MaxAttenuation": "0",
-      "DurationType": "OneShot",
-      "DurationMin": "0",
-      "DurationMax": "0"
-     },
      {
       "Id": "3991942870",
       "Name": "Music",
@@ -2643,6 +2818,6 @@
     ]
    }
   ],
-  "FileHash": "{93858637-C158-86E0-6250-7E12120C2114}"
+  "FileHash": "{64DE6F72-9B06-869F-2F1A-CF90E5FC5009}"
  }
 }
