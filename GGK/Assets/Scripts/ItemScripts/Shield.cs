@@ -22,16 +22,34 @@ public class Shield : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        // save the default color of the shield
-        renderer = GetComponent<Renderer>();
-        material = renderer.material;
-        defaultColor = material.color;
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            // save the default color of the shield
+            renderer = GetComponent<Renderer>();
+            material = renderer.material;
+            defaultColor = material.color;
 
-        timerColor = Color.red;
-        timerColor.a = defaultColor.a;
+            timerColor = Color.red;
+            timerColor.a = defaultColor.a;
 
-        shieldEffect.SetFloat("Duration", timer);
-        shieldEffect.Play();
+            shieldEffect.SetFloat("Duration", timer);
+            shieldEffect.Play();
+        }
+        else
+        {
+            // save the default color of the shield
+            renderer = GetComponent<Renderer>();
+            material = renderer.material;
+            defaultColor = material.color;
+
+            timerColor = Color.red;
+            timerColor.a = defaultColor.a;
+
+            if (IsServer)
+            {
+                currentPos.Value = transform.position;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -50,6 +68,20 @@ public class Shield : BaseItem
         if (kart)
         {
             transform.position = new Vector3(kart.transform.position.x, kart.transform.position.y, kart.transform.position.z);
+        }
+
+        if (!IsSpawned)
+        {
+            return;
+        }
+
+        if (NetworkManager.IsHost)
+        {
+            currentPos.Value = transform.position;
+        }
+        else if (NetworkManager.IsClient && !NetworkManager.IsHost)
+        {
+            transform.position = currentPos.Value;
         }
     }
 

@@ -53,23 +53,27 @@ public class MiniMapHud : MonoBehaviour
     //use these if you want to use points
     [Header("Map Bounds (Points)")]
     // list of points
-    [SerializeField] private List<Vector3> points;
+    [SerializeField, Tooltip("list of points")]
+    private List<Vector3> points;
 
     //Should you use the four points(above) as opposed to a center then box size(below)?
-    [SerializeField] private bool usePoints;
+    [SerializeField, Tooltip("Should you use the four points(above) as opposed to a center then box size(below)?")]
+    private bool usePoints;
 
     //Use these if you want to use a box
     [Header("Map Bounds(Box)")]
     // width, height, depth of the game space that the UI should cover
-    [SerializeField] private Vector3 center;
+    [SerializeField, Tooltip("width, height, depth of the game space that the UI should cover")]
+    private Vector3 center;
     //x, z, y indexes
     [SerializeField] private int width, height, depth;
 
     [Header("Objects")]
     // a list of objects to track on the map
-    [SerializeField] private List<GameObject> objects;
+    [SerializeField, Tooltip("a list of objects to track on the map. These objects should have an AppearanceSettings component if you wish to specify their appearance on the map.")]
+    private List<GameObject> objects;
     //..along with their respective icons on the map
-    [SerializeField] private List<Image> mapIcons;
+    [SerializeField, Tooltip("This should be fine to kep empty")] private List<Image> mapIcons;
 
     [Header("Depth")]
     // should icons on the map
@@ -126,7 +130,32 @@ public class MiniMapHud : MonoBehaviour
         //If there are objects to track..
         if (objects.Count > 0)
         {
+            if(objects[0])
+            //add objects to the icon list
+            iconRef.SetActive(true);
+            Image refImage = iconRef.GetComponent<Image>();
+            mapIcons.Add(refImage);
 
+            EstablishAppearance(objects[0], refImage);
+
+            //create more icons as more are needed
+            for (int i = 1; i < objects.Count; i++)
+            {
+                GameObject newIcon = Instantiate(iconRef, miniMap.gameObject.transform);
+                refImage = newIcon.GetComponent<Image>();
+                mapIcons.Add(refImage);
+
+                EstablishAppearance(objects[i], refImage);
+            }
+
+            //set the player's icon to the front
+            int trackingIndex = objects.IndexOf(trackingPlayer);
+            if (trackingIndex != -1)
+            {
+                mapIcons[trackingIndex].transform.SetAsLastSibling();
+                mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
+            }
+            
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
