@@ -16,26 +16,39 @@ public class TrapItem : BaseItem
     // Start is called before the first frame update
     void Start()
     {
-        // starts the hazard slightly behind the player
-        if (itemTier == 1)
+        if (!MultiplayerManager.Instance.IsMultiplayer)
+        {
+            // starts the hazard slightly behind the player
+            if (itemTier == 1)
+            {
+                Vector3 behindPos = transform.position - transform.forward * 6;
+                transform.position = behindPos;
+            }
+            if (itemTier > 1)
+            {
+                Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
+                transform.position = behindPos;
+            }
+
+            // freeze the fake item box's Y position
+            if (itemTier == 4)
+            {
+                rb.constraints = RigidbodyConstraints.FreezePositionY;
+            }
+
+            // sends the hazard slightly up and behind the player before landing on the ground
+            // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
+        }
+        else
         {
             Vector3 behindPos = transform.position - transform.forward * 6;
             transform.position = behindPos;
-        }
-        if (itemTier > 1)
-        {
-            Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
-            transform.position = behindPos;
-        }
 
-        // freeze the fake item box's Y position
-        if(itemTier == 4)
-        {
-            rb.constraints = RigidbodyConstraints.FreezePositionY;
+            if (IsServer)
+            {
+                currentPos.Value = transform.position;
+            }
         }
-        
-        // sends the hazard slightly up and behind the player before landing on the ground
-        // rb.AddForce(transform.forward * -750.0f + transform.up * 50.0f);
     }
 
     // Update is called once per frame
@@ -45,15 +58,40 @@ public class TrapItem : BaseItem
         {
             RotateBox();
         }
+
+        if (!IsSpawned)
+        {
+            return;
+        }
+
+        if (NetworkManager.IsHost)
+        {
+            currentPos.Value = transform.position;
+        }
+        else if (NetworkManager.IsClient && !NetworkManager.IsHost)
+        {
+            transform.position = currentPos.Value;
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
     {
         // stop the trap from falling when they reach the ground/road
         // for every tier except fake item box (it naturally floats a little)
-        if(itemTier < 4 && (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road")))
+        if (itemTier < 4 && (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road")))
         {
             rb.constraints = RigidbodyConstraints.FreezePositionY;
+        }
+        Debug.Log($"{collision.ToString()} in {collision.gameObject.ToString()}");
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            Rigidbody kartRigidbody;
+            if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody))
+            {
+                //this slows a kart down to an eighth of its speed
+                kartRigidbody.velocity *= 0.125f;
+                Destroy(gameObject);
+            }
         }
     }
 

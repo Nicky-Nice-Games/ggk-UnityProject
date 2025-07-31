@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
@@ -15,6 +16,7 @@ public class Puck : BaseItem
     private bool goStraight;                       // If the puck goes straight
     private bool isTrackingFirst;                  // If the puck should track to first
     public GameObject[] karts;
+    private float startTimer = 0;
 
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
@@ -27,17 +29,64 @@ public class Puck : BaseItem
         // sends puck backwards
         if (kart.GetComponent<SpeedCameraEffect>() && kart.GetComponent<SpeedCameraEffect>().IsHoldingTab && itemTier < 2)
         {
-            // The puck spawns 15 units behind of the kart
-            transform.position = new Vector3(transform.position.x -transform.forward.x * 10f,
-                            transform.position.y,
-                            transform.position.z -transform.forward.z * 10f);
+            if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
+            {
+                // The puck spawns 15 units behind of the kart
+                transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                transform.position.y,
+                                transform.position.z - transform.forward.z * 10f);
 
-            // The speed of the puck times 200
-            // Keeps the player from hitting it during use regardless of speed
-            direction = -(transform.forward * 200.0f);
+                // The speed of the puck times 200
+                // Keeps the player from hitting it during use regardless of speed
+                direction = -(transform.forward * 200.0f);
+            }
+            // If the kart is looking forwards
+            // sends puck forwards
+            else
+            {
+                // The puck spawns 15 units in front of the kart
+                transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+                                transform.position.y,
+                                transform.position.z + transform.forward.z * 5f);
+
+                // The speed of the puck times 200
+                // Keeps the player from hitting it during use regardless of speed
+                direction = transform.forward * 200.0f;
+            }
+
+
+            karts = GameObject.FindGameObjectsWithTag("Kart");
+
+            // Starts the puck with 0 bounces
+            bounceCount = 0;
+
+            // Tracks the item tier
+            switch (itemTier)
+            {
+                // Multi-puck (3 uses)
+                case 2:
+                    useCount = 1;
+                    timer = 50;
+                    FindClosestKart(karts);
+                    break;
+                // Puck tracks to the closest player and lasts longer
+                case 3:
+                    useCount = 3;
+                    timer = 50;
+                    FindClosestKart(karts);
+                    break;
+                // Puck tracks to first place
+                case 4:
+                    useCount = 1;
+                    timer = 50;
+                    isTrackingFirst = true;
+                    break;
+                // Normal puck, one use
+                default:
+                    useCount = 1;
+                    break;
+            }
         }
-        // If the kart is looking forwards
-        // sends puck forwards
         else
         {
             // The puck spawns 15 units in front of the kart
@@ -48,46 +97,38 @@ public class Puck : BaseItem
             // The speed of the puck times 200
             // Keeps the player from hitting it during use regardless of speed
             direction = transform.forward * 200.0f;
-        }
 
+            bounceCount = 0;
 
-        karts = GameObject.FindGameObjectsWithTag("Kart");
+            useCount = 1;
 
-        // Starts the puck with 0 bounces
-        bounceCount = 0;
-
-        // Tracks the item tier
-        switch (itemTier)
-        {
-            // Multi-puck (3 uses)
-            case 2:
-                useCount = 1;
-                timer = 50;
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to the closest player and lasts longer
-            case 3:
-                useCount = 3;
-                timer = 50;
-                FindClosestKart(karts);
-                break;
-            // Puck tracks to first place
-            case 4:
-                useCount = 1;
-                timer = 50;
-                isTrackingFirst = true;
-                break;
-            // Normal puck, one use
-            default:
-                useCount = 1;
-                break;
+            if (IsServer)
+            {
+                currentPos.Value = transform.position; 
+            }
         }
     }
 
     void Update()
     {
+        startTimer += Time.deltaTime;
+
         // Acts as stronger gravity to bring the puck down
         rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
+
+        if (!IsSpawned)
+        {
+            return;
+        }
+        
+        if (NetworkManager.Singleton.IsHost)
+        {
+            currentPos.Value = transform.position;
+        }
+        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+        {
+            transform.position = currentPos.Value;
+        }
     }
 
     void FixedUpdate()
@@ -130,7 +171,14 @@ public class Puck : BaseItem
             // Destroys puck if it bounced enough times
             if (bounceCount == maxBounces + 1)
             {
-                Destroy(this.gameObject);
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                {
+                    this.NetworkObject.Despawn();
+                }
             }
         }
 
@@ -161,40 +209,56 @@ public class Puck : BaseItem
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
-
-            // Detects if puck hit an NPC or player
-            NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
-            NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
-
-            // Stops player
-            if (playerKart)
+            if (startTimer >= 0.1f)
             {
-                playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
-                playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
-                Debug.Log(collision.transform.root.GetChild(0).gameObject);
-            }
-            // Stops NPC and starts recovery
-            else if (npcKart)
-            {
-                npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                npcKart.StartRecovery();
-                collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
-            }
+                // Detects if puck hit an NPC or player
+                NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
+                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
-            // Destroys puck only if it is tier 4 and it hits the first
-            // place kart
-            if (isTrackingFirst)
-            {
-                if (collision.transform.root.gameObject == kartTarget)
+                // Stops player
+                if (playerKart)
                 {
-                    Destroy(this.gameObject);
+                    playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
+                    playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                    collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    Debug.Log(collision.transform.root.GetChild(0).gameObject);
                 }
-            }
-            // Otherwise destroys puck regardless of kart hit
-            else
-            {
-                Destroy(this.gameObject);
+                // Stops NPC and starts recovery
+                else if (npcKart)
+                {
+                    npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                    npcKart.StartRecovery();
+                    collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
+                }
+
+                // Destroys puck only if it is tier 4 and it hits the first
+                // place kart
+                if (isTrackingFirst)
+                {
+                    if (collision.transform.root.gameObject == kartTarget)
+                    {
+                        if (!MultiplayerManager.Instance.IsMultiplayer)
+                        {
+                            Destroy(this.gameObject);
+                        }
+                        else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                        {
+                            this.NetworkObject.Despawn();
+                        }
+                    }
+                }
+                // Otherwise destroys puck regardless of kart hit
+                else
+                {
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                    {
+                        this.NetworkObject.Despawn();
+                    }
+                }
             }
         }
         // Pucks can destroy other pucks
@@ -204,7 +268,14 @@ public class Puck : BaseItem
             if (collision.gameObject.GetComponent<Puck>().itemTier != 4)
             {
                 Destroy(collision.gameObject);
-                Destroy(this.gameObject);
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                {
+                    this.NetworkObject.Despawn();
+                }
             }
         }
 
@@ -216,7 +287,14 @@ public class Puck : BaseItem
         if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
         {
             Destroy(other.gameObject);
-            Destroy(this.gameObject);
+            if (!MultiplayerManager.Instance.IsMultiplayer)
+            {
+                Destroy(this.gameObject);
+            }
+            else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+            {
+                this.NetworkObject.Despawn();
+            }
         }
     }
 

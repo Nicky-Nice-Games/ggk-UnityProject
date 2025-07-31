@@ -16,12 +16,19 @@ public class VFXHandler : NetworkBehaviour
     public List<Color> turboColors;
 
     [Header("Item Effects")]
-    VisualEffect shield;
-    VisualEffect itemBoost;
-    List<VisualEffect> hover;
+    public VisualEffect shield;
+    public VisualEffect itemBoost;
+    public List<VisualEffect> hover;
+    public VisualEffect warpBoost;
 
 
     public List<ParticleSystem> boostFlames;
+
+    // temporary fix to stop warp boost when loaded into the scene (can be deleted)
+    private void Awake()
+    {
+        warpBoost.Stop();
+    }
 
     // ---------- Public Methods ----------
     public void StopItemEffects()
@@ -132,9 +139,14 @@ public class VFXHandler : NetworkBehaviour
 
     public void PlayShieldVFX(float duration)
     {
-        PlayShieldVFXLocal(duration);
-        if (IsOwner)
+        if (!IsSpawned)
+        {
+            PlayShieldVFXLocal(duration);
+        }
+        else
+        {
             PlayShieldVFXServerRpc(duration);
+        }
     }
 
     public void PlayItemBoostVFX(float duration)
@@ -271,19 +283,21 @@ public class VFXHandler : NetworkBehaviour
             itemBoost.Stop();
         if (hover != null)
             hover.ForEach(vfx => { if (vfx.isActiveAndEnabled) vfx.Stop(); });
+        if (warpBoost != null && warpBoost.isActiveAndEnabled)
+            warpBoost.Stop();
     }
 
     void PlayShieldVFXLocal(float duration)
     {
         if (shield == null) return;
-        shield.SetFloat("duration", duration);
+        shield.SetFloat("Duration", duration);
         shield.Play();
     }
 
     void PlayItemBoostVFXLocal(float duration)
     {
         if (itemBoost == null) return;
-        itemBoost.SetFloat("duration", duration);
+        //itemBoost.SetFloat("Duration", duration);
         itemBoost.Play();
     }
 
@@ -295,7 +309,7 @@ public class VFXHandler : NetworkBehaviour
         {
             if (vfx != null)
             {
-                vfx.SetFloat("duration", duration);
+                vfx.SetFloat("Duration", duration);
                 vfx.Play();
             }
         }
@@ -340,7 +354,7 @@ public class VFXHandler : NetworkBehaviour
     [ServerRpc]
     void StopItemEffectsServerRpc() => StopItemEffectsClientRpc();
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     void PlayShieldVFXServerRpc(float duration) => PlayShieldVFXClientRpc(duration);
 
     [ServerRpc]
@@ -388,8 +402,8 @@ public class VFXHandler : NetworkBehaviour
     [ClientRpc]
     void StopItemEffectsClientRpc() { if (!IsOwner) StopItemEffectsLocal(); }
 
-    [ClientRpc]
-    void PlayShieldVFXClientRpc(float duration) { if (!IsOwner) PlayShieldVFXLocal(duration); }
+    [Rpc(SendTo.ClientsAndHost)]
+    void PlayShieldVFXClientRpc(float duration) { PlayShieldVFXLocal(duration); }
 
     [ClientRpc]
     void PlayItemBoostVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostVFXLocal(duration); }

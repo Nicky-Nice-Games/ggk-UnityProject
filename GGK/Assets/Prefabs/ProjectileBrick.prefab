@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 3333143799551126755}
   - component: {fileID: 8421588603155202299}
   - component: {fileID: 3227973856724491536}
-  - component: {fileID: 5579517559242711142}
+  - component: {fileID: -723479413344896397}
+  - component: {fileID: 1188274093296948054}
   m_Layer: 3
   m_Name: ProjectileBrick
   m_TagString: ItemBox
@@ -134,7 +135,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!114 &5579517559242711142
+--- !u!114 &-723479413344896397
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,9 +144,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 610751871366115687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e08a3c6939875945817ba295e4f717c, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items:
-  - {fileID: 2055685921588137374, guid: 2d9ffd843713ab44ea7ca3210ee15e1d, type: 3}
-  itemBoxType: Projectile
+  GlobalObjectIdHash: 3178858847
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1188274093296948054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610751871366115687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baddcda8225ec5240a122f53e3f7bb42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 3
+  isActive: 1
+  isTimerActive: 0
+  timerDuration: 0

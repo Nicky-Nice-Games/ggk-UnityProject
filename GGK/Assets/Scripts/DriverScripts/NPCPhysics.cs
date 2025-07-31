@@ -132,6 +132,7 @@ public class NPCPhysics : NetworkBehaviour
     float driftTweenDuration = 0.4f;
 
     //Stun Settings
+    [SerializeField]
     bool isStunned;
 
     [Header("Sound Settings")]
@@ -234,7 +235,11 @@ public class NPCPhysics : NetworkBehaviour
         //------------Movement stuff---------------------
 
         //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
+        if (isStunned)
+        { 
+            movementDirection = Vector3.zero;
+            return;
+        }
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -914,5 +919,37 @@ public class NPCPhysics : NetworkBehaviour
         turboTwisting = false; //Reset the turbo twisting state
     }
 
+    public void Stun(float duration)
+    {
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+
+        StartCoroutine(StunCoroutine(duration));
+
+
+
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
+        isStunned = false;
+    }
 
 }
