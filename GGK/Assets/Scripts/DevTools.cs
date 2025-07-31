@@ -53,9 +53,9 @@ public enum MethodName
     LoadScene,
     GameModeChange,
     GiveItem,
+    ChangeSpeed,
     ClearLog
 }
-
 
 
 /// <summary>
@@ -225,7 +225,7 @@ public class DevTools : MonoBehaviour
 
 
     /// <summary>
-    /// Singleton functionality for promt to remain across scenes.
+    /// Singleton functionality for prompt to remain across scenes.
     /// </summary>
     private void Awake()
     {
@@ -339,7 +339,7 @@ public class DevTools : MonoBehaviour
                         {
                             GiveItem(parts[1], parts[2]);
                         }
-                        else if (parts[1] == "Options")
+                        else if (parts.Length > 1 && parts[1] == "Options")
                         {
                             textLog += "\nOptions for Param 1 [ItemType]: ";
                             foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
@@ -353,6 +353,25 @@ public class DevTools : MonoBehaviour
                         else
                         {
                             textLog += "\nError: No or Invalid Param 1 [ItemType] or Param 2 [ItemTier] was Entered.";
+                        }
+                        break;
+
+                    case "ChangeSpeed":
+                        if (parts.Length > 2)
+                        {
+                            ChangeSpeed(parts[1], parts[2]);
+                        }
+                        else if (parts.Length > 1 && parts[1] == "Options")
+                        {
+                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
+                            
+                            textLog += "\nOptions for Param 2 [Speed]: " +
+                                "\nEnter a number";     //Determine possible values
+                            break;
+                        }
+                        else
+                        {
+                            textLog += "\nError: No or Invalid Param 1 [KartType] or Param 2 [Speed] was Entered.";
                         }
                         break;
 
@@ -661,11 +680,83 @@ public class DevTools : MonoBehaviour
     }
 
 
+
+
     /// <summary>
-    /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
+    /// Handles the ChangeSpeed command based on the inputted paramaters entered after it.
     /// </summary>
-    /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
-    public void AutoScroll(ScrollRect scrollRect)
+    /// <param name="kartType">The first inputted parameter after the ChangeSpeed command 
+    /// to specify if the player wants to change the speed of the player or NPC karts.</param>
+    /// <param name="speed">The second inputted parameter after the ChangeSpeed command 
+    /// to specify the speed that the user wants to change the kart speed to.</param>
+    public void ChangeSpeed(string kartType, string speed)
+    {
+        int speedInt;
+        //KartCheckpoint kartChosen;
+
+        switch (kartType) 
+        {
+            case ("Player"):
+                //Checks if you are in a track scene or not (such as a menu)
+                GameObject kart = GameObject.Find("Kart 1/Kart");
+                if (kart != null)
+                {
+                    //kartChosen = kart;
+                }
+                else
+                {
+                    textLog += "\nError: No Kart found in scene, cannot use command.";
+                    return;
+                }
+                break;
+
+            case ("NPC"):
+                break;
+
+            case "":
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+
+            case null:
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+
+            default:
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+        }
+
+
+        //Checks if the second parameter inputted is a valid number, then sets karts speed
+        if (Int32.TryParse(speed, out speedInt))
+        {
+            if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
+            {
+                //set chosenKart speed to speed
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+        }
+        else
+        {
+            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+            return;
+        }
+
+    }
+
+
+
+
+
+        /// <summary>
+        /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
+        /// </summary>
+        /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
+        public void AutoScroll(ScrollRect scrollRect)
     {
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
