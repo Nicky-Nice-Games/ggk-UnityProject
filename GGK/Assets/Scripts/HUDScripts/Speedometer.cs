@@ -2,6 +2,9 @@
 // 7/2/25
 // Speedometer - Display speed in a speedometer format
 
+
+// THIS SCRIPT IS NOW OUT OF DATE. SPEEDOMATER HAS BEEN SCRAPPED
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
