@@ -352,7 +352,7 @@ public class DevTools : MonoBehaviour
                         }             
                         else
                         {
-                            textLog += "\nError: No or Invalid Param 1 [ItemType] or Param 2 [ItemTier] was Entered.";
+                            textLog += "\nError: No or Invalid Param 1 [ItemType] \nor Param 2 [ItemTier] was Entered.";
                         }
                         break;
 
@@ -366,12 +366,12 @@ public class DevTools : MonoBehaviour
                             textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
                             
                             textLog += "\nOptions for Param 2 [Speed]: " +
-                                "\nEnter a number";     //Determine possible values
+                                "\nEnter a number";     //TODO Determine possible values
                             break;
                         }
                         else
                         {
-                            textLog += "\nError: No or Invalid Param 1 [KartType] or Param 2 [Speed] was Entered.";
+                            textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
                         }
                         break;
 
