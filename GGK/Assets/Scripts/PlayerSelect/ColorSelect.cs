@@ -52,7 +52,7 @@ public class ColorSelect : MonoBehaviour
     {
         if(charData.characterColor != null)
         {
-            gameManager.PlayerSelected();
+            gameManager.ColorSelected();
         }
     }
 }
