@@ -169,7 +169,6 @@ public class NPCPhysics : NetworkBehaviour
         KC = childTransform.GetComponent<KartCheckpoint>();
         if (!IsSpawned)
         {
-            CharacterBuilder.RandomizeUniqueAppearance(GetComponent<AppearanceSettings>());
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, KC);
         }
