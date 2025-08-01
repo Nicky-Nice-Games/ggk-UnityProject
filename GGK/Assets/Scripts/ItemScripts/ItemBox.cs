@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -5,22 +6,23 @@ using UnityEngine;
 
 public class ItemBox : NetworkBehaviour
 {
-    //[SerializeField]
-    //protected List<BaseItem> items;   // List of items the box can give
-    //[SerializeField] protected string itemBoxType;
-    //protected float respawnTimer = 5.0f;  // The seconds the box respawns after
+    private void Start()
+    {
+        if (!IsSpawned && randomizeOnStart)
+        {
+            SetItemBoxType(ItemHolder.RandomItemType());
+        }
+    }
 
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer && randomizeOnStart)
+        {
+            SetItemBoxTypeRpc(ItemHolder.RandomItemType());
+        }
+    }
 
-
-    /// <summary>
-    /// Read and write property for the respawn timer
-    /// </summary>
-    //public float RespawnTimer { get { return respawnTimer; } set { respawnTimer = value; } }
-    //public string ItemBoxType { get { return itemBoxType; } set { itemBoxType = value; } }
-
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (IsSpawned && !IsServer)
         {
@@ -72,14 +74,19 @@ public class ItemBox : NetworkBehaviour
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
-
     // new code
+    [Header("Type")]
     [SerializeField] private ItemHolder.ItemTypeEnum itemType = ItemHolder.ItemTypeEnum.NoItem;
     public ItemHolder.ItemTypeEnum ItemType { get { return itemType; } private set { itemType = value; } }
+    [Header("Respawning")]
     [SerializeField] private bool isActive = true;
     [SerializeField] private bool isTimerActive = false;
     [SerializeField] private float timerDuration = 0.0f;
-    const float defaultTimerDuration = 5.0f;
+    const float defaultTimerDuration = 2.5f;
+    [Header("Randomization")]
+    [SerializeField] private bool randomRespawnType = false;
+    [SerializeField] private bool randomizeOnStart = false;
+    [SerializeField] private List<Material> ItemBrickMaterials;
 
     private void ShowAndEnable()
     {
@@ -132,11 +139,19 @@ public class ItemBox : NetworkBehaviour
         {
             if (IsSpawned)
             {
+                if (randomRespawnType)
+                {
+                    SetItemBoxTypeRpc(ItemHolder.RandomItemType());
+                }
                 StopTimerRpc();
                 ShowAndEnableRpc();
             }
             else
             {
+                if (randomRespawnType)
+                {
+                    SetItemBoxType(ItemHolder.RandomItemType());
+                }
                 isTimerActive = false;
                 ShowAndEnable();
             }
@@ -147,5 +162,17 @@ public class ItemBox : NetworkBehaviour
     private void StopTimerRpc()
     {
         isTimerActive = false;
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void SetItemBoxTypeRpc(ItemHolder.ItemTypeEnum typeEnum)
+    {
+        SetItemBoxType(typeEnum);
+    }
+
+    private void SetItemBoxType(ItemHolder.ItemTypeEnum typeEnum)
+    {
+        ItemType = typeEnum;
+        GetComponent<MeshRenderer>().SetMaterials(new List<Material> { ItemBrickMaterials[(int)ItemType + 1] });
     }
 }
