@@ -420,7 +420,7 @@ public class ItemHolder : NetworkBehaviour
             thrownItemScript.UseCount -= kartScript.currentUseCounter.Value;
             thrownItemScript.timerEndCallback = kartScript.ClearItem;
 
-            if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+            if (thrownItemScript.UseCount <= 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
             {
                 ClearItem();
             }
