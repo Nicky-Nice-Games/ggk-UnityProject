@@ -41,6 +41,16 @@ public class MapSelectHandeler : MonoBehaviour
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<GameManager>().MapSelected());
+
+            button.onClick.AddListener(() => DisableButtons());
+        }
+    }
+
+    private void DisableButtons()
+    {
+        foreach(GameObject obj in mapOptions)
+        {
+            obj.GetComponent<Button>().enabled = false;
         }
     }
 

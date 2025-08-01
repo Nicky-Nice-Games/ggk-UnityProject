@@ -111,6 +111,8 @@ public class PauseHandler : NetworkBehaviour
     // Restart the track
     public void Restart()
     {
+        DisableButtons();
+
         sceneLoader.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
     }
@@ -118,6 +120,8 @@ public class PauseHandler : NetworkBehaviour
     // Return to start menu
     public void ReturnToStart()
     {
+        DisableButtons();
+
         gameManager.LoadStartMenu();
         Time.timeScale = 1;
     }
@@ -125,6 +129,8 @@ public class PauseHandler : NetworkBehaviour
     // Return to map select menu
     public void ReturnToMapSelect()
     {
+        DisableButtons();
+
         gameManager.PlayerSelected();
         Time.timeScale = 1;
     }
@@ -168,5 +174,13 @@ public class PauseHandler : NetworkBehaviour
                 Time.timeScale = 0;
             }
         }
+    }
+
+    // Disables buttons to avoid spammed clicks
+    private void DisableButtons()
+    {
+        restartBtn.GetComponent<Button>().enabled = false;
+        mapBtn.GetComponent<Button>().enabled = false;
+        startBtn.GetComponent<Button>().enabled = false;
     }
 }
