@@ -31,6 +31,8 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  figure out how to only get it to stop if the player changes the value
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
+//Show checkpoints method?
+//Remove NPCs?
 
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
 //  Update: can type if you close and reopen prompt but not initially even though cursor is there
@@ -39,6 +41,14 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Done (?)
 //Prompt persists through menu scenes
+
+
+
+//If multiplayer
+//  Make sure speed change is all player karts
+//  Make sure all players load into a map or scene (use multiplayer scene manager)
+//  Should game mode change be inaccessible? Or only for multiplayer possible modes?
+//  Make GiveItem only availible in test/free mode?
 
 
 
@@ -94,7 +104,7 @@ public enum GameMode
     Race,
     GrandPrix,
     TimeTrial,
-    Free    //Dev mode, free fly/drive ?
+    FreeDrive    //Dev mode, free fly/drive ?
 }
 
 
@@ -541,7 +551,6 @@ public class DevTools : MonoBehaviour
     /// specify the game mode that the user wants to change to.</param>
     public void GameModeChange(string gameMode)
     {
-
         switch (gameMode)
         {
             //Displays all of the parameter options for the GameModeChange method
@@ -554,6 +563,27 @@ public class DevTools : MonoBehaviour
                 break;
 
             //TODO Mode cases go here
+            /*  Race,
+                GrandPrix,
+                TimeTrial,
+                FreeDrive
+            */
+
+            case "Race":
+                //Send to map select if not already in map or use a map command
+                break;
+
+            case "GrandPrix":
+                break;
+
+            case "TimeTrial":
+                //Not availible in multiplayer
+                break;
+
+            case "FreeDrive":
+                //Disable NPCs, countdown/timer/leaderboard/placement?
+                //In multiplayer, enable give item
+                break;
 
             case "":
                 textLog += "\nError: No Param 1 [GameMode] was Entered.";
@@ -752,11 +782,11 @@ public class DevTools : MonoBehaviour
 
 
 
-        /// <summary>
-        /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
-        /// </summary>
-        /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
-        public void AutoScroll(ScrollRect scrollRect)
+    /// <summary>
+    /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
+    /// </summary>
+    /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
+    public void AutoScroll(ScrollRect scrollRect)
     {
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
