@@ -54,7 +54,7 @@ public class CharacterSelect : MonoBehaviour
     {
         if (characterData.characterName != null)
         {
-            SceneManager.LoadScene("ColorSelectMenu");
+            gameManager.PlayerSelected();
         }
     }
 }

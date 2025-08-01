@@ -14,6 +14,7 @@ public enum GameStates
     multiSingle,
     gameMode,
     playerKart,
+    colorSelect,
     map,
     game,
     gameOver
@@ -113,7 +114,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerSelected()
     {
-        curState = GameStates.map;
+        curState = GameStates.colorSelect;
+        sceneLoader.LoadScene("ColorSelectMenu");
+    }
+
+    public void ColorSelected()
+    {
+        curState = GameStates.colorSelect;
         sceneLoader.LoadScene("MapSelectScene");
     }
 
