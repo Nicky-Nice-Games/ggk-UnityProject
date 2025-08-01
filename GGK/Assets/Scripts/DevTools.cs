@@ -27,8 +27,6 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
 //  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
 //  the prompt or pause panel before it actually registers 
-//Fix auto scroll - stops auto scrolling because the scroll view keeps changing the value, need to 
-//  figure out how to only get it to stop if the player changes the value
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
 //Toggle checkpoints method?
@@ -39,9 +37,9 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
 //  works when you load into a map and then open the prompt
 
-//Done (?)
+//Done
 //Prompt persists through menu scenes
-//Scrollbar works (not auto)
+//Scrollbar works with autoscroll
 
 
 
@@ -723,7 +721,7 @@ public class DevTools : MonoBehaviour
     /// to specify the speed that the user wants to change the kart speed to.</param>
     public void ChangeSpeed(string kartType, string speed)
     {
-        int speedInt;
+        int speedInt;   //float instead?
         //KartCheckpoint kartChosen;
 
         switch (kartType) 
