@@ -14,9 +14,9 @@ public class ShieldTier3 : BaseItem
         base.Start();
 
         // this line clears the inventory instantly and allows for new items to get picked up again
-        // timerEndCallback();
+        timerEndCallback();
         // this line makes inventory clear when the shield ends
-        OnTimerEnd += (object sender, EventArgs e) => { timerEndCallback(); };
+        // OnTimerEnd += (object sender, EventArgs e) => { timerEndCallback(); };
 
         timer = 8.0f;
 
