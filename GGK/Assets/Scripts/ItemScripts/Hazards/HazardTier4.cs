@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-/// <summary>
-/// Blizzard
-/// </summary>
 public class HazardTier4 : BaseItem
 {
     private void Start()

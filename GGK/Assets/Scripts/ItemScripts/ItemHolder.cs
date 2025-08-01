@@ -327,7 +327,7 @@ public class ItemHolder : NetworkBehaviour
     {
         if (!IsSpawned)
         {
-            Debug.Log("single player clear item");
+            //Debug.Log("single player clear item");
             ItemType = ItemTypeEnum.NoItem;
             ItemTier = 0;
             canUpgrade = true;
@@ -335,7 +335,7 @@ public class ItemHolder : NetworkBehaviour
         }
         else
         {
-            Debug.Log("network clear item");
+            //Debug.Log("network clear item");
             currentItemType.Value = ItemTypeEnum.NoItem;
             currentItemTier.Value = 0;
             currentCanUpgrade.Value = true;
@@ -366,7 +366,7 @@ public class ItemHolder : NetworkBehaviour
                 thrownItemScript.UseCount -= useCounter;
                 thrownItemScript.timerEndCallback = ClearItem;
 
-                if (thrownItemScript.UseCount == 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
+                if (thrownItemScript.UseCount <= 0 && !thrownItemScript.isTimed) // get rid of item if use count is 0
                 {
                     ClearItem();
                 }
