@@ -31,7 +31,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  figure out how to only get it to stop if the player changes the value
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
-//Show checkpoints method?
+//Toggle checkpoints method?
 //Remove NPCs?
 
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
@@ -41,6 +41,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Done (?)
 //Prompt persists through menu scenes
+//Scrollbar works (not auto)
 
 
 
@@ -215,20 +216,20 @@ public class DevTools : MonoBehaviour
         {
             inputField.text = "";
             inputField.ActivateInputField();
-            //isScrolling = false;
+            isScrolling = false;
             AutoScroll(scrollRect);
         }
 
-        //Turns on auto-scroll when the user isn't scrolling
-        //if(!isScrolling)
-        //{
-        //    AutoScroll(scrollRect);
-        //}
+        //Turns on auto - scroll when the user isn't scrolling
+        if (!isScrolling)
+        {
+            AutoScroll(scrollRect);
+        }
         //else
         //{
         //    StopAutoScroll();
         //}
-        
+
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
     }
@@ -570,6 +571,7 @@ public class DevTools : MonoBehaviour
             */
 
             case "Race":
+                //Use game mode handler script
                 //Send to map select if not already in map or use a map command
                 break;
 
@@ -788,6 +790,7 @@ public class DevTools : MonoBehaviour
     /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
     public void AutoScroll(ScrollRect scrollRect)
     {
+        isScrolling = false;
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
         //scrollBar.value = 0;
@@ -804,10 +807,10 @@ public class DevTools : MonoBehaviour
         isScrolling = true;
         scrollRect.verticalNormalizedPosition = scrollRect.verticalNormalizedPosition;
 
-        if(scrollRect.verticalNormalizedPosition == 0)
-        {
-            isScrolling = false;
-        }
+        //if(scrollRect.verticalNormalizedPosition == 0)
+        //{
+        //    isScrolling = false;
+        //}
     }
 
 
