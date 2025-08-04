@@ -804,7 +804,7 @@ public class ItemHolder : NetworkBehaviour
         StartCoroutine(currentSpinCoroutine);
     }
 
-    private ItemTypeEnum RandomItemType()
+    public static ItemTypeEnum RandomItemType()
     {
         return (ItemTypeEnum)UnityEngine.Random.Range(0, (int)Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().Max() + 1);
     }
