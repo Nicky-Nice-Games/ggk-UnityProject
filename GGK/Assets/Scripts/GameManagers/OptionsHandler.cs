@@ -25,6 +25,25 @@ public class OptionsHandler : MonoBehaviour
     public GameObject closeBtn;
     private Vector3 initialScale;
 
+    public Toggle fullScreenToggle;
+
+    public TMP_InputField widthInputField;
+    public TMP_InputField heightInputField;
+
+    private bool initalizing;
+
+    private void Update()
+    {
+        // Updates resolution text fields when resolution changes
+        if (optionsData.resolution.x != Screen.width || optionsData.resolution.y != Screen.height)
+        {
+            optionsData.resolution.x = Screen.width;
+            optionsData.resolution.y = Screen.height;
+            widthInputField.text = optionsData.resolution.x.ToString();
+            heightInputField.text = optionsData.resolution.y.ToString();
+        }
+    }
+
     void OnEnable()
     {
         if (initialScale == Vector3.zero)
@@ -41,6 +60,8 @@ public class OptionsHandler : MonoBehaviour
     // Initialize saved values from OptionsData
     public void SetOptions()
     {
+        initalizing = true;
+
         masterVolumeSlider.value = optionsData.masterVolume;
         masterVolumeValue.text = optionsData.masterVolume.ToString();
 
@@ -52,6 +73,24 @@ public class OptionsHandler : MonoBehaviour
 
         musicVolumeSlider.value = optionsData.musicVolume;
         musicVolumeValue.text = optionsData.musicVolume.ToString();
+
+        // Set checkmark on or off if full screen or not
+        if (optionsData.IsFullScreen)
+        {
+            fullScreenToggle.isOn = true;
+        }
+        else
+        {
+            fullScreenToggle.isOn = false;
+        }
+
+        // Grab resolution of game window and update resolution text fields
+        optionsData.resolution.x = Screen.width;
+        optionsData.resolution.y = Screen.height;
+        widthInputField.text = optionsData.resolution.x.ToString();
+        heightInputField.text = optionsData.resolution.y.ToString();
+
+        initalizing = false;
     }
 
     // Methods to attach to options panel interactables
@@ -74,6 +113,41 @@ public class OptionsHandler : MonoBehaviour
     {
         optionsData.musicVolume = (int)musicVolumeSlider.value;
         musicVolumeValue.text = optionsData.musicVolume.ToString();
+    }
+    public void FullScreenChange()
+    {
+        if (initalizing) return;
+
+        if (optionsData.IsFullScreen)
+        {
+            optionsData.IsFullScreen = false;
+            Screen.SetResolution((int)optionsData.resolution.x, (int)optionsData.resolution.y, optionsData.IsFullScreen);
+        }
+        else
+        {
+            optionsData.IsFullScreen = true;
+            Screen.SetResolution((int)optionsData.resolution.x, (int)optionsData.resolution.y, optionsData.IsFullScreen);
+        }
+    }
+    public void ResolutionWidthChange()
+    {
+        int width = int.Parse(widthInputField.text);
+        if (width < 320)
+        {
+            width = 320;
+        }
+
+        Screen.SetResolution(width, (int)optionsData.resolution.y, optionsData.IsFullScreen);
+    }
+    public void ResolutionHeightChange()
+    {
+        int height = int.Parse(heightInputField.text);
+        if (height < 480)
+        {
+            height = 480;
+        }
+
+        Screen.SetResolution((int)optionsData.resolution.x, height, optionsData.IsFullScreen);
     }
 
     // Close Options
