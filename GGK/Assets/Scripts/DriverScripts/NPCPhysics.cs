@@ -415,22 +415,41 @@ public class NPCPhysics : NetworkBehaviour
         if (KC.checkpointList.Count > 0)
         {
             destination = KC.checkpointList[destinationID];
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 offsetBehindCheckpoint = destination.transform.position - checkpointForward * 2f; // 2 units behind
+
             randomizedTarget = destination.transform.position + checkpointOffset;
         }
 
         if (isGrounded)
         {
-            Vector3 dirToTarget = destination.transform.position - transform.position;
-            dirToTarget.y = 0f; // Flatten vertical influence
-            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 targetPos = destination.transform.position - checkpointForward * 2f;
 
+            Vector3 dirToTarget = targetPos - transform.position;
+            dirToTarget.y = 0f;
+
+            if (dirToTarget.magnitude < 1f)
+            {
+                // You're too close to the target, extend further back so there's a clear direction
+                targetPos = destination.transform.position - checkpointForward * 5f;
+                dirToTarget = targetPos - transform.position;
+                dirToTarget.y = 0f;
+            }
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
             movementDirection = new Vector3(localDir.x, 0f, localDir.z);
 
+            // --- Fix for stuck-turning (no forward movement)
+            if (isGrounded && movementDirection.z <= 0.05f)
+            {
+                movementDirection.z = 0.25f;
+            }
             CheckRoadEdges();
 
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
             AvoidObstacle();
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 3f, Color.green);
 
 
 
