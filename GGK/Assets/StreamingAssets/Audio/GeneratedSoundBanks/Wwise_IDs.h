@@ -15,12 +15,37 @@ namespace AK
     {
         static const AkUniqueID MUSIC = 3991942870U;
         static const AkUniqueID PLAY_CAN_OPEN = 1853968855U;
+        static const AkUniqueID PLAY_CRASH = 303595419U;
         static const AkUniqueID PLAY_DRIFTSCREECH = 3158137442U;
+        static const AkUniqueID PLAY_EMMA_HITCOLLISION = 1733083372U;
+        static const AkUniqueID PLAY_EMMA_ITEMTHROWN = 2639057674U;
+        static const AkUniqueID PLAY_EMMA_LAPMADE = 2881505691U;
+        static const AkUniqueID PLAY_EMMA_RACERPASSED = 2538839812U;
         static const AkUniqueID PLAY_ENGINE_HIGH = 3755593723U;
         static const AkUniqueID PLAY_ENGINE_HIGH_FULL = 1413651457U;
         static const AkUniqueID PLAY_ENGINE_REV = 1487915922U;
+        static const AkUniqueID PLAY_GIZMO_HITCOLLISION = 939256578U;
+        static const AkUniqueID PLAY_GIZMO_ITEMTHROWN = 530859044U;
+        static const AkUniqueID PLAY_GIZMO_LAPMADE = 3206269049U;
+        static const AkUniqueID PLAY_GIZMO_RACERPASSED = 552377374U;
         static const AkUniqueID PLAY_HIT_SPINOUT = 3595663260U;
         static const AkUniqueID PLAY_ITEM_PICKUP = 2652605998U;
+        static const AkUniqueID PLAY_JAMSTER_HITCOLLISION = 3389006056U;
+        static const AkUniqueID PLAY_JAMSTER_ITEMTHROWN = 139013774U;
+        static const AkUniqueID PLAY_JAMSTER_LAPMADE = 106992143U;
+        static const AkUniqueID PLAY_JAMSTER_RACERPASSED = 1338867424U;
+        static const AkUniqueID PLAY_KAI_HITCOLLISION = 650943439U;
+        static const AkUniqueID PLAY_KAI_ITEMTHROWN = 804367397U;
+        static const AkUniqueID PLAY_KAI_LAPMADE = 1656265490U;
+        static const AkUniqueID PLAY_KAI_RACERPASSED = 7782593U;
+        static const AkUniqueID PLAY_MORGAN_HITCOLLISION = 1766852740U;
+        static const AkUniqueID PLAY_MORGAN_ITEMTHROWN = 2999254882U;
+        static const AkUniqueID PLAY_MORGAN_LAPMADE = 645871539U;
+        static const AkUniqueID PLAY_MORGAN_RACERPASSED = 1758511580U;
+        static const AkUniqueID PLAY_REESE_HITCOLLISION = 569004136U;
+        static const AkUniqueID PLAY_REESE_ITEMTHROWN = 1549857294U;
+        static const AkUniqueID PLAY_REESE_LAPMADE = 539634831U;
+        static const AkUniqueID PLAY_REESE_RACERPASSED = 825639264U;
         static const AkUniqueID PLAY_SCROLL = 2085636989U;
         static const AkUniqueID PLAY_SELECT_BACK_ITEM_DROP = 2165390282U;
         static const AkUniqueID PLAY_SELECT_CONFIRM = 4158910119U;
@@ -33,14 +58,6 @@ namespace AK
         static const AkUniqueID PLAY_SHIELD = 1988178265U;
         static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
-
-    namespace DIALOGUE_EVENTS
-    {
-        static const AkUniqueID HITCOLLISION = 727363240U;
-        static const AkUniqueID ITEMTHROWN = 1734928206U;
-        static const AkUniqueID LAPMADE = 2965185743U;
-        static const AkUniqueID RACERPASSED = 3766303136U;
-    } // namespace DIALOGUE_EVENTS
 
     namespace STATES
     {

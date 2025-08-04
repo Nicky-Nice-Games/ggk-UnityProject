@@ -13,6 +13,7 @@ public class KartSounds : MonoBehaviour
     [SerializeField] AK.Wwise.Event HitSpinout;
     [SerializeField] AK.Wwise.Event Thud;
     [SerializeField] AK.Wwise.Event CanOpen;
+    [SerializeField] AK.Wwise.Event Crash;
 
     public void PlayItemPickup()
     {
@@ -32,5 +33,10 @@ public class KartSounds : MonoBehaviour
     public void PlayCanOpen()
     {
         CanOpen.Post(gameObject);
+    }
+
+    public void PlayCrash()
+    {
+        Crash.Post(gameObject);
     }
 }
