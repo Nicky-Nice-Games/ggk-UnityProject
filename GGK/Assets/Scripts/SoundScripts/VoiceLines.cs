@@ -59,6 +59,9 @@ public class VoiceLines : MonoBehaviour
 
     public void PlayHitCollision()
     {
+        //Depending on what the name of the character is, the voice lines used are different.
+        //Thus, the specific event for that character and this circumstance is called.
+        //Same structure with the following methods.
         if (characterName == "emma")
         {
             EmmaHitCollision.Post(gameObject);
@@ -87,9 +90,6 @@ public class VoiceLines : MonoBehaviour
 
     public void PlayItemThrown()
     {
-        //Depending on what the name of the character is, the voice lines used are different.
-        //Thus, the specific event for that character and this circumstance is called.
-        //Same structure with the following methods.
         if (characterName == "emma")
         {
             EmmaItemThrown.Post(gameObject);
