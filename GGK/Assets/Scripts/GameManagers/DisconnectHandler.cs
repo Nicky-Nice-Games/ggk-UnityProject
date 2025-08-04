@@ -32,7 +32,7 @@ public class DisconnectHandler : NetworkBehaviour
     /// <summary>
     /// this is what happens when the server disconnects as seen from the client's perspective
     /// </summary>
-    /// <param name="clientId"></param>
+    /// <param name="clientId">the client id of the player who disconnects</param>
     private void ServerDisconnectHandler(ulong clientId)
     {
         // script still considered Spawned when this function runs
