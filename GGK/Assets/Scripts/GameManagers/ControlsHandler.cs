@@ -13,7 +13,7 @@ public class ControlsHandler : MonoBehaviour
     public Image controllerInputs;
 
     /// <summary>
-    /// This is so when this panel opens, the button selected goes to this button set
+    /// This is so when this panel opens and closes, the button selected goes to this button set
     /// </summary>
     [Header("ButtonNavigation Settings")]
     [SerializeField] private EventSystem eventSystem;

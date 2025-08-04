@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening.Core.Easing;
+using UnityEngine.EventSystems;
 
 public class OptionsHandler : MonoBehaviour
 {
@@ -31,6 +32,13 @@ public class OptionsHandler : MonoBehaviour
     public TMP_InputField heightInputField;
 
     private bool initalizing;
+
+    /// <summary>
+    /// This is so when this panel closes, the button selected goes to this button set
+    /// </summary>
+    [Header("ButtonNavigation Settings")]
+    [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private GameObject buttonOut;
 
     private void Update()
     {
@@ -153,6 +161,8 @@ public class OptionsHandler : MonoBehaviour
     // Close Options
     public void Close()
     {
+        // When this panel closes this is the first button to be hovered outside of the panel
+        eventSystem.SetSelectedGameObject(buttonOut);
         gameObject.SetActive(false);
         optionsData.GameManager.RefreshSelected();
     }
