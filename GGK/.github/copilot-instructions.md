@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, ItemBox, Water, UI, Bonkable, Obstacle, Projectile
 - Active game object:
-  - Name: Canvas
-  - Tag: Untagged
-  - Layer: UI
+  - Name: RandomRespawnTypeBrick
+  - Tag: ItemBox
+  - Layer: ItemBox
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
