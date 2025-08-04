@@ -18,7 +18,7 @@ public class DeathZone : MonoBehaviour
 
             }
 
-        
+            other.GetComponent<NEWDriver>().playerInfo.fellOffMap++;
         }
     }
 

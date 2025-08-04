@@ -3,6 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+/* Log to keep track of where all the dynamic values sent to backend are being assigned:
+ * playerID - From backend when PlayerInfo is created in APIManager
+ * racePosition - 
+ * mapRaced - 
+ * collisionsWithPlayers - 
+ * collisionWithWalls - 
+ * characterUsed - 
+ * fellOffMap - DeathZone::OnTriggerEnter
+ * raceStartTime - 
+ * raceTime - 
+ */
+
 
 /// <summary>
 /// This Class is ised as the base container for the player info
