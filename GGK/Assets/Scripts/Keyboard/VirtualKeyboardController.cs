@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
-    [SerializeField] public TMP_InputField inputField;
+    public List<TMP_InputField> inputField = new List<TMP_InputField>();    // Ordered list according to screen visuals
+
+    [HideInInspector]
+    public int curField = 0;
+
     [SerializeField] private List<Button> keyButtons;
     private int selectedIndex = 0;
     private int rowSize = 10;
     private string curText;
     private bool toCapitol = false;
+    private GameManager gameManager;
+
+    // Script that holds the function to record the responces
+    [SerializeField] private SignInManager signInScript;
 
     // controller variables
     private const float threshold = 0.5f;
@@ -27,7 +36,7 @@ public class VirtualKeyboardController : MonoBehaviour
 
     void Start()
     {
-        // HighlightButton(selectedIndex);
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     void Update()
@@ -113,7 +122,7 @@ public class VirtualKeyboardController : MonoBehaviour
         for (int i = 0; i < keyButtons.Count; i++)
         {
             ColorBlock colors = keyButtons[i].colors;
-            colors.normalColor = (i == index) ? Color.yellow : Color.white;
+            colors.normalColor = (i == index) ? new Color(255, 255, 150, 52) : Color.white;
             keyButtons[i].colors = colors;
         }
     }
@@ -124,10 +133,7 @@ public class VirtualKeyboardController : MonoBehaviour
     /// <param name="value"></param>
     public void KeyPressed(string value)
     {
-        // Temporary fix so that when switching text inputs
-        // the current text will be set to the input's text 
-        // when typing/using virtual keyboard
-        curText = inputField.text;
+        curText = inputField[curField].text;
         // Backspace
         if (value == "Backspace")
         {
@@ -142,6 +148,22 @@ public class VirtualKeyboardController : MonoBehaviour
         else if (value == "SPACE")
         {
             curText += " ";
+        }
+
+        // Swapping input fields
+        else if(value == "Enter")
+        {
+            signInScript.SetPlayerLoginData(inputField[curField].name, curText);
+            curText = "";
+
+            curField++;
+
+            //Activating OnSelect triggers for inputfield
+            if (curField < inputField.Count)
+            {
+                inputField[curField].ActivateInputField();
+                inputField[curField].Select();
+            }
         }
 
         // Letters and shift
@@ -165,7 +187,7 @@ public class VirtualKeyboardController : MonoBehaviour
                 curText += value;
             }
         }
-        inputField.text = curText;
+        inputField[curField].text = curText;
     }
 
     /// <summary>
@@ -195,6 +217,18 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             holdingBackspace = false;
         }
+    }
+
+    public void ResetCurrentFields()
+    {
+        Debug.Log("Resetting input fields");
+        
+        foreach(TMP_InputField field in inputField)
+        {
+            field.text = "";
+        }
+        curField = 0;
+        Debug.Log(curField);
     }
 }
 

@@ -1,6 +1,9 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,7 +14,9 @@ using UnityEngine.UI;
 public enum GameStates
 {
     start,
+    login,
     multiSingle,
+    lobby,
     gameMode,
     playerKart,
     colorSelect,
@@ -20,14 +25,20 @@ public enum GameStates
     gameOver
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public GameStates curState;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
+    public PlayerInfo playerInfo;
+    public PostGameManager postGameManager;
+    private APIManager apiManager;
+    private LobbyManager lobbyManager;
+
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
     void Awake()
     {
         if (thisManagerInstance == null)
@@ -47,19 +58,17 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         curState = GameStates.start;
+        apiManager = thisManagerObjInstance.GetComponent<APIManager>();
+        postGameManager = thisManagerObjInstance.GetComponent<PostGameManager>();
+        lobbyManager = FindAnyObjectByType<LobbyManager>();
 
         //add functions to device config change and scene loaded events
         InputSystem.onDeviceChange += RefreshSelected;
         SceneManager.sceneLoaded += RefreshSelected;
-
+        RelayManager.Instance.OnRelayStarted += RelayManager_OnRelayStarted;
+        RelayManager.Instance.OnRelayJoined += RelayManager_OnRelayJoined;
         //refresh selected for the first scene since it doesn't get called for this scene
         RefreshSelected();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -67,8 +76,27 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
+        sceneLoader.LoadScene("Login");
+        curState = GameStates.login;
+        playerInfo = new PlayerInfo();
+    }
+
+    /// <summary>
+    /// Once the player is logged in the player will be moved to the multi / single player select scene
+    /// </summary>
+    public void LoggedIn()
+    {
+        Debug.Log("Log in is called!");
+        // Turn guest mode on
+        if(GetComponent<ButtonBehavior>().buttonClickedName == "Guest Log In")
+        {
+            playerInfo.isGuest = true;
+            Debug.Log("Guest mode on");
+        }
+
+        lobbyManager.AssignPlayerName(playerInfo.playerName);
+        sceneLoader.LoadScene("MultiSinglePlayerScene");
         curState = GameStates.multiSingle;
-        SafeLoad("MultiSinglePlayerScene");
     }
 
     /// <summary>
@@ -93,9 +121,42 @@ public class GameManager : MonoBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            curState = GameStates.gameMode;
-            sceneLoader.LoadScene("GameModeSelectScene");
+            SceneManager.LoadScene("MultiplayerMenus");
+            curState = GameStates.lobby;
+            //NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerMenus", LoadSceneMode.Single);
         }
+    }
+
+    /// <summary>
+    /// RelayManager OnRelayStarted EventHandler
+    /// written by Phillip Brown
+    /// </summary>
+    public void RelayManager_OnRelayStarted(object sender, EventArgs e)
+    {
+        //ToGameModeSelectScene();
+        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
+        curState = GameStates.gameMode;
+    }
+
+    public void RelayManager_OnRelayJoined(object sender, EventArgs e)
+    {
+        //ToGameModeSelectScene();
+    }
+    
+    /// <summary>
+    /// changes game state to the game mode selection scene
+    /// </summary>
+    public void ToGameModeSelectScene()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToGameModeSelectSceneRpc()
+    {
+        SceneManager.LoadScene("GameModeSelectScene");
+        curState = GameStates.gameMode;
     }
 
     /// <summary>
@@ -103,14 +164,32 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadedGameMode()
     {
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.Reset();
+            if (NetworkManager.IsServer)
+            {
+                MultiplayerSceneManager.Instance.ToPlayerKartScene();
+            }
+        }
+        else
+        { 
+            SceneManager.LoadScene("PlayerKartScene");
+        }
         curState = GameStates.playerKart;
-        sceneLoader.LoadScene("CharSelectMenu");
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void LoadedGameModeRpc()
+    {
+        SceneManager.LoadScene("PlayerKartScene");
+        curState = GameStates.playerKart;
     }
 
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
-    /// multyplayer is added
+    /// multiplayer is added
     /// </summary>
     public void PlayerSelected()
     {
@@ -120,8 +199,26 @@ public class GameManager : MonoBehaviour
 
     public void ColorSelected()
     {
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            MultiplayerManager.Instance.PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
+        }
+        else
+        {
+            ToMapSelectScreen();
+        }
+    }
+
+    public void ToMapSelectScreen() {
+        SceneManager.LoadScene("MapSelectScene");
         curState = GameStates.map;
-        sceneLoader.LoadScene("MapSelectScene");
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ToMapSelectScreenRpc()
+    {
+        SceneManager.LoadScene("MapSelectScene");
+        curState = GameStates.map;
     }
 
     /// <summary>
@@ -129,24 +226,55 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MapSelected(string map)
     {
-        curState = GameStates.game;
-        // Loads the race based on the name of the button clicked
-        switch (map)
+        if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            case "Campus Circuit":
-                sceneLoader.LoadScene("GSP_RITOuterLoop");
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+                case "RIT Outer Loop":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITOuterLoop);
+                    break;
+                case "Golisano":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.Golisano);
+                    break;
+                case "RIT Dorm":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITDorm);
+                    break;
+                case "RIT Woods Greybox":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITWoods);
+                    break;
+                case "RIT Quarter Mile":
+                    MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
+                    break;
+                case "Finals Brick Road":
+                    Debug.Log("GameManager: Before Finals Brick Road");
+                    MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
+                    Debug.Log("GameManager: After Finals Brick Road");
+                    break;
+                default:
+                    break;
+            }      
+        }
+        else
+        {
+           // Loads the race based on the name of the button clicked
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            {
+            case "RIT Outer Loop":
+                sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
             case "Tech House Turnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "Dorm Room Derby":
-                sceneLoader.LoadScene("GSP_RITDorm");
+            case "RIT Dorm":
+                sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "All-Nighter Expressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
+            }
+            curState = GameStates.game; 
         }
     }
 
@@ -156,6 +284,17 @@ public class GameManager : MonoBehaviour
     public void GameFinished()
     {
         curState = GameStates.gameOver;
+        //apiManager.PostPlayerData(playerInfo);
+
+        sceneLoader.LoadScene("GameOverScene");
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void GameFinishedRpc()
+    {
+        curState = GameStates.gameOver;
+        //apiManager.PostPlayerData(playerInfo);
+
         sceneLoader.LoadScene("GameOverScene");
     }
 

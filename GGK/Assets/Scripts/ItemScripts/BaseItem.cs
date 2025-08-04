@@ -1,13 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
+using static ItemHolder;
 
-public class BaseItem : MonoBehaviour
+public class BaseItem : NetworkBehaviour
 {
-    [SerializeField] protected float timer;    // Seconds until the item disappears
-    [SerializeField] protected Rigidbody rb;   // The item's rigidbody
-    protected ItemHolder kart;                 // The kart holding the item
+    #region old variables
+    [SerializeField] protected float timer;         // Seconds until the item disappears
+    public Action timerEndCallback; 
+    [SerializeField] protected Rigidbody rb;        // The item's rigidbody
+    [SerializeField] protected ItemHolder kart;     // The kart holding the item
     [SerializeField] protected string itemCategory;
 
     [SerializeField] protected int useCount;
@@ -26,7 +32,7 @@ public class BaseItem : MonoBehaviour
     [SerializeField]
     public Texture tierFourItemIcon;
 
-    public VisualEffect shieldEffect;
+    protected VisualEffect shieldEffect;
 
     /// <summary>
     /// Read and write property for the upgrade tier
@@ -41,7 +47,7 @@ public class BaseItem : MonoBehaviour
     /// </summary>
     public float Timer { get { return timer; } set { timer = value; } }
 
-    public string ItemCategory { get { return itemCategory; } set { itemCategory = value; } }
+    public NetworkVariable<Vector3> currentPos = new NetworkVariable<Vector3>();
 
 
     /// <summary>
@@ -49,17 +55,36 @@ public class BaseItem : MonoBehaviour
     /// </summary>
     public ItemHolder Kart { get { return kart; } set { kart = value; } }
 
+    public NetworkVariable<NetworkBehaviourReference> networkKartReference = new NetworkVariable<NetworkBehaviourReference>();
 
-    // Start is called before the first frame update
-    void Start()
+    public event EventHandler OnTimerEnd;
+
+    #endregion
+
+
+    public override void OnNetworkSpawn()
     {
-
+        networkKartReference.OnValueChanged += OnKartReferenceChanged;
     }
 
-    // Update is called once per frame
-    public void Update()
+    public override void OnNetworkDespawn()
     {
+        networkKartReference.OnValueChanged -= OnKartReferenceChanged;
+    }
 
+    private void OnKartReferenceChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
+    {
+        if (IsServer) return;
+        newValue.TryGet(out ItemHolder kartReference);
+        Kart = kartReference;
+    }
+
+    public virtual void Start()
+    {
+        if (IsSpawned && IsServer)
+        {
+            networkKartReference.Value = Kart;
+        }
     }
 
     /// <summary>
@@ -67,6 +92,8 @@ public class BaseItem : MonoBehaviour
     /// </summary>
     public void DecreaseTimer()
     {
+        if (IsSpawned && !IsServer) return;
+
         // Subtracts the timer by 1 second
         if (timer >= 0)
         {
@@ -75,10 +102,16 @@ public class BaseItem : MonoBehaviour
         // Destroys the item
         else
         {
-            //if (itemCategory != "Shield")
-            //{
+            OnTimerEnd?.Invoke(this, EventArgs.Empty);
+            if (IsServer)
+            {
+                GetComponent<NetworkObject>().Despawn();
                 Destroy(this.gameObject);
-            //}
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 
@@ -193,4 +226,13 @@ public class BaseItem : MonoBehaviour
         }
     }
 
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void DestroyItemRpc(NetworkBehaviourReference itemToDestroy)
+    {
+        if (itemToDestroy.TryGet(out BaseItem itemScript))
+        {
+            itemScript.gameObject.GetComponent<NetworkObject>().Despawn();
+            Destroy(itemScript.gameObject);
+        }
+    }
 }
