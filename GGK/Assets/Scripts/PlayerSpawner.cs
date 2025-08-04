@@ -16,6 +16,7 @@ public class PlayerSpawner : NetworkBehaviour
 
     [SerializeField] private Transform spawnPointParent;
     [SerializeField] private List<Transform> spawnPoints;
+    private List<GameObject> karts = new List<GameObject>();
 
     public static PlayerSpawner instance;
 
@@ -40,6 +41,25 @@ public class PlayerSpawner : NetworkBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (IsServer)
+        {
+            NetworkManager.SceneManager.OnLoadEventCompleted -= OnAllClientsInGame;
+
+            //despawn/cull spawned karts in case they ever persist between scenes for some reason
+            for (int i = 0; i < karts.Count; i++)
+            {
+                if (karts[i] != null)
+                {
+                    karts[i].GetComponent<NetworkObject>().Despawn();
+                }
+                karts.RemoveAt(0);
+            }
+        }
+        
+    }
+
     private void Start()
     {
         if (spawnPoints.Count < 1)
@@ -50,11 +70,12 @@ public class PlayerSpawner : NetworkBehaviour
         if (!IsSpawned)
         {
             StartCoroutine(DelayedLocalSpawn());
-            
+
         }
         else if (IsServer)
         {
-            StartCoroutine(DelayedServerSpawn());
+            //StartCoroutine(DelayedServerSpawn());
+            NetworkManager.SceneManager.OnLoadEventCompleted += OnAllClientsInGame;
         }
 
         //if (!IsSpawned)
@@ -92,7 +113,7 @@ public class PlayerSpawner : NetworkBehaviour
             foreach (KeyValuePair<ulong, NetworkClient> connectedClient in NetworkManager.ConnectedClients)
             {
                 Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
-                
+
                 kartObject.GetChild(0).transform.position = spawnPoints[spawnedKartCount].position;
                 GameObject colliderGO = kartObject.GetChild(1).gameObject;
                 colliderGO.GetComponent<SpawnHandler>().spawnPoints = spawnPoints;
@@ -106,6 +127,7 @@ public class PlayerSpawner : NetworkBehaviour
 
                 // get a list of itemholder scripts and each karts id
                 kartAndID.Add(connectedClient.Key, kartObject.GetComponentInChildren<ItemHolder>());
+                karts.Add(kartObject.gameObject);
             }
         }
 
@@ -122,6 +144,7 @@ public class PlayerSpawner : NetworkBehaviour
             }
             kartNetworkObject.Spawn();
             spawnedKartCount++;
+            karts.Add(kartObject.gameObject);
         }
     }
 
@@ -149,9 +172,17 @@ public class PlayerSpawner : NetworkBehaviour
         }
     }
 
+    //set to fire once all clients are ingame
+    void OnAllClientsInGame(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        //print("All clients have loaded into the scene, spawning karts");
+        StartCoroutine(DelayedServerSpawn());
+    }
     private IEnumerator DelayedServerSpawn()
     {
-        yield return new WaitForSeconds(0.0f); // slight delay
+
         FillGrid();
+        yield return new WaitForSeconds(0.0f); // slight delay
+        Countdown.instance.StartCoroutine(Countdown.instance.ServerCountdownRoutine());
     }
 }

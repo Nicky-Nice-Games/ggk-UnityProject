@@ -435,6 +435,10 @@ public class MultiplayerManager : NetworkBehaviour
                 default:
                     break;
             }
+
+            //clear the selections so they can vote again next time
+            playerMapSelections.Clear();
+            playerMapSelectionChecks.Clear();
         }
     }
 
