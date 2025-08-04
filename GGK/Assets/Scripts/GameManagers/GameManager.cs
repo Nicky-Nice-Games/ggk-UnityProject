@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
 
     public void ColorSelected()
     {
-        curState = GameStates.colorSelect;
+        curState = GameStates.map;
         sceneLoader.LoadScene("MapSelectScene");
     }
 

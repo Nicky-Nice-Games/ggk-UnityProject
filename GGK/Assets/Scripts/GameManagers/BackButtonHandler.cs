@@ -45,6 +45,9 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
+                gamemanagerObj.PlayerSelected();
+                break;
+            case GameStates.colorSelect:
                 gamemanagerObj.LoadedGameMode();
                 break;
             default:
