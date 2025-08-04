@@ -415,22 +415,41 @@ public class NPCPhysics : NetworkBehaviour
         if (KC.checkpointList.Count > 0)
         {
             destination = KC.checkpointList[destinationID];
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 offsetBehindCheckpoint = destination.transform.position - checkpointForward * 2f; // 2 units behind
+
             randomizedTarget = destination.transform.position + checkpointOffset;
         }
 
         if (isGrounded)
         {
-            Vector3 dirToTarget = destination.transform.position - transform.position;
-            dirToTarget.y = 0f; // Flatten vertical influence
-            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 targetPos = destination.transform.position - checkpointForward * 2f;
 
+            Vector3 dirToTarget = targetPos - transform.position;
+            dirToTarget.y = 0f;
+
+            if (dirToTarget.magnitude < 1f)
+            {
+                // You're too close to the target, extend further back so there's a clear direction
+                targetPos = destination.transform.position - checkpointForward * 5f;
+                dirToTarget = targetPos - transform.position;
+                dirToTarget.y = 0f;
+            }
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
             movementDirection = new Vector3(localDir.x, 0f, localDir.z);
 
+            // --- Fix for stuck-turning (no forward movement)
+            if (isGrounded && movementDirection.z <= 0.05f)
+            {
+                movementDirection.z = 0.25f;
+            }
             CheckRoadEdges();
 
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
             AvoidObstacle();
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 3f, Color.green);
 
 
 
@@ -507,7 +526,7 @@ public class NPCPhysics : NetworkBehaviour
             else
             {
                 // If both sides are blocked or both are open, pick a default direction
-                movementDirection.y -= avoidStrength;
+                movementDirection.z -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -519,6 +538,23 @@ public class NPCPhysics : NetworkBehaviour
         else if (obstacleRight && !obstacleLeft)
         {
             movementDirection.x -= avoidStrength;
+        }
+
+        //If we're nearly perpendicular to a wall/guardrail, reverse a bit
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 velocity = sphere.velocity; 
+        velocity.y = 0;
+
+        float dot = Vector3.Dot(forward, velocity.normalized);
+
+        // Dot product near 0 means perpendicular (±90 degrees), but allow slight leeway
+        if (Mathf.Abs(dot) < 0.25f && obstacleCenter)
+        {
+            // Moving nearly perpendicular to a wall — apply slight reverse force
+            movementDirection.z = Mathf.Clamp(movementDirection.z - 1f, 1f, 0f);
         }
 
         // Clamp for safety

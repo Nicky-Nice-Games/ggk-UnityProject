@@ -1,26 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
-/// Cracked Brick Wall
+/// Fake Item Box
 /// </summary>
 public class HazardTier2 : BaseItem
 {
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
-        transform.position = behindPos;
+        timer = 10.0f;
+
+        // sends the hazard slightly up and behind the player before landing on the ground
+        transform.position = transform.position
+                             - transform.forward * 5f   // behind the kart
+                             + transform.up * 1.5f;       // slightly above ground
+    }
+
+    // Update is called once per frame
+    private new void Update()
+    {
+        RotateBox();
+        DecreaseTimer();
+    }
+
+    public void RotateBox()
+    {
+        transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        // stop the trap from falling when they reach the ground/road
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Road"))
-        {
-            rb.constraints = RigidbodyConstraints.FreezePositionY;
-        }
         if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
         {
             Rigidbody kartRigidbody;
@@ -28,7 +41,6 @@ public class HazardTier2 : BaseItem
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
 
-                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
                     Destroy(this.gameObject);

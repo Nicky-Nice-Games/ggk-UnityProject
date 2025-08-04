@@ -29,7 +29,16 @@ public class BoostPanel : MonoBehaviour
         {
             GameObject parent = other.gameObject.transform.parent.gameObject;
             NEWDriver kart = parent.transform.GetChild(0).GetComponent<NEWDriver>();
-            StartCoroutine(kart.Boost(boostForce, boostTime));
+            if (kart != null) 
+            {
+                StartCoroutine(kart.Boost(boostForce, boostTime));
+            }
+            else if (parent.transform.GetChild(0).GetComponent<NPCPhysics>() != null)
+            {
+                NPCPhysics NPCkart = parent.transform.GetChild(0).GetComponent<NPCPhysics>();
+                StartCoroutine(NPCkart.Boost(boostForce, boostTime));
+            }
+
         }
     }
 }
