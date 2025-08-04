@@ -20,6 +20,9 @@ public class CharacterSelect : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI characterNameDisplay;
 
+    [SerializeField]
+    private List<GameObject> characterModels;
+
     private CharacterData characterData;
     private GameManager gameManager;
     // Start is called before the first frame update
@@ -41,11 +44,22 @@ public class CharacterSelect : MonoBehaviour
         {
             characterButtons[i].GetComponent<Image>().sprite = buttonDeselected;
         }
-        if (characterData != null)
+        for (int i = 0; i < characterModels.Count; i++)
         {
-            characterData.characterName = character.name;
-            characterData.characterSprite = character.gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
+            if (characterModels[i].name == character.name)
+            {
+                characterModels[i].SetActive(true);
+            }
+            else
+            {
+                characterModels[i].SetActive(false);
+            }
         }
+        if (characterData != null)
+            {
+                characterData.characterName = character.name;
+                characterData.characterSprite = character.gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
+            }
         character.GetComponent<Image>().sprite = buttonSelectedSprite;
         characterNameDisplay.text = character.name;
     }
