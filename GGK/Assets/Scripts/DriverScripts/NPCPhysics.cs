@@ -526,7 +526,7 @@ public class NPCPhysics : NetworkBehaviour
             else
             {
                 // If both sides are blocked or both are open, pick a default direction
-                movementDirection.y -= avoidStrength;
+                movementDirection.z -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -538,6 +538,23 @@ public class NPCPhysics : NetworkBehaviour
         else if (obstacleRight && !obstacleLeft)
         {
             movementDirection.x -= avoidStrength;
+        }
+
+        //If we're nearly perpendicular to a wall/guardrail, reverse a bit
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 velocity = sphere.velocity; 
+        velocity.y = 0;
+
+        float dot = Vector3.Dot(forward, velocity.normalized);
+
+        // Dot product near 0 means perpendicular (±90 degrees), but allow slight leeway
+        if (Mathf.Abs(dot) < 0.25f && obstacleCenter)
+        {
+            // Moving nearly perpendicular to a wall — apply slight reverse force
+            movementDirection.z = Mathf.Clamp(movementDirection.z - 0.8f, -0.8f, 0f);
         }
 
         // Clamp for safety
