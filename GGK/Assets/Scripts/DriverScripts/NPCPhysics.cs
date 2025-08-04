@@ -554,7 +554,7 @@ public class NPCPhysics : NetworkBehaviour
         if (Mathf.Abs(dot) < 0.25f && obstacleCenter)
         {
             // Moving nearly perpendicular to a wall — apply slight reverse force
-            movementDirection.z = Mathf.Clamp(movementDirection.z - 0.8f, -0.8f, 0f);
+            movementDirection.z = Mathf.Clamp(movementDirection.z - 1f, 1f, 0f);
         }
 
         // Clamp for safety
