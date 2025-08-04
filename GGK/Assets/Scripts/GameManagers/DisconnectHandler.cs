@@ -32,19 +32,20 @@ public class DisconnectHandler : NetworkBehaviour
     /// <summary>
     /// this is what happens when the server disconnects as seen from the client's perspective
     /// </summary>
-    /// <param name="clientId">the client id of the player who disconnects</param>
+    /// <param name="clientId">your own client id</param>
     private void ServerDisconnectHandler(ulong clientId)
     {
         // script still considered Spawned when this function runs
         // IsSpawned = true
-
-        Debug.Log($"Server Disconnected \n ClientId in parameter is {clientId}");
+        //this sends the clients back to the multi single select screen
+        GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+        GameManager.thisManagerInstance.curState = GameStates.multiSingle;
     }
 
     /// <summary>
     /// this is what happens when a client disconnects as seen from the server's perspective
     /// </summary>
-    /// <param name="clientId"></param>
+    /// <param name="clientId">the client id of the player who disconnects</param>
     private void ClientDisconnectHandler(ulong clientId)
     {
         Debug.Log($"Client Disconnected \n ClientId in parameter is {clientId}");

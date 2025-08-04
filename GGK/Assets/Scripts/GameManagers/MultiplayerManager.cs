@@ -91,11 +91,44 @@ public class MultiplayerManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         IsMultiplayer = true;
+        if (IsServer) {
+            NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnectHandler;
+        } else {
+            NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
+        }
+    }
+
+    private void ServerDisconnectHandler(ulong clientId)
+    {
+        
+    }
+
+    private void ClientDisconnectHandler(ulong clientId)
+    {
+        if (players.ContainsKey(clientId))
+        {
+            playerKartSelectionChecks.Remove(clientId);
+            playerMapSelectionChecks.Remove(clientId);
+            playerMapSelections.Remove(clientId);
+            players.Remove(clientId);
+        }
+        if (players.Count == 1)
+        {
+            NetworkManager.Shutdown();
+            GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+            GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+            ResetDictionaries();
+        }
     }
 
     public override void OnNetworkDespawn()
     {
         IsMultiplayer = false;
+        if (IsServer) {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
+        } else {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
+        }
     }
 
     /// <summary>
