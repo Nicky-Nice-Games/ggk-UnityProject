@@ -10,7 +10,8 @@ public class BoostTier4 : BaseItem
     [SerializeField] GameObject warpBoostEffect;
     [SerializeField] float warpWaitTime;
     private VFXHandler vfxScript;
-    private VisualEffect warpEffect;
+    private VisualEffect warpEffectBottom;
+    private VisualEffect warpEffectTop;
     private Vector3 originalScale;
     private Transform driverTransform;
 
@@ -37,8 +38,9 @@ public class BoostTier4 : BaseItem
             //    Find("Normal/Parent/KartModel/VFXEffects/EnergyDrinkBoost").GetComponent<VisualEffect>();
             vfxScript = driver.vfxHandler;
 
-            // get warp effect from scrip
-            warpEffect = vfxScript.warpBoost;
+            // get warp effects from script
+            warpEffectBottom = vfxScript.warpBoostBottom;
+            warpEffectTop = vfxScript.warpBoostTop;
 
             GameObject kartParent = driver.transform.parent.gameObject;
             KartCheckpoint kartCheck = kartParent.GetComponentInChildren<KartCheckpoint>();
@@ -77,10 +79,9 @@ public class BoostTier4 : BaseItem
 
             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
 
-            // Makes game object with wormhole effect appear
-            warpBoostEffect.SetActive(true);
-            warpEffect.SetFloat("Duration", warpWaitTime);
-            warpEffect.Play();
+            // Play warp vfx
+            warpEffectTop.SetFloat("Duration", warpWaitTime);
+            warpEffectTop.Play();
 
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,
@@ -118,10 +119,8 @@ public class BoostTier4 : BaseItem
             thisDriver.movementDirection = Vector3.zero;
             thisDriver.sphere.velocity = Vector3.zero;
 
-            Vector3 warpScale = warpEffect.transform.localScale;
-
             // gives the car a stretch effect
-            StartCoroutine(Stretch(warpWaitTime, warpScale));
+            StartCoroutine(Stretch(warpWaitTime));
 
             yield return new WaitForSeconds(warpWaitTime);
             thisDriver.sphere.velocity = originalVelocity;
@@ -133,7 +132,6 @@ public class BoostTier4 : BaseItem
         kartCheck.checkpointId = warpCheckpointId;
         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
         yield return new WaitForFixedUpdate();
-        warpBoostEffect.SetActive(false);
     }
 
     /// <summary>
@@ -146,8 +144,11 @@ public class BoostTier4 : BaseItem
     /// <returns></returns>
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        //boostEffect.Play();
+        // play warp and boost vfx
+        warpEffectTop.SetFloat("Duration", duration / 2);
+        warpEffectTop.Play();
         vfxScript.PlayItemBoostVFX(duration);
+
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -186,17 +187,21 @@ public class BoostTier4 : BaseItem
     /// stretches out the kart for the warp effect
     /// </summary>
     /// <returns>amount of time to wait before going again</returns>
-    IEnumerator Stretch(float duration, Vector3 originalWarpScale)
+    IEnumerator Stretch(float duration)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 currentScale = driverTransform.localScale;
-            currentScale.y *= 1.05f;
+
+            // make kart taller and skinnier
+            currentScale.y *= 1.01f;
+            currentScale.x /= 1.01f;
+
             driverTransform.localScale = currentScale;
-            // warpEffect.transform.localScale = originalWarpScale;
             yield return new WaitForFixedUpdate();
         }
 
+        // go back to original scale
         driverTransform.localScale = originalScale;
     }
 }
