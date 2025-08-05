@@ -72,9 +72,9 @@ public enum MethodName
 /// </summary>
 public enum MapName 
 { 
-    CampusCircuit,
-    TechHouseTurnpike,
+    CampusCircuit,    
     DormRoomDerby,
+    TechHouseTurnpike,
     AllNighterExpressway,
     QuarterMile,
     TestGrid,
@@ -418,20 +418,20 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "CampusCircuit":
-                sceneLoader.LoadScene("GSP_RITOuterLoop");
+                sceneLoader.LoadScene("LD_RITOuterLoop");
                 //Can be removed if prefered, maybe when in certain modes?
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
+                break;
+           
+            case "DormRoomDerby":
+                sceneLoader.LoadScene("LD_RITDorm");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TechHouseTurnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
-                break;
-
-            case "DormRoomDerby":
-                sceneLoader.LoadScene("GSP_RITDorm");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
