@@ -13,6 +13,8 @@ using UnityEngine.UIElements;
  * fellOffMap - DeathZone::OnTriggerEnter
  * raceStartTime - NEWDriver::OnNtetworkSpawn
  * raceTime - LeaderboardController::Finished
+ * 
+ * All the items are added in their respected classes
  */
 
 
@@ -75,7 +77,7 @@ public class PlayerInfo : ScriptableObject
         };
         trapUsage = new Dictionary<string, int>
         {
-            {"oilSpill1", 0 },
+            {"oilSpill", 0 },
             {"brickwall", 0 },
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
@@ -119,7 +121,7 @@ public class PlayerInfo : ScriptableObject
         };
         trapUsage = new Dictionary<string, int>
         {
-            {"oilSpill1", 0 },
+            {"oilSpill", 0 },
             {"brickwall", 0 },
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }

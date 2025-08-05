@@ -96,6 +96,7 @@ public class PuckTier4 : BaseItem
             // Stops player
             if (playerKart)
             {
+                playerKart.playerInfo.offenceUsage["puck4"]++;
                 playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                 playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                 collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);

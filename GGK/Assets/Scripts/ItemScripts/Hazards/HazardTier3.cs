@@ -34,6 +34,7 @@ public class HazardTier3 : BaseItem
         }
         if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
         {
+            collision.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
             Rigidbody kartRigidbody;
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
