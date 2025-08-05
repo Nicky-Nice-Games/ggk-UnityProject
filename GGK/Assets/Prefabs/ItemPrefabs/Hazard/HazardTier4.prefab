@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -5, z: 0}
-  m_LocalScale: {x: 4.961168, y: 124.02921, z: 4.961168}
+  m_LocalScale: {x: 3.4263809, y: 85.65953, z: 3.4263809}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6520384939966582723}
@@ -50,13 +50,37 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0.15
+        m_Name: Layer1Dissolve
+        m_Overridden: 1
+      - m_Value: 0.15
+        m_Name: CoreDissolve
+        m_Overridden: 1
+      - m_Value: -0.5
+        m_Name: CoreNoiseSpeed
+        m_Overridden: 1
+      - m_Value: 50
+        m_Name: CoreNoiseScale
+        m_Overridden: 1
+      - m_Value: 50
+        m_Name: Duration
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 42.175217, y: 59.21289, z: 42.175217, w: 0}
+        m_Name: Layer1Color
+        m_Overridden: 1
+      - m_Value: {x: 43.301594, y: 43.301594, z: 43.301594, w: 0}
+        m_Name: Color
+        m_Overridden: 1
+      - m_Value: {x: 425.05658, y: 425.05658, z: 425.05658, w: 0}
+        m_Name: BottomRingColor
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -327,7 +351,6 @@ MonoBehaviour:
   tierFourItemIcon: {fileID: 0}
   currentPos:
     m_InternalValue: {x: 0, y: 0, z: 0}
-  snowEffect: {fileID: 7440119972209505590}
 --- !u!1001 &8783150334044716784
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -388,11 +411,6 @@ PrefabInstance:
 --- !u!4 &2864712450866222953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6783974074366536089, guid: 2a0798619ad552445a66c1bc9cf6cf6b, type: 3}
-  m_PrefabInstance: {fileID: 8783150334044716784}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &7440119972209505590 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 2208057944346495942, guid: 2a0798619ad552445a66c1bc9cf6cf6b, type: 3}
   m_PrefabInstance: {fileID: 8783150334044716784}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9080914718894241770
