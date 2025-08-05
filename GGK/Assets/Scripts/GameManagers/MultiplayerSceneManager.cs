@@ -83,7 +83,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
     }
     public void ToPlayerKartScene()
     {
-        LoadScene("PlayerKartScene");
+        LoadScene("CharSelectMenu");
     }
     public void ToMapSelectScene()
     {

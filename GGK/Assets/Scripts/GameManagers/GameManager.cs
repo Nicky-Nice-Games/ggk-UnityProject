@@ -173,7 +173,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         { 
-            SceneManager.LoadScene("PlayerKartScene");
+            SceneManager.LoadScene("CharSelectMenu");
         }
         curState = GameStates.playerKart;
     }
@@ -181,7 +181,7 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.NotServer)]
     public void LoadedGameModeRpc()
     {
-        SceneManager.LoadScene("PlayerKartScene");
+        SceneManager.LoadScene("CharSelectMenu");
         curState = GameStates.playerKart;
     }
 
