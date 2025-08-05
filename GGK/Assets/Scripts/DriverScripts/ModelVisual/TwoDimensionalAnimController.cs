@@ -34,7 +34,14 @@ public class TwoDimensionalAnimController : NetworkBehaviour
         //if in singleplayer or in multiplayer and the owner..
         if (!playerObject.IsSpawned || (playerObject.IsSpawned && (IsOwner || playerObject.IsOwner)))
         {
-            turningValue = Mathf.Lerp(turningValue, driver.movementDirection.x, Time.deltaTime * lerpSpeed);
+            float turningDirection = driver.movementDirection.x;
+
+            if (driver.isDrifting) { turningDirection *= 2f; }
+
+            turningValue = Mathf.Lerp(turningValue, turningDirection, Time.deltaTime * lerpSpeed);
+            
+
+            
         }
         
         animator.SetFloat("turningValue", turningValue);
