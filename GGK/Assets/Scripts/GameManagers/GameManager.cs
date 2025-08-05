@@ -221,15 +221,15 @@ public class GameManager : NetworkBehaviour
     {
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
-            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            switch (CharacterData.Instance.mapVote)
             {
-                case "RIT Outer Loop":
+                case "Campus Circuit":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITOuterLoop);
                     break;
-                case "Golisano":
+                case "Tech House Turnpike":
                     MultiplayerManager.Instance.VoteMapRpc(Map.Golisano);
                     break;
-                case "RIT Dorm":
+                case "Dorm Room Derby":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITDorm);
                     break;
                 case "RIT Woods Greybox":
@@ -238,7 +238,7 @@ public class GameManager : NetworkBehaviour
                 case "RIT Quarter Mile":
                     MultiplayerManager.Instance.VoteMapRpc(Map.RITQuarterMile);
                     break;
-                case "Finals Brick Road":
+                case "All-Nighter Expressway":
                     Debug.Log("GameManager: Before Finals Brick Road");
                     MultiplayerManager.Instance.VoteMapRpc(Map.FinalsBrickRoad);
                     Debug.Log("GameManager: After Finals Brick Road");
@@ -250,21 +250,21 @@ public class GameManager : NetworkBehaviour
         else
         {
            // Loads the race based on the name of the button clicked
-            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            switch (CharacterData.Instance.mapVote)
             {
-            case "RIT Outer Loop":
+            case "Campus Circuit":
                 sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
-            case "Golisano":
+            case "Tech House Turnpike":
                 sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "RIT Dorm":
+            case "Dorm Room Derby":
                 sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
-            case "Finals Brick Road":
+            case "All-Nighter Expressway":
                 sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:

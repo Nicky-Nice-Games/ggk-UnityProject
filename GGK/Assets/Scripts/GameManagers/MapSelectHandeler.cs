@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts;
+using TMPro;
 
 /// <summary>
 /// Map Enum by Phillip Brown
@@ -22,6 +23,11 @@ public class MapSelectHandeler : MonoBehaviour
 {
     [SerializeField] private List<GameObject> mapOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
+    [SerializeField]
+    private TextMeshProUGUI trackDisplay;
+
+    [SerializeField]
+    private Button confirmBtn;
     // [SerializeField] private Transform waitingScreen;
     // [SerializeField] private Transform mapButtons;
 
@@ -40,10 +46,20 @@ public class MapSelectHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().MapSelected());
+            {
+                CharacterData.Instance.mapVote = obj.name;
+                trackDisplay.text = obj.name;
+            });
 
-            button.onClick.AddListener(() => DisableButtons());
+            //button.onClick.AddListener(() => DisableButtons());
         }
+
+        confirmBtn.onClick.AddListener(() => ConfirmVote());
+    }
+
+    public void ConfirmVote()
+    {
+        gamemanagerObj.MapSelected();
     }
 
     private void DisableButtons()
