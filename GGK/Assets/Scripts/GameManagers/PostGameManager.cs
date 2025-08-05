@@ -107,7 +107,7 @@ public class PostGameManager : NetworkBehaviour
     // resets all decisions to Undecided so they don't carry over into a second or following race
     private void ResetDecisions()
     {
-        foreach (KeyValuePair <ulong, PlayerDecisions> pair in playerDecisions.ToList())
+        foreach (KeyValuePair<ulong, PlayerDecisions> pair in playerDecisions.ToList())
         {
             playerDecisions[pair.Key] = PlayerDecisions.Undecided;
         }

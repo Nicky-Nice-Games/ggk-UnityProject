@@ -258,6 +258,7 @@ public static class CharacterBuilder
 
     public static void AddCharacter(AppearanceSettings settings)
     {
+        Debug.Log(settings.name);
         KeyValuePair<Character, Color> character = new KeyValuePair<Character, Color>((Character)Enum.Parse(typeof(Character), settings.name), settings.color);
         AddCharacter(character);
     }

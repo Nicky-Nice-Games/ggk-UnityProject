@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 940c41ee7ba656048b9f12929268e2f7, type: 2}
     - target: {fileID: 919132149155446097, guid: 7c039cb48e1ef5c4abe1b56827338bcb, type: 3}
       propertyPath: m_Name
-      value: model_tree1_basic
+      value: Tree1
       objectReference: {fileID: 0}
     - target: {fileID: 928174436980424051, guid: 7c039cb48e1ef5c4abe1b56827338bcb, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -69,15 +69,15 @@ PrefabInstance:
       addedObject: {fileID: 1975429938866208966}
     - targetCorrespondingSourceObject: {fileID: 6846926977233083226, guid: 7c039cb48e1ef5c4abe1b56827338bcb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1218427406400075453}
+      addedObject: {fileID: 74228014897302403}
   m_SourcePrefab: {fileID: 100100000, guid: 7c039cb48e1ef5c4abe1b56827338bcb, type: 3}
 --- !u!1 &4994080018093129998 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6846926977233083226, guid: 7c039cb48e1ef5c4abe1b56827338bcb, type: 3}
   m_PrefabInstance: {fileID: 1894786868723391060}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1218427406400075453
-BoxCollider:
+--- !u!136 &74228014897302403
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,8 +94,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.4124181, y: 7.9278483, z: 3.412418}
+  serializedVersion: 2
+  m_Radius: 1.7062091
+  m_Height: 7.9278483
+  m_Direction: 1
   m_Center: {x: -0.00000011920929, y: 2.9639242, z: 0.000000059604645}
 --- !u!1 &6374413479847490032 stripped
 GameObject:
