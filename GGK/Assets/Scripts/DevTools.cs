@@ -645,7 +645,7 @@ public class DevTools : MonoBehaviour
         {
             if(tier >= 1 && tier <= 4)
             {
-                itemHolder.ItemTier = tier;
+                itemHolder.ItemTier = tier - 1;
             }
             else
             {
