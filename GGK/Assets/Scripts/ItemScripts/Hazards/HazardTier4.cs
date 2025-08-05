@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class HazardTier4 : BaseItem
 {
+    [SerializeField]
+    private ParticleSystem snowEffect;
+
     private void Start()
     {
-        Vector3 behindPos = transform.position - transform.forward * 8;
-        behindPos.y += 3.0f;
+        Vector3 behindPos = transform.position - transform.forward * 11;
+        behindPos.y += 0.8f;
         transform.position = behindPos;
+
+        //if (snowEffect != null)
+        //{
+        //    snowEffect.Play();
+        //}
     }
 
     private new void Update()
     {
-        RotateBox();
+        //RotateBox();
     }
 
     private void RotateBox()
