@@ -59,9 +59,27 @@ public class PlayerInfo : ScriptableObject
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 
-        boostUsage = new Dictionary<string, int>();
-        offenceUsage = new Dictionary<string, int>();
-        trapUsage = new Dictionary<string, int>();
+        boostUsage = new Dictionary<string, int>
+        {
+            {"speedBoost1", 0 },
+            {"speedBoost2", 0 },
+            {"speedBoost3", 0 },
+            {"speedBoost4", 0 }
+        };
+        offenceUsage = new Dictionary<string, int>
+        {
+            {"puck1", 0 },
+            {"puck2", 0 },
+            {"puck3", 0 },
+            {"puck4", 0 }
+        };
+        trapUsage = new Dictionary<string, int>
+        {
+            {"oilSpill1", 0 },
+            {"brickwall", 0 },
+            {"confuseritchie", 0 },
+            {"fakepowerupbrick", 0 }
+        };
 
         isGuest = false;
     }
@@ -103,8 +121,8 @@ public class PlayerInfo : ScriptableObject
         {
             {"oilSpill1", 0 },
             {"brickwall", 0 },
-            {"speedBoost3", 0 },
-            {"confuseritchie", 0 }
+            {"confuseritchie", 0 },
+            {"fakepowerupbrick", 0 }
         };
 
         isGuest = false;
