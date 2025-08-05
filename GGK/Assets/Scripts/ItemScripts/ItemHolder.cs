@@ -54,6 +54,10 @@ public class ItemHolder : NetworkBehaviour
     #endregion
 
 //AUDIO1
+    [Header("Wwise Kart Sounds")]
+    public KartSounds kartSounds;
+    private uint shieldID = 0;
+
     #region ItemTracking Variables
     [Header("Held Item")]
     [SerializeField] private int tier = 0;
@@ -848,11 +852,6 @@ public class ItemHolder : NetworkBehaviour
         useCounter = newValue;
     }
 }
-/* AUDIO1
-    [Header("Wwise Kart Sounds")]
-    public KartSounds kartSounds;
-    private uint shieldID = 0;
-*/
 
 /* AUDIO2
             item = Instantiate(heldItem, transform.position, transform.rotation);
