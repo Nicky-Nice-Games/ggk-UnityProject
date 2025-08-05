@@ -280,8 +280,6 @@ public class GameManager : NetworkBehaviour
     public void GameFinished()
     {
         curState = GameStates.gameOver;
-        //apiManager.PostPlayerData(playerInfo);
-
         sceneLoader.LoadScene("GameOverScene");
     }
 
@@ -289,8 +287,6 @@ public class GameManager : NetworkBehaviour
     public void GameFinishedRpc()
     {
         curState = GameStates.gameOver;
-        //apiManager.PostPlayerData(playerInfo);
-
         sceneLoader.LoadScene("GameOverScene");
     }
 

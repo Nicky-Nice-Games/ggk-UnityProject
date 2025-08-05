@@ -28,7 +28,7 @@ public class APIManager : MonoBehaviour
     /// <param name="url">where to send the data</param>
     /// <param name="jsonData">json data</param>
     /// <returns></returns>
-    public async Task PostJsonAsync(string url, string json)
+    private async Task PostJsonAsync(string url, string json)
     {
         using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
         {
@@ -57,14 +57,14 @@ public class APIManager : MonoBehaviour
     /// </summary>
     /// <param name="thisPlayer">the player whos data will be set</param>
     /// <returns></returns>
-    public void PostPlayerData(PlayerInfo thisPlayer)
+    public async void PostPlayerData(PlayerInfo thisPlayer)
     {
         // Serializing data to send back
         SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
         serializable.ConvertToSerializable(thisPlayer);
         string json = JsonUtility.ToJson(serializable);
 
-        //StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));
+        await PostJsonAsync("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json);
     }
 
     /// <summary>

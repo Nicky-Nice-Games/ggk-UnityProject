@@ -1115,4 +1115,9 @@ public class NEWDriver : NetworkBehaviour
         airTrickTween?.Kill();
         driftRotationTween?.Kill();
     }
+
+    public void SendThisPlayerData()
+    {
+        gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+    }
 }
