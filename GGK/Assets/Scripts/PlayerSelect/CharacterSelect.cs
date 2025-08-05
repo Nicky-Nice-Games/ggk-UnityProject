@@ -22,13 +22,15 @@ public class CharacterSelect : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> characterModels;
-
-    private CharacterData characterData;
     private GameManager gameManager;
+
+    [SerializeField]
+    private GameObject colorSelectMenu;
+    [SerializeField]
+    private GameObject charSelectMenu;
     // Start is called before the first frame update
     void Start()
     {
-        characterData = FindObjectOfType<CharacterData>();
         gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -58,10 +60,10 @@ public class CharacterSelect : MonoBehaviour
         //     }
         // }
 
-        if (characterData != null)
+        if (CharacterData.Instance != null)
         {
-            characterData.characterName = character.name;
-            characterData.characterSprite = character.gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
+            CharacterData.Instance.characterName = character.name;
+            CharacterData.Instance.characterSprite = character.gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
         }
         character.GetComponent<Image>().sprite = buttonSelectedSprite;
         characterNameDisplay.text = character.name;
@@ -69,9 +71,10 @@ public class CharacterSelect : MonoBehaviour
 
     public void Confirm()
     {
-        if (characterData.characterName != null)
+        if (CharacterData.Instance.characterName != null)
         {
-            SceneManager.LoadScene("MapSelectScene");
+            colorSelectMenu.SetActive(true);
+            charSelectMenu.SetActive(false);
         }
     }
 }
