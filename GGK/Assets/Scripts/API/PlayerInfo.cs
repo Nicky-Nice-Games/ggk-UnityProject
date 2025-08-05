@@ -21,7 +21,7 @@ using UnityEngine.UIElements;
 /// It is used to retain basic functionality for C# Dictionaries
 /// </summary>
 [System.Serializable]
-public class PlayerInfo : MonoBehaviour
+public class PlayerInfo : ScriptableObject
 {
     // Basic player and match stats
     [Header("Do not Change")]

@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -125,8 +126,57 @@ public class PlayerKartHandeler : MonoBehaviour
         {
             characterData.characterSprite = characterImage.sprite;
             characterData.characterName = name;
+            SendAppearanceToPlayerInfo();
         }
             
+    }
+
+    /// <summary>
+    /// Organizes the models name to a number based off of organization in backend
+    /// </summary>
+    private void SendAppearanceToPlayerInfo()
+    {
+        int index = 0;
+        Debug.Log("chardata.name: " + characterData.name);
+        switch (characterData.characterName)
+        {
+            case "gizmo":
+                index = 2;
+                break;
+
+            case "morgan":
+                index = 3;
+                break;
+
+            case "reese":
+                index = 4;
+                break;
+
+            case "emma":
+                index = 5;
+                break;
+
+            case "kai":
+                index = 6;
+                break;
+
+            case "jamster":
+                index = 1;
+                break;
+
+            default:
+                index = 1;
+                break;
+        }
+        if(gameManager.playerInfo != null)
+        {
+            gameManager.playerInfo.characterUsed = index;
+            Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
+        }
+        else
+        {
+            Debug.Log("Playerinfo was null!");
+        }
     }
 
     // Which direction for the color carousel?

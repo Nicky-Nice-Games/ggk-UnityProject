@@ -77,7 +77,6 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("Login");
         curState = GameStates.login;
-        playerInfo = new PlayerInfo();
     }
 
     /// <summary>
