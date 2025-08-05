@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 /* Log to keep track of where all the dynamic values sent to backend are being assigned:
  * playerID - From backend when PlayerInfo is created in APIManager
  * racePosition - KartCheckpoint::OnTriggerEnter
- * mapRaced - 
+ * mapRaced - GameManager::FillMapRaced (called in NEWDriver::Start)
  * collisionsWithPlayers - KartCheckpoint::OnCollisionEnter
  * collisionWithWalls - BonkCollision::OnCollisionEnter
  * characterUsed - PlayerKartHandeler::SendAppearanceToPlayerInfo

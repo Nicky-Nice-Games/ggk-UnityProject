@@ -249,6 +249,7 @@ public class GameManager : NetworkBehaviour
         else
         {
            // Loads the race based on the name of the button clicked
+           // Note: change scenes in FillMapRaced when changing the scene names here
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
             case "RIT Outer Loop":
@@ -364,6 +365,31 @@ public class GameManager : NetworkBehaviour
             sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
         }
         sceneLoader.LoadScene(sceneToLoad);
+    }
+
+    public void FillMapRaced(NEWDriver player)
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "LD_RITOuterLoop":
+                Debug.Log("Map data: Outer Loop (1)");
+                player.playerInfo.mapRaced = 1;
+                break;
+            case "LD_RITDorm":
+                Debug.Log("Map data: Dorm (2)");
+                player.playerInfo.mapRaced = 2;
+                break;
+            case "GSP_Golisano":
+                Debug.Log("Map data: Golisano (3)");
+                player.playerInfo.mapRaced = 3;
+                break;
+            case "GSP_FinalsBrickRoad":
+                Debug.Log("Map data: Finals Brick (4)");
+                player.playerInfo.mapRaced = 4;
+                break;
+            default:
+                break;
+        }
     }
 }
 

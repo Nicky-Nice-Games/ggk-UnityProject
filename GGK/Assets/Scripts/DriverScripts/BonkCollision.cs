@@ -26,15 +26,9 @@ public class BonkCollision : MonoBehaviour
 
         GameObject collisionParent = collision.transform.parent.gameObject;
 
-        // track # of collisions with karts and with walls
-        if(collisionParent.transform.GetChild(0).GetComponent<NEWDriver>() != null ||
-            collisionParent.transform.GetChild(0).GetComponent<NPCPhysics>() != null)
-        {
-            kart.GetComponent<NEWDriver>().playerInfo.collisionsWithPlayers++;
-        }
-        else
-        {
-            kart.GetComponent<NEWDriver>().playerInfo.collisionWithWalls++;
-        }
+        // track # of collisions with walls for playerinfo
+
+        Debug.Log("Collision with wall");
+        kart.GetComponent<NEWDriver>().playerInfo.collisionWithWalls++;
     }
 }

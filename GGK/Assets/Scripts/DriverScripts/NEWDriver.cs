@@ -164,6 +164,8 @@ public class NEWDriver : NetworkBehaviour
             playerInfo = gameManagerObj.playerInfo;
         }
 
+        gameManagerObj.FillMapRaced(this);
+
         sphere.drag = 0.5f;
 
         StopParticles();

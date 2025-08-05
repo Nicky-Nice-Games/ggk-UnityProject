@@ -117,6 +117,7 @@ public class KartCheckpoint : NetworkBehaviour
                 if (lap >= totalLaps)
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    // raceposition data to playerinfo
                     parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
                     Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
@@ -127,6 +128,7 @@ public class KartCheckpoint : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // kart collision data to playerinfo
         if (collision.gameObject.CompareTag("Kart"))
         {
             // avoid doubling collisions by only checking the Kart child
