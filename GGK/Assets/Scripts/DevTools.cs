@@ -144,6 +144,7 @@ public class DevTools : MonoBehaviour
     private ItemHolder itemHolder;
     //private BaseItem baseItem;
 
+    private PlacementManager placementManager;
 
     //[SerializeField] private GameObject pausePanel;
 
@@ -688,6 +689,7 @@ public class DevTools : MonoBehaviour
                 itemHolder.ItemType = ItemHolder.ItemTypeEnum.Boost;
                 break;
 
+            //Removes item but keeps tier that is entered
             case "NoItem":
                 itemHolder.ItemType = ItemHolder.ItemTypeEnum.NoItem;
                 break;
@@ -708,10 +710,10 @@ public class DevTools : MonoBehaviour
         //Setting appropriate variables for the held item, regardless of item type
         //Note: Does not run if a parameter is invalid because of return statements
         //itemHolder.HoldingItem = true;
-        itemHolder.HeldItem.ItemTier = tier;
-        itemHolder.HeldItem.OnLevelUp(tier);
-        itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-        itemHolder.uses = itemHolder.HeldItem.UseCount;
+        //itemHolder.HeldItem.ItemTier = tier;
+        //itemHolder.HeldItem.OnLevelUp(tier);
+        //itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+        //itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
 
 
@@ -726,26 +728,68 @@ public class DevTools : MonoBehaviour
     /// to specify the speed that the user wants to change the kart speed to.</param>
     public void ChangeSpeed(string kartType, string speed)
     {
-        int speedInt;   //float instead?
-        //KartCheckpoint kartChosen;
+        float speedFloat;
+
+        GameObject kartCheck = GameObject.FindGameObjectWithTag("Kart");
+        if (!kartCheck)
+        {
+            textLog += "\nError: No Kart found in scene, cannot \nuse command.";
+            return;
+        }
+
+        if (GameObject.Find("PlacementManager").GetComponent<PlacementManager>() != null)
+        {
+            placementManager = GameObject.Find("PlacementManager").GetComponent<PlacementManager>();
+        }       
+
+        //Checks if the second parameter inputted is a valid number, then sets karts speed
+        if (float.TryParse(speed, out speedFloat))
+        {
+            /*if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
+            {
+                //set chosenKart speed to speed
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+            Debug.Log("here");*/
+        }
+        else
+        {
+            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+            return;
+        }
 
         switch (kartType) 
         {
             case ("Player"):
-                //Checks if you are in a track scene or not (such as a menu)
-                GameObject kart = GameObject.Find("Kart 1/Kart");
-                if (kart != null)
-                {
-                    //kartChosen = kart;
+                Debug.Log("speedFloat " + speedFloat);
+                foreach(GameObject kart in placementManager.kartsList)
+                {               
+                    if (kart.GetComponent<NEWDriver>() != null)
+                    {
+                        kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
+                        //kart.GetComponent<NEWDriver>().minSpeed = speedFloat;
+                        kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat/2);
+                    }
                 }
-                else
-                {
-                    textLog += "\nError: No Kart found in scene, cannot use command.";
-                    return;
-                }
+                
                 break;
 
             case ("NPC"):
+
+                foreach (GameObject kart in placementManager.kartsList)
+                {
+                    if (kart.GetComponent<NPCPhysics>() != null)
+                    {
+                        kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
+                        //kart.GetComponent<NPCPhysics>().minSpeed = speedFloat;
+                        kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                    }
+                }
+
                 break;
 
             case "":
@@ -762,24 +806,7 @@ public class DevTools : MonoBehaviour
         }
 
 
-        //Checks if the second parameter inputted is a valid number, then sets karts speed
-        if (Int32.TryParse(speed, out speedInt))
-        {
-            if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
-            {
-                //set chosenKart speed to speed
-            }
-            else
-            {
-                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-                return;
-            }
-        }
-        else
-        {
-            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-            return;
-        }
+       
 
     }
 
