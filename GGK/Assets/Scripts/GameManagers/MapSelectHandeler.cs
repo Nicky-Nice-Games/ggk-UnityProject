@@ -31,6 +31,11 @@ public class MapSelectHandeler : MonoBehaviour
     // [SerializeField] private Transform waitingScreen;
     // [SerializeField] private Transform mapButtons;
 
+    [SerializeField]
+    private Sprite mapSelectedTexture;
+    [SerializeField]
+    private Sprite mapDefaultTexture;
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +54,11 @@ public class MapSelectHandeler : MonoBehaviour
             {
                 CharacterData.Instance.mapVote = obj.name;
                 trackDisplay.text = obj.name;
+                foreach(GameObject button in mapOptions)
+                {
+                    button.GetComponent<Image>().sprite = mapDefaultTexture;
+                }
+                obj.GetComponent<Image>().sprite = mapSelectedTexture;
             });
 
             //button.onClick.AddListener(() => DisableButtons());
