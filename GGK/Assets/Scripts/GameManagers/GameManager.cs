@@ -220,7 +220,7 @@ public class GameManager : NetworkBehaviour
     public void MapSelected()
     {
         curState = GameStates.game;
-        MusicStateManager.instance.ResetToLimbo();
+        //MusicStateManager.instance.ResetToLimbo();
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
