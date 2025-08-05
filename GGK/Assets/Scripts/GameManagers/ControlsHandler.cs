@@ -11,6 +11,8 @@ public class ControlsHandler : MonoBehaviour
 
     public Image keyboardInputs;
     public Image controllerInputs;
+    public OptionsData optionsData;
+
 
     /// <summary>
     /// This is so when this panel opens and closes, the button selected goes to this button set
@@ -18,7 +20,7 @@ public class ControlsHandler : MonoBehaviour
     [Header("ButtonNavigation Settings")]
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private GameObject buttonIn;
-    [SerializeField] private GameObject buttonOut;
+    //[SerializeField] private GameObject buttonOut;
 
     private Vector3 initialScale;
     public void OnEnable()
@@ -42,8 +44,10 @@ public class ControlsHandler : MonoBehaviour
     public void Close()
     {
         // When this panel closes this is the first button to be hovered outside of the panel
-        eventSystem.SetSelectedGameObject(buttonOut);
+       // eventSystem.SetSelectedGameObject(buttonOut);
         gameObject.SetActive(false);
+        optionsData.GameManager.RefreshSelected();
+
     }
 
     public void Keyboard()

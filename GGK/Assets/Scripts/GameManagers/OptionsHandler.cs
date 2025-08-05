@@ -38,7 +38,7 @@ public class OptionsHandler : MonoBehaviour
     /// </summary>
     [Header("ButtonNavigation Settings")]
     [SerializeField] private EventSystem eventSystem;
-    [SerializeField] private GameObject buttonOut;
+    //[SerializeField] private GameObject buttonOut;
 
     private void Update()
     {
@@ -162,7 +162,7 @@ public class OptionsHandler : MonoBehaviour
     public void Close()
     {
         // When this panel closes this is the first button to be hovered outside of the panel
-        eventSystem.SetSelectedGameObject(buttonOut);
+       // eventSystem.SetSelectedGameObject(buttonOut);
         gameObject.SetActive(false);
         optionsData.GameManager.RefreshSelected();
     }
