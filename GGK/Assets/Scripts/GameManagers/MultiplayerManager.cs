@@ -97,6 +97,19 @@ public class MultiplayerManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
         }
     }
+    
+    public override void OnNetworkDespawn()
+    {
+        IsMultiplayer = false;
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
+        }
+        else
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
+        }
+    }
 
     private void ServerDisconnectHandler(ulong clientId)
     {
@@ -121,15 +134,6 @@ public class MultiplayerManager : NetworkBehaviour
         }
     }
 
-    public override void OnNetworkDespawn()
-    {
-        IsMultiplayer = false;
-        if (IsServer) {
-            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
-        } else {
-            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
-        }
-    }
 
     /// <summary>
     /// Call this going into a new multiplayer game (from lobby to game mode select)
