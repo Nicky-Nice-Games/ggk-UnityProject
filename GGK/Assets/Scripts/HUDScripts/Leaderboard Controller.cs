@@ -51,14 +51,14 @@ public class LeaderboardController : NetworkBehaviour
             // Format and display time
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
+            timeDisplay.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
         else
         {
             curTime = 0;
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.00}", minutes, seconds);
+            timeDisplay.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
     }
 

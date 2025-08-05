@@ -56,7 +56,7 @@ public class PlacementManager : NetworkBehaviour
     {
         checkPlacement();
         placementDisplay.text = $"Placement: {trackedKart.placement}";
-        lapDisplay.text = $"Lap: {trackedKart.lap + 1}";
+        lapDisplay.text = $"Lap: {trackedKart.lap + 1}/3";
     }
 
     private void checkPlacement()
