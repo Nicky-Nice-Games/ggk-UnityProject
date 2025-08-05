@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class DynamicRecovery : MonoBehaviour
@@ -116,22 +117,18 @@ public class DynamicRecovery : MonoBehaviour
     private Transform FindClosestCheckpoint()
     {
         Transform closest = null;
-        //float closestDistSqr = Mathf.Infinity;
-        //Vector3 currentPosition = transform.position;
-        //
-        //foreach (GameObject checkpoint in checkpoints)
-        //{
-        //    //float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
-        //    //if (distSqr < closestDistSqr)
-        //    //{
-        //    //    closestDistSqr = distSqr;
-        //    //    closest = checkpoint;
-        //    //}
-        //
-        //    
-        //}
 
-        closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
+        // go through all the checkpoint behind and including this to find the closest respawn point available and respawn there
+        for (int i = kartCheckpointScript.checkpointId; i >= 0; i--)
+        {
+            if (checkpoints[i].CompareTag("RespawnPoint") || checkpoints[i].CompareTag("Startpoint"))
+            {
+                closest = checkpoints[i].transform;
+                kartCheckpointScript.checkpointId = i;
+                break;
+            }
+        }
+
         return closest;
 
     }

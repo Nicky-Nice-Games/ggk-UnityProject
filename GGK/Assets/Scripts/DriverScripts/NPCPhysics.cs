@@ -498,7 +498,7 @@ public class NPCPhysics : NetworkBehaviour
 
     void AvoidObstacle()
     {
-        float rayForwardLength = 7f;
+        float rayForwardLength = 4f;
         float raySideOffset = 1.0f;
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
