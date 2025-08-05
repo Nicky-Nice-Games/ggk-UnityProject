@@ -115,12 +115,30 @@ public class KartCheckpoint : NetworkBehaviour
                 }
 
                 if (lap >= totalLaps)
-                {                    
+                {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
                     Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            // avoid doubling collisions by only checking the Kart child
+            // only count collisions from a player into any other kart
+            if(collision.gameObject.GetComponent<KartCheckpoint>() != null &&
+                this.transform.parent.transform.GetChild(0).gameObject.GetComponent<NEWDriver>() != null)
+            {
+                Debug.Log("Collision with kart");
+                GameObject driverObj = this.transform.parent.transform.GetChild(0).gameObject;
+                driverObj.GetComponent<NEWDriver>().playerInfo.collisionsWithPlayers++;
+            }
+
         }
     }
 

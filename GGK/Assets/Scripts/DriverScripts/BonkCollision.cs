@@ -20,9 +20,21 @@ public class BonkCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
-        
-            sphere.AddForce(collision.contacts[0].normal * bonkForce, ForceMode.Impulse);
-        
+        sphere.AddForce(collision.contacts[0].normal * bonkForce, ForceMode.Impulse);
+
+        GameObject kart = sphere.transform.parent.transform.GetChild(0).gameObject;
+
+        GameObject collisionParent = collision.transform.parent.gameObject;
+
+        // track # of collisions with karts and with walls
+        if(collisionParent.transform.GetChild(0).GetComponent<NEWDriver>() != null ||
+            collisionParent.transform.GetChild(0).GetComponent<NPCPhysics>() != null)
+        {
+            kart.GetComponent<NEWDriver>().playerInfo.collisionsWithPlayers++;
+        }
+        else
+        {
+            kart.GetComponent<NEWDriver>().playerInfo.collisionWithWalls++;
+        }
     }
 }
