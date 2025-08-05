@@ -106,7 +106,10 @@ public class MultiplayerManager : NetworkBehaviour
         //gamemode.Value = Gamemode.Unselected;
         kartSelectionTimer = kartSelectionTimerMax;
         mapSelectionTimer = mapSelectionTimerMax;
-        ResetDictionaries();
+        if (IsServer)
+        {
+            ResetDictionaries();
+        }
     }
 
     public void ResetDictionaries()

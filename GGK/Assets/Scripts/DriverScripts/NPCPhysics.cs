@@ -148,6 +148,11 @@ public class NPCPhysics : NetworkBehaviour
     public float confusedTimer;
     public Transform childNormal;
 
+    private float backingOutTimer = 0f;
+    private float backingOutDuration = 1.2f; // seconds
+    private bool isBackingOut = false;
+    private Vector2 backingOutDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -169,7 +174,6 @@ public class NPCPhysics : NetworkBehaviour
         KC = childTransform.GetComponent<KartCheckpoint>();
         if (!IsSpawned)
         {
-            CharacterBuilder.RandomizeUniqueAppearance(GetComponent<AppearanceSettings>());
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, KC);
         }
@@ -416,22 +420,41 @@ public class NPCPhysics : NetworkBehaviour
         if (KC.checkpointList.Count > 0)
         {
             destination = KC.checkpointList[destinationID];
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 offsetBehindCheckpoint = destination.transform.position - checkpointForward * 2f; // 2 units behind
+
             randomizedTarget = destination.transform.position + checkpointOffset;
         }
 
         if (isGrounded)
         {
-            Vector3 dirToTarget = destination.transform.position - transform.position;
-            dirToTarget.y = 0f; // Flatten vertical influence
-            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 targetPos = destination.transform.position - checkpointForward * 2f;
 
+            Vector3 dirToTarget = targetPos - transform.position;
+            dirToTarget.y = 0f;
+
+            if (dirToTarget.magnitude < 1f)
+            {
+                // You're too close to the target, extend further back so there's a clear direction
+                targetPos = destination.transform.position - checkpointForward * 5f;
+                dirToTarget = targetPos - transform.position;
+                dirToTarget.y = 0f;
+            }
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
             movementDirection = new Vector3(localDir.x, 0f, localDir.z);
 
+            // --- Fix for stuck-turning (no forward movement)
+            if (isGrounded && movementDirection.z <= 0.05f)
+            {
+                movementDirection.z = 0.25f;
+            }
             CheckRoadEdges();
 
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
             AvoidObstacle();
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 3f, Color.green);
 
 
 
@@ -475,7 +498,7 @@ public class NPCPhysics : NetworkBehaviour
 
     void AvoidObstacle()
     {
-        float rayForwardLength = 7f;
+        float rayForwardLength = 4f;
         float raySideOffset = 1.0f;
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
@@ -507,8 +530,7 @@ public class NPCPhysics : NetworkBehaviour
             }
             else
             {
-                // If both sides are blocked or both are open, pick a default direction
-                movementDirection.y -= avoidStrength;
+                movementDirection.z -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -522,7 +544,41 @@ public class NPCPhysics : NetworkBehaviour
             movementDirection.x -= avoidStrength;
         }
 
-        // Clamp for safety
+        // ========== PERPENDICULAR STUCK CHECK ==========
+
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 velocity = sphere.velocity;
+        velocity.y = 0;
+
+        float dot = Vector3.Dot(forward, velocity.normalized);
+
+        if (!isBackingOut && Mathf.Abs(dot) < 0.25f && velocity.magnitude < 1f && obstacleCenter)
+        {
+            isBackingOut = true;
+            backingOutTimer = backingOutDuration;
+
+            // Choose a consistent backward + slight left or right offset
+            float sideOffset = Random.value > 0.5f ? 0.8f : -0.8f;
+            backingOutDirection = new Vector2(sideOffset, -1f); // (x: side, z: reverse)
+        }
+
+        if (isBackingOut)
+        {
+            backingOutTimer -= Time.deltaTime;
+
+            movementDirection.x = backingOutDirection.x;
+            movementDirection.z = backingOutDirection.y;
+
+
+            if (backingOutTimer <= 0f)
+            {
+                isBackingOut = false;
+            }
+        }
+
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
 

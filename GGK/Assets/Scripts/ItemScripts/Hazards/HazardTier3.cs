@@ -4,25 +4,14 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// Confused Ritchie
+/// Cracked Brick Wall
 /// </summary>
 public class HazardTier3 : BaseItem
 {
     private void Start()
     {
-        Vector3 behindPos = transform.position - transform.forward * 8;
-        behindPos.y += 3.0f;
+        Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
         transform.position = behindPos;
-    }
-
-    private new void Update()
-    {
-        RotateBox();
-    }
-
-    private void RotateBox()
-    {
-        transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -39,23 +28,16 @@ public class HazardTier3 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
-            }
-            NEWDriver playerKart = collision.gameObject.gameObject.GetComponentInChildren<NEWDriver>();
-            if (playerKart)
-            {
-                playerKart.confusedTimer = 10;
-                playerKart.isConfused = true;
-                playerKart.movementDirection *= -1;
-            }
-            
-            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-            if (!MultiplayerManager.Instance.IsMultiplayer)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                DestroyItemRpc(this);
+
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    DestroyItemRpc(this);
+                }
             }
         }
     }

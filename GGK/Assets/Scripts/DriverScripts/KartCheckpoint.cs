@@ -99,7 +99,7 @@ public class KartCheckpoint : NetworkBehaviour
             }
         }
 
-        if (other.CompareTag("Checkpoint") && canPass)
+        if ((other.CompareTag("Checkpoint") && canPass) || (other.CompareTag("RespawnPoint") && canPass))
         {
             checkpointId = nextValidCheckpointIndex;
         }

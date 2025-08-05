@@ -167,32 +167,27 @@ public class NEWDriver : NetworkBehaviour
         gameManagerObj.FillMapRaced(this);
 
         sphere.drag = 0.5f;
-
+        sphere.isKinematic = false;
         StopParticles();
 
+
         baseRotation = steeringWheel.transform.localRotation;
+
         if (!IsSpawned)
         {
 
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
-
+            MiniMapHud.instance.trackingPlayer = gameObject;
+            MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-            AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
-            if (appearance)
-            {
-                appearance.UpdateAppearance();
-            }
-            CharacterBuilder.AddCharacter(appearance);
-            MiniMapHud.instance.trackingPlayer = gameObject;
-            MiniMapHud.instance.AddKart(gameObject);
-            sphere.isKinematic = false;
 
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
+        
     }
 
     public override void OnNetworkSpawn()
