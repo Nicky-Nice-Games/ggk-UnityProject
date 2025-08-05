@@ -103,6 +103,7 @@ public class LeaderboardController : NetworkBehaviour
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
+            kart.GetComponent<NEWDriver>().playerInfo.raceTime = curTime;
         }
 
         //if multiplayer, figure out number of clients +1, for each player kart, ++ until matches # of clients(+1)

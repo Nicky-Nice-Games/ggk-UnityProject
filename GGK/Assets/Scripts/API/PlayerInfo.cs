@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
  * collisionWithWalls - BonkCollision::OnCollisionEnter
  * characterUsed - 
  * fellOffMap - DeathZone::OnTriggerEnter
- * raceStartTime - 
- * raceTime - 
+ * raceStartTime - NEWDriver::OnNtetworkSpawn
+ * raceTime - LeaderboardController::Finished
  */
 
 

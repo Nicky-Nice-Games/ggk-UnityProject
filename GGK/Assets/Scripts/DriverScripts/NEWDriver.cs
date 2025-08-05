@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -220,6 +221,7 @@ public class NEWDriver : NetworkBehaviour
         TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
 
+        playerInfo.raceStartTime = DateTime.Now;
     }
 
     public void StopParticles()
