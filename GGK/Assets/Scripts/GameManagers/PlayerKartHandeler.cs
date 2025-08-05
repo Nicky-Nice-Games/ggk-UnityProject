@@ -46,8 +46,7 @@ public class PlayerKartHandeler : MonoBehaviour
             Image[] images = characterButton.GetComponentsInChildren<Image>();
 
             Button btn = characterButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], btn.name));
+            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], characterButton.name));
         }
 
         // Invoke default selection
@@ -88,7 +87,7 @@ public class PlayerKartHandeler : MonoBehaviour
     }
 
     // Select this character button
-    public void ChangeCharacter(Image characterImage, Image border, string name)
+    public void ChangeCharacter(Image characterImage, Image border, string charName)
     {
         // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
@@ -103,12 +102,12 @@ public class PlayerKartHandeler : MonoBehaviour
         // Change selected character information to those on the button
         characterSelectedImage = characterImage;
         ColorChange(); // Change color of selected character image
-        characterName.text = name;
+        characterName.text = charName;
         
         // Set active the correct character model
         foreach(GameObject characterModel in characterModels)
         {
-            if (characterModel.name.ToLower() != name.ToLower())
+            if (characterModel.name.ToLower() != charName.ToLower())
             {
                 characterModel.SetActive(false);
             }
@@ -125,7 +124,7 @@ public class PlayerKartHandeler : MonoBehaviour
         if (characterData != null)
         {
             characterData.characterSprite = characterImage.sprite;
-            characterData.characterName = name;
+            characterData.characterName = charName;
             SendAppearanceToPlayerInfo();
         }
             
@@ -137,30 +136,29 @@ public class PlayerKartHandeler : MonoBehaviour
     private void SendAppearanceToPlayerInfo()
     {
         int index = 0;
-        Debug.Log("chardata.name: " + characterData.name);
         switch (characterData.characterName)
         {
-            case "gizmo":
+            case "Gizmo":
                 index = 2;
                 break;
 
-            case "morgan":
+            case "Morgan":
                 index = 3;
                 break;
 
-            case "reese":
+            case "Reese":
                 index = 4;
                 break;
 
-            case "emma":
+            case "Emma":
                 index = 5;
                 break;
 
-            case "kai":
+            case "Kai":
                 index = 6;
                 break;
 
-            case "jamster":
+            case "Jamster":
                 index = 1;
                 break;
 
@@ -171,11 +169,11 @@ public class PlayerKartHandeler : MonoBehaviour
         if(gameManager.playerInfo != null)
         {
             gameManager.playerInfo.characterUsed = index;
-            Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
+            //Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
         }
         else
         {
-            Debug.Log("Playerinfo was null!");
+            //Debug.Log("Playerinfo was null!");
         }
     }
 
