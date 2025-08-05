@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static ItemHolder;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
@@ -107,16 +108,16 @@ public enum GameMode
 }
 
 
-/// <summary>
-/// Enum for each item category keyword/command
-/// </summary>
-public enum ItemType
-{
-    Offense,
-    Defense,
-    Hazard,
-    Boost
-}
+///// <summary>
+///// Enum for each item category keyword/command
+///// </summary>
+//public enum ItemType
+//{
+//    Offense,
+//    Defense,
+//    Hazard,
+//    Boost
+//}
 
 
 public class DevTools : MonoBehaviour
@@ -139,9 +140,9 @@ public class DevTools : MonoBehaviour
     private bool isScrolling;
 
     //Variables and references for GiveItem command
-    [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
+    //[SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
-    private BaseItem baseItem;
+    //private BaseItem baseItem;
 
 
     //[SerializeField] private GameObject pausePanel;
@@ -351,7 +352,7 @@ public class DevTools : MonoBehaviour
                         else if (parts.Length > 1 && parts[1] == "Options")
                         {
                             textLog += "\nOptions for Param 1 [ItemType]: ";
-                            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
                             {
                                 textLog += "\n" + type;
                             }
@@ -614,7 +615,7 @@ public class DevTools : MonoBehaviour
         if (itemType == "Options")
         {
             textLog += "\nOptions for Param 1 [ItemType]: ";
-            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
             {
                 textLog += "\n" + type;
             }
@@ -625,10 +626,10 @@ public class DevTools : MonoBehaviour
         else
         {
             //Checks if you are in a track scene or not (such as a menu)
-            GameObject kart = GameObject.Find("Kart 1/Kart");
+            GameObject kart = GameObject.Find("Kart 1(Clone)");
             if (kart != null)
             {
-                itemHolder = kart.GetComponent<ItemHolder>();
+                itemHolder = kart.GetComponentInChildren<ItemHolder>();
             }
             else
             {
@@ -663,7 +664,7 @@ public class DevTools : MonoBehaviour
             //Displays all of the parameter options for the GiveItem method
             case "Options":
                 textLog += "\nOptions for Param 1 [ItemType]: ";
-                foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
                 {
                     textLog += "\n" + type;
                 }
@@ -671,20 +672,24 @@ public class DevTools : MonoBehaviour
                     "\nEnter a number 1-4";
                 break;
 
-            case "Offense":
-                itemHolder.HeldItem = baseItems[0];                
+            case "Puck":             
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Puck;                
                 break;
 
-            case "Defense":
-                itemHolder.HeldItem = baseItems[1];
+            case "Shield":
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Shield;
                 break;
 
             case "Hazard":
-                itemHolder.HeldItem = baseItems[2];              
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Hazard;
                 break;
 
             case "Boost":
-                itemHolder.HeldItem = baseItems[3];
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Boost;
+                break;
+
+            case "NoItem":
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.NoItem;
                 break;
 
             case "":
