@@ -220,10 +220,15 @@ public class DynamicRecovery : MonoBehaviour
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
 
-        
+
 
         // TELEPORT TO NEW POSITION 
-        rb.position = targetPosition;
+        Vector3 drivingDirection = -(targetRotation * Vector3.right); // opposite of red arrow
+        Vector3 spawnOffset = drivingDirection.normalized * 8f;
+        Vector3 spawnPos = targetPosition + spawnOffset;
+
+        rb.position = spawnPos;
+        normalTransform.rotation = Quaternion.LookRotation(drivingDirection, Vector3.up);
         rb.isKinematic = false;
         ResetParticles();
         
