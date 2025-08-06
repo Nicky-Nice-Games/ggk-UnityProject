@@ -19,7 +19,7 @@ public class Countdown : MonoBehaviour
     public bool finished = false;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         // Pause stuff using scaled time
         Time.timeScale = 0;
