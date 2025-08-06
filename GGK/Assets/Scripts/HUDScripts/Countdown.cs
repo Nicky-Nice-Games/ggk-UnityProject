@@ -183,6 +183,9 @@ public class Countdown : NetworkBehaviour
     public bool finished = false;
     public static Countdown instance;
 
+    [Header("Wwise Music State")]
+    [SerializeField] MusicState musicState = MusicState.OuterLoop;
+
     void Awake()
     {
         instance = this;
@@ -228,6 +231,14 @@ public class Countdown : NetworkBehaviour
 
         int count = countdownStart;
 
+        if (MusicStateManager.instance != null)
+        {
+            MusicStateManager.instance.ResetToLimbo();
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
+            MusicLapStateManager.instance.SetLapState(LapState.Lap1);
+            MusicStateManager.instance.SetMusicState(musicState);
+        }
+
         while (count > 0)
         {
             UpdateCountdownRpc(count);
@@ -245,6 +256,14 @@ public class Countdown : NetworkBehaviour
         yield return new WaitForSecondsRealtime(countdownSpeed);
 
         int count = countdownStart;
+
+        if (MusicStateManager.instance != null)
+        {
+            MusicStateManager.instance.ResetToLimbo();
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
+            MusicLapStateManager.instance.SetLapState(LapState.Lap1);
+            MusicStateManager.instance.SetMusicState(musicState);
+        }
 
         while (count > 0)
         {
