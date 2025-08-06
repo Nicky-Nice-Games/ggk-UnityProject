@@ -10,12 +10,12 @@ public class DisconnectHandler : NetworkBehaviour
     {
         if (IsServer)
         {
-            Debug.Log("I am the server");
+            //Debug.Log("I am the server");
             NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnectHandler;
         }
         else
         {
-            Debug.Log("I am a client");
+            //Debug.Log("I am a client");
             NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
         }
     }
