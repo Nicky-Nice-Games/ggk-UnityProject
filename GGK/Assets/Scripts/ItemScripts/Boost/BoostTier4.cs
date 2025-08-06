@@ -55,6 +55,7 @@ public class BoostTier4 : BaseItem
 
             int currentCheckpointId = kartCheck.checkpointId;
             int warpCheckpointId = currentCheckpointId + 3;
+            bool warpPass = false;
 
             // check if the checkpoint is past the count and adjust
             int checkpointMax = kartCheck.checkpointList.Count - 1;
@@ -73,8 +74,7 @@ public class BoostTier4 : BaseItem
                 {
                     warpCheckpointId = 2;
                 }
-                kartCheck.lap++;
-                kartCheck.PassedWithWarp = true;
+                warpPass = true;
             }
 
             GameObject warpCheckpoint = kartCheck.checkpointList[warpCheckpointId];
@@ -85,7 +85,8 @@ public class BoostTier4 : BaseItem
 
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,
-                           boostMult, duration, boostMaxSpeed));
+                           boostMult, duration, boostMaxSpeed, warpPass));
+
         }
 
         // handles boosting for npcs
@@ -102,11 +103,12 @@ public class BoostTier4 : BaseItem
             duration = 3.0f;
 
             StartCoroutine(ApplyBoostNPC(npcDriver, boostMult, duration, boostMaxSpeed));
+
         }
     }
 
     IEnumerator WaitThenBoost(NEWDriver thisDriver, GameObject warpCheckpoint, KartCheckpoint kartCheck, int warpCheckpointId,
-                                      float boostMult, float duration, float boostMaxSpeed)
+                                      float boostMult, float duration, float boostMaxSpeed, bool warpPass)
     {
         //This is the code for the player.
         if (thisDriver != null)
@@ -131,7 +133,13 @@ public class BoostTier4 : BaseItem
         thisDriver.transform.rotation = Quaternion.Euler(0, warpCheckpoint.transform.eulerAngles.y - 90, 0);
         kartCheck.checkpointId = warpCheckpointId;
         StartCoroutine(ApplyBoost(thisDriver, boostMult, duration, boostMaxSpeed));
+        kartCheck.PassedWithWarp = warpPass;
+        if (warpPass)
+        {
+            kartCheck.lap++;
+        }
         yield return new WaitForFixedUpdate();
+
     }
 
     /// <summary>
