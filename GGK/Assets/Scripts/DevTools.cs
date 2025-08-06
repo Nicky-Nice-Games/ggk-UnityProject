@@ -127,7 +127,9 @@ public class DevTools : MonoBehaviour
     [SerializeField] public SceneLoader sceneLoader;
     [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
     [SerializeField] public CharacterData characterData;
+    //public PlayerKartHandeler playerKartHandeler;
     private PlacementManager placementManager;
+    private AppearanceSettings appearanceSettings;
     //[SerializeField] public GameObject gameManagerObj;
     //[SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
@@ -147,7 +149,8 @@ public class DevTools : MonoBehaviour
     private ItemHolder itemHolder;
     //private BaseItem baseItem;
 
-
+    [SerializeField] public Sprite defaultSprite;
+    [SerializeField] public Color defaultColor;
 
     //[SerializeField] private GameObject pausePanel;
 
@@ -163,6 +166,8 @@ public class DevTools : MonoBehaviour
         defaultText = "Welcome to Command Prompt\nType ShowMethods for methods " +
                 "or \n[MethodName] Options for Param options";
         textLog = defaultText;
+
+        
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -196,6 +201,9 @@ public class DevTools : MonoBehaviour
         //Debug.Log("enabled " + commandPromptCanvas.enabled);
         //}
         #endregion
+
+       
+
 
         //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -411,8 +419,29 @@ public class DevTools : MonoBehaviour
     public void LoadMap(string mapName)
     {
         bool multiplayer = false;
+
+        //if (GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>() != null)
+        //{
+        //    playerKartHandeler = GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>();
+        //}
+
+        //if (GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>() != null
+        //    && characterData.characterSprite == defaultSprite)
+        //{
+        //appearanceSettings = GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>();
+        //appearanceSettings.UpdateAppearance();
+        //}
+
         if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
-        //if (characterData.characterName)
+        if (characterData.characterSprite == null)
+        {
+            characterData.characterName = "Gizmo";
+            //characterData.characterColor = playerKartHandeler.colors[3];
+            characterData.characterColor = defaultColor;
+            characterData.characterSprite = defaultSprite;
+            //Image[] images = playerKartHandeler.characterButtons[1].GetComponentsInChildren<Image>();
+            //playerKartHandeler.characterSelectedImage =             
+        }
 
         //DeactivatePause();
         switch (mapName)
@@ -426,12 +455,12 @@ public class DevTools : MonoBehaviour
                 }
                 break;
 
-            case "CampusCircuit":
+            case "CampusCircuit":                
                 if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop"); }
                 else { multiSceneLoader.LoadScene("LD_RITOuterLoop"); }                
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
+                inputField.DeactivateInputField();                
                 break;
 
             case "DormRoomDerby":
