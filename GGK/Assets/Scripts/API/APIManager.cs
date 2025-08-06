@@ -12,6 +12,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class APIManager : MonoBehaviour
 {
@@ -63,7 +64,7 @@ public class APIManager : MonoBehaviour
         // Serializing data to send back
         SerializablePlayerInfo serializable = new SerializablePlayerInfo();
         serializable.ConvertToSerializable(thisPlayer);
-        string json = JsonUtility.ToJson(serializable);
+        string json = JsonConvert.SerializeObject(serializable);
         Debug.Log("Json: " + json);
 
         await PostJsonAsync("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json);
@@ -122,6 +123,8 @@ public class APIManager : MonoBehaviour
                 // Gets the basic user data that holds pid then using that to get the rest of players data
                 string data = webRequest.downloadHandler.text;
                 WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
+                Debug.Log("PlayerID: " + userData.pid);
+                thisPlayer.pid = userData.pid;
                 GetPlayerWithPid(userData.pid, thisPlayer);
                 return true;
             }

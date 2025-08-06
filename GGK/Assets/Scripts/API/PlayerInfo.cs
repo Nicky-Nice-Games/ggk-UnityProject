@@ -27,12 +27,14 @@ public class PlayerInfo : ScriptableObject
 {
     // Basic player and match stats
     [Header("Do not Change")]
-    public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public string pid;
+    public int racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public DateTime raceStartTime;
     public float raceTime;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
+    public Dictionary<string, int> defenseUsage;
 
     // NOT SENT TO BACKEND / Used unity side
     public bool isGuest;
@@ -46,7 +48,7 @@ public class PlayerInfo : ScriptableObject
     //Default constructor
     public PlayerInfo()
     {
-        playerID = 0;
+        pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
         racePosition = 0;
@@ -82,6 +84,13 @@ public class PlayerInfo : ScriptableObject
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
         };
+        defenseUsage = new Dictionary<string, int>
+        {
+            {"shield1", 0 },
+            {"shield2", 0 },
+            {"shield3", 0 },
+            {"shield4", 0 }
+        };
 
         isGuest = false;
     }
@@ -90,7 +99,7 @@ public class PlayerInfo : ScriptableObject
     public PlayerInfo(ulong clientID)
     {
         this.clientID = clientID;
-        playerID = 0;
+        pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
         racePosition = 0;
@@ -126,6 +135,13 @@ public class PlayerInfo : ScriptableObject
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
         };
+        defenseUsage = new Dictionary<string, int>
+        {
+            {"shield1", 0 },
+            {"shield2", 0 },
+            {"shield3", 0 },
+            {"shield4", 0 }
+        };
 
         isGuest = false;
 
@@ -134,7 +150,7 @@ public class PlayerInfo : ScriptableObject
     // Copy constructor
     public PlayerInfo(PlayerInfo other)
     {
-        playerID = other.playerID;
+        pid = other.pid;
         raceStartTime = other.raceStartTime;
         raceTime = other.raceTime;
         racePosition = other.racePosition;
