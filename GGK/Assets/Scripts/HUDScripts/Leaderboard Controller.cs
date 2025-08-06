@@ -103,9 +103,6 @@ public class LeaderboardController : NetworkBehaviour
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
-            NEWDriver player = kart.GetComponent<NEWDriver>(); 
-            player.playerInfo.raceTime = curTime;
-            player.SendThisPlayerData();
         }
 
         //if multiplayer, figure out number of clients +1, for each player kart, ++ until matches # of clients(+1)
@@ -114,7 +111,8 @@ public class LeaderboardController : NetworkBehaviour
         //{
         //leaderboard.SetActive(true);
 
-        if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+        NEWDriver player = kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+        if (player != null)
         {
             numOfPlayerKarts++;
             Debug.Log("Player kart added, total: " + numOfPlayerKarts);
@@ -127,6 +125,8 @@ public class LeaderboardController : NetworkBehaviour
                 leaderboard.SetActive(true);
                 allPlayerKartsFinished.Value = true;
             }
+            player.playerInfo.raceTime = curTime;
+            player.SendThisPlayerData();
         }
 
         // if(allPlayerKartsFinished.Value)

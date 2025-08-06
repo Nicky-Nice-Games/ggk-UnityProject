@@ -59,10 +59,12 @@ public class APIManager : MonoBehaviour
     /// <returns></returns>
     public async void PostPlayerData(PlayerInfo thisPlayer)
     {
+        Debug.Log("Called PostPlayerData in APIManager");
         // Serializing data to send back
-        SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
+        SerializablePlayerInfo serializable = new SerializablePlayerInfo();
         serializable.ConvertToSerializable(thisPlayer);
         string json = JsonUtility.ToJson(serializable);
+        Debug.Log("Json: " + json);
 
         await PostJsonAsync("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json);
     }

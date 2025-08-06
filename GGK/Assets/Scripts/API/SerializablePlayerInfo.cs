@@ -9,7 +9,7 @@ using UnityEngine;
 /// This class is not used for gameplay logic
 /// </summary>
 [System.Serializable]
-public class SerializablePlayerInfo : MonoBehaviour
+public class SerializablePlayerInfo : ScriptableObject
 {
     public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public string raceStartTime;
@@ -20,6 +20,7 @@ public class SerializablePlayerInfo : MonoBehaviour
 
     public SerializablePlayerInfo ConvertToSerializable(PlayerInfo player)
     {
+        Debug.Log("Called ConvertToSerializable in SerializablePlayerInfo");
         playerID = player.playerID;
         raceStartTime = player.raceStartTime.ToString();
         raceTime = player.raceTime;
