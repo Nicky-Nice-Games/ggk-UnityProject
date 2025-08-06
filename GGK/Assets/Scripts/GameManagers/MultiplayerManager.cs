@@ -113,7 +113,8 @@ public class MultiplayerManager : NetworkBehaviour
 
     private void ServerDisconnectHandler(ulong clientId)
     {
-        
+        ResetDictionaries();
+        multiplayerPanel.SetActive(false);
     }
 
     private void ClientDisconnectHandler(ulong clientId)
@@ -131,6 +132,7 @@ public class MultiplayerManager : NetworkBehaviour
             GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
             GameManager.thisManagerInstance.curState = GameStates.multiSingle;
             ResetDictionaries();
+            multiplayerPanel.SetActive(false);
         }
     }
 
@@ -160,7 +162,7 @@ public class MultiplayerManager : NetworkBehaviour
 
         // clear multiplayer panel
         int childCount = multiplayerPanel.transform.childCount;
-        for (int i = childCount - 1; i > 0; i++)
+        for (int i = childCount - 1; i > 0; i--)
         {
             Destroy(multiplayerPanel.transform.GetChild(i).gameObject);
         }
