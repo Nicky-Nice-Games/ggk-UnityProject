@@ -139,27 +139,27 @@ public class PlayerKartHandeler : MonoBehaviour
         switch (characterData.characterName)
         {
             case "Gizmo":
-                index = 2;
+                index = 1;
                 break;
 
             case "Morgan":
-                index = 3;
+                index = 2;
                 break;
 
             case "Reese":
-                index = 4;
+                index = 3;
                 break;
 
             case "Emma":
-                index = 5;
+                index = 4;
                 break;
 
             case "Kai":
-                index = 6;
+                index = 5;
                 break;
 
             case "Jamster":
-                index = 1;
+                index = 6;
                 break;
 
             default:
