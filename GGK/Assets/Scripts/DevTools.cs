@@ -125,6 +125,9 @@ public class DevTools : MonoBehaviour
     //Variables and references for setting up the DevTools object
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
+    [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
+    [SerializeField] public CharacterData characterData;
+    private PlacementManager placementManager;
     //[SerializeField] public GameObject gameManagerObj;
     //[SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
@@ -144,7 +147,7 @@ public class DevTools : MonoBehaviour
     private ItemHolder itemHolder;
     //private BaseItem baseItem;
 
-    private PlacementManager placementManager;
+
 
     //[SerializeField] private GameObject pausePanel;
 
@@ -407,6 +410,10 @@ public class DevTools : MonoBehaviour
     /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
+        bool multiplayer = false;
+        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+        //if (characterData.characterName)
+
         //DeactivatePause();
         switch (mapName)
         {
@@ -420,44 +427,54 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "CampusCircuit":
-                sceneLoader.LoadScene("LD_RITOuterLoop");
+                if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop"); }
+                else { multiSceneLoader.LoadScene("LD_RITOuterLoop"); }                
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
-           
+
             case "DormRoomDerby":
-                sceneLoader.LoadScene("LD_RITDorm");
+                if (!multiplayer) { sceneLoader.LoadScene("LD_RITDorm"); }
+                else { multiSceneLoader.LoadScene("LD_RITDorm"); }                
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TechHouseTurnpike":
-                sceneLoader.LoadScene("GSP_Golisano");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_Golisano"); }
+                else { multiSceneLoader.LoadScene("GSP_Golisano"); }
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "AllNighterExpressway":
-                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_FinalsBrickRoad"); }
+                else { multiSceneLoader.LoadScene("GSP_FinalsBrickRoad"); }
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "QuarterMile":
-                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_RITQuarterMile"); }
+                else { multiSceneLoader.LoadScene("GSP_RITQuarterMile"); }
+                //sceneLoader.LoadScene("GSP_RITQuarterMile");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TestGrid":
-                sceneLoader.LoadScene("Testing_Grid");
+                if (!multiplayer) { sceneLoader.LoadScene("Testing_Grid"); }
+                else { multiSceneLoader.LoadScene("Testing_Grid"); }
+                //sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TestTube":
-                sceneLoader.LoadScene("Testing_Tube");
+                if (!multiplayer) { sceneLoader.LoadScene("Testing_Tube"); }
+                else { multiSceneLoader.LoadScene("Testing_Tube"); }
+                //sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -717,8 +734,6 @@ public class DevTools : MonoBehaviour
     }
 
 
-
-
     /// <summary>
     /// Handles the ChangeSpeed command based on the inputted paramaters entered after it.
     /// </summary>
@@ -805,13 +820,7 @@ public class DevTools : MonoBehaviour
                 return;
         }
 
-
-       
-
     }
-
-
-
 
 
     /// <summary>
