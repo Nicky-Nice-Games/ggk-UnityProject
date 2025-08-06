@@ -14,6 +14,9 @@ public class PuckTier4 : BaseItem
     [SerializeField]
     SpeedCameraEffect cameraScript;   // Camera effect
 
+    uint hitSpinoutID = 0;
+    uint crashID = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -98,6 +101,10 @@ public class PuckTier4 : BaseItem
             {
                 playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                 playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+
+                hitSpinoutID = AkUnitySoundEngine.PostEvent("Play_hit_spinout", gameObject);
+                crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
+
                 collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
                 Debug.Log(collision.transform.root.GetChild(0).gameObject);
             }

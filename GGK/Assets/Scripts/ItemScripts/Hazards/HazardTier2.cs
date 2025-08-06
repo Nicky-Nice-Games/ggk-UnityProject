@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 /// </summary>
 public class HazardTier2 : BaseItem
 {
+    uint hitSpinoutID = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,8 @@ public class HazardTier2 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+
+                hitSpinoutID = AkUnitySoundEngine.PostEvent("Play_hit_spinout", gameObject);
 
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
