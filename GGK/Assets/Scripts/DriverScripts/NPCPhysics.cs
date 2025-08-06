@@ -148,6 +148,11 @@ public class NPCPhysics : NetworkBehaviour
     public float confusedTimer;
     public Transform childNormal;
 
+    private float backingOutTimer = 0f;
+    private float backingOutDuration = 1.2f; // seconds
+    private bool isBackingOut = false;
+    private Vector2 backingOutDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -493,7 +498,7 @@ public class NPCPhysics : NetworkBehaviour
 
     void AvoidObstacle()
     {
-        float rayForwardLength = 7f;
+        float rayForwardLength = 4f;
         float raySideOffset = 1.0f;
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
@@ -525,7 +530,6 @@ public class NPCPhysics : NetworkBehaviour
             }
             else
             {
-                // If both sides are blocked or both are open, pick a default direction
                 movementDirection.z -= avoidStrength;
             }
 
@@ -540,24 +544,41 @@ public class NPCPhysics : NetworkBehaviour
             movementDirection.x -= avoidStrength;
         }
 
-        //If we're nearly perpendicular to a wall/guardrail, reverse a bit
+        // ========== PERPENDICULAR STUCK CHECK ==========
+
         Vector3 forward = transform.forward;
         forward.y = 0;
         forward.Normalize();
 
-        Vector3 velocity = sphere.velocity; 
+        Vector3 velocity = sphere.velocity;
         velocity.y = 0;
 
         float dot = Vector3.Dot(forward, velocity.normalized);
 
-        // Dot product near 0 means perpendicular (±90 degrees), but allow slight leeway
-        if (Mathf.Abs(dot) < 0.25f && obstacleCenter)
+        if (!isBackingOut && Mathf.Abs(dot) < 0.25f && velocity.magnitude < 1f && obstacleCenter)
         {
-            // Moving nearly perpendicular to a wall — apply slight reverse force
-            movementDirection.z = Mathf.Clamp(movementDirection.z - 1f, 1f, 0f);
+            isBackingOut = true;
+            backingOutTimer = backingOutDuration;
+
+            // Choose a consistent backward + slight left or right offset
+            float sideOffset = Random.value > 0.5f ? 0.8f : -0.8f;
+            backingOutDirection = new Vector2(sideOffset, -1f); // (x: side, z: reverse)
         }
 
-        // Clamp for safety
+        if (isBackingOut)
+        {
+            backingOutTimer -= Time.deltaTime;
+
+            movementDirection.x = backingOutDirection.x;
+            movementDirection.z = backingOutDirection.y;
+
+
+            if (backingOutTimer <= 0f)
+            {
+                isBackingOut = false;
+            }
+        }
+
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
 
