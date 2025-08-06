@@ -181,7 +181,7 @@ public class LeaderboardController : NetworkBehaviour
             {
                 for (int i = 0; i < tempArray.Length; i++)
                 {
-                    tempArray[i].color = Color.red;
+                    tempArray[i].color = Color.yellow;
                 }
             }
             else
@@ -242,7 +242,7 @@ public class LeaderboardController : NetworkBehaviour
         {
             for (int i = 0; i < tempArray.Length; i++)
             {
-                tempArray[i].color = Color.red;
+                tempArray[i].color = Color.yellow;
             }
         }
         else
