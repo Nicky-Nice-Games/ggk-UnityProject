@@ -127,6 +127,10 @@ public class MiniMapHud : MonoBehaviour
         }
         DebugBounds();
 
+        // clearing lists before populating them again
+
+        CleanLists();
+
         //If there are objects to track..
         if (objects.Count > 0)
         {
@@ -435,6 +439,17 @@ public class MiniMapHud : MonoBehaviour
             mapIcons.RemoveAt(index);
             Debug.Log("map icons removed for kart");
         }
+    }
+
+    public void CleanLists()
+    {
+        // removing preexisting map icons
+        foreach (Image img in mapIcons)
+        {
+            Destroy(img);
+        }
+        mapIcons.Clear();
+        objects.Clear();
     }
 }
 
