@@ -388,9 +388,14 @@ public class DevTools : MonoBehaviour
                             textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
                             
                             textLog += "\nOptions for Param 2 [Speed]: " +
-                                "\nEnter a number";     //TODO Determine possible values
+                                "\nEnter a number or Reset";  
                             break;
                         }
+                        //else if (parts.Length > 1 && parts[1] == "Reset")
+                        //{
+                        //    ChangeSpeed("Reset", "-1");
+                        //    break;
+                        //}
                         else
                         {
                             textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
@@ -802,37 +807,69 @@ public class DevTools : MonoBehaviour
         }
         else
         {
-            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-            return;
+            if(speed != "Reset")
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+         
         }
 
         switch (kartType) 
         {
             case ("Player"):
-                Debug.Log("speedFloat " + speedFloat);
-                foreach(GameObject kart in placementManager.kartsList)
-                {               
-                    if (kart.GetComponent<NEWDriver>() != null)
+                if(speed == "Reset")
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
                     {
-                        kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
-                        //kart.GetComponent<NEWDriver>().minSpeed = speedFloat;
-                        kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat/2);
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = 38;
+                            kart.GetComponent<NEWDriver>().accelerationRate = 2700;
+                        }                      
                     }
                 }
-                
+                else
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
+                            kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }                             
                 break;
 
             case ("NPC"):
-
-                foreach (GameObject kart in placementManager.kartsList)
+                if (speed == "Reset")
                 {
-                    if (kart.GetComponent<NPCPhysics>() != null)
+                    foreach (GameObject kart in placementManager.kartsList)
                     {
-                        kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
-                        //kart.GetComponent<NPCPhysics>().minSpeed = speedFloat;
-                        kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = 38;
+                            kart.GetComponent<NPCPhysics>().accelerationRate = 2300;
+                        }
                     }
                 }
+                else
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
+                            kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }                
+                break;
+
+            case ("Reset"):
+
+                
 
                 break;
 
