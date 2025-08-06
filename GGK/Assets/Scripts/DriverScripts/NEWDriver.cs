@@ -219,6 +219,7 @@ public class NEWDriver : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         MiniMapHud.instance.RemoveKart(gameObject);
+        Debug.Log($"ClientId {OwnerClientId} has despawned/disconnected");
     }
 
     public void StopParticles()

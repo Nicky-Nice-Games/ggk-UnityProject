@@ -224,7 +224,6 @@ public class MiniMapHud : MonoBehaviour
                     mapIcons[i].rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
                 }
             }
-
         }
     }
 
@@ -420,13 +419,21 @@ public class MiniMapHud : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Allows for the removal of a kart icon during the race
+    /// </summary>
+    /// <param name="kart"></param>
     public void RemoveKart(GameObject kart)
     {
+        Debug.Log("attempting to remove kart from minimap");
         if (objects.Contains(kart))
         {
+            Debug.Log("kart found");
             int index = objects.FindIndex(obj => obj == kart);
+            Debug.Log($"kart found at index {index}");
             objects.RemoveAt(index);
             mapIcons.RemoveAt(index);
+            Debug.Log("map icons removed for kart");
         }
     }
 }
