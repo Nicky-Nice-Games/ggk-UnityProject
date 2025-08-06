@@ -1017,6 +1017,11 @@ public class NEWDriver : NetworkBehaviour
         }
     }
 
+    public void OnLookBack(InputAction.CallbackContext context)
+    {
+        SpeedCameraEffect.instance.OnLookBack(context);
+    }
+
     private void UpdateControllerMovement(InputAction.CallbackContext context)
     {
         Vector2 moveInput = new Vector2(controllerX, controllerZ);
