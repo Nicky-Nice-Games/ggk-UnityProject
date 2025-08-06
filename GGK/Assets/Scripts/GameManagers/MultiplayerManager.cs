@@ -142,13 +142,17 @@ public class MultiplayerManager : NetworkBehaviour
     /// </summary>
     public void Reset()
     {
-        //gamemode.Value = Gamemode.Unselected;
-        kartSelectionTimer = kartSelectionTimerMax;
-        mapSelectionTimer = mapSelectionTimerMax;
+        ResetTimers();
         if (IsServer)
         {
             ResetDictionaries();
         }
+    }
+
+    public void ResetTimers()
+    {
+        kartSelectionTimer = kartSelectionTimerMax;
+        mapSelectionTimer = mapSelectionTimerMax;
     }
 
     public void ResetDictionaries()
@@ -177,6 +181,29 @@ public class MultiplayerManager : NetworkBehaviour
             playerMapSelections.Add(clientId, Map.RITOuterLoop);
         }
     }
+
+    public void SoftResetKartSelection()
+    {
+        // iterate through all the values of the playerKartSelectionChecks and set them all to false
+        Dictionary<ulong, bool> temporaryDictionary = new Dictionary<ulong, bool>();
+        foreach (ulong clientId in playerKartSelectionChecks.Keys)
+        {
+            temporaryDictionary.Add(clientId, false);
+        }
+        playerKartSelectionChecks = temporaryDictionary;
+    }
+
+    public void SoftResetMapSelection()
+    {
+        // iterate through all the values of the playerMapSelectionChecks and set them all to false
+        Dictionary<ulong, bool> temporaryDictionary = new Dictionary<ulong, bool>();
+        foreach (ulong clientId in playerMapSelectionChecks.Keys)
+        {
+            temporaryDictionary.Add(clientId, false);
+        }
+        playerMapSelectionChecks = temporaryDictionary;
+    }
+
 
     [Rpc(SendTo.ClientsAndHost)]
     public void InitPlayerDataRpc()
