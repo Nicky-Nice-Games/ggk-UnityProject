@@ -148,6 +148,11 @@ public class NPCPhysics : NetworkBehaviour
     public float confusedTimer;
     public Transform childNormal;
 
+    private float backingOutTimer = 0f;
+    private float backingOutDuration = 1.2f; // seconds
+    private bool isBackingOut = false;
+    private Vector2 backingOutDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -493,7 +498,7 @@ public class NPCPhysics : NetworkBehaviour
 
     void AvoidObstacle()
     {
-        float rayForwardLength = 7f;
+        float rayForwardLength = 4f;
         float raySideOffset = 1.0f;
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
@@ -525,8 +530,7 @@ public class NPCPhysics : NetworkBehaviour
             }
             else
             {
-                // If both sides are blocked or both are open, pick a default direction
-                movementDirection.y -= avoidStrength;
+                movementDirection.z -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -540,7 +544,41 @@ public class NPCPhysics : NetworkBehaviour
             movementDirection.x -= avoidStrength;
         }
 
-        // Clamp for safety
+        // ========== PERPENDICULAR STUCK CHECK ==========
+
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 velocity = sphere.velocity;
+        velocity.y = 0;
+
+        float dot = Vector3.Dot(forward, velocity.normalized);
+
+        if (!isBackingOut && Mathf.Abs(dot) < 0.25f && velocity.magnitude < 1f && obstacleCenter)
+        {
+            isBackingOut = true;
+            backingOutTimer = backingOutDuration;
+
+            // Choose a consistent backward + slight left or right offset
+            float sideOffset = Random.value > 0.5f ? 0.8f : -0.8f;
+            backingOutDirection = new Vector2(sideOffset, -1f); // (x: side, z: reverse)
+        }
+
+        if (isBackingOut)
+        {
+            backingOutTimer -= Time.deltaTime;
+
+            movementDirection.x = backingOutDirection.x;
+            movementDirection.z = backingOutDirection.y;
+
+
+            if (backingOutTimer <= 0f)
+            {
+                isBackingOut = false;
+            }
+        }
+
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
 
