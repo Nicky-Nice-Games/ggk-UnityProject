@@ -24,9 +24,17 @@ public enum GameStates
     gameOver
 }
 
+public enum GameModes
+{
+    quickRace,
+    timeTrial,
+    grandPrix
+}
+
 public class GameManager : NetworkBehaviour
 {
     public GameStates curState;
+    public GameModes curGameMode;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
@@ -37,6 +45,9 @@ public class GameManager : NetworkBehaviour
 
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
+    // grand prix stuff
+    private List<string> grandPrixMaps = new List<string>();
 
     void Awake()
     {
@@ -184,6 +195,11 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.playerKart;
     }
 
+    public void ChangeGameMode(GameModes gameMode)
+    {
+        curGameMode = gameMode;
+    }
+
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
@@ -195,10 +211,34 @@ public class GameManager : NetworkBehaviour
         {
             MultiplayerManager.Instance.PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
         }
+        else if (curGameMode == GameModes.grandPrix)
+        {
+            ToGrandPrixSelectScreen();
+        }
         else
         {
             ToMapSelectScreen();
         }
+    }
+
+    public void GrandPrixSelected(List<string> grandPrixMaps)
+    {
+        this.grandPrixMaps = grandPrixMaps;
+
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+
+        }
+        else
+        {
+            sceneLoader.LoadScene(grandPrixMaps[0]);
+        }
+    }
+
+    public void ToGrandPrixSelectScreen()
+    {
+        SceneManager.LoadScene("GrandPrixSelectScene");
+        curState = GameStates.map;
     }
 
     public void ToMapSelectScreen() {
@@ -253,7 +293,7 @@ public class GameManager : NetworkBehaviour
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
             case "RIT Outer Loop":
-                sceneLoader.LoadScene("LD_RITOuterLoop");
+                sceneLoader.LoadScene("GSP_RITOuterLoop");
                 break;
             case "Golisano":
                 sceneLoader.LoadScene("GSP_Golisano");
@@ -279,8 +319,29 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
-        curState = GameStates.gameOver;
-        sceneLoader.LoadScene("GameOverScene");
+        if (curGameMode == GameModes.grandPrix)
+        {
+            int index = grandPrixMaps.IndexOf(SceneManager.GetActiveScene().name);
+            
+            if (index != grandPrixMaps.Count - 1)
+            {
+                sceneLoader.LoadScene(grandPrixMaps[index + 1]);
+            }
+            else
+            {
+                curState = GameStates.gameOver;
+                //apiManager.PostPlayerData(playerInfo);
+
+                sceneLoader.LoadScene("GameOverScene");
+            }
+        }
+        else
+        {
+            curState = GameStates.gameOver;
+            //apiManager.PostPlayerData(playerInfo);
+
+            sceneLoader.LoadScene("GameOverScene");
+        }
     }
 
     [Rpc(SendTo.ClientsAndHost)]

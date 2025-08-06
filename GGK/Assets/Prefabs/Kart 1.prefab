@@ -10798,6 +10798,7 @@ Transform:
   - {fileID: 5175546395433121647}
   - {fileID: 8719071438036900973}
   - {fileID: 8650760387202532977}
+  - {fileID: 8543200113185521663}
   m_Father: {fileID: 9189572482977137924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1556419620383864031
@@ -113521,6 +113522,7 @@ MonoBehaviour:
   boostFlames:
   - {fileID: 4943566234739806955}
   - {fileID: 654275368021250051}
+  dazedStars: {fileID: 3429183785657913562}
   vfxHandler: {fileID: 5017296300065448797}
   groundLayer:
     serializedVersion: 2
@@ -126061,6 +126063,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4521404770085940, guid: 89956e675b749204c8e10395ce2b5fb9, type: 3}
   m_PrefabInstance: {fileID: 5069794394650800613}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5538672316556409331
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7324962379893977866}
+    m_Modifications:
+    - target: {fileID: 4090374902652695511, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_Name
+      value: DazedStars
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0553
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+--- !u!198 &3429183785657913562 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7155016239776606505, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+  m_PrefabInstance: {fileID: 5538672316556409331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8543200113185521663 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4202661221534369292, guid: b987315f7ca3042418fa318d3876688b, type: 3}
+  m_PrefabInstance: {fileID: 5538672316556409331}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6194191989287800505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -126530,7 +126599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7842891381905885049, guid: 4f864eb9a59799446acfbfbe0b2aaf00, type: 3}
       propertyPath: m_CastShadows
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

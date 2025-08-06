@@ -35,16 +35,25 @@ public class GameModeHandeler : MonoBehaviour
             {
                 button.onClick.AddListener(() =>
                 gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
+
+                button.onClick.AddListener(() =>
+                gamemanagerObj.ChangeGameMode(GameModes.quickRace));
             }
             else if(obj.name == "Time Trial")
             {
                 button.onClick.AddListener(() =>
                 gamemanagerObj.sceneLoader.LoadScene("TimeTrialStub"));
+
+                button.onClick.AddListener(() =>
+                gamemanagerObj.ChangeGameMode(GameModes.timeTrial));
             }
             else if(obj.name == "Grand Prix")
             {
                 button.onClick.AddListener(() =>
-                gamemanagerObj.sceneLoader.LoadScene("GrandPrixStub"));
+                gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
+
+                button.onClick.AddListener(() =>
+                gamemanagerObj.ChangeGameMode(GameModes.grandPrix));
             }
         }
 
