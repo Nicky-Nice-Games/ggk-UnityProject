@@ -126,13 +126,13 @@ public class MiniMapHud : MonoBehaviour
             EstablishBounds(points);
         }
         DebugBounds();
-        
+
         //If there are objects to track..
         if (objects.Count > 0)
         {
-            if(objects[0])
-            //add objects to the icon list
-            iconRef.SetActive(true);
+            if (objects[0])
+                //add objects to the icon list
+                iconRef.SetActive(true);
             Image refImage = iconRef.GetComponent<Image>();
             mapIcons.Add(refImage);
 
@@ -155,7 +155,7 @@ public class MiniMapHud : MonoBehaviour
                 mapIcons[trackingIndex].transform.SetAsLastSibling();
                 mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
             }
-            
+
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
@@ -224,7 +224,7 @@ public class MiniMapHud : MonoBehaviour
                     mapIcons[i].rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
                 }
             }
-            
+
         }
     }
 
@@ -418,7 +418,16 @@ public class MiniMapHud : MonoBehaviour
             mapIcons[trackingIndex].transform.SetAsLastSibling();
             mapIcons[trackingIndex].rectTransform.sizeDelta = iconRef.GetComponent<Image>().rectTransform.sizeDelta * 1.15f;
         }
-        
+    }
+
+    public void RemoveKart(GameObject kart)
+    {
+        if (objects.Contains(kart))
+        {
+            int index = objects.FindIndex(obj => obj == kart);
+            objects.RemoveAt(index);
+            mapIcons.RemoveAt(index);
+        }
     }
 }
 
