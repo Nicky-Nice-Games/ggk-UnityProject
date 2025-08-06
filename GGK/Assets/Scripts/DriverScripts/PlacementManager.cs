@@ -88,7 +88,7 @@ public class PlacementManager : NetworkBehaviour
 
         if (trackedKart.lap < 3)
         {
-            lapDisplay.text = $"Lap: {trackedKart.lap + 1}/3";
+            lapDisplay.text = $"LAP: {trackedKart.lap + 1}/3";
         }
     }
 
