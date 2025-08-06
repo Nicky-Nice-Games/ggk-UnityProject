@@ -8,6 +8,8 @@ public class BoostTier2 : BaseItem
 {
     private VFXHandler vfxScript;
 
+    uint canOpenID = 0;
+
     private void OnTriggerEnter(Collider collision)
     {
         // set variables for boost
@@ -29,6 +31,8 @@ public class BoostTier2 : BaseItem
             boostMult = 1.5f;
             boostMaxSpeed = boostMult * 60.0f;
             duration = 3.0f;
+
+            canOpenID = AkUnitySoundEngine.PostEvent("Play_Can_Open", gameObject);
 
             // start boost
             StartCoroutine(ApplyBoost(driver, boostMult, duration, boostMaxSpeed));

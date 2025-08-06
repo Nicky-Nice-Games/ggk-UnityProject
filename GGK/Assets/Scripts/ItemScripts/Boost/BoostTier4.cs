@@ -15,6 +15,8 @@ public class BoostTier4 : BaseItem
     private Vector3 originalScale;
     private Transform driverTransform;
 
+    uint canOpenID = 0;
+
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -82,6 +84,8 @@ public class BoostTier4 : BaseItem
             // Play warp vfx
             warpEffectTop.SetFloat("Duration", warpWaitTime);
             warpEffectTop.Play();
+
+            canOpenID = AkUnitySoundEngine.PostEvent("Play_Can_Open", gameObject);
 
             // Waits a certain number of seconds, and then activates the warp boost
             StartCoroutine(WaitThenBoost(driver, warpCheckpoint, kartCheck, warpCheckpointId,

@@ -15,6 +15,8 @@ public class BoostTier1 : BaseItem
         float boostMaxSpeed;
         float duration;
 
+        uint canOpenID = 0;
+
         NEWDriver driver = collision.gameObject.GetComponent<NEWDriver>();
         if (driver != null)
         {
@@ -29,6 +31,8 @@ public class BoostTier1 : BaseItem
             boostMult = 1.25f;
             boostMaxSpeed = boostMult * 60.0f;
             duration = 3.0f;
+
+            canOpenID = AkUnitySoundEngine.PostEvent("Play_Can_Open", gameObject);
 
             // start boost
             StartCoroutine(ApplyBoost(driver, boostMult, duration, boostMaxSpeed));
