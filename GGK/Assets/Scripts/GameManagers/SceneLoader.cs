@@ -20,21 +20,24 @@ public class SceneLoader : NetworkBehaviour
 
     IEnumerator LoadAnimation(string sceneName)
     {
-        // Play start scene transition animation
-        StartAnimation();
-         
-        // Wait
-        if (transitionActive)
-            yield return new WaitForSeconds(transitionTime);
+        if (SceneManager.GetActiveScene().name != sceneName)
+        {
+            // Play start scene transition animation
+            StartAnimation();
+            
+            // Wait
+            if (transitionActive)
+                yield return new WaitForSeconds(transitionTime);
 
-        // Load Scene and play end scene transition animation
-        SceneManager.LoadScene(sceneName); 
-        EndAnimation();
+            // Load Scene and play end scene transition animation
+            SceneManager.LoadScene(sceneName); 
+            EndAnimation(); 
+        }
     }
 
     public IEnumerator ServerLoadScene(string sceneName)
     {
-        if (IsServer)
+        if (IsServer && SceneManager.GetActiveScene().name != sceneName)
         {
             StartAnimationRpc();
             if (transitionActive) yield return new WaitForSeconds(transitionTime);
@@ -57,11 +60,16 @@ public class SceneLoader : NetworkBehaviour
     public void StartAnimation()
     {
         // Play start scene transition animation
-        if (transitionActive) transition.SetTrigger("Start");
+        if (transitionActive && loading == false) transition.SetTrigger("Start");
     }
 
     public void EndAnimation()
     {
-        if (transitionActive) transition.SetTrigger("End");
+        if (transitionActive)
+        {
+            transition.SetTrigger("End");
+            loading = false;
+        }
+
     }
 }

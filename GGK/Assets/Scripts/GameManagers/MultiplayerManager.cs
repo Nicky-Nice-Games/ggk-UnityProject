@@ -439,6 +439,13 @@ public class MultiplayerManager : NetworkBehaviour
             //clear the selections so they can vote again next time
             playerMapSelections.Clear();
             playerMapSelectionChecks.Clear();
+
+            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            {
+                playerKartSelectionChecks.Add(clientId, false);
+                playerMapSelectionChecks.Add(clientId, false);
+                playerMapSelections.Add(clientId, Map.RITOuterLoop);
+            }
         }
     }
 
