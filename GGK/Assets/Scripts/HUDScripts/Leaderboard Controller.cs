@@ -125,7 +125,7 @@ public class LeaderboardController : NetworkBehaviour
                 leaderboard.SetActive(true);
                 allPlayerKartsFinished.Value = true;
             }
-            player.playerInfo.raceTime = curTime;
+            player.playerInfo.raceTime = curTime / 1000f;
             player.SendThisPlayerData();
         }
 
