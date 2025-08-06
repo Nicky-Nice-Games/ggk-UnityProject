@@ -85,7 +85,11 @@ public class PlacementManager : NetworkBehaviour
                 positionDisplay.sprite = spritePlacementList[7];
                 break;
         }
-        lapDisplay.text = $"Lap: {trackedKart.lap + 1}/3";
+
+        if (trackedKart.lap < 3)
+        {
+            lapDisplay.text = $"Lap: {trackedKart.lap + 1}/3";
+        }
     }
 
     private void checkPlacement()
