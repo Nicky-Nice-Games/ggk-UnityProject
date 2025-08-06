@@ -407,6 +407,16 @@ public class MultiplayerManager : NetworkBehaviour
             // pick random map
             List<Map> mapOptions = new List<Map>(playerMapSelections.Values);
             Map votedMap = mapOptions[random.Next(mapOptions.Count)];
+
+            //clear the selections so they can vote again next time
+            playerMapSelections.Clear();
+            playerMapSelectionChecks.Clear();
+
+            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            {
+                playerMapSelectionChecks.Add(clientId, false);
+                playerMapSelections.Add(clientId, Map.RITOuterLoop);
+            }
             switch (votedMap)
             {
                 case Map.RITOuterLoop:
@@ -436,16 +446,7 @@ public class MultiplayerManager : NetworkBehaviour
                     break;
             }
 
-            //clear the selections so they can vote again next time
-            playerMapSelections.Clear();
-            playerMapSelectionChecks.Clear();
-
-            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
-            {
-                playerKartSelectionChecks.Add(clientId, false);
-                playerMapSelectionChecks.Add(clientId, false);
-                playerMapSelections.Add(clientId, Map.RITOuterLoop);
-            }
+            
         }
     }
 
@@ -468,6 +469,7 @@ public class MultiplayerManager : NetworkBehaviour
         bool allVoted = true;
         foreach (KeyValuePair<ulong, bool> playerChoice in playerMapSelectionChecks)
         {
+            print(playerChoice + ", " +playerChoice.Value);
             if (!playerChoice.Value) allVoted = false;
         }
         return allVoted;
