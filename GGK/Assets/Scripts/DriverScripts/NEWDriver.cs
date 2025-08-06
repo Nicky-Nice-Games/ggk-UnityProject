@@ -1114,6 +1114,9 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         Debug.Log("Called SendPlayerData from NEWDriver");
-        gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+        if(!playerInfo.isGuest)
+        {
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+        }
     }
 }
