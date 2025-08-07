@@ -101,7 +101,6 @@ public class PauseHandler : NetworkBehaviour
                         restartBtn.SetActive(false);
                         mapBtn.SetActive(false);
                         startBtn.SetActive(true);
-                        Time.timeScale = 1;
                     }
                 }
             }

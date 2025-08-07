@@ -67,12 +67,14 @@ public class DisconnectHandler : NetworkBehaviour
         {
             foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
             {
+                Debug.Log($"Disconnecting client {clientId}");
                 NetworkManager.DisconnectClient(clientId);
             }
             NetworkManager.Shutdown();
         }
-        else
+        if (IsClient)
         {
+            Debug.Log($"before Disconnecting client rpc");
             DisconnectClientRpc();
         }
     }
@@ -80,7 +82,11 @@ public class DisconnectHandler : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void DisconnectClientRpc(RpcParams rpcParams = default)
     {
+        Debug.Log($"attempting Disconnecting client");
+
         ulong senderClientId = rpcParams.Receive.SenderClientId;
+        Debug.Log($"Disconnecting client {senderClientId}");
+
         NetworkManager.DisconnectClient(senderClientId);
     }
 }
