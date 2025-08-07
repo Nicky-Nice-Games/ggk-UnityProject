@@ -73,6 +73,43 @@ public class LeaderboardController : NetworkBehaviour
             allPlayerKartsFinished.OnValueChanged += OnPlayersFinished;
         }
 
+        if (IsServer)
+        {
+            //Debug.Log("I am the server");
+            NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnectHandler;
+        }
+        else
+        {
+            //Debug.Log("I am a client");
+            NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
+        }
+
+    }
+    public override void OnNetworkDespawn()
+    {
+        if (IsClient)
+        {
+            networkTime.OnValueChanged -= OnTimeChange;
+            allPlayerKartsFinished.OnValueChanged -= OnPlayersFinished;
+        }
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
+        }
+        else
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
+        }
+    }
+
+    private void ClientDisconnectHandler(ulong clientId)
+    {
+        numOfPlayerKarts--;
+    }
+
+    private void ServerDisconnectHandler(ulong clientId)
+    {
+
     }
 
     /// <summary>

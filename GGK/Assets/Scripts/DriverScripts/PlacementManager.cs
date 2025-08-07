@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -32,6 +33,52 @@ public class PlacementManager : NetworkBehaviour
         checkpointList.Clear();
         kartsList.Clear();
         kartCheckpointList.Clear();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            //Debug.Log("I am the server");
+            NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnectHandler;
+        }
+        else
+        {
+            //Debug.Log("I am a client");
+            NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
+        }
+        else
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
+        }
+    }
+
+    /// <summary>
+    /// this is what happens when the server disconnects as seen from the client's perspective
+    /// </summary>
+    /// <param name="clientId">your own client id</param>
+    private void ServerDisconnectHandler(ulong clientId)
+    {
+
+    }
+
+    /// <summary>
+    /// this is what happens when a client disconnects as seen from the server's perspective
+    /// </summary>
+    /// <param name="clientId">the client id of the player who disconnects</param>
+    private void ClientDisconnectHandler(ulong clientId)
+    {
+        int kartIndex = FindKartIndex(clientId);
+        kartCheckpointList.RemoveAt(kartIndex);
+        kartsList.RemoveAt(kartIndex);
     }
 
     void Start()
@@ -130,12 +177,42 @@ public class PlacementManager : NetworkBehaviour
     }
     public void AddKart(GameObject kart, KartCheckpoint kartCheckpoint)
     {
-            kartsList.Add(kart);
-            kartCheckpointList.Add(kartCheckpoint);
+        kartsList.Add(kart);
+        kartCheckpointList.Add(kartCheckpoint);
     }
 
     public void TrackKart(KartCheckpoint kart)
     {
         trackedKart = kart;
+    }
+    
+    /// <summary>
+    /// returns kart index from user clientId
+    /// </summary>
+    private int FindKartIndex(ulong clientId)
+    {
+        for (int index = 0; index < kartCheckpointList.Count; index++)
+        {
+            if (kartCheckpointList[index].OwnerClientId == clientId)
+            {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// returns kart from user clientId
+    /// </summary>
+    public GameObject FindKart(ulong clientId)
+    {
+        for (int index = 0; index < kartCheckpointList.Count; index++)
+        {
+            if (kartCheckpointList[index].OwnerClientId == clientId)
+            {
+                return kartsList[index];
+            }
+        }
+        return null;
     }
 }
