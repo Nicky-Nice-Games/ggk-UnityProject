@@ -88,7 +88,6 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("Login");
         curState = GameStates.login;
-        playerInfo = new PlayerInfo();
     }
 
     /// <summary>
@@ -226,14 +225,7 @@ public class GameManager : NetworkBehaviour
     {
         this.grandPrixMaps = grandPrixMaps;
 
-        if (MultiplayerManager.Instance.IsMultiplayer)
-        {
-
-        }
-        else
-        {
-            sceneLoader.LoadScene(grandPrixMaps[0]);
-        }
+        sceneLoader.LoadScene(grandPrixMaps[0]);
     }
 
     public void ToGrandPrixSelectScreen()
@@ -290,22 +282,28 @@ public class GameManager : NetworkBehaviour
         else
         {
            // Loads the race based on the name of the button clicked
-            switch (CharacterData.Instance.mapVote)
+           // Note: change scenes in FillMapRaced when changing the scene names here
+            switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
-            case "Campus Circuit":
-                sceneLoader.LoadScene("LD_RITOuterLoop");
+            case "RIT Outer Loop":
+
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITOuterLoop");
+                else sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
-            case "Tech House Turnpike":
-                sceneLoader.LoadScene("GSP_Golisano");
+            case "Golisano":
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_Golisano");
+                else sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "Dorm Room Derby":
-                sceneLoader.LoadScene("LD_RITDorm");
+            case "RIT Dorm":
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITDorm");
+                else sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
-            case "All-Nighter Expressway":
-                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+            case "Finals Brick Road":
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_FinalsBrickRoad");
+                else sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
@@ -348,8 +346,6 @@ public class GameManager : NetworkBehaviour
     public void GameFinishedRpc()
     {
         curState = GameStates.gameOver;
-        //apiManager.PostPlayerData(playerInfo);
-
         sceneLoader.LoadScene("GameOverScene");
     }
 
@@ -424,6 +420,31 @@ public class GameManager : NetworkBehaviour
             sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
         }
         sceneLoader.LoadScene(sceneToLoad);
+    }
+
+    public void FillMapRaced(NEWDriver player)
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "LD_RITOuterLoop":
+                Debug.Log("Map data: Outer Loop (1)");
+                player.playerInfo.mapRaced = 1;
+                break;
+            case "LD_RITDorm":
+                Debug.Log("Map data: Dorm (2)");
+                player.playerInfo.mapRaced = 2;
+                break;
+            case "GSP_Golisano":
+                Debug.Log("Map data: Golisano (3)");
+                player.playerInfo.mapRaced = 3;
+                break;
+            case "GSP_FinalsBrickRoad":
+                Debug.Log("Map data: Finals Brick (4)");
+                player.playerInfo.mapRaced = 4;
+                break;
+            default:
+                break;
+        }
     }
 }
 

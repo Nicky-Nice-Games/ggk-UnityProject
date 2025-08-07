@@ -28,7 +28,6 @@ public class AppearanceSettings : NetworkBehaviour
         string characterName = MultiplayerManager.Instance.players[OwnerClientId].CharacterName;
         Color characterColor = MultiplayerManager.Instance.players[OwnerClientId].CharacterColor;
         SetKartAppearanceRpc(characterName, characterColor);
-
     }
 
     public void UpdateAppearance()

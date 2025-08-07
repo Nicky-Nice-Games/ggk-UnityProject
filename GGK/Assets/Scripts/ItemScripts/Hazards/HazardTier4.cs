@@ -9,6 +9,7 @@ public class HazardTier4 : BaseItem
         Vector3 behindPos = transform.position - transform.forward * 11;
         behindPos.y += 0.8f;
         transform.position = behindPos;
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
     }
 
     private new void Update()

@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static ItemHolder;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
@@ -51,7 +52,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 
-
+#region Enums
 /// <summary>
 /// Enum for every method command to simplify adding additional methods
 /// </summary>
@@ -72,9 +73,9 @@ public enum MethodName
 /// </summary>
 public enum MapName 
 { 
-    CampusCircuit,
-    TechHouseTurnpike,
+    CampusCircuit,    
     DormRoomDerby,
+    TechHouseTurnpike,
     AllNighterExpressway,
     QuarterMile,
     TestGrid,
@@ -107,23 +108,29 @@ public enum GameMode
 }
 
 
-/// <summary>
-/// Enum for each item category keyword/command
-/// </summary>
-public enum ItemType
-{
-    Offense,
-    Defense,
-    Hazard,
-    Boost
-}
-
+//  Replaced with Enum from ItemHolder
+///// <summary>
+///// Enum for each item category keyword/command
+///// </summary>
+//public enum ItemType
+//{
+//    Offense,
+//    Defense,
+//    Hazard,
+//    Boost
+//}
+#endregion
 
 public class DevTools : MonoBehaviour
 {
-    //Variables and references for setting up the DevTools object
+    //Variables and references for setting up the DevTools object and references to other scripts
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
+    [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
+    [SerializeField] public CharacterData characterData;
+    //public PlayerKartHandeler playerKartHandeler;
+    private PlacementManager placementManager;
+    private AppearanceSettings appearanceSettings;
     //[SerializeField] public GameObject gameManagerObj;
     //[SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
@@ -139,10 +146,12 @@ public class DevTools : MonoBehaviour
     private bool isScrolling;
 
     //Variables and references for GiveItem command
-    [SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
+    //[SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
-    private BaseItem baseItem;
+    //private BaseItem baseItem;
 
+    [SerializeField] public Sprite defaultSprite;
+    [SerializeField] public Color defaultColor;
 
     //[SerializeField] private GameObject pausePanel;
 
@@ -158,6 +167,8 @@ public class DevTools : MonoBehaviour
         defaultText = "Welcome to Command Prompt\nType ShowMethods for methods " +
                 "or \n[MethodName] Options for Param options";
         textLog = defaultText;
+
+        
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -191,6 +202,9 @@ public class DevTools : MonoBehaviour
         //Debug.Log("enabled " + commandPromptCanvas.enabled);
         //}
         #endregion
+
+       
+
 
         //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -351,7 +365,7 @@ public class DevTools : MonoBehaviour
                         else if (parts.Length > 1 && parts[1] == "Options")
                         {
                             textLog += "\nOptions for Param 1 [ItemType]: ";
-                            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
                             {
                                 textLog += "\n" + type;
                             }
@@ -375,9 +389,14 @@ public class DevTools : MonoBehaviour
                             textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
                             
                             textLog += "\nOptions for Param 2 [Speed]: " +
-                                "\nEnter a number";     //TODO Determine possible values
+                                "\nEnter a number or Reset";  
                             break;
                         }
+                        //else if (parts.Length > 1 && parts[1] == "Reset")
+                        //{
+                        //    ChangeSpeed("Reset", "-1");
+                        //    break;
+                        //}
                         else
                         {
                             textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
@@ -405,6 +424,33 @@ public class DevTools : MonoBehaviour
     /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
+        bool multiplayer = false;
+
+        //if (GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>() != null)
+        //{
+        //    playerKartHandeler = GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>();
+        //}
+
+        //if (GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>() != null
+        //    && characterData.characterSprite == defaultSprite)
+        //{
+        //appearanceSettings = GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>();
+        //appearanceSettings.UpdateAppearance();
+        //}
+
+        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+
+        //Sets default character when loading into a map if one hasn't already been chosen
+        if (characterData.characterSprite == null)
+        {
+            characterData.characterName = "Gizmo";
+            //characterData.characterColor = playerKartHandeler.colors[3];
+            characterData.characterColor = defaultColor;
+            characterData.characterSprite = defaultSprite;
+            //Image[] images = playerKartHandeler.characterButtons[1].GetComponentsInChildren<Image>();
+            //playerKartHandeler.characterSelectedImage =             
+        }
+
         //DeactivatePause();
         switch (mapName)
         {
@@ -417,45 +463,55 @@ public class DevTools : MonoBehaviour
                 }
                 break;
 
-            case "CampusCircuit":
-                sceneLoader.LoadScene("GSP_RITOuterLoop");
+            case "CampusCircuit":                
+                if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop"); }
+                else { multiSceneLoader.LoadScene("LD_RITOuterLoop"); }                
                 //Can be removed if prefered, maybe when in certain modes?
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();                
+                break;
+
+            case "DormRoomDerby":
+                if (!multiplayer) { sceneLoader.LoadScene("LD_RITDorm"); }
+                else { multiSceneLoader.LoadScene("LD_RITDorm"); }                
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TechHouseTurnpike":
-                sceneLoader.LoadScene("GSP_Golisano");
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
-                break;
-
-            case "DormRoomDerby":
-                sceneLoader.LoadScene("GSP_RITDorm");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_Golisano"); }
+                else { multiSceneLoader.LoadScene("GSP_Golisano"); }
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "AllNighterExpressway":
-                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_FinalsBrickRoad"); }
+                else { multiSceneLoader.LoadScene("GSP_FinalsBrickRoad"); }
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "QuarterMile":
-                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_RITQuarterMile"); }
+                else { multiSceneLoader.LoadScene("GSP_RITQuarterMile"); }
+                //sceneLoader.LoadScene("GSP_RITQuarterMile");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TestGrid":
-                sceneLoader.LoadScene("Testing_Grid");
+                if (!multiplayer) { sceneLoader.LoadScene("Testing_Grid"); }
+                else { multiSceneLoader.LoadScene("Testing_Grid"); }
+                //sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
 
             case "TestTube":
-                sceneLoader.LoadScene("Testing_Tube");
+                if (!multiplayer) { sceneLoader.LoadScene("Testing_Tube"); }
+                else { multiSceneLoader.LoadScene("Testing_Tube"); }
+                //sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -614,7 +670,7 @@ public class DevTools : MonoBehaviour
         if (itemType == "Options")
         {
             textLog += "\nOptions for Param 1 [ItemType]: ";
-            foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
             {
                 textLog += "\n" + type;
             }
@@ -625,10 +681,10 @@ public class DevTools : MonoBehaviour
         else
         {
             //Checks if you are in a track scene or not (such as a menu)
-            GameObject kart = GameObject.Find("Kart 1/Kart");
+            GameObject kart = GameObject.Find("Kart 1(Clone)");
             if (kart != null)
             {
-                itemHolder = kart.GetComponent<ItemHolder>();
+                itemHolder = kart.GetComponentInChildren<ItemHolder>();
             }
             else
             {
@@ -644,7 +700,7 @@ public class DevTools : MonoBehaviour
         {
             if(tier >= 1 && tier <= 4)
             {
-                itemHolder.ItemTier = tier;
+                itemHolder.ItemTier = tier - 1;
             }
             else
             {
@@ -663,7 +719,7 @@ public class DevTools : MonoBehaviour
             //Displays all of the parameter options for the GiveItem method
             case "Options":
                 textLog += "\nOptions for Param 1 [ItemType]: ";
-                foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
+                foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
                 {
                     textLog += "\n" + type;
                 }
@@ -671,20 +727,25 @@ public class DevTools : MonoBehaviour
                     "\nEnter a number 1-4";
                 break;
 
-            case "Offense":
-                itemHolder.HeldItem = baseItems[0];                
+            case "Puck":             
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Puck;                
                 break;
 
-            case "Defense":
-                itemHolder.HeldItem = baseItems[1];
+            case "Shield":
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Shield;
                 break;
 
             case "Hazard":
-                itemHolder.HeldItem = baseItems[2];              
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Hazard;
                 break;
 
             case "Boost":
-                itemHolder.HeldItem = baseItems[3];
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.Boost;
+                break;
+
+            //Removes item but keeps tier that is entered
+            case "NoItem":
+                itemHolder.ItemType = ItemHolder.ItemTypeEnum.NoItem;
                 break;
 
             case "":
@@ -703,13 +764,11 @@ public class DevTools : MonoBehaviour
         //Setting appropriate variables for the held item, regardless of item type
         //Note: Does not run if a parameter is invalid because of return statements
         //itemHolder.HoldingItem = true;
-        itemHolder.HeldItem.ItemTier = tier;
-        itemHolder.HeldItem.OnLevelUp(tier);
-        itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-        itemHolder.uses = itemHolder.HeldItem.UseCount;
+        //itemHolder.HeldItem.ItemTier = tier;
+        //itemHolder.HeldItem.OnLevelUp(tier);
+        //itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
+        //itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
-
-
 
 
     /// <summary>
@@ -721,26 +780,100 @@ public class DevTools : MonoBehaviour
     /// to specify the speed that the user wants to change the kart speed to.</param>
     public void ChangeSpeed(string kartType, string speed)
     {
-        int speedInt;   //float instead?
-        //KartCheckpoint kartChosen;
+        float speedFloat;
+
+        GameObject kartCheck = GameObject.FindGameObjectWithTag("Kart");
+        if (!kartCheck)
+        {
+            textLog += "\nError: No Kart found in scene, cannot \nuse command.";
+            return;
+        }
+
+        if (GameObject.Find("PlacementManager").GetComponent<PlacementManager>() != null)
+        {
+            placementManager = GameObject.Find("PlacementManager").GetComponent<PlacementManager>();
+        }       
+
+        //Checks if the second parameter inputted is a valid number, then sets karts speed
+        if (float.TryParse(speed, out speedFloat))
+        {
+            /*if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
+            {
+                //set chosenKart speed to speed
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+            Debug.Log("here");*/
+        }
+        else
+        {
+            if(speed != "Reset")
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+         
+        }
 
         switch (kartType) 
         {
             case ("Player"):
-                //Checks if you are in a track scene or not (such as a menu)
-                GameObject kart = GameObject.Find("Kart 1/Kart");
-                if (kart != null)
+                if(speed == "Reset")
                 {
-                    //kartChosen = kart;
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = 38;
+                            kart.GetComponent<NEWDriver>().accelerationRate = 2700;
+                        }                      
+                    }
                 }
                 else
                 {
-                    textLog += "\nError: No Kart found in scene, cannot use command.";
-                    return;
-                }
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
+                            kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }                             
                 break;
 
             case ("NPC"):
+                if (speed == "Reset")
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = 38;
+                            kart.GetComponent<NPCPhysics>().accelerationRate = 2300;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
+                            kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }                
+                break;
+
+            case ("Reset"):
+
+                
+
                 break;
 
             case "":
@@ -756,30 +889,7 @@ public class DevTools : MonoBehaviour
                 return;
         }
 
-
-        //Checks if the second parameter inputted is a valid number, then sets karts speed
-        if (Int32.TryParse(speed, out speedInt))
-        {
-            if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
-            {
-                //set chosenKart speed to speed
-            }
-            else
-            {
-                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-                return;
-            }
-        }
-        else
-        {
-            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-            return;
-        }
-
     }
-
-
-
 
 
     /// <summary>

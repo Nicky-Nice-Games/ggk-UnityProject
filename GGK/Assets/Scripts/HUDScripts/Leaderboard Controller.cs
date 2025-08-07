@@ -51,14 +51,14 @@ public class LeaderboardController : NetworkBehaviour
             // Format and display time
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.000}", minutes, seconds);
         }
         else
         {
             curTime = 0;
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
+            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.000}", minutes, seconds);
         }
     }
 
@@ -148,7 +148,8 @@ public class LeaderboardController : NetworkBehaviour
         //{
         //leaderboard.SetActive(true);
 
-        if (kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+        NEWDriver player = kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+        if (player != null)
         {
             numOfPlayerKarts++;
             Debug.Log("Player kart added, total: " + numOfPlayerKarts);
@@ -161,6 +162,8 @@ public class LeaderboardController : NetworkBehaviour
                 leaderboard.SetActive(true);
                 allPlayerKartsFinished.Value = true;
             }
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.SendThisPlayerData();
         }
 
         // if(allPlayerKartsFinished.Value)
@@ -205,7 +208,7 @@ public class LeaderboardController : NetworkBehaviour
 
             tempArray[0].text = kart.placement.ToString();
             tempArray[1].text = kart.name;
-            tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)kart.finishTime / 60, kart.finishTime % 60);
+            tempArray[2].text = string.Format("{0:00}:{1:00.000}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
 
 
@@ -270,7 +273,7 @@ public class LeaderboardController : NetworkBehaviour
 
         tempArray[0].text = card.Placement.ToString();
         tempArray[1].text = card.Name;
-        tempArray[2].text = string.Format("{0:00}:{1:00.00}", (int)card.Time / 60, card.Time % 60);
+        tempArray[2].text = string.Format("{0:00}:{1:00.000}", (int)card.Time / 60, card.Time % 60);
 
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;

@@ -12,6 +12,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class APIManager : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class APIManager : MonoBehaviour
     /// <param name="url">where to send the data</param>
     /// <param name="jsonData">json data</param>
     /// <returns></returns>
-    public async Task PostJsonAsync(string url, string json)
+    private async Task PostJsonAsync(string url, string json)
     {
         using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
         {
@@ -57,14 +58,16 @@ public class APIManager : MonoBehaviour
     /// </summary>
     /// <param name="thisPlayer">the player whos data will be set</param>
     /// <returns></returns>
-    public void PostPlayerData(PlayerInfo thisPlayer)
+    public async void PostPlayerData(PlayerInfo thisPlayer)
     {
+        Debug.Log("Called PostPlayerData in APIManager");
         // Serializing data to send back
-        SerializablePlayerInfo serializable = gameObject.GetComponent<SerializablePlayerInfo>();
+        SerializablePlayerInfo serializable = new SerializablePlayerInfo();
         serializable.ConvertToSerializable(thisPlayer);
-        string json = JsonUtility.ToJson(serializable);
+        string json = JsonConvert.SerializeObject(serializable);
+        Debug.Log("Json: " + json);
 
-        //StartCoroutine(PostJson("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json));
+        await PostJsonAsync("https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/gamelog", json);
     }
 
     /// <summary>
@@ -120,6 +123,8 @@ public class APIManager : MonoBehaviour
                 // Gets the basic user data that holds pid then using that to get the rest of players data
                 string data = webRequest.downloadHandler.text;
                 WebUserData userData = JsonUtility.FromJson<WebUserData>(data);
+                Debug.Log("PlayerID: " + userData.pid);
+                thisPlayer.pid = userData.pid;
                 GetPlayerWithPid(userData.pid, thisPlayer);
                 return true;
             }

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -149,9 +150,7 @@ public class NEWDriver : NetworkBehaviour
 
 
     // Player info for API
-    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
-    // Any game related data will be filled in in the game scene handeler or manager
-    private PlayerInfo playerInfo;
+    public PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
    
@@ -165,6 +164,8 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInfo = gameManagerObj.playerInfo;
         }
+
+        gameManagerObj.FillMapRaced(this);
 
         sphere.drag = 0.5f;
         sphere.isKinematic = false;
@@ -216,7 +217,10 @@ public class NEWDriver : NetworkBehaviour
         
         TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
+
+        playerInfo.raceStartTime = DateTime.Now;
     }
+    
     public override void OnNetworkDespawn()
     {
         MiniMapHud.instance.RemoveKart(gameObject);
@@ -1116,5 +1120,14 @@ public class NEWDriver : NetworkBehaviour
         airTrickInProgress = false;
         airTrickTween?.Kill();
         driftRotationTween?.Kill();
+    }
+
+    public void SendThisPlayerData()
+    {
+        Debug.Log("Called SendPlayerData from NEWDriver");
+        if(!playerInfo.isGuest)
+        {
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+        }
     }
 }

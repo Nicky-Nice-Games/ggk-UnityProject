@@ -3,22 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+/* Log to keep track of where all the dynamic values sent to backend are being assigned:
+ * playerID - From backend when PlayerInfo is created in APIManager
+ * racePosition - KartCheckpoint::OnTriggerEnter
+ * mapRaced - GameManager::FillMapRaced (called in NEWDriver::Start)
+ * collisionsWithPlayers - KartCheckpoint::OnCollisionEnter
+ * collisionWithWalls - BonkCollision::OnCollisionEnter
+ * characterUsed - PlayerKartHandeler::SendAppearanceToPlayerInfo
+ * fellOffMap - DeathZone::OnTriggerEnter
+ * raceStartTime - NEWDriver::OnNtetworkSpawn
+ * raceTime - LeaderboardController::Finished
+ * 
+ * All the items are added in their respected classes
+ */
+
 
 /// <summary>
 /// This Class is ised as the base container for the player info
 /// It is used to retain basic functionality for C# Dictionaries
 /// </summary>
 [System.Serializable]
-public class PlayerInfo : MonoBehaviour
+public class PlayerInfo : ScriptableObject
 {
     // Basic player and match stats
     [Header("Do not Change")]
-    public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public string pid;
+    public int racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public DateTime raceStartTime;
     public float raceTime;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
+    public Dictionary<string, int> defenseUsage;
 
     // NOT SENT TO BACKEND / Used unity side
     public bool isGuest;
@@ -32,7 +48,7 @@ public class PlayerInfo : MonoBehaviour
     //Default constructor
     public PlayerInfo()
     {
-        playerID = 0;
+        pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
         racePosition = 0;
@@ -47,9 +63,34 @@ public class PlayerInfo : MonoBehaviour
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 
-        boostUsage = new Dictionary<string, int>();
-        offenceUsage = new Dictionary<string, int>();
-        trapUsage = new Dictionary<string, int>();
+        boostUsage = new Dictionary<string, int>
+        {
+            {"speedBoost1", 0 },
+            {"speedBoost2", 0 },
+            {"speedBoost3", 0 },
+            {"speedBoost4", 0 }
+        };
+        offenceUsage = new Dictionary<string, int>
+        {
+            {"puck1", 0 },
+            {"puck2", 0 },
+            {"puck3", 0 },
+            {"puck4", 0 }
+        };
+        trapUsage = new Dictionary<string, int>
+        {
+            {"oilSpill", 0 },
+            {"brickwall", 0 },
+            {"confuseritchie", 0 },
+            {"fakepowerupbrick", 0 }
+        };
+        defenseUsage = new Dictionary<string, int>
+        {
+            {"shield1", 0 },
+            {"shield2", 0 },
+            {"shield3", 0 },
+            {"shield4", 0 }
+        };
 
         isGuest = false;
     }
@@ -58,7 +99,7 @@ public class PlayerInfo : MonoBehaviour
     public PlayerInfo(ulong clientID)
     {
         this.clientID = clientID;
-        playerID = 0;
+        pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
         racePosition = 0;
@@ -73,9 +114,34 @@ public class PlayerInfo : MonoBehaviour
         PlayerCharacter = PlayerKart.Freddie;
         PlayerColor = Color.white;
 
-        boostUsage = new Dictionary<string, int>();
-        offenceUsage = new Dictionary<string, int>();
-        trapUsage = new Dictionary<string, int>();
+        boostUsage = new Dictionary<string, int>
+        {
+            {"speedBoost1", 0 },
+            {"speedBoost2", 0 },
+            {"speedBoost3", 0 },
+            {"speedBoost4", 0 }
+        };
+        offenceUsage = new Dictionary<string, int>
+        {
+            {"puck1", 0 },
+            {"puck2", 0 },
+            {"puck3", 0 },
+            {"puck4", 0 }
+        };
+        trapUsage = new Dictionary<string, int>
+        {
+            {"oilSpill", 0 },
+            {"brickwall", 0 },
+            {"confuseritchie", 0 },
+            {"fakepowerupbrick", 0 }
+        };
+        defenseUsage = new Dictionary<string, int>
+        {
+            {"shield1", 0 },
+            {"shield2", 0 },
+            {"shield3", 0 },
+            {"shield4", 0 }
+        };
 
         isGuest = false;
 
@@ -84,7 +150,7 @@ public class PlayerInfo : MonoBehaviour
     // Copy constructor
     public PlayerInfo(PlayerInfo other)
     {
-        playerID = other.playerID;
+        pid = other.pid;
         raceStartTime = other.raceStartTime;
         raceTime = other.raceTime;
         racePosition = other.racePosition;
@@ -97,5 +163,6 @@ public class PlayerInfo : MonoBehaviour
         boostUsage = new Dictionary<string, int>(other.boostUsage);
         offenceUsage = new Dictionary<string, int>(other.offenceUsage);
         trapUsage = new Dictionary<string, int>(other.trapUsage);
+        defenseUsage = new Dictionary<string, int>(other.defenseUsage);
     }
 }
