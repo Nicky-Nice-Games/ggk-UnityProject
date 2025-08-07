@@ -14,6 +14,21 @@ namespace AK
     namespace EVENTS
     {
         static const AkUniqueID MUSIC = 3991942870U;
+        static const AkUniqueID PLAY_ANNOUNCER_ALLNIGHTEREXPRESSWAY = 2869609495U;
+        static const AkUniqueID PLAY_ANNOUNCER_CAMPUSCIRCUIT = 987299370U;
+        static const AkUniqueID PLAY_ANNOUNCER_DORMROOMDERBY = 3570555779U;
+        static const AkUniqueID PLAY_ANNOUNCER_EMMA = 3516720266U;
+        static const AkUniqueID PLAY_ANNOUNCER_GIZMO = 293619684U;
+        static const AkUniqueID PLAY_ANNOUNCER_GRANDPRIX = 4134180009U;
+        static const AkUniqueID PLAY_ANNOUNCER_JAMSTER = 2627598342U;
+        static const AkUniqueID PLAY_ANNOUNCER_KAI = 3438417059U;
+        static const AkUniqueID PLAY_ANNOUNCER_MORGAN = 2584026818U;
+        static const AkUniqueID PLAY_ANNOUNCER_MULTIPLAYER = 4227638626U;
+        static const AkUniqueID PLAY_ANNOUNCER_RACE = 2661113841U;
+        static const AkUniqueID PLAY_ANNOUNCER_REESE = 3731766310U;
+        static const AkUniqueID PLAY_ANNOUNCER_SINGLEPLAYER = 3669000037U;
+        static const AkUniqueID PLAY_ANNOUNCER_TECHHOUSETURNPIKE = 1792409090U;
+        static const AkUniqueID PLAY_ANNOUNCER_TIMETRIAL = 3523457223U;
         static const AkUniqueID PLAY_CAN_OPEN = 1853968855U;
         static const AkUniqueID PLAY_CRASH = 303595419U;
         static const AkUniqueID PLAY_DRIFTSCREECH = 3158137442U;
