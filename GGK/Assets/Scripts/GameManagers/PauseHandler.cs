@@ -23,6 +23,13 @@ public class PauseHandler : NetworkBehaviour
     // Multiplayer Pausing
     public bool isHostPaused;
     public GameObject hostPausedText;
+    public static PauseHandler instance;
+
+    private void Awake()
+    {
+        instance = this;
+
+    }
 
     // Start is called before the first frame update
     void Start()
