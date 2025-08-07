@@ -17,17 +17,20 @@ public class VFXHandler : NetworkBehaviour
 
     [Header("Item Effects")]
     public VisualEffect shield;
-    public VisualEffect itemBoost;
+    public VisualEffect itemBoostOne;
+    public VisualEffect itemBoostTwo;
     public List<VisualEffect> hover;
-    public VisualEffect warpBoost;
+    public VisualEffect warpBoostBottom;
+    public VisualEffect warpBoostTop;
 
 
     public List<ParticleSystem> boostFlames;
 
-    // temporary fix to stop warp boost when loaded into the scene (can be deleted)
+    // temporary fix to stop warp boost when loaded into the scene
     private void Awake()
     {
-        warpBoost.Stop();
+        warpBoostBottom.Stop();
+        warpBoostTop.Stop();
     }
 
     // ---------- Public Methods ----------
@@ -156,6 +159,13 @@ public class VFXHandler : NetworkBehaviour
             PlayItemBoostVFXServerRpc(duration);
     }
 
+    public void PlayItemBoostTwoVFX(float duration)
+    {
+        PlayItemBoostTwoVFXLocal(duration);
+        if (IsOwner)
+            PlayItemBoostTwoVFXServerRpc(duration);
+    }
+
     public void PlayHoverVFX(float duration)
     {
         PlayHoverVFXLocal(duration);
@@ -279,12 +289,14 @@ public class VFXHandler : NetworkBehaviour
     {
         if (shield != null && shield.isActiveAndEnabled)
             shield.Stop();
-        if (itemBoost != null && itemBoost.isActiveAndEnabled)
-            itemBoost.Stop();
+        if (itemBoostOne != null && itemBoostOne.isActiveAndEnabled)
+            itemBoostOne.Stop();
+        if (itemBoostTwo != null && itemBoostTwo.isActiveAndEnabled)
+            itemBoostTwo.Stop();
         if (hover != null)
             hover.ForEach(vfx => { if (vfx.isActiveAndEnabled) vfx.Stop(); });
-        if (warpBoost != null && warpBoost.isActiveAndEnabled)
-            warpBoost.Stop();
+        if (warpBoostBottom != null && warpBoostBottom.isActiveAndEnabled)
+            warpBoostBottom.Stop();
     }
 
     void PlayShieldVFXLocal(float duration)
@@ -296,9 +308,16 @@ public class VFXHandler : NetworkBehaviour
 
     void PlayItemBoostVFXLocal(float duration)
     {
-        if (itemBoost == null) return;
+        if (itemBoostOne == null) return;
         //itemBoost.SetFloat("Duration", duration);
-        itemBoost.Play();
+        itemBoostOne.Play();
+    }
+
+    void PlayItemBoostTwoVFXLocal(float duration)
+    {
+        if (itemBoostTwo == null) return;
+        //itemBoost.SetFloat("Duration", duration);
+        itemBoostTwo.Play();
     }
 
     void PlayHoverVFXLocal(float duration)
@@ -361,6 +380,9 @@ public class VFXHandler : NetworkBehaviour
     void PlayItemBoostVFXServerRpc(float duration) => PlayItemBoostVFXClientRpc(duration);
 
     [ServerRpc]
+    void PlayItemBoostTwoVFXServerRpc(float duration) => PlayItemBoostTwoVFXClientRpc(duration);
+
+    [ServerRpc]
     void PlayHoverVFXServerRpc(float duration) => PlayHoverVFXClientRpc(duration);
 
 
@@ -407,6 +429,9 @@ public class VFXHandler : NetworkBehaviour
 
     [ClientRpc]
     void PlayItemBoostVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostVFXLocal(duration); }
+
+    [ClientRpc]
+    void PlayItemBoostTwoVFXClientRpc(float duration) { if (!IsOwner) PlayItemBoostTwoVFXLocal(duration); }
 
     [ClientRpc]
     void PlayHoverVFXClientRpc(float duration) { if (!IsOwner) PlayHoverVFXLocal(duration); }
