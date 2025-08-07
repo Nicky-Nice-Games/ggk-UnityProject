@@ -176,6 +176,7 @@ public class PauseHandler : NetworkBehaviour
             if (pausePanel.activeSelf)
             {
                 hostPausedText.SetActive(false);
+                Time.timeScale = 1;
             }
             // Client not paused
             else
@@ -193,6 +194,7 @@ public class PauseHandler : NetworkBehaviour
             if (pausePanel.activeSelf)
             {
                 hostPausedText.SetActive(true);
+                Time.timeScale = 0;
             }
             // Client not paused
             else
