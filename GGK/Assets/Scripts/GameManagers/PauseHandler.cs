@@ -161,6 +161,8 @@ public class PauseHandler : NetworkBehaviour
         if (IsSpawned)
         {
             MultiplayerSceneManager.Instance.ToMapSelectScene();
+            MultiplayerManager.Instance.SoftResetMapSelection();
+            MultiplayerManager.Instance.ResetTimers();
         }
         else
         {
