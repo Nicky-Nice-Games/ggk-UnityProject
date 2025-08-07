@@ -9,6 +9,7 @@ public class HazardTier4 : BaseItem
         Vector3 behindPos = transform.position - transform.forward * 11;
         behindPos.y += 0.8f;
         transform.position = behindPos;
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
     }
 
     private new void Update()
@@ -33,7 +34,6 @@ public class HazardTier4 : BaseItem
         // slows the kart a little when it goes into the hazard
         if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
         {
-            collision.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
             Rigidbody kartRigidbody;
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {

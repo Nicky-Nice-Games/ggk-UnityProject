@@ -18,6 +18,7 @@ public class HazardTier2 : BaseItem
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
     }
 
     // Update is called once per frame
@@ -36,7 +37,6 @@ public class HazardTier2 : BaseItem
     {
         if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
         {
-            collision.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
             Rigidbody kartRigidbody;
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {

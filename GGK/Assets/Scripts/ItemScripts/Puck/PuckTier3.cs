@@ -31,7 +31,7 @@ public class PuckTier3 : BaseItem
             transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
                             transform.position.y,
                             transform.position.z + transform.forward.z * 5f);
-
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck3"]++;
         }
         else
         {
@@ -101,7 +101,6 @@ public class PuckTier3 : BaseItem
                 // Stops player
                 if (playerKart)
                 {
-                    playerKart.playerInfo.offenceUsage["puck3"]++;
                     playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                     playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);

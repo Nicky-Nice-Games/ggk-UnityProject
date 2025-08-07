@@ -12,6 +12,7 @@ public class HazardTier3 : BaseItem
     {
         Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
         transform.position = behindPos;
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -23,7 +24,6 @@ public class HazardTier3 : BaseItem
         }
         if (collision.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
         {
-            collision.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
             Rigidbody kartRigidbody;
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {

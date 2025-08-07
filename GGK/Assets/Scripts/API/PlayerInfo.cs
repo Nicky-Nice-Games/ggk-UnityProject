@@ -163,5 +163,6 @@ public class PlayerInfo : ScriptableObject
         boostUsage = new Dictionary<string, int>(other.boostUsage);
         offenceUsage = new Dictionary<string, int>(other.offenceUsage);
         trapUsage = new Dictionary<string, int>(other.trapUsage);
+        defenseUsage = new Dictionary<string, int>(other.defenseUsage);
     }
 }
