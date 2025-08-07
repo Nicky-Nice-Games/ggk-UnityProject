@@ -204,9 +204,12 @@ public class NEWDriver : NetworkBehaviour
             if (appearance) appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
 
             MiniMapHud.instance.trackingPlayer = gameObject;
-            SpeedLineHandler.instance.trackingPlayer = this;
-
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+            if (SpeedLineHandler.instance != null)
+            {
+                SpeedLineHandler.instance.trackingPlayer = this;
+            }
+            
         }
         if (IsServer)
         {
