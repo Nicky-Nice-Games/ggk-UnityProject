@@ -82,6 +82,10 @@ public class DisconnectHandler : NetworkBehaviour
         Debug.Log("before");
         NetworkManager.Singleton.Shutdown();
         Debug.Log("after");
+
+        Time.timeScale = 1;
+        GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+        GameManager.thisManagerInstance.curState = GameStates.multiSingle;
     }
 
     [Rpc(SendTo.Server)]

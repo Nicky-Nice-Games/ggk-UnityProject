@@ -78,6 +78,7 @@ public class PauseHandler : NetworkBehaviour
                         restartBtn.SetActive(false);
                         mapBtn.SetActive(true);
                         startBtn.SetActive(true);
+                        EnableButtons();
                         Time.timeScale = 0;
                     }
 
@@ -101,6 +102,7 @@ public class PauseHandler : NetworkBehaviour
                         restartBtn.SetActive(false);
                         mapBtn.SetActive(false);
                         startBtn.SetActive(true);
+                        EnableButtons();
                     }
                 }
             }
@@ -117,6 +119,7 @@ public class PauseHandler : NetworkBehaviour
                     restartBtn.SetActive(true);
                     mapBtn.SetActive(true);
                     startBtn.SetActive(true);
+                    EnableButtons();
                     Time.timeScale = 0;
                 }
             }
@@ -213,5 +216,12 @@ public class PauseHandler : NetworkBehaviour
         restartBtn.GetComponent<Button>().enabled = false;
         mapBtn.GetComponent<Button>().enabled = false;
         startBtn.GetComponent<Button>().enabled = false;
+    }
+    
+    private void EnableButtons()
+    {
+        restartBtn.GetComponent<Button>().enabled = true;
+        mapBtn.GetComponent<Button>().enabled = true;
+        startBtn.GetComponent<Button>().enabled = true;
     }
 }
