@@ -120,7 +120,7 @@ public class GameManager : NetworkBehaviour
             // ...
 
             // Will most likely be replaced when implimenting the comments above
-            SceneManager.LoadScene("MultiplayerMenus");
+            sceneLoader.LoadScene("MultiplayerMenus");
             curState = GameStates.lobby;
             //NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerMenus", LoadSceneMode.Single);
         }
@@ -147,14 +147,14 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void ToGameModeSelectScene()
     {
-        SceneManager.LoadScene("GameModeSelectScene");
+        sceneLoader.LoadScene("GameModeSelectScene");
         curState = GameStates.gameMode;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     public void ToGameModeSelectSceneRpc()
     {
-        SceneManager.LoadScene("GameModeSelectScene");
+        sceneLoader.LoadScene("GameModeSelectScene");
         curState = GameStates.gameMode;
     }
 
@@ -173,7 +173,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         { 
-            SceneManager.LoadScene("CharSelectMenu");
+            sceneLoader.LoadScene("CharSelectMenu");
         }
         curState = GameStates.playerKart;
     }
@@ -181,7 +181,7 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.NotServer)]
     public void LoadedGameModeRpc()
     {
-        SceneManager.LoadScene("CharSelectMenu");
+        sceneLoader.LoadScene("CharSelectMenu");
         curState = GameStates.playerKart;
     }
 
@@ -203,14 +203,14 @@ public class GameManager : NetworkBehaviour
     }
 
     public void ToMapSelectScreen() {
-        SceneManager.LoadScene("MapSelectScene");
+        sceneLoader.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     public void ToMapSelectScreenRpc()
     {
-        SceneManager.LoadScene("MapSelectScene");
+        sceneLoader.LoadScene("MapSelectScene");
         curState = GameStates.map;
     }
 
