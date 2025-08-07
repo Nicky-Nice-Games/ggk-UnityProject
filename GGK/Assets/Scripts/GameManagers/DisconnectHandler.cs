@@ -72,6 +72,7 @@ public class DisconnectHandler : NetworkBehaviour
             }
             NetworkManager.Shutdown();
         }
+        Debug.Log("Between");
         if (IsClient)
         {
             Debug.Log($"before Disconnecting client rpc");
