@@ -76,7 +76,7 @@ public class PauseHandler : NetworkBehaviour
                     {
                         pausePanel.SetActive(true);
                         restartBtn.SetActive(false);
-                        mapBtn.SetActive(false);
+                        mapBtn.SetActive(true);
                         startBtn.SetActive(true);
                         Time.timeScale = 0;
                     }
