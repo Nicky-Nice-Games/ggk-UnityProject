@@ -135,9 +135,11 @@ public class PauseHandler : NetworkBehaviour
     // Return to start menu
     public void ReturnToStart()
     {
+        Debug.Log("running ReturnToStart()");
         DisableButtons();
         if (IsSpawned)
         {
+            Debug.Log($"attempting safe disconnect");
             DisconnectHandler.instance.SafeDisconnect();
         }
         else
