@@ -75,6 +75,9 @@ public class PauseHandler : NetworkBehaviour
                     else
                     {
                         pausePanel.SetActive(true);
+                        restartBtn.SetActive(false);
+                        mapBtn.SetActive(false);
+                        startBtn.SetActive(true);
                         Time.timeScale = 0;
                     }
 
@@ -109,6 +112,9 @@ public class PauseHandler : NetworkBehaviour
                 else
                 {
                     pausePanel.SetActive(true);
+                    restartBtn.SetActive(true);
+                    mapBtn.SetActive(true);
+                    startBtn.SetActive(true);
                     Time.timeScale = 0;
                 }
             }
