@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -33,6 +34,13 @@ public class CharacterSelect : MonoBehaviour
     private GameObject colorSelectMenu;
     [SerializeField]
     private GameObject charSelectMenu;
+
+    [SerializeField]
+    private EventSystem eventSystem;
+
+    [SerializeField]
+    private GameObject firstColor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +87,7 @@ public class CharacterSelect : MonoBehaviour
         {
             colorSelectMenu.SetActive(true);
             charSelectMenu.SetActive(false);
+            eventSystem.SetSelectedGameObject(firstColor);
         }
     }
 }
