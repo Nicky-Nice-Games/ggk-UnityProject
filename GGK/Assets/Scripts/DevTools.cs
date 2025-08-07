@@ -52,7 +52,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 
-
+#region Enums
 /// <summary>
 /// Enum for every method command to simplify adding additional methods
 /// </summary>
@@ -108,6 +108,7 @@ public enum GameMode
 }
 
 
+//  Replaced with Enum from ItemHolder
 ///// <summary>
 ///// Enum for each item category keyword/command
 ///// </summary>
@@ -118,11 +119,11 @@ public enum GameMode
 //    Hazard,
 //    Boost
 //}
-
+#endregion
 
 public class DevTools : MonoBehaviour
 {
-    //Variables and references for setting up the DevTools object
+    //Variables and references for setting up the DevTools object and references to other scripts
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
     [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
@@ -438,6 +439,8 @@ public class DevTools : MonoBehaviour
         //}
 
         if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+
+        //Sets default character when loading into a map if one hasn't already been chosen
         if (characterData.characterSprite == null)
         {
             characterData.characterName = "Gizmo";
