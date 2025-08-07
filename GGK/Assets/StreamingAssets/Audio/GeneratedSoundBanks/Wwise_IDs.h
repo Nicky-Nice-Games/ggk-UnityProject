@@ -56,6 +56,7 @@ namespace AK
         static const AkUniqueID PLAY_SELECT_START = 3240429611U;
         static const AkUniqueID PLAY_SELECT_UP = 3823515762U;
         static const AkUniqueID PLAY_SHIELD = 1988178265U;
+        static const AkUniqueID PLAY_SQUIRRELS = 701022914U;
         static const AkUniqueID PLAY_THUD = 3289997257U;
     } // namespace EVENTS
 
