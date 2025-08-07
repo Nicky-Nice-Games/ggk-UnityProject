@@ -24,6 +24,7 @@ namespace AK
         static const AkUniqueID PLAY_ANNOUNCER_KAI = 3438417059U;
         static const AkUniqueID PLAY_ANNOUNCER_MORGAN = 2584026818U;
         static const AkUniqueID PLAY_ANNOUNCER_MULTIPLAYER = 4227638626U;
+        static const AkUniqueID PLAY_ANNOUNCER_QUICKRACE = 1176820180U;
         static const AkUniqueID PLAY_ANNOUNCER_RACE = 2661113841U;
         static const AkUniqueID PLAY_ANNOUNCER_REESE = 3731766310U;
         static const AkUniqueID PLAY_ANNOUNCER_SINGLEPLAYER = 3669000037U;
