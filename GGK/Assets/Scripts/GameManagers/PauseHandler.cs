@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,7 @@ public class PauseHandler : NetworkBehaviour
     public GameObject restartBtn;
     public GameObject mapBtn;
     public GameObject startBtn;
+    public TMP_Text startBtnText;
 
     public Vector3 initalScale;
 
@@ -77,7 +79,7 @@ public class PauseHandler : NetworkBehaviour
                         pausePanel.SetActive(true);
                         restartBtn.SetActive(false);
                         mapBtn.SetActive(true);
-                        startBtn.SetActive(true);
+                        startBtn.SetActive(false);
                         EnableButtons();
                         Time.timeScale = 0;
                     }
