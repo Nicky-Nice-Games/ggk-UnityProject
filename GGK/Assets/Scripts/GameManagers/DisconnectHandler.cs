@@ -63,22 +63,25 @@ public class DisconnectHandler : NetworkBehaviour
 
     public void SafeDisconnect()
     {
-        Debug.Log("Above");
-        if (IsServer)
-        {
-            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
-            {
-                Debug.Log($"Disconnecting client {clientId}");
-                NetworkManager.DisconnectClient(clientId);
-            }
-            NetworkManager.Shutdown();
-        }
-        Debug.Log("Between");
-        if (IsClient)
-        {
-            Debug.Log($"before Disconnecting client rpc");
-            DisconnectClientRpc();
-        }
+        // Debug.Log("Above");
+        // if (IsServer)
+        // {
+        //     foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+        //     {
+        //         Debug.Log($"Disconnecting client {clientId}");
+        //         NetworkManager.DisconnectClient(clientId);
+        //     }
+        //     NetworkManager.Shutdown();
+        // }
+        // Debug.Log("Between");
+        // if (IsClient)
+        // {
+        //     Debug.Log($"before Disconnecting client rpc");
+        //     DisconnectClientRpc();
+        // }
+        Debug.Log("before");
+        NetworkManager.Singleton.Shutdown();
+        Debug.Log("after");
     }
 
     [Rpc(SendTo.Server)]
