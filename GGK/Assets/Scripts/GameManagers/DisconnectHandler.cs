@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class DisconnectHandler : NetworkBehaviour
 {
+    public static DisconnectHandler instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -22,9 +28,12 @@ public class DisconnectHandler : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer) {
+        if (IsServer)
+        {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
-        } else {
+        }
+        else
+        {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
         }
     }
@@ -49,5 +58,24 @@ public class DisconnectHandler : NetworkBehaviour
     private void ClientDisconnectHandler(ulong clientId)
     {
         Debug.Log($"Client Disconnected \n ClientId in parameter is {clientId}");
-    }  
+    }
+
+    public void SafeDisconnect()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Shutdown();
+        }
+        else
+        {
+            DisconnectClientRpc();
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void DisconnectClientRpc(RpcParams rpcParams = default)
+    {
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+        NetworkManager.DisconnectClient(senderClientId);
+    }
 }

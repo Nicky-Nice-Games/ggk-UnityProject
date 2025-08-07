@@ -98,7 +98,10 @@ public class PauseHandler : NetworkBehaviour
                     else
                     {
                         pausePanel.SetActive(true);
-                        Time.timeScale = 0;
+                        restartBtn.SetActive(false);
+                        mapBtn.SetActive(false);
+                        startBtn.SetActive(true);
+                        Time.timeScale = 1;
                     }
                 }
             }
@@ -134,8 +137,14 @@ public class PauseHandler : NetworkBehaviour
     public void ReturnToStart()
     {
         DisableButtons();
-
-        gameManager.LoadStartMenu();
+        if (IsSpawned)
+        {
+            DisconnectHandler.instance.SafeDisconnect();
+        }
+        else
+        {
+            gameManager.LoadStartMenu();
+        }
         Time.timeScale = 1;
     }
 
@@ -143,8 +152,14 @@ public class PauseHandler : NetworkBehaviour
     public void ReturnToMapSelect()
     {
         DisableButtons();
-
-        gameManager.PlayerSelected();
+        if (IsSpawned)
+        {
+            MultiplayerSceneManager.Instance.ToMapSelectScene();
+        }
+        else
+        {
+            gameManager.PlayerSelected();
+        }
         Time.timeScale = 1;
     }
 
