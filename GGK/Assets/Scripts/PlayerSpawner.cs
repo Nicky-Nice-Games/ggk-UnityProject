@@ -54,7 +54,6 @@ public class PlayerSpawner : NetworkBehaviour
                 {
                     karts[i].GetComponent<NetworkObject>().Despawn();
                 }
-                karts.RemoveAt(0);
             }
         }
         
