@@ -164,6 +164,7 @@ public class PuckTier2 : BaseItem
                     playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                     playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    playerKart.Stun(2.0f);
                     Debug.Log(collision.transform.root.GetChild(0).gameObject);
                 }
                 // Stops NPC and starts recovery
