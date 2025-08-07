@@ -59,33 +59,34 @@ public class DisconnectHandler : NetworkBehaviour
     private void ClientDisconnectHandler(ulong clientId)
     {
         Debug.Log($"Client Disconnected \n ClientId in parameter is {clientId}");
+        if (NetworkManager.ConnectedClients.Count <= 1)
+        {
+            NetworkManager.Singleton.Shutdown();
+            GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+            GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+        }
     }
 
     public void SafeDisconnect()
     {
-        // Debug.Log("Above");
-        // if (IsServer)
-        // {
-        //     foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
-        //     {
-        //         Debug.Log($"Disconnecting client {clientId}");
-        //         NetworkManager.DisconnectClient(clientId);
-        //     }
-        //     NetworkManager.Shutdown();
-        // }
-        // Debug.Log("Between");
-        // if (IsClient)
-        // {
-        //     Debug.Log($"before Disconnecting client rpc");
-        //     DisconnectClientRpc();
-        // }
-        Debug.Log("before");
-        NetworkManager.Singleton.Shutdown();
-        Debug.Log("after");
 
-        Time.timeScale = 1;
-        GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
-        GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+        if (IsServer)
+        {
+            for (int index = NetworkManager.Singleton.ConnectedClientsIds.Count - 1; index >= 0; index--)
+            {
+                NetworkManager.DisconnectClient(NetworkManager.Singleton.ConnectedClientsIds[index]);
+            }
+        }
+        else
+        {
+            Debug.Log("before");
+            NetworkManager.Singleton.Shutdown();
+            Debug.Log("after");
+
+            Time.timeScale = 1;
+            GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+            GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+        }
     }
 
     [Rpc(SendTo.Server)]
