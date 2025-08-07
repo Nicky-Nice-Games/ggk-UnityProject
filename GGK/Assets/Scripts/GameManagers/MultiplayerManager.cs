@@ -248,7 +248,7 @@ public class MultiplayerManager : NetworkBehaviour
         }
 
         // Toggle multiplayer panel
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             if (multiplayerPanel.activeSelf)
             {
