@@ -63,6 +63,10 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             KeyPressed("Backspace");
         }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            KeyPressed("Tab");
+        }
 
     }
 
@@ -158,12 +162,17 @@ public class VirtualKeyboardController : MonoBehaviour
             {
                 curText = curText.Substring(0, curText.Length - 1);
             }
-            else if (curText.Length == 0 && curField > 0)
+
+        }
+
+        else if (value == "Tab")
+        {
+            if (curText.Length == 0 && curField > 0)
             {
                 // If the text is empty and the current field is not the first one, go back to the previous field
-                
-                
-                
+
+
+
                 curField--;
 
                 curText = inputField[curField].text;
@@ -221,6 +230,7 @@ public class VirtualKeyboardController : MonoBehaviour
             }
         }
         inputField[curField].text = curText;
+
     }
 
     /// <summary>
