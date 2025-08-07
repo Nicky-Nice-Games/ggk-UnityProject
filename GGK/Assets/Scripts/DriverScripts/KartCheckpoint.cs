@@ -43,10 +43,16 @@ public class KartCheckpoint : NetworkBehaviour
             if (child != checkPointParent.transform) // Avoid adding the parent itself
                 checkpointList.Add(child.gameObject);
         }
-        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
-        {
-            lapDisplay.text = "Lap: " + (lap + 1);
-        }   
+        if(IsSpawned && IsOwner){
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null) {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }   
+        }else{
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }   
+        }
 
         name = transform.parent.GetChild(0).gameObject.name;
     }
@@ -99,7 +105,7 @@ public class KartCheckpoint : NetworkBehaviour
             }
         }
 
-        if (other.CompareTag("Checkpoint") && canPass)
+        if ((other.CompareTag("Checkpoint") && canPass) || (other.CompareTag("RespawnPoint") && canPass))
         {
             checkpointId = nextValidCheckpointIndex;
         }
