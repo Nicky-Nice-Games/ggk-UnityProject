@@ -47,6 +47,7 @@ public class DisconnectHandler : NetworkBehaviour
         // script still considered Spawned when this function runs
         // IsSpawned = true
         //this sends the clients back to the multi single select screen
+        Time.timeScale = 1;
         GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
         GameManager.thisManagerInstance.curState = GameStates.multiSingle;
     }
@@ -64,6 +65,10 @@ public class DisconnectHandler : NetworkBehaviour
     {
         if (IsServer)
         {
+            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            {
+                NetworkManager.DisconnectClient(clientId);
+            }
             NetworkManager.Shutdown();
         }
         else
