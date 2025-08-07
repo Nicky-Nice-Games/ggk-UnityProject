@@ -1,3 +1,6 @@
+// Joshua Chisholm
+// 8/7/25
+// Character select logic
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,6 +11,8 @@ using UnityEngine.UI;
 
 public class CharacterSelect : MonoBehaviour
 {
+    // References 
+
     [SerializeField]
     private GameObject buttons;
 
@@ -40,26 +45,21 @@ public class CharacterSelect : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// On click for character buttons. It will record the player's choice
+    /// </summary>
+    /// <param name="character"></param>
     public void SelectCharacter(Button character)
     {
+        // Get all the buttons and update sprites
         Button[] characters = buttons.GetComponentsInChildren<Button>();
         for (int i = 0; i < characters.Length; i++)
         {
             characters[i].GetComponent<Image>().sprite = buttonDeselected;
         }
 
-        // for (int i = 0; i < characterModels.Count; i++)
-        // {
-        //     if (characterModels[i].name == character.name)
-        //     {
-        //         characterModels[i].SetActive(true);
-        //     }
-        //     else
-        //     {
-        //         characterModels[i].SetActive(false);
-        //     }
-        // }
-
+        // If character data exists, set player's choice and update display
         if (CharacterData.Instance != null)
         {
             CharacterData.Instance.characterName = character.name;
@@ -69,6 +69,10 @@ public class CharacterSelect : MonoBehaviour
         characterNameDisplay.text = character.name;
     }
 
+
+    /// <summary>
+    /// Confirms the player's choice and continues to color selects
+    /// </summary>
     public void Confirm()
     {
         if (CharacterData.Instance.characterName != null)

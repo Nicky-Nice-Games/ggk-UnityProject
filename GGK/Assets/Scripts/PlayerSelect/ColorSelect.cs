@@ -33,13 +33,21 @@ public class ColorSelect : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
     }
 
+
+    /// <summary>
+    /// On click for the color select buttons. Will record player's choice
+    /// </summary>
+    /// <param name="color"></param>
     public void SelectColor(Button color)
     {
+        // Get all buttons and update sprites
         Button[] colors = buttons.transform.GetComponentsInChildren<Button>();
         for (int i = 0; i < colors.Length; i++)
         {
             colors[i].GetComponent<Image>().sprite = buttonDeselected;
         }
+
+        // If character data exists, update choice and update display afterwards
         if (charData != null)
         {
             charData.characterColor = color.transform.GetChild(0).GetComponent<Image>().color;
@@ -48,6 +56,9 @@ public class ColorSelect : MonoBehaviour
         colorDisplay.text = color.name;
     }
 
+    /// <summary>
+    /// If a choice has been made proceed to next scene.
+    /// </summary>
     public void Confirm()
     {
         if (charData.characterColor != null)
