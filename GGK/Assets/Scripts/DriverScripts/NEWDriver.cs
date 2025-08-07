@@ -175,7 +175,6 @@ public class NEWDriver : NetworkBehaviour
 
         if (!IsSpawned)
         {
-
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
@@ -217,7 +216,11 @@ public class NEWDriver : NetworkBehaviour
         
         TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
-
+    }
+    public override void OnNetworkDespawn()
+    {
+        MiniMapHud.instance.RemoveKart(gameObject);
+        Debug.Log($"ClientId {OwnerClientId} has despawned/disconnected");
     }
 
     public void StopParticles()
