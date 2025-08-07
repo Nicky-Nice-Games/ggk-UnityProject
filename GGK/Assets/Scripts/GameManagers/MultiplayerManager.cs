@@ -91,22 +91,68 @@ public class MultiplayerManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         IsMultiplayer = true;
+        if (IsServer) {
+            NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnectHandler;
+        } else {
+            NetworkManager.Singleton.OnClientDisconnectCallback += ServerDisconnectHandler;
+        }
     }
-
+    
     public override void OnNetworkDespawn()
     {
         IsMultiplayer = false;
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
+        }
+        else
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
+        }
     }
+
+    private void ServerDisconnectHandler(ulong clientId)
+    {
+        ResetDictionaries();
+        multiplayerPanel.SetActive(false);
+    }
+
+    private void ClientDisconnectHandler(ulong clientId)
+    {
+        if (players.ContainsKey(clientId))
+        {
+            playerKartSelectionChecks.Remove(clientId);
+            playerMapSelectionChecks.Remove(clientId);
+            playerMapSelections.Remove(clientId);
+            players.Remove(clientId);
+        }
+        if (players.Count == 1)
+        {
+            NetworkManager.Shutdown();
+            GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+            GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+            ResetDictionaries();
+            multiplayerPanel.SetActive(false);
+        }
+    }
+
 
     /// <summary>
     /// Call this going into a new multiplayer game (from lobby to game mode select)
     /// </summary>
     public void Reset()
     {
-        //gamemode.Value = Gamemode.Unselected;
+        ResetTimers();
+        if (IsServer)
+        {
+            ResetDictionaries();
+        }
+    }
+
+    public void ResetTimers()
+    {
         kartSelectionTimer = kartSelectionTimerMax;
         mapSelectionTimer = mapSelectionTimerMax;
-        ResetDictionaries();
     }
 
     public void ResetDictionaries()
@@ -120,7 +166,7 @@ public class MultiplayerManager : NetworkBehaviour
 
         // clear multiplayer panel
         int childCount = multiplayerPanel.transform.childCount;
-        for (int i = childCount - 1; i > 0; i++)
+        for (int i = childCount - 1; i > 0; i--)
         {
             Destroy(multiplayerPanel.transform.GetChild(i).gameObject);
         }
@@ -135,6 +181,29 @@ public class MultiplayerManager : NetworkBehaviour
             playerMapSelections.Add(clientId, Map.RITOuterLoop);
         }
     }
+
+    public void SoftResetKartSelection()
+    {
+        // iterate through all the values of the playerKartSelectionChecks and set them all to false
+        Dictionary<ulong, bool> temporaryDictionary = new Dictionary<ulong, bool>();
+        foreach (ulong clientId in playerKartSelectionChecks.Keys)
+        {
+            temporaryDictionary.Add(clientId, false);
+        }
+        playerKartSelectionChecks = temporaryDictionary;
+    }
+
+    public void SoftResetMapSelection()
+    {
+        // iterate through all the values of the playerMapSelectionChecks and set them all to false
+        Dictionary<ulong, bool> temporaryDictionary = new Dictionary<ulong, bool>();
+        foreach (ulong clientId in playerMapSelectionChecks.Keys)
+        {
+            temporaryDictionary.Add(clientId, false);
+        }
+        playerMapSelectionChecks = temporaryDictionary;
+    }
+
 
     [Rpc(SendTo.ClientsAndHost)]
     public void InitPlayerDataRpc()
@@ -179,7 +248,7 @@ public class MultiplayerManager : NetworkBehaviour
         }
 
         // Toggle multiplayer panel
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             if (multiplayerPanel.activeSelf)
             {

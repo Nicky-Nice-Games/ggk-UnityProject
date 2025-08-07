@@ -128,16 +128,23 @@ public class PlayerSpawner : NetworkBehaviour
 
     private IEnumerator DelayedLocalSpawn()
     {
-        yield return new WaitForSeconds(0.2f); // slight delay
+        yield return new WaitForSeconds(0.0f); // slight delay
         CharacterBuilder.StartCharacterBatch();
         Transform kartObject = Instantiate(playerKartPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
+        AppearanceSettings appearance = kartObject.GetComponentInChildren<AppearanceSettings>();
+        if (appearance)
+        {
+            appearance.UpdateAppearance();
+            CharacterBuilder.AddCharacter(appearance);
+        }
         kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
         spawnedKartCount++;
 
         while (spawnedKartCount < 8)
         {
-            kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);       
             kartObject.SetPositionAndRotation(spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);
+            CharacterBuilder.RandomizeUniqueAppearance(kartObject.GetComponentInChildren<AppearanceSettings>());
             spawnedKartCount++;
         }
     }

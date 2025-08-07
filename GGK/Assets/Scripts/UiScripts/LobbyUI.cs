@@ -37,6 +37,16 @@ public class LobbyUI : MonoBehaviour
         Hide();
     }
 
+    private void OnDestroy()
+    {
+        startButton.onClick.RemoveListener(StartGame);
+        leaveButton.onClick.RemoveListener(LeaveLobby);
+        LobbyManager.Instance.OnJoinedLobbyUpdate -= LobbyManager_OnJoinedLobbyUpdate;
+        LobbyManager.Instance.OnJoinedLobby -= LobbyManager_OnJoinedLobby;
+        LobbyManager.Instance.OnLeftLobby -= LobbyManager_OnLeftLobby;
+        LobbyManager.Instance.OnKickedFromLobby -= LobbyManager_OnKickedFromLobby;
+    }
+
     private void OnEnable()
     {
         startButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());

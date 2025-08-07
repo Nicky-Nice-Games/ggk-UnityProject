@@ -146,7 +146,9 @@ public class GameOverMenuHandeler : MonoBehaviour
     {
         if (MultiplayerManager.Instance.NetworkManager.IsHost)
         {
-            gamemanagerObj.ToMapSelectScreenRpc();
+            MultiplayerSceneManager.Instance.ToMapSelectScene();
+            MultiplayerManager.Instance.SoftResetMapSelection();
+            MultiplayerManager.Instance.ResetTimers();
         }
     }
 
@@ -154,7 +156,10 @@ public class GameOverMenuHandeler : MonoBehaviour
     {
         if (MultiplayerManager.Instance.NetworkManager.IsHost)
         {
-            gamemanagerObj.LoadedGameMode();
+            MultiplayerSceneManager.Instance.ToPlayerKartScene();
+            MultiplayerManager.Instance.SoftResetKartSelection();
+            MultiplayerManager.Instance.SoftResetMapSelection();
+            MultiplayerManager.Instance.ResetTimers();
         }
     }
 
@@ -162,7 +167,8 @@ public class GameOverMenuHandeler : MonoBehaviour
     {
         if (MultiplayerManager.Instance.NetworkManager.IsHost)
         {
-            gamemanagerObj.ToGameModeSelectSceneRpc();
+            MultiplayerSceneManager.Instance.ToGameModeSelectScene();
+            MultiplayerManager.Instance.Reset();
         }
     }
 
