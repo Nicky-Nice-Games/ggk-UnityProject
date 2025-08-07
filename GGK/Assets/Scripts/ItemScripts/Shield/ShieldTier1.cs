@@ -31,7 +31,7 @@ public class ShieldTier1 : BaseItem
             vfxScript.PlayShieldVFX(timer);
 
             shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", gameObject);
-            StartCoroutine(StopPlayingShieldNoise((int)timer));
+            StartCoroutine(StopPlayingShieldNoise());
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {
@@ -43,9 +43,11 @@ public class ShieldTier1 : BaseItem
         }
     }
 
-    IEnumerator StopPlayingShieldNoise(int activeSeconds)
+    IEnumerator StopPlayingShieldNoise()
     {
-        yield return new WaitForSeconds(activeSeconds);
+        Debug.Log("Help me");
+        yield return new WaitForSeconds(3.9f);
+        Debug.Log("WaitForSeconds done");
 
         AkUnitySoundEngine.StopPlayingID(shieldID);
     }
