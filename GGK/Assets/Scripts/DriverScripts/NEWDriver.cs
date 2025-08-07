@@ -182,9 +182,11 @@ public class NEWDriver : NetworkBehaviour
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
-            SpeedLineHandler.instance.trackingPlayer = this;
-
+            Debug.Log("Before get pause");
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+            Debug.Log("After get pause");
+            SpeedLineHandler.instance.trackingPlayer = this;
+            
         }
         
     }
