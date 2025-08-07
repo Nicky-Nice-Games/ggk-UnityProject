@@ -101,7 +101,7 @@ public class PlayerKartHandeler : MonoBehaviour
 
         // Change selected character information to those on the button
         characterSelectedImage = characterImage;
-        ColorChange(); // Change color of selected character image
+        //ColorChange(); // Change color of selected character image
         characterName.text = charName;
         
         // Set active the correct character model

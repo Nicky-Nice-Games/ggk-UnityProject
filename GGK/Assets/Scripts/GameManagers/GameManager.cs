@@ -283,25 +283,24 @@ public class GameManager : NetworkBehaviour
         {
            // Loads the race based on the name of the button clicked
            // Note: change scenes in FillMapRaced when changing the scene names here
-            switch (GetComponent<ButtonBehavior>().buttonClickedName)
+            switch (CharacterData.Instance.mapVote)
             {
-            case "RIT Outer Loop":
-
+            case "Campus Circuit":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITOuterLoop");
                 else sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
-            case "Golisano":
+            case "Tech House Turnpike":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_Golisano");
                 else sceneLoader.LoadScene("GSP_Golisano");
                 break;
-            case "RIT Dorm":
+            case "Dorm Room Derby":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITDorm");
                 else sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
-            case "Finals Brick Road":
+            case "All-Nighter Expressway":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_FinalsBrickRoad");
                 else sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;

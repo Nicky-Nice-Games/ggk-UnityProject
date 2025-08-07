@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
  * mapRaced - GameManager::FillMapRaced (called in NEWDriver::Start)
  * collisionsWithPlayers - KartCheckpoint::OnCollisionEnter
  * collisionWithWalls - BonkCollision::OnCollisionEnter
- * characterUsed - PlayerKartHandeler::SendAppearanceToPlayerInfo
+ * characterUsed - ColorSelect::SendAppearanceToPlayerInfo
  * fellOffMap - DeathZone::OnTriggerEnter
  * raceStartTime - NEWDriver::OnNtetworkSpawn
  * raceTime - LeaderboardController::Finished

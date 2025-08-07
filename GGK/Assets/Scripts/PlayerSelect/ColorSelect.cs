@@ -63,7 +63,56 @@ public class ColorSelect : MonoBehaviour
     {
         if (charData.characterColor != null)
         {
+            SendAppearanceToPlayerInfo();
             gameManager.PlayerSelected();
         }
     }
+
+    /// <summary>
+    /// Organizes the models name to a number based off of organization in backend
+    /// </summary>
+    private void SendAppearanceToPlayerInfo()
+    {
+        int index = 0;
+        switch (charData.characterName)
+        {
+            case "Gizmo":
+                index = 1;
+                break;
+
+            case "Morgan":
+                index = 2;
+                break;
+
+            case "Reese":
+                index = 3;
+                break;
+
+            case "Emma":
+                index = 4;
+                break;
+
+            case "Kai":
+                index = 5;
+                break;
+
+            case "Jamster":
+                index = 6;
+                break;
+
+            default:
+                index = 1;
+                break;
+        }
+        if (gameManager.playerInfo != null)
+        {
+            gameManager.playerInfo.characterUsed = index;
+            //Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
+        }
+        else
+        {
+            //Debug.Log("Playerinfo was null!");
+        }
+    }
+
 }
