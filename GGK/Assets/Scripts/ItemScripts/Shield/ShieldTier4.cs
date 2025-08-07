@@ -8,6 +8,8 @@ public class ShieldTier4 : BaseItem
 {
     private VFXHandler vfxScript;
 
+    uint shieldID = 0;
+
     // Start is called before the first frame update
     public override void Start()
     {
@@ -27,6 +29,9 @@ public class ShieldTier4 : BaseItem
     
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
+
+            shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", gameObject);
+            StartCoroutine(StopPlayingShieldNoise((int)timer));
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {
@@ -36,6 +41,13 @@ public class ShieldTier4 : BaseItem
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
         }
+    }
+
+    IEnumerator StopPlayingShieldNoise(int activeSeconds)
+    {
+        yield return new WaitForSeconds(activeSeconds);
+
+        AkUnitySoundEngine.StopPlayingID(shieldID);
     }
 
     // Update is called once per frame
