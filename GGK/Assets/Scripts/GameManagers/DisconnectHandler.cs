@@ -63,6 +63,7 @@ public class DisconnectHandler : NetworkBehaviour
 
     public void SafeDisconnect()
     {
+        Debug.Log("Above");
         if (IsServer)
         {
             foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
