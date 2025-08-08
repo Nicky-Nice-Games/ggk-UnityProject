@@ -546,6 +546,7 @@ public class LobbyManager : MonoBehaviour
                         {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
                     }
                 });
+                MultiplayerManager.Instance.expectedPlayerCount = lobby.Players.Count;
                 joinedLobby = null;
             }
             catch (LobbyServiceException e)
