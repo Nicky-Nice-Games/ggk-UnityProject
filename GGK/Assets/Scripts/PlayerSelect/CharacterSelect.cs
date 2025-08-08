@@ -41,6 +41,11 @@ public class CharacterSelect : MonoBehaviour
     [SerializeField]
     private GameObject firstColor;
 
+    [SerializeField]
+    private Button colorOptionsPanel;
+    [SerializeField]
+    private Button charOptionsPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -114,6 +119,7 @@ public class CharacterSelect : MonoBehaviour
             colorSelectMenu.SetActive(true);
             charSelectMenu.SetActive(false);
             eventSystem.SetSelectedGameObject(firstColor);
+            colorOptionsPanel.onClick = charOptionsPanel.onClick;
         }
     }
 }
