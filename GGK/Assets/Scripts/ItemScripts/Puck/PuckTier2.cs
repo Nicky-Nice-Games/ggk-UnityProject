@@ -7,9 +7,10 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PuckTier2 : BaseItem
 {
-    private Vector3 direction;                     // The direction and speed the puck travels
-    [SerializeField] private int maxBounces;       // The max number the puck can bounce off walls
-    private int bounceCount;                       // The times the puck bounced
+    private GameObject kartTarget;                 // The kart the puck tracks to
+    [SerializeField] private NavMeshAgent agent;   // The AI component of the puck
+    private bool goStraight;                       // If the puck goes straight
+    public GameObject[] karts;
     private float startTimer = 0;
     private int itemCount = 3;
 
@@ -20,38 +21,17 @@ public class PuckTier2 : BaseItem
     void Start()
     {
 
+        karts = GameObject.FindGameObjectsWithTag("Kart");
+
         // If the kart is looking backwards
         // sends puck backwards
         if (!MultiplayerManager.Instance.IsMultiplayer)
         {
-            if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
-            {
-                // The puck spawns 15 units behind of the kart
-                transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
-                                transform.position.y,
-                                transform.position.z - transform.forward.z * 10f);
-
-                // The speed of the puck times 200
-                // Keeps the player from hitting it during use regardless of speed
-                direction = -(transform.forward * 200.0f);
-            }
-            // If the kart is looking forwards
-            // sends puck forwards
-            else
-            {
-                // The puck spawns 15 units in front of the kart
-                transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                                transform.position.y,
-                                transform.position.z + transform.forward.z * 5f);
-
-                // The speed of the puck times 200
-                // Keeps the player from hitting it during use regardless of speed
-                direction = transform.forward * 200.0f;
-            }
-            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck2"]++;
-
-            // Starts the puck with 0 bounces
-            bounceCount = 0;
+            // The puck spawns 15 units in front of the kart
+            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+                            transform.position.y,
+                            transform.position.z + transform.forward.z * 5f);
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck3"]++;
         }
         else
         {
@@ -60,13 +40,8 @@ public class PuckTier2 : BaseItem
                             transform.position.y,
                             transform.position.z + transform.forward.z * 5f);
 
-            // The speed of the puck times 200
-            // Keeps the player from hitting it during use regardless of speed
-            direction = transform.forward * 200.0f;
 
-            bounceCount = 0;
-
-            useCount = 1;
+            useCount = 3;
 
             if (IsServer)
             {
@@ -78,9 +53,6 @@ public class PuckTier2 : BaseItem
     void Update()
     {
         startTimer += Time.deltaTime;
-
-        // Acts as stronger gravity to bring the puck down
-        rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
 
         if (!IsSpawned)
         {
@@ -99,30 +71,14 @@ public class PuckTier2 : BaseItem
 
     void FixedUpdate()
     {
-        rb.velocity = direction;
+        FindClosestKart(karts);
 
-        // Destroys puck if it bounced enough times
-        if (bounceCount == maxBounces + 1)
+        // Moves the puck towards the closest kart
+        agent.SetDestination(kartTarget.transform.position);
+        // Moves the puck straight normally but still follows pathing
+        if (goStraight)
         {
-            //if (!MultiplayerManager.Instance.IsMultiplayer)
-            //{
-            //    Destroy(this.gameObject);
-            //}
-            //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
-            //{
-            //    this.NetworkObject.Despawn();
-            //    Destroy(this.gameObject);
-            //}
-
-            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-            if (!MultiplayerManager.Instance.IsMultiplayer)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                DestroyItemRpc(this);
-            }
+            agent.SetDestination(transform.position + (transform.forward * 3));
         }
 
 
@@ -133,22 +89,6 @@ public class PuckTier2 : BaseItem
 
     void OnCollisionEnter(Collision collision)
     {
-        // Checks each point of contact in the collision
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            // Checks if the contact point is on the sides of the puck
-            // and only a vertical wall (protects against slopes)
-            if (Vector3.Dot(contact.normal, Vector3.up) < 0.3f)
-            {
-                // Reflects the direction and increases the bounce count
-                direction = Vector3.Reflect(direction, contact.normal);
-                bounceCount++;
-
-                // Stops loop at the first side contact point
-                break;
-            }
-        }
-
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
@@ -176,24 +116,27 @@ public class PuckTier2 : BaseItem
                 }
 
                 // Otherwise destroys puck regardless of kart hit
-                //if (!MultiplayerManager.Instance.IsMultiplayer)
-                //{
-                //    Destroy(this.gameObject);
-                //}
-                //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
-                //{
-                //    this.NetworkObject.Despawn();
-                //    Destroy(this.gameObject);
-                //}
-
-                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                if (!MultiplayerManager.Instance.IsMultiplayer)
-                {
-                    Destroy(this.gameObject);
-                }
                 else
                 {
-                    DestroyItemRpc(this);
+                    //if (!MultiplayerManager.Instance.IsMultiplayer)
+                    //{
+                    //    Destroy(this.gameObject);
+                    //}
+                    //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                    //{
+                    //    this.NetworkObject.Despawn();
+                    //    Destroy(this.gameObject);
+                    //}
+
+                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else
+                    {
+                        DestroyItemRpc(this);
+                    }
                 }
             }
         }
@@ -254,5 +197,49 @@ public class PuckTier2 : BaseItem
                 DestroyItemRpc(this);
             }
         }
+    }
+
+    /// <summary>
+    /// Finds the kart closest to the player using the puck.
+    /// Ignores the player who used it.
+    /// Ignores karts behind player.
+    /// </summary>
+    /// <param name="karts">A list of every kart in the scene</param>
+    public void FindClosestKart(GameObject[] karts)
+    {
+        GameObject closestKart = null;        // The starting empty closest kart
+        float baseDistance = Mathf.Infinity;  // The minimum distance encloses every kart
+
+        foreach (GameObject kart in karts)
+        {
+            // Checks each distance to the kart
+            float distance = Vector3.Distance(transform.position, kart.transform.position);
+            Vector3 direction = kart.transform.position - transform.position;
+            // Returns if kart is in front or behind user kart
+            float dp = Vector3.Dot(transform.forward, direction.normalized);
+
+            // If kart is in front of the user kart
+            if (dp > 0)
+            {
+                // Sets the closest kart to whatever is closest
+                if (distance < baseDistance)
+                {
+                    baseDistance = distance;
+                    closestKart = kart;
+                }
+            }
+        }
+        // Sets the puck to target the closest kart
+        if (closestKart)
+        {
+            kartTarget = closestKart;
+        }
+        // If there is no kart in front of user,
+        // then puck goes straight
+        else
+        {
+            goStraight = true;
+        }
+
     }
 }
