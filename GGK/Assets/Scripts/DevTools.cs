@@ -19,7 +19,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //If seen as an issue (which I think it probably is), make it so that the command
 //  prompt is hidden when entering a map which happens when the prompt was already open
 //  and you go into a track not using a command
-//Add other commands (see dev keyboard shortcuts; restart command?)
+
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
@@ -27,21 +27,23 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  unpause - make it auto-unpause/disable pause menu when load command happens
 //  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
 //  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
-//  the prompt or pause panel before it actually registers 
-//Ability to adjust player and npc speed
-//Debug GiveItem (implement with new item system)
-//Toggle checkpoints method?
-//Remove NPCs?
+//  the prompt or pause panel before it actually registers
+//Add other commands (see dev keyboard shortcuts; restart command, toggle checkpoints, remove NPCs?)
 
 //Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
 //  Update: can type if you close and reopen prompt but not initially even though cursor is there
 //UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
 //  works when you load into a map and then open the prompt
 
+//Finish GameModeChange
+//Make commands only accessible in certain modes
+//Make console innaccessible at times
+
 //Done
 //Prompt persists through menu scenes
 //Scrollbar works with autoscroll
-
+//Ability to adjust player and npc speed
+//Debug GiveItem (implement with new item system)
 
 
 //If multiplayer
@@ -49,6 +51,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  Make sure all players load into a map or scene (use multiplayer scene manager)
 //  Should game mode change be inaccessible? Or only for multiplayer possible modes?
 //  Make GiveItem only availible in test/free mode?
+//  Fix GiveItem in multiplayer (maybe make not work or all players can, etc.)
 
 
 
