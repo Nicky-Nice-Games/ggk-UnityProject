@@ -1120,6 +1120,17 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &796871339 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8417543583397942093, guid: b3d309a2e26d12d41a5edcb648ee2d15, type: 3}
+  m_PrefabInstance: {fileID: 376136322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e74d828133f574083200a376bb2d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &833419203
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2254,12 +2265,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f01ba0fe3aae18489813b9a9bfc3aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopSceneNames:
-  - GSP_RITOuterLoop
-  - GSP_RITQuarterMile
-  - LD_GolisanoGreybox
-  - GSP_FinalsBrickRoad
-  - GSP_RITDorm
+  gameManager: {fileID: 1555633132}
+  soundVolume: {fileID: 1555633138}
 --- !u!1 &1448914252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2915,6 +2922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curState: 0
+  curGameMode: 0
   sceneLoader: {fileID: 1555633137}
   playerInfo: {fileID: 0}
   postGameManager: {fileID: 1555633143}
@@ -3935,9 +3943,41 @@ PrefabInstance:
       value: DevTools
       objectReference: {fileID: 0}
     - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1555633132}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
       propertyPath: sceneLoader
       value: 
       objectReference: {fileID: 1555633137}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: characterData
+      value: 
+      objectReference: {fileID: 1555633135}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 98e193a2a48d9884e9b3a4d89954a656, type: 3}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: defaultColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: defaultColor.b
+      value: 0.015686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: defaultColor.g
+      value: 0.39607844
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: defaultColor.r
+      value: 0.92941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114337026605002731, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
+      propertyPath: multiSceneLoader
+      value: 
+      objectReference: {fileID: 796871339}
     - target: {fileID: 7798345223652425840, guid: dab43e081b9aa61499e9578b65b979fc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1

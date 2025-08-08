@@ -170,6 +170,9 @@ public class BoostTier4 : BaseItem
         //boostEffect.Stop();
         vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
+
+        // add boost usage
+        driver.playerInfo.boostUsage["speedBoost4"]++;
         Destroy(this.gameObject);
     }
 

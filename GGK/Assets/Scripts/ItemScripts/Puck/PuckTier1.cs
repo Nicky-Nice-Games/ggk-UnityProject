@@ -47,7 +47,7 @@ public class PuckTier1 : BaseItem
                 // Keeps the player from hitting it during use regardless of speed
                 direction = transform.forward * 200.0f;
             }
-
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck1"]++;
 
             // Starts the puck with 0 bounces
             bounceCount = 0;
@@ -163,6 +163,7 @@ public class PuckTier1 : BaseItem
                     playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                     playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    playerKart.Stun(2.0f);
                     Debug.Log(collision.transform.root.GetChild(0).gameObject);
                 }
                 // Stops NPC and starts recovery

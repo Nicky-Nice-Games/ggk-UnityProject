@@ -164,6 +164,8 @@ public class PlayerSpawner : NetworkBehaviour
         kartObject.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
         spawnedKartCount++;
 
+        if (FindAnyObjectByType<GameManager>().curGameMode == GameModes.timeTrial) yield break;
+
         while (spawnedKartCount < 8)
         {
             kartObject = Instantiate(npcKartPrefab, spawnPoints[spawnedKartCount].position, spawnPoints[spawnedKartCount].rotation);       
