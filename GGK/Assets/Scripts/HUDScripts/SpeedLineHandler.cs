@@ -31,7 +31,7 @@ public class SpeedLineHandler : NetworkBehaviour
     private Camera mainCamera;
     private List<Image> activeLines = new List<Image>();
     private List<Image> inactiveLines = new List<Image>();
-    private float radius;
+    [SerializeField] private float radius;
     private Vector2 oval;
     private float timer;
     private float minTimer, maxTimer;
@@ -40,8 +40,9 @@ public class SpeedLineHandler : NetworkBehaviour
     private float lastArea;
     private float normalFOVMax;
     private float normalLineWidth;
+    private float normalLineHeight;
     private SpeedCameraEffect cameraEffect;
-
+    private Vector2 canvasSize;
     void Awake()
     {
         instance = this;
@@ -148,11 +149,10 @@ public class SpeedLineHandler : NetworkBehaviour
         float radians = randomRot * (Mathf.PI / 180);
         RectTransform tr = img.rectTransform;
         tr.rotation = Quaternion.Euler(0, 0, randomRot);
-
         tr.localPosition = new Vector3(radius * Mathf.Cos(radians) * oval.x, radius * Mathf.Sin(radians) * oval.y, 0);
 
         float speedLineModifier = Mathf.Min(1.25f, speedDiff);
-        tr.sizeDelta = new Vector2(Screen.width * 0.45f * speedLineModifier, Random.Range(normalLineWidth/variance, normalLineWidth*variance));
+        tr.sizeDelta = new Vector2(Random.Range(normalLineHeight/(variance/2), normalLineHeight * (variance/2)) * speedLineModifier, Random.Range(normalLineWidth/variance, normalLineWidth*variance));
 
         img.color = new Color (255, 255, 255, 0.05f * (speedLineModifier * 5));
     }
@@ -177,20 +177,24 @@ public class SpeedLineHandler : NetworkBehaviour
 
     public void RepositionLineRadius(){
 
-        if (Screen.width > Screen.height){
-            radius = Screen.width;
+        canvasSize = canvas.gameObject.GetComponent<RectTransform>().sizeDelta;
+        if (canvasSize.x > canvasSize.y)
+        {
+            radius = canvasSize.x/2 * Mathf.Sqrt(2);
+            normalLineHeight = canvasSize.y / 2;
 
             oval.x = 1;
-            oval.y = (float)Screen.height/(float)Screen.width;
+            oval.y = canvasSize.y / canvasSize.x;
 
         }
-        else{
-            radius = Screen.height;
-
-            oval.x = (float)Screen.width/(float)Screen.height;
+        else
+        {
+            radius = canvasSize.y/2 * Mathf.Sqrt(2);
+            normalLineHeight = canvasSize.x / 2;
+            oval.x = canvasSize.x / canvasSize.y;
             oval.y = 1;
         }
 
-        lastArea = Screen.width*Screen.height;
+        lastArea = canvasSize.x * canvasSize.y;
     }
 }
