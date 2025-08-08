@@ -177,9 +177,6 @@ public class NEWDriver : NetworkBehaviour
         if (!IsSpawned)
         {
             playerInput.enabled = true;
-            Debug.Log("Before get pause");
-            playerInput.actions["Pause"].started += PauseHandler.instance.TogglePause;
-            Debug.Log("After get pause");
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             MiniMapHud.instance.trackingPlayer = gameObject;
@@ -187,7 +184,8 @@ public class NEWDriver : NetworkBehaviour
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-            
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
         
     }
@@ -197,7 +195,6 @@ public class NEWDriver : NetworkBehaviour
         if (IsOwner)
         {
             playerInput.enabled = true;
-            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
@@ -206,11 +203,9 @@ public class NEWDriver : NetworkBehaviour
             if (appearance) appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
 
             MiniMapHud.instance.trackingPlayer = gameObject;
-            if (SpeedLineHandler.instance != null)
-            {
-                SpeedLineHandler.instance.trackingPlayer = this;
-            }
-            
+            SpeedLineHandler.instance.trackingPlayer = this;
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
         if (IsServer)
         {

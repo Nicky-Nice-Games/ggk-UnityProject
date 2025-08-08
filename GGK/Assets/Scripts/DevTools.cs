@@ -418,7 +418,6 @@ public class DevTools : MonoBehaviour
 
 
     /// <summary>
-    /// <summary>
     /// Handles the LoadMap command based on the inputted paramater entered after it. 
     /// </summary>
     /// <param name="mapName">The inputted parameter after the LoadMap command to 
@@ -538,12 +537,6 @@ public class DevTools : MonoBehaviour
     /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
-
-        bool multiplayer = false;
-
-        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
-
-
         //DeactivatePause();
         switch (sceneName)
         {
@@ -557,8 +550,7 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "Start":
-                if (!multiplayer) { sceneLoader.LoadScene("StartScene"); }
-                else { multiSceneLoader.LoadScene("StartScene"); }
+                sceneLoader.LoadScene("StartScene");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
@@ -566,32 +558,28 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "MultiSingle":
-                if (!multiplayer) { sceneLoader.LoadScene("MultiSinglePlayerScene"); }
-                else { multiSceneLoader.LoadScene("MultiSinglePlayerScene"); }
+                sceneLoader.LoadScene("MultiSinglePlayerScene");
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "ModeSelect":
-                if (!multiplayer) { sceneLoader.LoadScene("GameModeSelectScene"); }
-                else { multiSceneLoader.LoadScene("GameModeSelectScene"); }
+                sceneLoader.LoadScene("GameModeSelectScene");
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "PlayerKart":
-                if (!multiplayer) { sceneLoader.LoadScene("PlayerKartScene"); }
-                else { multiSceneLoader.LoadScene("PlayerKartScene"); }
+                sceneLoader.LoadScene("PlayerKartScene");
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MapSelect":
-                if (!multiplayer) { sceneLoader.LoadScene("MapSelectScene"); }
-                else { multiSceneLoader.LoadScene("MapSelectScene"); }
+                sceneLoader.LoadScene("MapSelectScene");
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
