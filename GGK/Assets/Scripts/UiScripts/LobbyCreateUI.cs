@@ -15,6 +15,7 @@ public class LobbyCreateUI : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button backButton;
     [SerializeField] private Button playersButton;
+    [SerializeField] private Slider playersSlider;
     [SerializeField] private TextMeshProUGUI playersText;
     [SerializeField] private TMP_InputField nameInput;
     private int maxPlayers = 8;
@@ -29,6 +30,8 @@ public class LobbyCreateUI : MonoBehaviour
         createButton.onClick.AddListener(CreateLobbyButtonClick);
         backButton.onClick.AddListener(BackButtonClick);
         playersButton.onClick.AddListener(PlayersButtonClick);
+
+        playersSlider.onValueChanged.AddListener((value) => PlayerSliderMoved(value));
     }
 
     private void OnDestroy() {
@@ -61,6 +64,12 @@ public class LobbyCreateUI : MonoBehaviour
         if (players > maxPlayers) players = 2;
         if (players < 2) players = maxPlayers;
         playersText.text = $"Max Player: {players}";
+    }
+
+    private void PlayerSliderMoved(float value)
+    {
+        players = (int)value;
+        playersText.text = $"Max Players: {players}";
     }
 
     private void CreateLobbyButtonClick()
