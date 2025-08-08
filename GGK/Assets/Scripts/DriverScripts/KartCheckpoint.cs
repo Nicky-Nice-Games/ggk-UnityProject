@@ -43,10 +43,16 @@ public class KartCheckpoint : NetworkBehaviour
             if (child != checkPointParent.transform) // Avoid adding the parent itself
                 checkpointList.Add(child.gameObject);
         }
-        if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
-        {
-            lapDisplay.text = "Lap: " + (lap + 1);
-        }   
+        if(IsSpawned && IsOwner){
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null) {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }   
+        }else{
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }   
+        }
 
         name = transform.parent.GetChild(0).gameObject.name;
     }
@@ -115,12 +121,32 @@ public class KartCheckpoint : NetworkBehaviour
                 }
 
                 if (lap >= totalLaps)
-                {                    
+                {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
+                    // raceposition data to playerinfo
+                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePos = placement;
                     Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // kart collision data to playerinfo
+        if (collision.gameObject.CompareTag("Kart"))
+        {
+            // avoid doubling collisions by only checking the Kart child
+            // only count collisions from a player into any other kart
+            if(collision.gameObject.GetComponent<KartCheckpoint>() != null &&
+                this.transform.parent.transform.GetChild(0).gameObject.GetComponent<NEWDriver>() != null)
+            {
+                Debug.Log("Collision with kart");
+                GameObject driverObj = this.transform.parent.transform.GetChild(0).gameObject;
+                driverObj.GetComponent<NEWDriver>().playerInfo.collisionsWithPlayers++;
+            }
+
         }
     }
 

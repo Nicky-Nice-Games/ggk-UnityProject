@@ -9,11 +9,13 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource musicPlayer;
 
-    [SerializeField]
-    List<string> stopSceneNames;
+    // [SerializeField]
+    // List<string> stopSceneNames;
 
     // Reference to other scripts
-    private SoundVolume soundVolume;
+    [SerializeField] private GameManager gameManager;
+
+    [SerializeField]  private SoundVolume soundVolume;
     private OptionsData optionsData;
     private float curMasterVolume;
     private float curMusicVolume;
@@ -68,14 +70,11 @@ public class AudioManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // stops menu music when given scene starts
-        for (int x = 0; x < stopSceneNames.Count; x++)
+        // stops menu music when in game state
+        if (gameManager.curState == GameStates.game)
         {
-            if (scene.name == stopSceneNames[x])
-            {
-                musicPlayer.Stop();
-                return;
-            }
+            musicPlayer.Stop();
+            return;
         }
 
         // starts music in other scenes if it stops

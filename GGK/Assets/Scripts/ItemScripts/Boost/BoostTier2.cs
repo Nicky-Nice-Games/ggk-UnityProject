@@ -62,7 +62,7 @@ public class BoostTier2 : BaseItem
     IEnumerator ApplyBoost(NEWDriver driver, float boostForce, float duration, float boostMaxSpeed)
     {
         //boostEffect.Play();
-        vfxScript.PlayItemBoostVFX(duration);
+        vfxScript.PlayItemBoostTwoVFX(duration);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -76,12 +76,15 @@ public class BoostTier2 : BaseItem
         //boostEffect.Stop();
         vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
+
+        // add boost usage
+        driver.playerInfo.boostUsage["speedBoost2"]++;
         Destroy(this.gameObject);
     }
 
     IEnumerator ApplyBoostNPC(NPCPhysics driver, float boostForce, float duration, float boostMaxSpeed)
     {
-        vfxScript.PlayItemBoostVFX(duration);
+        vfxScript.PlayItemBoostTwoVFX(duration);
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;

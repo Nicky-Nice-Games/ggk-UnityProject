@@ -53,7 +53,7 @@ public class SignInManager : MonoBehaviour
         }
 
         // Getting Client ID / creating player info
-        playerInfo = new PlayerInfo();
+        playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         gameManager.playerInfo = playerInfo;
 
         // Organizing fields list into dict

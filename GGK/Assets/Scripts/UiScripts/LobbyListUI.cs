@@ -23,6 +23,10 @@ public class LobbyListUI : MonoBehaviour
         Instance = this;
         refreshButton.onClick.AddListener(RefreshButtonClick);
         createLobbyButton.onClick.AddListener(CreateLobbyButtonClick);
+        if (container == null) {
+            Debug.Log("had to grab container");
+            container = transform.GetChild(0);
+        }
         Show();
     }
 
@@ -33,6 +37,16 @@ public class LobbyListUI : MonoBehaviour
         LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
         LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
+    }
+
+    private void OnDestroy()
+    {
+        refreshButton.onClick.RemoveListener(RefreshButtonClick);
+        createLobbyButton.onClick.RemoveListener(CreateLobbyButtonClick);
+        LobbyManager.Instance.OnLobbyListChanged -= LobbyManager_OnLobbyListChanged;
+        LobbyManager.Instance.OnJoinedLobby -= LobbyManager_OnJoinedLobby;
+        LobbyManager.Instance.OnLeftLobby -= LobbyManager_OnLeftLobby;
+        LobbyManager.Instance.OnKickedFromLobby -= LobbyManager_OnKickedFromLobby;
     }
 
     private void LobbyManager_OnKickedFromLobby(object sender, LobbyManager.LobbyEventArgs e)
@@ -57,8 +71,12 @@ public class LobbyListUI : MonoBehaviour
 
     private void UpdateLobbyList(List<Lobby> lobbyList)
     {
+        Debug.Log($"container exists: {container != null}");
+        Debug.Log($"lobbylist exists: {lobbyList != null}");
+        if (lobbyList != null) Debug.Log($"there are {lobbyList.Count} found lobbies");
         foreach (Transform child in container)
         {
+            if (child == null) Debug.Log("child is null");
             if (child == lobbySingleTemplate) continue;
             Destroy(child.gameObject);
         }
