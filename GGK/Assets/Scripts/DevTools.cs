@@ -35,6 +35,8 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
 //  works when you load into a map and then open the prompt
 
+//Merge main into branch caused load map in single player to not work if used from the start scene (committed at 2:13 on 8/8/25)
+
 //Finish GameModeChange
 //Make commands only accessible in certain modes
 //Make console innaccessible at times
