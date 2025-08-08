@@ -55,6 +55,7 @@ public class MultiplayerConnectionBufferHandler : NetworkBehaviour
             if (IsServer)
             {
                 MultiplayerSceneManager.Instance.ToPlayerKartScene();
+                MultiplayerManager.Instance.Reset();
             }
         }
     }
@@ -80,6 +81,7 @@ public class MultiplayerConnectionBufferHandler : NetworkBehaviour
         if (currentConnectedPlayerCount.Value > 1)
         {
             MultiplayerSceneManager.Instance.ToPlayerKartScene();
+            MultiplayerManager.Instance.Reset();
         }
     }
 }
