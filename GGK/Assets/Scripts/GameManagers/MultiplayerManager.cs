@@ -55,8 +55,9 @@ public class MultiplayerManager : NetworkBehaviour
     [SerializeField] GameObject multiplayerPanel;
     [SerializeField] GameObject playerPanelItemTemplate;
     private Dictionary<ulong, GameObject> playerPanelItems = new Dictionary<ulong, GameObject>();
-
     private System.Random random = new System.Random();
+
+    public int expectedPlayerCount = 0;
 
     enum Gamemode
     {
