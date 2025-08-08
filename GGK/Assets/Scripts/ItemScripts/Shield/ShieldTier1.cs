@@ -27,7 +27,7 @@ public class ShieldTier1 : BaseItem
             // find the visual effect script from the kart
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
 
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["shield1"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense1"]++;
             
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
