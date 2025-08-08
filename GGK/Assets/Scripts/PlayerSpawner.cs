@@ -47,7 +47,7 @@ public class PlayerSpawner : NetworkBehaviour
         {
             NetworkManager.SceneManager.OnLoadEventCompleted -= OnAllClientsInGame;
 
-            //despawn/cull spawned karts in case they ever persist between scenes for some reason
+            //despawn/cull spawned karts in case they want to try and persist between scenes for some reason
             for (int i = 0; i < karts.Count; i++)
             {
                 if (karts[i] != null)
@@ -66,16 +66,18 @@ public class PlayerSpawner : NetworkBehaviour
             LoadSpawnPoints();
         }
         spawnedKartCount = 0;
-        if (!IsSpawned)
-        {
-            StartCoroutine(DelayedLocalSpawn());
 
-        }
-        else if (IsServer)
+        if (IsServer)
         {
             //StartCoroutine(DelayedServerSpawn());
             NetworkManager.SceneManager.OnLoadEventCompleted += OnAllClientsInGame;
         }
+        else if (!IsSpawned && !NetworkManager.Singleton.IsClient)
+        {
+            StartCoroutine(DelayedLocalSpawn());
+
+        }
+        
 
         //if (!IsSpawned)
         //{
