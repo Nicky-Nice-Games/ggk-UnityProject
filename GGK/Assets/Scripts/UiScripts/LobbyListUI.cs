@@ -106,6 +106,7 @@ public class LobbyListUI : MonoBehaviour
     private void CreateLobbyButtonClick()
     {
         LobbyCreateUI.Instance.Show();
+        Hide();
     }
 
     public void Hide()

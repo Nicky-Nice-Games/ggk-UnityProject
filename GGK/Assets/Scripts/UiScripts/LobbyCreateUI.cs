@@ -80,6 +80,7 @@ public class LobbyCreateUI : MonoBehaviour
     private void BackButtonClick()
     {
         Hide();
+        LobbyListUI.Instance.Show();
     }
 
     public void Hide()
