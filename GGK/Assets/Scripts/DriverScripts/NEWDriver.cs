@@ -1124,11 +1124,10 @@ public class NEWDriver : NetworkBehaviour
 
     public void SendThisPlayerData()
     {
-        Debug.Log("Called SendPlayerData from NEWDriver \nIsOwner: " + IsOwner + 
-            "\nPID on Data: " + playerInfo.pid);
-        if(!playerInfo.isGuest && IsOwner)
+        Debug.Log("Called SendPlayerData from NEWDriver");
+        if(!playerInfo.isGuest)
         {
-            gameManagerObj.GetComponent<APIManager>().PostPlayerDataRpc(playerInfo);
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
         }
     }
 }

@@ -2,37 +2,21 @@
 // Written by Logan Larrondo
 
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
-public class APIManager : NetworkBehaviour
+public class APIManager : MonoBehaviour
 {
     private GameManager gameManager;
-    public static APIManager Instance;
-    private Dictionary<ulong, PlayerInfo> allPlayerData = new();
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     private void Start()
     {
@@ -74,12 +58,9 @@ public class APIManager : NetworkBehaviour
     /// </summary>
     /// <param name="thisPlayer">the player whos data will be set</param>
     /// <returns></returns>
-    [ServerRpc(RequireOwnership = false)]
-    public async void PostPlayerDataRpc(PlayerInfo thisPlayer, ServerRpcParams rpcParams = default)
+    public async void PostPlayerData(PlayerInfo thisPlayer)
     {
         Debug.Log("Called PostPlayerData in APIManager");
-        ulong senderClientId = rpcParams.Receive.SenderClientId;
-
         // Serializing data to send back
         SerializablePlayerInfo serializable = new SerializablePlayerInfo();
         serializable.ConvertToSerializable(thisPlayer);
