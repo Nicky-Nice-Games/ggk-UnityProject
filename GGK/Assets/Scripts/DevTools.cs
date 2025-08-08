@@ -680,6 +680,14 @@ public class DevTools : MonoBehaviour
     public void GiveItem(string itemType, string itemTier)
     {
         int tier;
+        bool multiplayer = false;
+
+        if (MultiplayerManager.Instance.IsMultiplayer) 
+        { 
+            multiplayer = true;
+            textLog += "\nError: Command not currently supported in \nmultiplayer.";
+            return;
+        }
 
         //TODO remove? check moved to command; Check for options before tier to prevent check for tier
         if (itemType == "Options")
@@ -706,6 +714,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: No Kart found in scene, cannot use command.";
                 return;
             }
+
         }
 
         
