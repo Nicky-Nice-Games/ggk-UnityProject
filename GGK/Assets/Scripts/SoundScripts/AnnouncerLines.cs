@@ -7,96 +7,103 @@ using UnityEngine;
 /// </summary>
 public class AnnouncerLines : MonoBehaviour
 {
-    //These are all the Events planned for the announcer.
+    //These are all the Wwise Events for the announcer.
     [Header("Wwise Sound Events")]
-    [SerializeField] AK.Wwise.Event SinglePlayer;
-    [SerializeField] AK.Wwise.Event MultiPlayer;
-    [SerializeField] AK.Wwise.Event RaceGameMode;
-    [SerializeField] AK.Wwise.Event GrandPrixGameMode;
-    [SerializeField] AK.Wwise.Event TimeTrialGameMode;
-    [SerializeField] AK.Wwise.Event MorganSelect;
-    [SerializeField] AK.Wwise.Event ReeseSelect;
-    [SerializeField] AK.Wwise.Event KaiSelect;
-    [SerializeField] AK.Wwise.Event EmmaSelect;
-    [SerializeField] AK.Wwise.Event GizmoSelect;
-    [SerializeField] AK.Wwise.Event JamsterSelect;
-    [SerializeField] AK.Wwise.Event CampusCircuitMap;
-    [SerializeField] AK.Wwise.Event TechHouseTurnpikeMap;
-    [SerializeField] AK.Wwise.Event DormRoomDerbyMap;
-    [SerializeField] AK.Wwise.Event AllNighterExpresswayMap;
+    [SerializeField] AK.Wwise.Event AllNighterExpressway;
+    [SerializeField] AK.Wwise.Event CampusCircuit;
+    [SerializeField] AK.Wwise.Event DormRoomDerby;
+    [SerializeField] AK.Wwise.Event Emma;
+    [SerializeField] AK.Wwise.Event Gizmo;
+    [SerializeField] AK.Wwise.Event GrandPrix;
+    [SerializeField] AK.Wwise.Event Jamster;
+    [SerializeField] AK.Wwise.Event Kai;
+    [SerializeField] AK.Wwise.Event Morgan;
+    [SerializeField] AK.Wwise.Event Multiplayer;
+    [SerializeField] AK.Wwise.Event QuickRace;
+    [SerializeField] AK.Wwise.Event Race;
+    [SerializeField] AK.Wwise.Event Reese;
+    [SerializeField] AK.Wwise.Event Singleplayer;
+    [SerializeField] AK.Wwise.Event TechHouseTurnpike;
+    [SerializeField] AK.Wwise.Event TimeTrial;
 
-    void PlaySinglePlayer()
+    //These scripts play each of the Wwise sound events for the announcer lines.
+    void PlayAllNighterExpressway()
     {
-        SinglePlayer.Post(gameObject);
+        AllNighterExpressway.Post(gameObject);
     }
 
-    void PlayMultiPlayer()
+    void PlayCampusCircuit()
     {
-        MultiPlayer.Post(gameObject);
+        CampusCircuit.Post(gameObject);
     }
 
-    void PlayRaceGameMode()
+    void PlayDormRoomDerby()
     {
-        RaceGameMode.Post(gameObject);
+        DormRoomDerby.Post(gameObject);
     }
 
-    void PlayGrandPrixGameMode()
+    void PlayEmma()
     {
-        GrandPrixGameMode.Post(gameObject);
+        Emma.Post(gameObject);
     }
 
-    void PlayTimeTrialGameMode()
+    void PlayGizmo()
     {
-        TimeTrialGameMode.Post(gameObject);
+        Gizmo.Post(gameObject);
     }
 
-    void PlayMorganSelect()
+    void PlayGrandPrix()
     {
-        MorganSelect.Post(gameObject);
+        GrandPrix.Post(gameObject);
     }
 
-    void PlayReeseSelect()
+    void PlayJamster()
     {
-        ReeseSelect.Post(gameObject);
+        Jamster.Post(gameObject);
     }
 
-    void PlayKaiSelect()
+    void PlayKai()
     {
-        KaiSelect.Post(gameObject);
+        Kai.Post(gameObject);
     }
 
-    void PlayEmmaSelect()
+    void PlayMorgan()
     {
-        EmmaSelect.Post(gameObject);
+        Morgan.Post(gameObject);
     }
 
-    void PlayGizmoSelect()
+    void PlayMultiplayer()
     {
-        GizmoSelect.Post(gameObject);
+        Multiplayer.Post(gameObject);
     }
 
-    void PlayJamsterSelect()
+    void PlayQuickRace()
     {
-        JamsterSelect.Post(gameObject);
+        QuickRace.Post(gameObject);
     }
 
-    void PlayCampusCircuitMap()
+    void PlayRace()
     {
-        CampusCircuitMap.Post(gameObject);
+        Race.Post(gameObject);
     }
 
-    void PlayTechHouseTurnpikeMap()
+    void PlayReese()
     {
-        TechHouseTurnpikeMap.Post(gameObject);
+        Reese.Post(gameObject);
     }
 
-    void PlayDormRoomDerbyMap()
+    void PlaySingleplayer()
     {
-        DormRoomDerbyMap.Post(gameObject);
+        Singleplayer.Post(gameObject);
     }
 
-    void PlayAllNighterExpresswayMap()
+    void PlayTechHouseTurnpike()
     {
-        AllNighterExpresswayMap.Post(gameObject);
+        TechHouseTurnpike.Post(gameObject);
+    }
+
+    void PlayTimeTrial()
+    {
+        TimeTrial.Post(gameObject);
     }
 }
