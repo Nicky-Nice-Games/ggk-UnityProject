@@ -10,6 +10,7 @@ public class AppearanceSettings : NetworkBehaviour
     public Sprite icon;
     public Color color;
     public string kartName;
+    public Material kartColor;
 
     public List<GameObject> models; // List of GameObjects representing different character models
     CharacterData characterData; // Reference to CharacterData script
@@ -59,6 +60,10 @@ public class AppearanceSettings : NetworkBehaviour
 
     public void UpdateModel()
     {
+        if(color != null)
+        {
+            kartColor.color = color; // Set the kart's color material to the selected color
+        }
         // Set correct character model active
         if (models != null)
         {
@@ -75,6 +80,7 @@ public class AppearanceSettings : NetworkBehaviour
                 //bugs out in multiplayer :(
                 //Destroy(models[i])
             }
+            
         }
         else
         {
