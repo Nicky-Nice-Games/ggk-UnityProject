@@ -54,9 +54,10 @@ public class ItemHolder : NetworkBehaviour
     #endregion
 
 //AUDIO1
-    [Header("Wwise Kart Sounds")]
+    [Header("Wwise Sounds")]
     public KartSounds kartSounds;
     private uint shieldID = 0;
+    public VoiceLines voiceLines;
 
     #region ItemTracking Variables
     [Header("Held Item")]
@@ -362,7 +363,13 @@ public class ItemHolder : NetworkBehaviour
 
         if (context.performed) // make sure input is only being read once
         {
+            if (voiceLines != null && (ItemType == ItemTypeEnum.Puck || ItemType == ItemTypeEnum.Hazard))
+            {
+                voiceLines.PlayItemThrown();
+            }
+
             if (!IsSpawned) {
+                
                 thrownItem = Instantiate(ItemArray[(int)ItemType][ItemTier], transform.position, transform.rotation).gameObject;
 
                 // get the baseitem script from the thrown item and set proper variables
