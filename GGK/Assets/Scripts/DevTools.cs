@@ -51,7 +51,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  Make sure all players load into a map or scene (use multiplayer scene manager)
 //  Should game mode change be inaccessible? Or only for multiplayer possible modes?
 //  Make GiveItem only availible in test/free mode?
-//  Fix GiveItem in multiplayer (maybe make not work or all players can, etc.)
+//  Fix GiveItem in multiplayer (maybe make not work or all players can, etc.) - Disabled in the meantime
 
 
 
