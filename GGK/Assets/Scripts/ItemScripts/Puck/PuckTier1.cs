@@ -22,16 +22,41 @@ public class PuckTier1 : BaseItem
         SphereCollider kartCollider = kart.transform.parent.Find("Collider").GetComponent<SphereCollider>();
         Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), kartCollider, true);
 
+        GameObject driver = kart.gameObject;
+
+        float yPos;
+
         // If the kart is looking backwards
         // sends puck backwards
         if (!MultiplayerManager.Instance.IsMultiplayer)
         {
             if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
             {
-                // The puck spawns 15 units behind of the kart
-                transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
-                                transform.position.y + 1.0f,
-                                transform.position.z - transform.forward.z * 10f);
+                RaycastHit hit;
+                if (Physics.Raycast(driver.transform.position, -driver.transform.up, out hit, 4.0f))
+                {
+                    if (Vector3.Angle(hit.normal, Vector3.up) > 20.0f)
+                    {
+                        // The puck spawns 15 units behind of the kart
+                        transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                        transform.position.y + 3.0f,
+                                        transform.position.z - transform.forward.z * 10f);
+                    }
+                    else
+                    {
+                        // The puck spawns 15 units behind of the kart
+                        transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                        transform.position.y + 1.0f,
+                                        transform.position.z - transform.forward.z * 10f);
+                    }
+                }
+                else
+                {
+                    // The puck spawns 15 units behind of the kart
+                    transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                    transform.position.y + 1.0f,
+                                    transform.position.z - transform.forward.z * 10f);
+                }
 
                 // The speed of the puck times 200
                 // Keeps the player from hitting it during use regardless of speed
@@ -41,9 +66,35 @@ public class PuckTier1 : BaseItem
             // sends puck forwards
             else
             {
+                RaycastHit hit;
+                if (Physics.Raycast(driver.transform.position, -driver.transform.up, out hit, 4.0f))
+                {
+                    float angle = Vector3.Angle(hit.normal, Vector3.up);
+                    if (angle > 10.0f)
+                    {
+                        yPos = transform.position.y + 3.0f;
+                    }
+                    else if (angle > 25.0f)
+                    {
+                        yPos = transform.position.y + 4.0f;
+                    }
+                    else if (angle > 40.0f)
+                    {
+                        yPos = transform.position.y + 5.0f;
+                    }
+                    else
+                    {
+                        yPos = transform.position.y + 1.0f;
+                    }
+                }
+                else
+                {
+                    yPos = transform.position.y + 1.0f;
+                }
+
                 // The puck spawns 15 units in front of the kart
                 transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                                transform.position.y + 1.0f,
+                                yPos,
                                 transform.position.z + transform.forward.z * 5f);
 
                 // The speed of the puck times 200
@@ -80,6 +131,8 @@ public class PuckTier1 : BaseItem
     void Update()
     {
         startTimer += Time.deltaTime;
+
+        //transform.position += direction * Time.deltaTime;
 
         // turn collision back on for user who threw the puck
         if (startTimer > 1.0f)
