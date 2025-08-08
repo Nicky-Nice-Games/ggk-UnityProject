@@ -79,7 +79,7 @@ public class PlayerInfo : ScriptableObject
         };
         trapUsage = new Dictionary<string, int>
         {
-            {"oilSpill", 0 },
+            {"oilSpill1", 0 },
             {"brickwall", 0 },
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
