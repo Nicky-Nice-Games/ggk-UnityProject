@@ -226,6 +226,8 @@ public class GameManager : NetworkBehaviour
         this.grandPrixMaps = grandPrixMaps;
 
         sceneLoader.LoadScene(grandPrixMaps[0]);
+
+        curState = GameStates.game;
     }
 
     public void ToGrandPrixSelectScreen()
