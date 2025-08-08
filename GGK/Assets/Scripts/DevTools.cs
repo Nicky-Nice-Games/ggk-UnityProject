@@ -38,8 +38,6 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Merge main into branch caused load map in single player to not work if used from the start scene (committed at 2:13 on 8/8/25)
 
-//Finish GameModeChange
-//Make commands only accessible in certain modes
 //Make console innaccessible at times
 
 //Done
@@ -47,12 +45,12 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Scrollbar works with autoscroll
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
+//Finish GameModeChange
+//Make commands only accessible in certain modes
+//Make sure all players load into a map or scene (use multiplayer scene manager)
 
 
 //If multiplayer
-//  Make sure speed change is all player karts
-//  Make sure all players load into a map or scene (use multiplayer scene manager)
-//  Should game mode change be inaccessible? Or only for multiplayer possible modes?
 //  Make GiveItem only availible in test/free mode?
 //  Fix GiveItem in multiplayer (maybe make not work or all players can, etc.) - Disabled in the meantime
 
@@ -390,7 +388,7 @@ public class DevTools : MonoBehaviour
                         }
                         else if (parts.Length > 1 && parts[1] == "Options")
                         {
-                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
+                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC\nAll";
                             
                             textLog += "\nOptions for Param 2 [Speed]: " +
                                 "\nEnter a number or Reset";  
@@ -920,10 +918,39 @@ public class DevTools : MonoBehaviour
                 }                
                 break;
 
-            case ("Reset"):
-
-                
-
+            case ("All"):
+                if (speed == "Reset")
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = 38;
+                            kart.GetComponent<NEWDriver>().accelerationRate = 2700;
+                        }
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = 38;
+                            kart.GetComponent<NPCPhysics>().accelerationRate = 2300;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
+                            kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
+                            kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }
                 break;
 
             case "":
