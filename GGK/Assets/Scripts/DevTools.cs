@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static ItemHolder;
@@ -137,7 +138,7 @@ public class DevTools : MonoBehaviour
     private PlacementManager placementManager;
     private AppearanceSettings appearanceSettings;
     //[SerializeField] public GameObject gameManagerObj;
-    //[SerializeField] public GameManager gameManager;
+    [SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
 
     //Variables and references for the visible command prompt game objects
@@ -350,7 +351,6 @@ public class DevTools : MonoBehaviour
                         break;
 
                     case "GameModeChange":
-                        //TODO set up gamemode method command to change game mode without changing map
                         if (parts.Length > 1)
                         {
                             GameModeChange(parts[1]);
@@ -359,7 +359,6 @@ public class DevTools : MonoBehaviour
                         {
                             textLog += "\nError: No Param 1 [GameMode] was Entered.";
                         }
-                        textLog += "\nMethod not yet set up :)";
                         break;
 
                     case "GiveItem":
@@ -623,6 +622,10 @@ public class DevTools : MonoBehaviour
     /// specify the game mode that the user wants to change to.</param>
     public void GameModeChange(string gameMode)
     {
+        bool multiplayer = false;
+
+        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+
         switch (gameMode)
         {
             //Displays all of the parameter options for the GameModeChange method
@@ -634,23 +637,32 @@ public class DevTools : MonoBehaviour
                 }
                 break;
 
-            //TODO Mode cases go here
-            /*  Race,
-                GrandPrix,
-                TimeTrial,
-                FreeDrive
-            */
-
             case "Race":
                 //Use game mode handler script
                 //Send to map select if not already in map or use a map command
+                gameManager.curGameMode = GameModes.quickRace;
                 break;
 
             case "GrandPrix":
+                //Not availible in multiplayer
+                if (!multiplayer) 
+                {
+                    gameManager.ChangeGameMode(GameModes.grandPrix); ;
+                    gameManager.GrandPrixSelected(new List<string> 
+                    { "LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" });
+                }
+                else { textLog += "\nError: Grand Prix not availible \nin multiplayer."; return; }                
                 break;
 
             case "TimeTrial":
-                //Not availible in multiplayer
+                //Not availible in multiplayer                
+                if (!multiplayer) 
+                { 
+                    gameManager.ChangeGameMode(GameModes.timeTrial);
+                    string scene = SceneManager.GetActiveScene().name;
+                    LoadTimeTrialMap(scene);
+                }
+                else { textLog += "\nError: Time Trial not availible \nin multiplayer."; return; }
                 break;
 
             case "FreeDrive":
@@ -689,6 +701,12 @@ public class DevTools : MonoBehaviour
             multiplayer = true;
             textLog += "\nError: Command not currently supported in \nmultiplayer.";
             return;
+        }
+
+        if (gameManager.curGameMode == GameModes.timeTrial) 
+        {
+            textLog += "\nError: Command not allowed in Time Trial.";
+            return ;
         }
 
         //TODO remove? check moved to command; Check for options before tier to prevent check for tier
@@ -808,6 +826,12 @@ public class DevTools : MonoBehaviour
     {
         float speedFloat;
 
+        if (gameManager.curGameMode == GameModes.timeTrial)
+        {
+            textLog += "\nError: Command not allowed in Time Trial.";
+            return;
+        }
+
         GameObject kartCheck = GameObject.FindGameObjectWithTag("Kart");
         if (!kartCheck)
         {
@@ -916,6 +940,36 @@ public class DevTools : MonoBehaviour
         }
 
     }
+
+
+
+
+    public void LoadTimeTrialMap(string name)
+    {
+        switch (name) 
+        {
+            case "LD_RITOuterLoop":
+                sceneLoader.LoadScene("TT_RITOuterLoop");
+                break;
+
+            case "LD_RITDorm":
+                sceneLoader.LoadScene("TT_RITDorm");
+                break;
+
+            case "GSP_Golisano":
+                sceneLoader.LoadScene("TT_Golisano");
+                break;
+
+            case "GSP_FinalsBrickRoad":
+                sceneLoader.LoadScene("TT_FinalsBrickRoad");
+                break;
+
+            default:
+                return;
+        }
+    }
+
+
 
 
     /// <summary>
