@@ -75,6 +75,32 @@ public class CharacterSelect : MonoBehaviour
         }
         character.GetComponent<Image>().sprite = buttonSelectedSprite;
         characterNameDisplay.text = character.name;
+
+        foreach(GameObject model in characterModels)
+        {
+            model.SetActive(false);
+        }
+        switch (character.name)
+        {
+            case "Gizmo":
+                characterModels[0].SetActive(true);
+                break;
+            case "Morgan":
+                characterModels[1].SetActive(true);
+                break;
+            case "Reese":
+                characterModels[2].SetActive(true);
+                break;
+            case "Emma":
+                characterModels[4].SetActive(true);
+                break;
+            case "Kai":
+                characterModels[3].SetActive(true);
+                break;
+            case "Jamster":
+                characterModels[5].SetActive(true);
+                break;
+        }
     }
 
 
