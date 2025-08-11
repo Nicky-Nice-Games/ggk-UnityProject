@@ -97,7 +97,7 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
-                gamemanagerObj.sceneLoader.LoadScene("PlayerKartScene");
+                gamemanagerObj.sceneLoader.LoadScene("CharSelectMenu");
                 gamemanagerObj.curState = GameStates.playerKart;
                 break;
             default:
