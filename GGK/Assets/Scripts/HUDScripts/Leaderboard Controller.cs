@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class LeaderboardController : NetworkBehaviour
@@ -143,6 +144,7 @@ public class LeaderboardController : NetworkBehaviour
         {
             finishedKarts.Add(kart);
             player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacementRpc(kart.placement);
 
             if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId) {
                 player.SendThisPlayerData();
