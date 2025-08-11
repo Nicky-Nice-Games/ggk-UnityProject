@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class HazardTier4 : BaseItem
 {
+    GameObject hazardVFX;
+
     private void Start()
     {
         Vector3 behindPos = transform.position - transform.forward * 11;
         behindPos.y += 0.8f;
         transform.position = behindPos;
         kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+
+        // get a reference to only the vfx
+        hazardVFX = GameObject.Find("VFX");
     }
 
     private new void Update()
@@ -20,7 +25,8 @@ public class HazardTier4 : BaseItem
 
     private void RotateBox()
     {
-        transform.rotation *= new Quaternion(0.0f, 1.5f * Time.deltaTime, 0.0f, 1.0f);
+        // only rotate the vfx portion of the hazard and not the cloud
+        hazardVFX.transform.rotation *= new Quaternion(0.0f, 1.5f * Time.deltaTime, 0.0f, 1.0f);
     }
 
     private void OnTriggerEnter(Collider collision)
