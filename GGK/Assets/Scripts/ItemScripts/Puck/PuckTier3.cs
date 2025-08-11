@@ -31,7 +31,7 @@ public class PuckTier3 : BaseItem
             transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
                             transform.position.y,
                             transform.position.z + transform.forward.z * 5f);
-            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier3Rpc();
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck3"]++;
         }
         else
         {
@@ -47,6 +47,8 @@ public class PuckTier3 : BaseItem
             {
                 currentPos.Value = transform.position;
             }
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier3Rpc();
+
         }
     }
 
