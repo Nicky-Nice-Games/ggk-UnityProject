@@ -9,7 +9,7 @@ public class DeathZone : MonoBehaviour
     {
         if (other.CompareTag("Kart"))
         {
-            if (other.transform.parent.GetComponent<NEWDriver>() != null)
+            if (other.gameObject.gameObject.GetComponent<NEWDriver>() != null)
             {
                 if (MultiplayerManager.Instance.IsMultiplayer)
                 {
