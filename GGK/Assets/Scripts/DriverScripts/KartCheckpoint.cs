@@ -31,6 +31,9 @@ public class KartCheckpoint : NetworkBehaviour
 
     public bool PassedWithWarp { get { return passedWithWarp; } set { passedWithWarp = value; } }
 
+    [Header("Wwise VoiceLines")]
+    public VoiceLines voiceLines;
+
     void Start()
     {
         totalLaps = 3;
@@ -119,10 +122,13 @@ public class KartCheckpoint : NetworkBehaviour
                     if (lap + 1 == 2)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap2);
+                        voiceLines.PlayLapMade();
+
                     }
                     else if (lap + 1 == 3)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap3);
+                        voiceLines.PlayLapMade();
                     }
                 }
 
