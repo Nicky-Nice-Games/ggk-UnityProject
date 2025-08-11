@@ -210,6 +210,10 @@ public class LeaderboardController : NetworkBehaviour
             float tempFinishTime = kart.finishTime;
             bool isPlayerKart = kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null;
             ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
+
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacementRpc(kart.placement);
+
             SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
