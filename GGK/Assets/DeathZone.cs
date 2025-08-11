@@ -8,18 +8,23 @@ public class DeathZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Kart") && other == other.transform.parent.GetChild(0))
+        if (other.CompareTag("Kart"))
         {
             if (other.transform.parent.GetChild(0).TryGetComponent<NEWDriver>(out NEWDriver kart))
             {
-                if(kart.OwnerClientId == NetworkManager.Singleton.LocalClientId)
-                if (MultiplayerManager.Instance.IsMultiplayer)
+                if (other == other.transform.parent.GetChild(0))
                 {
-                    kart.IncrementFellOffMapRpc();
-                }
-                else
-                {
-                    kart.playerInfo.fellOffMap++;
+                    if (kart.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                    {
+                        if (MultiplayerManager.Instance.IsMultiplayer)
+                        {
+                            kart.IncrementFellOffMapRpc();
+                        }
+                        else
+                        {
+                            kart.playerInfo.fellOffMap++;
+                        }
+                    }
                 }
             }
 
