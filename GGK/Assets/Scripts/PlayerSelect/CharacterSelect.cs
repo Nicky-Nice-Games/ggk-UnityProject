@@ -28,6 +28,7 @@ public class CharacterSelect : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> characterModels;
+    private GameObject kart;
     private GameManager gameManager;
 
     [SerializeField]
@@ -120,6 +121,12 @@ public class CharacterSelect : MonoBehaviour
             charSelectMenu.SetActive(false);
             eventSystem.SetSelectedGameObject(firstColor);
             colorOptionsPanel.onClick = charOptionsPanel.onClick;
+
+            // disable all character models
+            foreach (GameObject model in characterModels)
+            {
+                model.SetActive(false);
+            }
         }
     }
 }
