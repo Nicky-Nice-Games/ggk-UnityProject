@@ -37,7 +37,7 @@ public class PuckTier4 : BaseItem
                                 transform.position.y,
                                 transform.position.z + transform.forward.z * 5f);
             }
-            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier4Rpc();
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck4"]++;
         }
         else
         {
@@ -52,6 +52,7 @@ public class PuckTier4 : BaseItem
             {
                 currentPos.Value = transform.position;
             }
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier4Rpc();            
         }
     }
 
