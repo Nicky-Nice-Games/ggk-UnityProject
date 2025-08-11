@@ -42,7 +42,7 @@ public class GameModeHandeler : MonoBehaviour
             else if(obj.name == "Time Trial")
             {
                 button.onClick.AddListener(() =>
-                gamemanagerObj.sceneLoader.LoadScene("TimeTrialStub"));
+                gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
 
                 button.onClick.AddListener(() =>
                 gamemanagerObj.ChangeGameMode(GameModes.timeTrial));
