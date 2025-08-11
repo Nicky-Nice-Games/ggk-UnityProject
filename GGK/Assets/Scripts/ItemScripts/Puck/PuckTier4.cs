@@ -97,7 +97,7 @@ public class PuckTier4 : BaseItem
         if (collision.gameObject.CompareTag("Kart"))
         {
             // Detects if puck hit an NPC or player
-            NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
+            NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
             NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
             // Stops player
@@ -114,6 +114,8 @@ public class PuckTier4 : BaseItem
             {
                 npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                 npcKart.StartRecovery();
+                NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                npcPhys.Stun(2.0f);
                 collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
             }
 

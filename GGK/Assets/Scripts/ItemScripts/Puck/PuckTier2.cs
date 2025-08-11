@@ -95,7 +95,7 @@ public class PuckTier2 : BaseItem
             if (startTimer >= 0.1f)
             {
                 // Detects if puck hit an NPC or player
-                NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
+                NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
                 NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
                 // Stops player
@@ -112,6 +112,8 @@ public class PuckTier2 : BaseItem
                 {
                     npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                     npcKart.StartRecovery();
+                    NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcPhys.Stun(2.0f);
                     collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
                 }
 
@@ -127,6 +129,17 @@ public class PuckTier2 : BaseItem
                     //    this.NetworkObject.Despawn();
                     //    Destroy(this.gameObject);
                     //}
+
+                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                    {
+                        playerKart.Stun(2.0f);
+                    }
+
+                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                    {
+                        NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                        npcPhys.Stun(2.0f);
+                    }
 
                     // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                     if (!MultiplayerManager.Instance.IsMultiplayer)

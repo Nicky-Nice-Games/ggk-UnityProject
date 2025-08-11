@@ -42,6 +42,18 @@ public class HazardTier2 : BaseItem
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
 
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                {
+                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    playerKart.Stun(2.0f);
+                }
+
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                {
+                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcKart.Stun(2.0f);
+                }
+
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
                     Destroy(this.gameObject);

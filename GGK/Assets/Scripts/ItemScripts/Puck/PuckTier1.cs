@@ -215,29 +215,13 @@ public class PuckTier1 : BaseItem
 
     void OnCollisionEnter(Collision collision)
     {
-        // Checks each point of contact in the collision
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            // Checks if the contact point is on the sides of the puck
-            // and only a vertical wall (protects against slopes)
-            if (Vector3.Dot(contact.normal, Vector3.up) < 0.3f)
-            {
-                // Reflects the direction and increases the bounce count
-                direction = Vector3.Reflect(direction, contact.normal);
-                bounceCount++;
-
-                // Stops loop at the first side contact point
-                break;
-            }
-        }
-
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
             if (startTimer >= 0.1f)
             {
                 // Detects if puck hit an NPC or player
-                NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
+                NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
                 NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
                 // Stops player
@@ -254,6 +238,8 @@ public class PuckTier1 : BaseItem
                 {
                     npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
                     npcKart.StartRecovery();
+                    NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcPhys.Stun(2.0f);
                     collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
                 }
 
@@ -304,6 +290,24 @@ public class PuckTier1 : BaseItem
                 else
                 {
                     DestroyItemRpc(this);
+                }
+            }
+        }
+        else
+        {
+            // Checks each point of contact in the collision
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                // Checks if the contact point is on the sides of the puck
+                // and only a vertical wall (protects against slopes)
+                if (Vector3.Dot(contact.normal, Vector3.up) < 0.3f)
+                {
+                    // Reflects the direction and increases the bounce count
+                    direction = Vector3.Reflect(direction, contact.normal);
+                    bounceCount++;
+
+                    // Stops loop at the first side contact point
+                    break;
                 }
             }
         }
