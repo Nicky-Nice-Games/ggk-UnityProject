@@ -14,11 +14,12 @@ public class HazardTier1 : BaseItem
         // Checking for multiplayer
         if(IsSpawned)
         {
-            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
+            Debug.Log($"Client {kart.OwnerClientId} kart spawned hazardT1\n{kart}");
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill1"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill1"]++;
         }
     }
 

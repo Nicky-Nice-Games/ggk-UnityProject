@@ -14,11 +14,11 @@ public class HazardTier4 : BaseItem
         // Checking for multiplayer
         if (IsSpawned)
         {
-            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier4Rpc();
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier4Rpc();
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
         }
     }
 

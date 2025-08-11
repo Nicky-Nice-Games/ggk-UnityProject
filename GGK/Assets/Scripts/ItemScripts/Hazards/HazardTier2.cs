@@ -18,11 +18,11 @@ public class HazardTier2 : BaseItem
         // Checking for multiplayer
         if (IsSpawned)
         {
-            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
         }
     }
 

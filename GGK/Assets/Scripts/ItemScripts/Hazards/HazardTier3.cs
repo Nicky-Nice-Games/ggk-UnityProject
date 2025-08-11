@@ -14,11 +14,11 @@ public class HazardTier3 : BaseItem
         // Checking for multiplayer
         if (IsSpawned)
         {
-            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier3Rpc();
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier3Rpc();
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
         }
     }
 
