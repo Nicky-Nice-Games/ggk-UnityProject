@@ -28,7 +28,7 @@ public class ShieldTier2 : BaseItem
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
 
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense2"]++;
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementDefenseUsageTier2Rpc();
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {

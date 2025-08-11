@@ -48,7 +48,7 @@ public class PuckTier2 : BaseItem
                 // Keeps the player from hitting it during use regardless of speed
                 direction = transform.forward * 200.0f;
             }
-            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck2"]++;
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier2Rpc();
 
             // Starts the puck with 0 bounces
             bounceCount = 0;

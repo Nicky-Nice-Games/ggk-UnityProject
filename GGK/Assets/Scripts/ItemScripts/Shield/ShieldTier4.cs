@@ -28,7 +28,7 @@ public class ShieldTier4 : BaseItem
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
 
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense4"]++;
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementDefenseUsageTier4Rpc();
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {
