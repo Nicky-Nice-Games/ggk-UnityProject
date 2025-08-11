@@ -909,7 +909,6 @@ public class NEWDriver : NetworkBehaviour
             recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
         }
 
-
         if (TurnCount > 3)
         {
             isDriftingLeft = !isDriftingLeft; //Change the direction of the drift
