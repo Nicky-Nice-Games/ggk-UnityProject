@@ -37,8 +37,8 @@ public class SpeedAndTimeDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        speedBar.SetSpeed(kart.sphere.velocity.magnitude);
-        speedDisplay.text = "Speed: " + kart.sphere.velocity.magnitude.ToString("n2");
+        //speedBar.SetSpeed(kart.sphere.velocity.magnitude);
+        //speedDisplay.text = "Speed: " + kart.sphere.velocity.magnitude.ToString("n2");
     }
 
     public void TrackKart(GameObject trackedKart)

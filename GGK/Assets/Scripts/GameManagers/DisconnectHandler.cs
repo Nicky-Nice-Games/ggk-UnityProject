@@ -6,12 +6,6 @@ using UnityEngine;
 
 public class DisconnectHandler : NetworkBehaviour
 {
-    public static DisconnectHandler instance;
-
-    private void Awake() {
-        instance = this;
-    }
-
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -28,12 +22,9 @@ public class DisconnectHandler : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
-        {
+        if (IsServer) {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
-        }
-        else
-        {
+        } else {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
         }
     }
@@ -47,7 +38,6 @@ public class DisconnectHandler : NetworkBehaviour
         // script still considered Spawned when this function runs
         // IsSpawned = true
         //this sends the clients back to the multi single select screen
-        Time.timeScale = 1;
         GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
         GameManager.thisManagerInstance.curState = GameStates.multiSingle;
     }
@@ -59,28 +49,5 @@ public class DisconnectHandler : NetworkBehaviour
     private void ClientDisconnectHandler(ulong clientId)
     {
         Debug.Log($"Client Disconnected \n ClientId in parameter is {clientId}");
-    }
-
-    public void SafeDisconnect()
-    {
-        if (IsServer) return;
-        Debug.Log("before");
-        NetworkManager.Singleton.Shutdown();
-        Debug.Log("after");
-
-        Time.timeScale = 1;
-        GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
-        GameManager.thisManagerInstance.curState = GameStates.multiSingle;
-    }
-
-    [Rpc(SendTo.Server)]
-    private void DisconnectClientRpc(RpcParams rpcParams = default)
-    {
-        Debug.Log($"attempting Disconnecting client");
-
-        ulong senderClientId = rpcParams.Receive.SenderClientId;
-        Debug.Log($"Disconnecting client {senderClientId}");
-
-        NetworkManager.DisconnectClient(senderClientId);
-    }
+    }  
 }

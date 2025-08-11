@@ -34,5 +34,6 @@ public class CharacterData : MonoBehaviour
     //public GameObject characterModelSelected;
     public string characterName;
     public Color characterColor;
+    public string mapVote;
 
 }

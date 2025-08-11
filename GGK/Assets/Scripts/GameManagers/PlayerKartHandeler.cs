@@ -62,11 +62,11 @@ public class PlayerKartHandeler : MonoBehaviour
             gameManager.GetComponentInChildren<GameManager>().PlayerSelected());
         }
 
-        // During multiplayer build multiplayer panel
-        if (MultiplayerManager.Instance.IsMultiplayer)
-        {
-            MultiplayerManager.Instance.AddPlayerToPanelRpc();
-        }
+        //// During multiplayer build multiplayer panel
+        //if (MultiplayerManager.Instance.IsMultiplayer)
+        //{
+        //    MultiplayerManager.Instance.AddPlayerToPanelRpc();
+        //}
     }
 
     public void SwitchToWaitingScreen()
@@ -101,7 +101,7 @@ public class PlayerKartHandeler : MonoBehaviour
 
         // Change selected character information to those on the button
         characterSelectedImage = characterImage;
-        ColorChange(); // Change color of selected character image
+        //ColorChange(); // Change color of selected character image
         characterName.text = charName;
         
         // Set active the correct character model
@@ -117,8 +117,8 @@ public class PlayerKartHandeler : MonoBehaviour
             }
         }
         // Save selected button information to change back later and change border color to yellow
-        border.enabled = true;
-        prevCharacterImageBorder = border;
+       //border.enabled = true;
+       //prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
         if (characterData != null)
@@ -178,69 +178,69 @@ public class PlayerKartHandeler : MonoBehaviour
     }
 
     // Which direction for the color carousel?
-    public void LeftColor()
-    {
-        // Create a new list that shifts everything to the Right
-        // Moving the left color towards middle
-        List<Color> temp = new List<Color>();
-
-        temp.Add(colors[colors.Count - 1]);
-
-        for (int i = 0; i < colors.Count - 1; i++)
-        {
-            temp.Add(colors[i]);
-        }
-
-        // New list overwrites old list
-        colors = temp;
-
-        // Call this to set color of the color carousel
-        ColorChange();
-    }
-    public void RightColor()
-    {
-        // Create a new list that shifts everything to the left
-        // Moving the right color towards middle
-        List<Color> temp = new List<Color>();
-
-        for (int i = 1; i < colorButtons.Count; i++)
-        {
-            temp.Add(colors[i]);
-        }
-        temp.Add(colors[0]);
-
-        // New list overwrites old list
-        colors = temp;
-
-        // Call this to set color of the color carousel
-        ColorChange();
-    }
-    public void ColorChange()
-    {
-        // Color Carousel Update
-        for (int i = 0; i < colorButtons.Count; i++)
-        {
-            Image[] images = colorButtons[i].GetComponentsInChildren<Image>();
-
-            // This should be the inner color
-            images[1].color = colors[i];
-        }
-
-        // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
-        Color middleColor = colors[3];
-        characterSelectedImage.color = middleColor;
-
-        /*
-        foreach (GameObject characterButton in characterButtons)
-        {
-            Button button = characterButton.GetComponentInChildren<Button>();
-            ColorBlock colorBlock = button.colors;
-            colorBlock.selectedColor = middleColor;
-            button.colors = colorBlock;
-        }
-        */
-
-        if (characterData != null)
-            characterData.characterColor = middleColor;
-    }
+    //public void LeftColor()
+    //{
+    //    // Create a new list that shifts everything to the Right
+    //    // Moving the left color towards middle
+    //    List<Color> temp = new List<Color>();
+    //
+    //    temp.Add(colors[colors.Count - 1]);
+    //
+    //    for (int i = 0; i < colors.Count - 1; i++)
+    //    {
+    //        temp.Add(colors[i]);
+    //    }
+    //
+    //    // New list overwrites old list
+    //    colors = temp;
+    //
+    //    // Call this to set color of the color carousel
+    //    ColorChange();
+    //}
+    //public void RightColor()
+    //{
+    //    // Create a new list that shifts everything to the left
+    //    // Moving the right color towards middle
+    //    List<Color> temp = new List<Color>();
+    //
+    //    for (int i = 1; i < colorButtons.Count; i++)
+    //    {
+    //        temp.Add(colors[i]);
+    //    }
+    //    temp.Add(colors[0]);
+    //
+    //    // New list overwrites old list
+    //    colors = temp;
+    //
+    //    // Call this to set color of the color carousel
+    //    ColorChange();
+    //}
+    //public void ColorChange()
+    //{
+    //    // Color Carousel Update
+    //    for (int i = 0; i < colorButtons.Count; i++)
+    //    {
+    //        Image[] images = colorButtons[i].GetComponentsInChildren<Image>();
+    //
+    //        // This should be the inner color
+    //        images[1].color = colors[i];
+    //    }
+    //
+    //    // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
+    //    Color middleColor = colors[3];
+    //    characterSelectedImage.color = middleColor;
+    //
+    //    /*
+    //    foreach (GameObject characterButton in characterButtons)
+    //    {
+    //        Button button = characterButton.GetComponentInChildren<Button>();
+    //        ColorBlock colorBlock = button.colors;
+    //        colorBlock.selectedColor = middleColor;
+    //        button.colors = colorBlock;
+    //    }
+    //    */
+    //
+    //    if (characterData != null)
+    //        characterData.characterColor = middleColor;
+    //}
 }

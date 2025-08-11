@@ -54,6 +54,20 @@ public class VirtualKeyboardController : MonoBehaviour
                 timer = 0;
             }
         }
+
+        if(Input.GetKeyUp(KeyCode.Return))
+        {
+            KeyPressed("Enter");
+        }
+        if(Input.GetKeyUp(KeyCode.Backspace))
+        {
+            KeyPressed("Backspace");
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            KeyPressed("Tab");
+        }
+
     }
 
     void HandleNavigation()
@@ -67,11 +81,11 @@ public class VirtualKeyboardController : MonoBehaviour
         float dpadY = Input.GetAxisRaw("DPadY");
 
         // read keyboard inputs
-        bool kbRight = Input.GetKeyDown(KeyCode.RightArrow);
-        bool kbLeft = Input.GetKeyDown(KeyCode.LeftArrow);
-        bool kbDown = Input.GetKeyDown(KeyCode.DownArrow);
-        bool kbUp = Input.GetKeyDown(KeyCode.UpArrow);
-        bool kbReturn = Input.GetKeyDown(KeyCode.Return);
+        //bool kbRight = Input.GetKeyDown(KeyCode.RightArrow);
+        //bool kbLeft = Input.GetKeyDown(KeyCode.LeftArrow);
+        //bool kbDown = Input.GetKeyDown(KeyCode.DownArrow);
+        //bool kbUp = Input.GetKeyDown(KeyCode.UpArrow);
+        //bool kbReturn = Input.GetKeyDown(KeyCode.Return);
 
         // check if input passes threshold and reads as full press
         bool gpRight = stickX > threshold || dpadX > threshold;
@@ -81,12 +95,18 @@ public class VirtualKeyboardController : MonoBehaviour
         bool gpEnter = Input.GetKeyDown(KeyCode.JoystickButton0);
 
         // Nav Controls
-        if (kbRight || (gpRight && !prevRight)) selectedIndex++;
-        else if (kbLeft || (gpLeft && !prevLeft)) selectedIndex--;
-        else if ((kbUp || (gpUp && !prevUp)) && selectedIndex != 40) selectedIndex -= rowSize;
-        else if ((kbUp || (gpUp && !prevUp)) && selectedIndex == 40) selectedIndex -= rowSize + 1;
-        else if (kbDown || (gpDown && !prevDown)) selectedIndex += rowSize;
-        else if (kbReturn || gpEnter) keyButtons[selectedIndex].onClick.Invoke();
+        //if (kbRight || (gpRight && !prevRight)) selectedIndex++;
+        //else if (kbLeft || (gpLeft && !prevLeft)) selectedIndex--;
+        //else if ((kbUp || (gpUp && !prevUp)) && selectedIndex != 40) selectedIndex -= rowSize;
+        //else if ((kbUp || (gpUp && !prevUp)) && selectedIndex == 40) selectedIndex -= rowSize + 1;
+        //else if (kbDown || (gpDown && !prevDown)) selectedIndex += rowSize;
+        //else if (kbReturn || gpEnter) keyButtons[selectedIndex].onClick.Invoke();
+        if ((gpRight && !prevRight)) selectedIndex++;
+        else if ((gpLeft && !prevLeft)) selectedIndex--;
+        else if (((gpUp && !prevUp)) && selectedIndex != 40) selectedIndex -= rowSize;
+        else if (((gpUp && !prevUp)) && selectedIndex == 40) selectedIndex -= rowSize + 1;
+        else if ((gpDown && !prevDown)) selectedIndex += rowSize;
+        else if (gpEnter) keyButtons[selectedIndex].onClick.Invoke();
 
         // Making sure the index does not go out of bounds
         selectedIndex = Mathf.Clamp(selectedIndex, 0, keyButtons.Count - 1);
@@ -142,6 +162,28 @@ public class VirtualKeyboardController : MonoBehaviour
             {
                 curText = curText.Substring(0, curText.Length - 1);
             }
+
+        }
+
+        else if (value == "Tab")
+        {
+            if (curText.Length == 0 && curField > 0)
+            {
+                // If the text is empty and the current field is not the first one, go back to the previous field
+
+
+
+                curField--;
+
+                curText = inputField[curField].text;
+
+                //Activating OnSelect triggers for inputfield
+                if (curField < inputField.Count)
+                {
+                    inputField[curField].ActivateInputField();
+                    inputField[curField].Select();
+                }
+            }
         }
 
         // Space will prob not be included
@@ -188,6 +230,7 @@ public class VirtualKeyboardController : MonoBehaviour
             }
         }
         inputField[curField].text = curText;
+
     }
 
     /// <summary>
