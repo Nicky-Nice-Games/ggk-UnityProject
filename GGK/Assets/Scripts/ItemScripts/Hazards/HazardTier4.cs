@@ -12,6 +12,8 @@ public class HazardTier4 : BaseItem
         behindPos.y += 0.8f;
         transform.position = behindPos;
         kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+
+        // get a reference to only the vfx
         hazardVFX = GameObject.Find("VFX");
     }
 
@@ -23,6 +25,7 @@ public class HazardTier4 : BaseItem
 
     private void RotateBox()
     {
+        // only rotate the vfx portion of the hazard and not the cloud
         hazardVFX.transform.rotation *= new Quaternion(0.0f, 1.5f * Time.deltaTime, 0.0f, 1.0f);
     }
 
