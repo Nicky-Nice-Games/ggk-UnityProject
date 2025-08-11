@@ -9,12 +9,10 @@ public class SceneLoader : MonoBehaviour
     public float transitionTime;
     public bool transitionActive;
 
-    public bool loading = false;
 
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadAnimation(sceneName));
-        loading = true;
     }
 
     IEnumerator LoadAnimation(string sceneName)

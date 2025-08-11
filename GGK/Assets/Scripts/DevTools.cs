@@ -47,7 +47,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Scrollbar works with autoscroll
 //Ability to adjust player and npc speed
 //Debug GiveItem (implement with new item system)
-//Finish GameModeChange
+//Finish ChangeGameMode
 //Make commands only accessible in certain modes
 //Make sure all players load into a map or scene (use multiplayer scene manager)
 
@@ -109,8 +109,8 @@ public enum GameMode
 {
     Race,
     GrandPrix,
-    TimeTrial,
-    FreeDrive    //Dev mode, free fly/drive ?
+    TimeTrial
+    //FreeDrive    //Dev mode, free fly/drive ?
 }
 
 
@@ -134,13 +134,14 @@ public class DevTools : MonoBehaviour
     [SerializeField] public SceneLoader sceneLoader;
     [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
     [SerializeField] public CharacterData characterData;
-    //public PlayerKartHandeler playerKartHandeler;
     private PlacementManager placementManager;
     private AppearanceSettings appearanceSettings;
-    //[SerializeField] public GameObject gameManagerObj;
     [SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
 
+    //Variables for password protection
+
+    /*[SerializeField]*/ public GameObject optionsPanel;
     private bool devToolsKeyEnabled = false;
     private int keyCount = 0;
     private KeyCode lastKey = KeyCode.Backspace;
@@ -165,8 +166,6 @@ public class DevTools : MonoBehaviour
     //[SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
     //private BaseItem baseItem;
-
-    [SerializeField] public GameObject optionsPanel;
 
     [SerializeField] public Sprite defaultSprite;
     [SerializeField] public Color defaultColor;
@@ -194,35 +193,12 @@ public class DevTools : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //trying to fix issue where prompt dissapears between menu scenes (this code works
-        //to keep it enabled but it still doesn't show until the key is pressed again)
-        #region Commented out testing
-        //Debug.Log("loading " + sceneLoader.loading);
-        //if (sceneLoader.loading)
-        //{
-        //inputField.ActivateInputField();
-        //Debug.Log("enabled " + commandPromptCanvas.enabled);
-        //Debug.Log("Length " + textLog.Length);
 
-        //TODO FIX! won't work if log has been cleared, run secondary check?
-        //  ALSO overrides disabling when entering a map
-        //if (textLog.Length > 131)   
-        //{
-        //    commandPromptCanvas.enabled = true;
-        //    inputField.ActivateInputField();
-        //}
-        //else
-        //{
-        //    commandPromptCanvas.enabled = false;
-        //}
-        //sceneLoader.loading = false;
-        //Debug.Log("enabled " + commandPromptCanvas.enabled);
-        //}
-        #endregion
-
+        //Sets the options panel variable to the currently open options panel
+        optionsPanel = GameObject.FindGameObjectWithTag("Options");
 
         //Makes command prompt password protected for final build
-        if (optionsPanel.activeSelf == true)
+        if (optionsPanel != null && optionsPanel.activeSelf == true)
         {
             if (!devToolsKeyEnabled)
             {
@@ -447,10 +423,10 @@ public class DevTools : MonoBehaviour
                         }
                         break;
 
-                    case "GameModeChange":
+                    case "ChangeGameMode":
                         if (parts.Length > 1)
                         {
-                            GameModeChange(parts[1]);
+                            ChangeGameMode(parts[1]);
                         }
                         else
                         {
@@ -708,11 +684,11 @@ public class DevTools : MonoBehaviour
 
 
     /// <summary>
-    /// Handles the GameModeChange command based on the inputted paramater entered after it.
+    /// Handles the ChangeGameMode command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="gameMode">The inputted parameter after the GameModeChange command to 
+    /// <param name="gameMode">The inputted parameter after the ChangeGameMode command to 
     /// specify the game mode that the user wants to change to.</param>
-    public void GameModeChange(string gameMode)
+    public void ChangeGameMode(string gameMode)
     {
         bool multiplayer = false;
 
@@ -720,7 +696,7 @@ public class DevTools : MonoBehaviour
 
         switch (gameMode)
         {
-            //Displays all of the parameter options for the GameModeChange method
+            //Displays all of the parameter options for the ChangeGameMode method
             case "Options":
                 textLog += "\nOptions for Param 1 [GameMode]: ";
                 foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
@@ -757,10 +733,10 @@ public class DevTools : MonoBehaviour
                 else { textLog += "\nError: Time Trial not availible \nin multiplayer."; return; }
                 break;
 
-            case "FreeDrive":
-                //Disable NPCs, countdown/timer/leaderboard/placement?
-                //In multiplayer, enable give item
-                break;
+            //case "FreeDrive":
+            //    //Disable NPCs, countdown/timer/leaderboard/placement?
+            //    //In multiplayer, enable give item
+            //    break;
 
             case "":
                 textLog += "\nError: No Param 1 [GameMode] was Entered.";
@@ -1063,8 +1039,11 @@ public class DevTools : MonoBehaviour
     }
 
 
-
-
+/// <summary>
+/// Helper method used in ChangeGameMode to load into the correct time trial map based 
+/// on the current map.
+/// </summary>
+/// <param name="name">The name of the current scene.</param>
     public void LoadTimeTrialMap(string name)
     {
         switch (name) 
@@ -1091,8 +1070,6 @@ public class DevTools : MonoBehaviour
     }
 
 
-
-
     /// <summary>
     /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
     /// </summary>
@@ -1109,7 +1086,7 @@ public class DevTools : MonoBehaviour
     /// <summary>
     /// Keeps the scroll bar from trying to stay at the bottom when the user is trying to scroll 
     /// up to view previous text. Auto-scrolling continues when either the bar is scrolled back to 
-    /// the bottom or the user enters another input. 
+    /// the bottom or the user enters another input. Called OnEndEdit of input field.
     /// </summary>
     public void StopAutoScroll()
     {
