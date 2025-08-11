@@ -36,6 +36,8 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
 //  works when you load into a map and then open the prompt
 
+//Pressing enter after the prompt is closed still enters a line (even after adding additional statement to if)
+
 //Merge main into branch caused load map in single player to not work if used from the start scene (committed at 2:13 on 8/8/25)
 
 //Make console innaccessible at times
@@ -139,6 +141,16 @@ public class DevTools : MonoBehaviour
     [SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
 
+    private bool devToolsKeyEnabled = false;
+    private int keyCount = 0;
+    private KeyCode lastKey = KeyCode.Backspace;
+    private KeyCode[] enablePass = 
+        {KeyCode.E, KeyCode.N, KeyCode.A, KeyCode.B, KeyCode.L, KeyCode.E, KeyCode.D, KeyCode.E, 
+        KeyCode.V, KeyCode.P, KeyCode.R, KeyCode.O, KeyCode.M, KeyCode.P, KeyCode.T};
+    private KeyCode[] disablePass =
+        {KeyCode.D, KeyCode.I, KeyCode.S, KeyCode.A, KeyCode.B, KeyCode.L, KeyCode.E, KeyCode.D, KeyCode.E,
+        KeyCode.V, KeyCode.P, KeyCode.R, KeyCode.O, KeyCode.M, KeyCode.P, KeyCode.T};
+
     //Variables and references for the visible command prompt game objects
     private string textLog;
     private string defaultText;
@@ -153,6 +165,8 @@ public class DevTools : MonoBehaviour
     //[SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
     private ItemHolder itemHolder;
     //private BaseItem baseItem;
+
+    [SerializeField] public GameObject optionsPanel;
 
     [SerializeField] public Sprite defaultSprite;
     [SerializeField] public Color defaultColor;
@@ -172,7 +186,6 @@ public class DevTools : MonoBehaviour
                 "or \n[MethodName] Options for Param options";
         textLog = defaultText;
 
-        
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -207,28 +220,118 @@ public class DevTools : MonoBehaviour
         //}
         #endregion
 
-       
 
-
-        //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        //Makes command prompt password protected for final build
+        if (optionsPanel.activeSelf == true)
         {
-            if (commandPromptCanvas.enabled == false)
+            if (!devToolsKeyEnabled)
             {
-                commandPromptCanvas.enabled = true;
-                inputField.DeactivateInputField();
-                inputField.ActivateInputField();
+                if (keyCount < enablePass.Length)
+                {
+                    if (Input.GetKeyDown(enablePass[keyCount]))
+                    {
+                        Debug.Log("key pressed");
+                        if (lastKey != KeyCode.Backspace)
+                        {
+                            Debug.Log("here");
+                            if (lastKey == enablePass[keyCount - 1])
+                            {
+                                lastKey = enablePass[keyCount];
+
+                                keyCount++;
+                            }
+                            //else
+                            //{
+                            //    keyCount = 0;
+                            //    lastKey = KeyCode.Backspace;
+                            //}
+                        }
+                        else
+                        {
+                            lastKey = enablePass[keyCount];
+                            keyCount++;
+                        }
+
+
+                    }
+                }
+                else if (keyCount == enablePass.Length)
+                {
+                    Debug.Log("enabled!");
+                    devToolsKeyEnabled = true;
+                    keyCount = 0;
+                    lastKey = KeyCode.Backspace;
+                }
             }
-            else
+            else if (devToolsKeyEnabled)
             {
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
+                if (keyCount < disablePass.Length)
+                {
+                    if (Input.GetKeyDown(disablePass[keyCount]))
+                    {
+                        Debug.Log("key pressed");
+                        if (lastKey != KeyCode.Backspace)
+                        {
+                            Debug.Log("here");
+                            if (lastKey == disablePass[keyCount - 1])
+                            {
+                                lastKey = disablePass[keyCount];
+
+                                keyCount++;
+                            }
+                            //else
+                            //{
+                            //    keyCount = 0;
+                            //    lastKey = KeyCode.Backspace;
+                            //}
+                        }
+                        else
+                        {
+                            lastKey = disablePass[keyCount];
+                            keyCount++;
+                        }
+
+
+                    }
+                }
+                else if (keyCount == disablePass.Length)
+                {
+                    Debug.Log("disabled!");
+                    devToolsKeyEnabled = false;
+                    keyCount = 0;
+                    lastKey = KeyCode.Backspace;
+                }
             }
+
         }
+
+
+        if (devToolsKeyEnabled) 
+        {
+            //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                if (commandPromptCanvas.enabled == false)
+                {
+                    commandPromptCanvas.enabled = true;
+                    inputField.DeactivateInputField();
+                    inputField.ActivateInputField();
+                }
+                else
+                {
+                    inputField.text = "";
+                    commandPromptCanvas.enabled = false;
+                    inputField.DeactivateInputField();
+                }
+            }
+
+        }
+
+
 
         //Clears input field, returns cursor to field, and turns on auto-scroll when the user
         //enters new input
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) && commandPromptCanvas.enabled == true)
         {
             inputField.text = "";
             inputField.ActivateInputField();
@@ -241,10 +344,6 @@ public class DevTools : MonoBehaviour
         {
             AutoScroll(scrollRect);
         }
-        //else
-        //{
-        //    StopAutoScroll();
-        //}
 
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
@@ -299,12 +398,12 @@ public class DevTools : MonoBehaviour
         //Splits input into substrings with a colon as the delimiter
         string[] methods = input.Split(new char[] { ':' });
 
-        //Format:
-        //or MethodName Param:MethodName Param
-        //  methods[0] = Method1 Param1
-        //  methods[1] = Method2 Param2
-        //  parts[0] = MethodName
-        //  parts[1] = Param
+        /*Format:
+            MethodName Param:MethodName Param
+            methods[0] = Method1 Param1
+            methods[1] = Method2 Param2
+            parts[0] = MethodName
+            parts[1] = Param */
 
         //For each method inputted, checks method name and parameters
         for (int i = 0; i < methods.Length; i++)
@@ -394,11 +493,6 @@ public class DevTools : MonoBehaviour
                                 "\nEnter a number or Reset";  
                             break;
                         }
-                        //else if (parts.Length > 1 && parts[1] == "Reset")
-                        //{
-                        //    ChangeSpeed("Reset", "-1");
-                        //    break;
-                        //}
                         else
                         {
                             textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
@@ -708,19 +802,19 @@ public class DevTools : MonoBehaviour
         }
 
         //TODO remove? check moved to command; Check for options before tier to prevent check for tier
-        if (itemType == "Options")
-        {
-            textLog += "\nOptions for Param 1 [ItemType]: ";
-            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
-            {
-                textLog += "\n" + type;
-            }
-            textLog += "\nOptions for Param 2 [ItemTier]: " +
-                "\nEnter a number 1-4";
-            return;
-        }
-        else
-        {
+        //if (itemType == "Options")
+        //{
+        //    textLog += "\nOptions for Param 1 [ItemType]: ";
+        //    foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
+        //    {
+        //        textLog += "\n" + type;
+        //    }
+        //    textLog += "\nOptions for Param 2 [ItemTier]: " +
+        //        "\nEnter a number 1-4";
+        //    return;
+        //}
+        //else
+        //{
             //Checks if you are in a track scene or not (such as a menu)
             GameObject kart = GameObject.Find("Kart 1(Clone)");
             if (kart != null)
@@ -733,7 +827,7 @@ public class DevTools : MonoBehaviour
                 return;
             }
 
-        }
+        //}
 
         
 
@@ -759,15 +853,15 @@ public class DevTools : MonoBehaviour
         switch (itemType)
         {
             //Displays all of the parameter options for the GiveItem method
-            case "Options":
-                textLog += "\nOptions for Param 1 [ItemType]: ";
-                foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
-                {
-                    textLog += "\n" + type;
-                }
-                textLog += "\nOptions for Param 2 [ItemTier]: " +
-                    "\nEnter a number 1-4";
-                break;
+            //case "Options":
+            //    textLog += "\nOptions for Param 1 [ItemType]: ";
+            //    foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
+            //    {
+            //        textLog += "\n" + type;
+            //    }
+            //    textLog += "\nOptions for Param 2 [ItemTier]: " +
+            //        "\nEnter a number 1-4";
+            //    break;
 
             case "Puck":             
                 itemHolder.ItemType = ItemHolder.ItemTypeEnum.Puck;                
@@ -803,7 +897,7 @@ public class DevTools : MonoBehaviour
                 return;
         }
 
-        //Setting appropriate variables for the held item, regardless of item type
+        //Setting appropriate variables for the held item, regardless of item type - for old item system
         //Note: Does not run if a parameter is invalid because of return statements
         //itemHolder.HoldingItem = true;
         //itemHolder.HeldItem.ItemTier = tier;
