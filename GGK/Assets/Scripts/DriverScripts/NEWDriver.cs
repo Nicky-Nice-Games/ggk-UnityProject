@@ -1172,4 +1172,46 @@ public class NEWDriver : NetworkBehaviour
     {
         playerInfo.defenseUsage["defense1"]++;
     }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier2Rpc()
+    {
+        playerInfo.defenseUsage["defense2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier3Rpc()
+    {
+        playerInfo.defenseUsage["defense3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier4Rpc()
+    {
+        playerInfo.defenseUsage["defense4"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier1Rpc()
+    {
+        playerInfo.offenceUsage["puck1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier2Rpc()
+    {
+        playerInfo.offenceUsage["puck2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier3Rpc()
+    {
+        playerInfo.offenceUsage["puck3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier4Rpc()
+    {
+        playerInfo.offenceUsage["puck4"]++;
+    }
 }
