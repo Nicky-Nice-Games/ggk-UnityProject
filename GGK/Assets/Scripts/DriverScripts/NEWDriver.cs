@@ -162,7 +162,7 @@ public class NEWDriver : NetworkBehaviour
 
         if (gameManagerObj)
         {
-            playerInfo = gameManagerObj.playerInfo;
+            playerInfo = new PlayerInfo(gameManagerObj.playerInfo);
         }
 
         gameManagerObj.FillMapRaced(this);
@@ -1125,9 +1125,15 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         Debug.Log("Called SendPlayerData from NEWDriver");
-        if(!playerInfo.isGuest)
+        if(!playerInfo.isGuest && IsOwner)
         {
-            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+            SendThisPlayerDataRpc();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SendThisPlayerDataRpc()
+    {
+        gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
     }
 }
