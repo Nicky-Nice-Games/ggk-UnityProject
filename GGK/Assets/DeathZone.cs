@@ -9,7 +9,7 @@ public class DeathZone : MonoBehaviour
     {
         if (other.CompareTag("Kart"))
         {
-            if (other.GetComponent<NEWDriver>() != null) { other.GetComponent<NEWDriver>().IncrementFellOffMapRpc(); }
+            if (other.transform.parent.GetComponent<NEWDriver>() != null) { other.GetComponent<NEWDriver>().IncrementFellOffMapRpc(); }
 
             DynamicRecovery recovery = other.GetComponent<DynamicRecovery>();
             if (recovery != null)
