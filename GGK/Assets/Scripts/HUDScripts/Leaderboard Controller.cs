@@ -143,12 +143,6 @@ public class LeaderboardController : NetworkBehaviour
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
-            player.playerInfo.raceTime = curTime * 1000f;
-            player.AssignPlacementRpc(kart.placement);
-
-            if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId) {
-                player.SendThisPlayerData();
-            }
         }
 
         if (player != null)
@@ -216,6 +210,15 @@ public class LeaderboardController : NetworkBehaviour
             float tempFinishTime = kart.finishTime;
             bool isPlayerKart = kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null;
             ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
+
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacementRpc(kart.placement);
+
+            if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                player.SendThisPlayerData();
+            }
+
             SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
