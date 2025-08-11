@@ -12,7 +12,7 @@ public class HazardTier3 : BaseItem
     {
         Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
         transform.position = behindPos;
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+        kart.GetComponent<NEWDriver>().IncrementHazardUsageTier3Rpc();
     }
 
     private void OnTriggerEnter(Collider collision)

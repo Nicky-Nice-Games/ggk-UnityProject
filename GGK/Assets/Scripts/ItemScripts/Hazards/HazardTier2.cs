@@ -18,7 +18,7 @@ public class HazardTier2 : BaseItem
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+        kart.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
     }
 
     // Update is called once per frame

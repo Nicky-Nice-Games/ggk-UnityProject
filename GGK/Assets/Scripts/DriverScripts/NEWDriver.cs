@@ -1141,6 +1141,30 @@ public class NEWDriver : NetworkBehaviour
         gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
     }
 
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier1Rpc()
+    {
+        playerInfo.defenseUsage["oilSpill1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier2Rpc()
+    {
+        playerInfo.defenseUsage["brickwall"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier3Rpc()
+    {
+        playerInfo.defenseUsage["confuseritchie"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier4Rpc()
+    {
+        playerInfo.defenseUsage["fakepowerupbrick"]++;
+    }
+
     // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
     // SendTo.Owner should work
     [Rpc(SendTo.Owner, RequireOwnership = false)]
