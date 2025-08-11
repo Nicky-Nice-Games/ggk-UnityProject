@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class DeathZone : MonoBehaviour
@@ -7,17 +8,18 @@ public class DeathZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Kart"))
+        if (other.CompareTag("Kart") && other == other.transform.parent.GetChild(0))
         {
-            if (other.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+            if (other.transform.parent.GetChild(0).TryGetComponent<NEWDriver>(out NEWDriver kart))
             {
+                if(kart.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                 if (MultiplayerManager.Instance.IsMultiplayer)
                 {
-                    other.transform.parent.GetChild(0).GetComponent<NEWDriver>().IncrementFellOffMapRpc();
+                    kart.IncrementFellOffMapRpc();
                 }
                 else
                 {
-                    other.transform.parent.GetChild(0).GetComponent<NEWDriver>().playerInfo.fellOffMap++;
+                    kart.playerInfo.fellOffMap++;
                 }
             }
 
