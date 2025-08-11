@@ -214,11 +214,6 @@ public class LeaderboardController : NetworkBehaviour
             player.playerInfo.raceTime = curTime * 1000f;
             player.AssignPlacementRpc(kart.placement);
 
-            if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                player.SendThisPlayerData();
-            }
-
             SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
@@ -226,6 +221,11 @@ public class LeaderboardController : NetworkBehaviour
             Debug.Log("this is client");
         }
 
+        if ( player != null && 
+            player.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            player.SendThisPlayerData();
+        }
     }
 
     /// <summary>
