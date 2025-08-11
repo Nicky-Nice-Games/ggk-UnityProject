@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
-public class KartCheckpoint : MonoBehaviour
+public class KartCheckpoint : NetworkBehaviour
 {
     // Start is called before the first frame update
     public int lap = 0;
@@ -14,9 +14,7 @@ public class KartCheckpoint : MonoBehaviour
     public int placement;
     public string name;
     [SerializeField] public List<GameObject> checkpointList;
-    [SerializeField]
-    private GameObject checkPointParent;
-    GameManager gameManager;
+    [SerializeField] private GameObject checkPointParent;
     public GameObject parent;
     public NPCPhysics physicsNPC;
 
@@ -33,10 +31,14 @@ public class KartCheckpoint : MonoBehaviour
 
     public bool PassedWithWarp { get { return passedWithWarp; } set { passedWithWarp = value; } }
 
+    [Header("Wwise VoiceLines")]
+    public VoiceLines voiceLines;
+
     void Start()
     {
         totalLaps = 3;
         checkpointId = 0;
+        checkPointParent = PlacementManager.instance.checkpointManager;
         Transform childTransform = parent.transform.GetChild(0);
         physicsNPC = childTransform.GetComponent<NPCPhysics>();
         foreach (Transform child in checkPointParent.GetComponentsInChildren<Transform>(true))
@@ -47,43 +49,35 @@ public class KartCheckpoint : MonoBehaviour
         if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
             lapDisplay.text = "Lap: " + (lap + 1);
-        }
+        }   
 
-        GameObject gameManagerGO = GameObject.FindGameObjectWithTag("GameManager");
-
-        if (gameManagerGO == null)
-        {
-            Debug.LogError("GameManager not found in the scene. Please ensure it is present.");
-            return;
-        }
-        else
-        {
-            gameManager = gameManagerGO.GetComponent<GameManager>();
-
-
-        }
-
-
-        
+        name = transform.parent.GetChild(0).gameObject.name;
     }
+
 
     // Update is called once per frame
     void Update()
     {
+        if(name.Length < 1)
+        {
+            name = transform.parent.GetChild(0).gameObject.name;
+        }
+
+
         distanceSquaredToNextCP = Mathf.Pow(transform.position.x - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.x, 2) +
             Mathf.Pow(transform.position.z - checkpointList[(checkpointId + 1) % checkpointList.Count].transform.position.z, 2);
         if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
         {
-            placementDisplay.text = "Placement: " + placement;
+            //placementDisplay.text = "Placement: " + placement;
         }
 
         if (passedWithWarp && lap == totalLaps)
         {
-            finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+            finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
             StartCoroutine(FinalizeFinish());
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
-                lapDisplay.text = "Lap: " + (lap + 1);
+                //lapDisplay.text = "Lap: " + (lap + 1);
             }
             passedWithWarp = false;
         }
@@ -107,7 +101,7 @@ public class KartCheckpoint : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Checkpoint") && canPass)
+        if ((other.CompareTag("Checkpoint") && canPass) || (other.CompareTag("RespawnPoint") && canPass))
         {
             checkpointId = nextValidCheckpointIndex;
         }
@@ -119,7 +113,7 @@ public class KartCheckpoint : MonoBehaviour
                 checkpointId = 0;
                 if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
-                    lapDisplay.text = "Lap: " + (lap + 1);
+                    //lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
                 if (MusicLapStateManager.instance != null &&
@@ -128,16 +122,19 @@ public class KartCheckpoint : MonoBehaviour
                     if (lap + 1 == 2)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap2);
+                        voiceLines.PlayLapMade();
+
                     }
                     else if (lap + 1 == 3)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap3);
+                        voiceLines.PlayLapMade();
                     }
                 }
 
-                if (lap == totalLaps)
-                {
-                    finishTime = FindAnyObjectByType<LeaderboardController>().curTime;
+                if (lap >= totalLaps)
+                {                    
+                    finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
 
                     if (this.GetComponent<NPCDriver>() == null && physicsNPC == null
                         && MusicStateManager.instance != null)
@@ -156,6 +153,7 @@ public class KartCheckpoint : MonoBehaviour
                         MusicStateManager.instance.SetMusicState(MusicState.PostRace);
                     }
 
+                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -165,15 +163,35 @@ public class KartCheckpoint : MonoBehaviour
     IEnumerator GameOverWait()
     {
         yield return new WaitForSeconds(10.5f);
-        gameManager.GameFinished();
+        if (MultiplayerManager.Instance.IsMultiplayer)
+        {
+            GameManager.thisManagerInstance.GameFinishedRpc();
+        }
+        else
+        {
+            GameManager.thisManagerInstance.GameFinished();
+        }
     }
 
+
+    /// <summary>
+    /// Finishes the race once ALL the players finishes the race
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FinalizeFinish()
     {
+        Debug.Log("In FinalizeFinish");
         yield return new WaitForEndOfFrame(); // Wait for PlacementManager to finish updating
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        StartCoroutine(GameOverWait());
+        Debug.Log(gameObject.transform.parent.GetChild(0));
+        Debug.Log(gameObject.transform.parent.GetChild(0).gameObject);
+        if (leaderboardController.allPlayerKartsFinished.Value /*&& 
+            gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null*/)
+        {
+            Debug.Log("Inside");
+            StartCoroutine(GameOverWait());
+        }
     }
 }

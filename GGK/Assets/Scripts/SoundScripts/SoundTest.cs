@@ -17,16 +17,9 @@ public class SoundTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            MusicStateManager.instance.ResetToLimbo();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            MusicLapStateManager.instance.SetLapState(LapState.Lap1);
-            MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
-            MusicStateManager.instance.SetMusicState(MusicState.OuterLoop);
+            MusicStateManager.instance.SetMusicState(MusicState.None);
         }
 
     }

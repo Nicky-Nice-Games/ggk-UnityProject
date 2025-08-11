@@ -1,12 +1,19 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D;
 
-public class NEWDriver : MonoBehaviour
+public class NEWDriver : NetworkBehaviour
 {
+     // root reference of the prefab
+    public Transform rootTransform;
+    public KartCheckpoint kartCheckpoint;
+    
+    [Header("Input System Settings")]
+    public PlayerInput playerInput;
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
     // Keep
     [Header("Do not Change")]
@@ -99,6 +106,7 @@ public class NEWDriver : MonoBehaviour
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
     public List<ParticleSystem> boostFlames;
+    public VFXHandler vfxHandler;
     int driftTier;
     int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
 
@@ -107,7 +115,7 @@ public class NEWDriver : MonoBehaviour
     public LayerMask groundLayer;        
     // Ground snapping variables
     public bool isGrounded;
-    bool attemptingDrift;
+    public bool attemptingDrift;
     float airTime;
     public float groundCheckDistance = 1.05f;    
     public float rotationAlignSpeed = 0.05f;
@@ -122,6 +130,7 @@ public class NEWDriver : MonoBehaviour
     float driftTweenDuration = 0.4f;
 
     //Stun Settings
+    [SerializeField]
     bool isStunned;
 
     [Header("Sound Settings")]
@@ -147,44 +156,99 @@ public class NEWDriver : MonoBehaviour
     //Wwise sound ID's
     private uint drivingSoundID;
     private uint driftingSoundID;
+   
 
     // Start is called before the first frame update
     void Start()
     {
         gameManagerObj = FindAnyObjectByType<GameManager>();
 
-        sphere.drag = 0.5f;
+        if (gameManagerObj)
+        {
+            playerInfo = gameManagerObj.playerInfo;
+        }
 
+        sphere.drag = 0.5f;
+        sphere.isKinematic = false;
         StopParticles();
 
+
         baseRotation = steeringWheel.transform.localRotation;
+
+        if (!IsSpawned)
+        {
+
+            playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            MiniMapHud.instance.trackingPlayer = gameObject;
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
+            SpeedLineHandler.instance.trackingPlayer = this;
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+        }
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            playerInput.enabled = true;
+            SpeedCameraEffect.instance.FollowKart(rootTransform);
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            PlacementManager.instance.TrackKart(kartCheckpoint);
+            //if it's the owner, send its CharacterData settings over to other clients
+            AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
+            if (appearance) appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
+
+            MiniMapHud.instance.trackingPlayer = gameObject;
+            SpeedLineHandler.instance.trackingPlayer = this;
+
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+        }
+        if (IsServer)
+        {
+            // PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+        }
+        PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
+
+        MiniMapHud.instance.AddKart(gameObject);
+        
+        TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
+        if (multiplayerAnim) multiplayerAnim.driver = this;
+
     }
 
     public void StopParticles()
-    {        
-        //-------------Particles----------------
-        foreach (ParticleSystem ps in particleSystemsBR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in particleSystemsBL)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in TireScreechesLtoR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in transitionSparksLtoR)
-        {
-            ps.Stop();
-        }
-        foreach (ParticleSystem ps in boostFlames)
-        {
-            ps.Stop();
-        }
+    {
+        ////-------------Particles----------------
+        //foreach (ParticleSystem ps in particleSystemsBR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in particleSystemsBL)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in TireScreechesLtoR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in transitionSparksLtoR)
+        //{
+        //    ps.Stop();
+        //}
+        //foreach (ParticleSystem ps in boostFlames)
+        //{
+        //    ps.Stop();
+        //}
+        //
+        //airTrickParticles.Stop();
 
-        airTrickParticles.Stop();
+        vfxHandler.StopAllParticles();
     }
 
     // Update is called once per frame
@@ -592,83 +656,32 @@ public class NEWDriver : MonoBehaviour
         //--------------------Particles----------------                        
         ColorDrift();
 
-        if (isDriftingLeft && driftTier > 0)
+        if (isDriftingLeft)
         {
-            if (!particleSystemsBL[0].isPlaying)
+            if(driftTier > 0)
             {
-                //Activate left drift sparks when we get the boost
-                foreach (ParticleSystem ps in particleSystemsBL)
+                vfxHandler.ParticleSystemsL();
+
+                if (driftTier > currentDriftTier)
                 {
-                    if (!ps.isPlaying)
-                    {
-                        ps.Play();
-                    }
+                    vfxHandler.TierTransitionSparksL();
                 }
             }
-
-            if (driftTier > currentDriftTier)
-            {
-                //Adding transition sparks
-                transitionSparksLtoR[0].Play();
-                transitionSparksLtoR[2].Play();
-                transitionSparksLtoR[4].Play();
-                transitionSparksLtoR[5].Play();
-            }
+            vfxHandler.TireScreechesL();
         }
-        else if (!isDriftingLeft && driftTier > 0)
+        else if (!isDriftingLeft)
         {
-
-            if (!particleSystemsBR[0].isPlaying)
+            if(driftTier > 0)
             {
-                //Activate right drift sparks when we get the boost
-                foreach (ParticleSystem ps in particleSystemsBR)
+                vfxHandler.ParticleSystemsR();
+                if (driftTier > currentDriftTier)
                 {
-                    if (!ps.isPlaying)
-                    {
-                        ps.Play();
-                    }
+                    vfxHandler.TierTransitionSparksR();
                 }
             }
+            vfxHandler.TireScreechesR();
 
-
-            if (driftTier > currentDriftTier)
-            {
-
-                //Adding transition sparks
-                transitionSparksLtoR[1].Play();
-                transitionSparksLtoR[3].Play();
-                transitionSparksLtoR[6].Play();
-                transitionSparksLtoR[7].Play();
-            }
-
-        }
-        //Tire Screech Particles
-        if (isDriftingLeft && !TireScreechesLtoR[0].isPlaying)
-        {
-            TireScreechesLtoR[0].Play();
-            TireScreechesLtoR[2].Play();
-
-            if (TireScreechesLtoR[1].isPlaying)
-            {
-                TireScreechesLtoR[1].Stop();
-                TireScreechesLtoR[3].Stop();
-                particleSystemsBR.ForEach(ps => ps.Stop());
-
-            }
-        }
-        else if (!isDriftingLeft && !TireScreechesLtoR[1].isPlaying)
-        {
-            TireScreechesLtoR[1].Play();
-            TireScreechesLtoR[3].Play();
-
-            if (TireScreechesLtoR[0].isPlaying)
-            {
-                TireScreechesLtoR[0].Stop();
-                TireScreechesLtoR[2].Stop();
-                particleSystemsBL.ForEach(ps => ps.Stop());
-            }
-        }
-
+        }       
         currentDriftTier = driftTier;
     }
 
@@ -711,12 +724,7 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween = kartModel.DOLocalMoveY(0f, driftTweenDuration/3f)
             .SetEase(Ease.InOutSine);
 
-
-        particleSystemsBL.ForEach(ps => ps.Stop());
-        particleSystemsBR.ForEach(ps => ps.Stop());
-        TireScreechesLtoR.ForEach(ps => ps.Stop());
-        transitionSparksLtoR.ForEach(ps => ps.Stop());
-
+        vfxHandler.StopDriftVFX();
     }
 
     public void ColorDrift()
@@ -749,27 +757,7 @@ public class NEWDriver : MonoBehaviour
             driftTier = 0;
         }
 
-        foreach (ParticleSystem ps in particleSystemsBL)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
-        foreach (ParticleSystem ps in particleSystemsBR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
-        foreach (ParticleSystem ps in TireScreechesLtoR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-            
-        }
-        foreach (ParticleSystem ps in transitionSparksLtoR)
-        {
-            var main = ps.main;
-            main.startColor = c;
-        }
+        vfxHandler.ColorDrift(c);
 
     }
 
@@ -785,10 +773,7 @@ public class NEWDriver : MonoBehaviour
                 //Perform right air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
-                var main = airTrickParticles.main;
-                main.flipRotation = 0; // Flip the rotation for left air trick
-
-                airTrickParticles.Play(); // Play air trick particles
+                vfxHandler.PlayAirTrickVFX(false);                
                 
                 airTrickTween = DOTween.Sequence() 
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
@@ -806,11 +791,8 @@ public class NEWDriver : MonoBehaviour
                 airTrickInProgress = true;
                 //Perform left air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
-                
-                var main = airTrickParticles.main;
-                main.flipRotation = 1; // Flip the rotation for left air trick
 
-                airTrickParticles.Play(); // Play air trick particles
+                vfxHandler.PlayAirTrickVFX(true);                
 
                 airTrickTween = DOTween.Sequence()
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
@@ -843,13 +825,7 @@ public class NEWDriver : MonoBehaviour
 
     public IEnumerator Boost(float boostForce, float duration)
     {
-        foreach(ParticleSystem ps in boostFlames)
-        {
-            if (!ps.isPlaying)
-            {
-                ps.Play();
-            }
-        }
+        vfxHandler.PlayBoostVFX();
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
             Vector3 boostDirection = Vector3.zero;
@@ -862,16 +838,10 @@ public class NEWDriver : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        foreach (ParticleSystem ps in boostFlames)
-        {
-            if (ps.isPlaying)
-            {
-                ps.Stop();
-            }
-        }
+        vfxHandler.StopBoostVFX();
     }
 
-    IEnumerator DriftHopEnabler()
+    public IEnumerator DriftHopEnabler()
     {
         //Disabling raycast
         attemptingDrift = true;
@@ -1176,5 +1146,20 @@ public class NEWDriver : MonoBehaviour
         driftRotationTween?.Kill();
         kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
         isStunned = false;
+    }
+
+    public void Recover()
+    {
+        StopCoroutine(DriftHopEnabler());
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickCount = 0;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
     }
 }

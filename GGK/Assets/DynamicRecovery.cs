@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 //using UnityEditor.Experimental.GraphView;
+using UnityEditor;
 using UnityEngine;
 
 public class DynamicRecovery : MonoBehaviour
@@ -16,7 +17,7 @@ public class DynamicRecovery : MonoBehaviour
     private GameObject[] checkpoints;
     public KartCheckpoint kartCheckpointScript;
     private Transform currentCheckpoint;
-    private Transform normalTransform;
+    [SerializeField] private Transform normalTransform;
 
     private Rigidbody rb;
     private bool isRecovering = false;
@@ -29,6 +30,10 @@ public class DynamicRecovery : MonoBehaviour
     private NPCPhysics kartPhysicsNPC;
 
     public MiniMapHud miniMap;
+
+    Transform kartVisual;
+    Vector3 originalScale;
+    Vector3 stretchedScale;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +58,7 @@ public class DynamicRecovery : MonoBehaviour
         //    currentCheckpoint = checkpoints[0].transform;
         
         Transform kartRoot = transform.parent; // "Kart 1"
-        Transform normal = kartRoot.Find("Kart");
+        Transform normal = kartRoot.GetChild(0);
 
         if (normal != null)
         {
@@ -63,6 +68,11 @@ public class DynamicRecovery : MonoBehaviour
         kartMovementScript = kartRoot.GetComponentInChildren<NEWDriver>();
         kartPhysicsNPC = kartRoot.GetComponentInChildren<NPCPhysics>();
         particleSystem = kartModel.GetComponentsInChildren<ParticleSystem>(true);
+
+
+        kartVisual = kartModel;
+        originalScale = kartVisual.localScale;
+        stretchedScale = new Vector3(originalScale.x * 0.2f, originalScale.y * 2.5f, originalScale.z * 0.2f);
 
     }
 
@@ -109,22 +119,17 @@ public class DynamicRecovery : MonoBehaviour
     private Transform FindClosestCheckpoint()
     {
         Transform closest = null;
-        //float closestDistSqr = Mathf.Infinity;
-        //Vector3 currentPosition = transform.position;
-        //
-        //foreach (GameObject checkpoint in checkpoints)
-        //{
-        //    //float distSqr = (checkpoint.position - currentPosition).sqrMagnitude;
-        //    //if (distSqr < closestDistSqr)
-        //    //{
-        //    //    closestDistSqr = distSqr;
-        //    //    closest = checkpoint;
-        //    //}
-        //
-        //    
-        //}
 
-        closest = checkpoints[kartCheckpointScript.checkpointId].transform; // Default to first checkpoint
+        // go through all the checkpoint behind and including this to find the closest respawn point available and respawn there
+        for (int i = kartCheckpointScript.checkpointId; i >= 0; i--)
+        {
+            if (checkpoints[i].CompareTag("RespawnPoint") || checkpoints[i].CompareTag("Startpoint"))
+            {
+                closest = checkpoints[i].transform;
+                kartCheckpointScript.checkpointId = i;
+                break;
+            }
+        }
 
         return closest;
 
@@ -139,14 +144,14 @@ public class DynamicRecovery : MonoBehaviour
 
         // Teleport at checkpoint
         Vector3 hoverPos = currentCheckpoint.position + Vector3.up * hoverHeight;
-        transform.position = hoverPos;
+        rb.position = hoverPos;
 
         rb.velocity = Vector3.zero; // Reset first
         rb.angularVelocity = Vector3.zero;
 
 
         //face forward
-        transform.rotation = currentCheckpoint.rotation;
+        rb.rotation = currentCheckpoint.rotation;
         kartModel.rotation = currentCheckpoint.rotation;
 
         rb.useGravity = false;
@@ -166,6 +171,8 @@ public class DynamicRecovery : MonoBehaviour
 
     private IEnumerator Teleport(Vector3 targetPosition, Quaternion targetRotation)
     {
+        //Making rigidbody kinematic
+        rb.isKinematic = true;
 
         Quaternion finalRot = Quaternion.Euler(0, targetRotation.eulerAngles.y - 90, 0);
 
@@ -183,9 +190,7 @@ public class DynamicRecovery : MonoBehaviour
 
         isRecovering = true;
 
-        Transform kartVisual = kartModel;
-        Vector3 originalScale = kartVisual.localScale;
-        Vector3 stretchedScale = new Vector3(originalScale.x * 0.2f, originalScale.y * 2.5f, originalScale.z * 0.2f);
+        
 
         float duration = 0.3f;
 
@@ -214,13 +219,28 @@ public class DynamicRecovery : MonoBehaviour
         // DISAPPEAR
         kartVisual.gameObject.SetActive(false);
 
+
+
         // TELEPORT TO NEW POSITION 
-        transform.position = targetPosition;
+        Vector3 drivingDirection = -(targetRotation * Vector3.right); // opposite of red arrow
+        Vector3 spawnOffset = drivingDirection.normalized * 8f;
+        Vector3 spawnPos = targetPosition + spawnOffset;
+
+        rb.position = spawnPos;
+        normalTransform.rotation = Quaternion.LookRotation(drivingDirection, Vector3.up);
+        rb.isKinematic = false;
         ResetParticles();
+        
         normalTransform.rotation = finalRot;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;
+
+        if(kartMovementScript != null)
+        {
+            kartMovementScript.Recover();
+        }
+
 
         yield return new WaitForSeconds(1.3f); // hold black screen for effect
 

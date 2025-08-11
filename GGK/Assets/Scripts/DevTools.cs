@@ -12,21 +12,59 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //Gina Piccirilli
 
 //OTHER TODOs (not listed elsewhere)
-//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
-//  Update: can type if you close and reopen prompt but not initially even though cursor is there
+
 //Fix issue where when clicking a button with the mouse it thinks input has been
 //  entered (likely something to do with On End Edit)
 //If seen as an issue (which I think it probably is), make it so that the command
 //  prompt is hidden when entering a map which happens when the prompt was already open
-//  and you go into a track not using a command (Update: now not working with command either)
-//  (This mildly relates to issue of prompt only appearing in some scenes when it persists)
+//  and you go into a track not using a command
 //Add other commands (see dev keyboard shortcuts; restart command?)
 //Typing letters in the input that are keybinds such as WASD and P will do their actions in game
 //Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
 //  a space before a method name, prevent having to retype)
-//Can't load into another map (or scene?) when paused, it goes to a black screen but works after you
+//Can't load into another map or scene when paused, it goes to a black screen but works after you
 //  unpause - make it auto-unpause/disable pause menu when load command happens
-//Change map names to updated names
+//  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
+//  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
+//  the prompt or pause panel before it actually registers 
+//Ability to adjust player and npc speed
+//Debug GiveItem (implement with new item system)
+//Toggle checkpoints method?
+//Remove NPCs?
+
+//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
+//  Update: can type if you close and reopen prompt but not initially even though cursor is there
+//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
+//  works when you load into a map and then open the prompt
+
+//Done
+//Prompt persists through menu scenes
+//Scrollbar works with autoscroll
+
+
+
+//If multiplayer
+//  Make sure speed change is all player karts
+//  Make sure all players load into a map or scene (use multiplayer scene manager)
+//  Should game mode change be inaccessible? Or only for multiplayer possible modes?
+//  Make GiveItem only availible in test/free mode?
+
+
+
+
+/// <summary>
+/// Enum for every method command to simplify adding additional methods
+/// </summary>
+public enum MethodName 
+{
+    ShowMethods,
+    LoadMap,
+    LoadScene,
+    GameModeChange,
+    GiveItem,
+    ChangeSpeed,
+    ClearLog
+}
 
 
 /// <summary>
@@ -38,6 +76,7 @@ public enum MapName
     TechHouseTurnpike,
     DormRoomDerby,
     AllNighterExpressway,
+    QuarterMile,
     TestGrid,
     TestTube
 }
@@ -64,7 +103,7 @@ public enum GameMode
     Race,
     GrandPrix,
     TimeTrial,
-    Free    //Dev mode, free fly/drive ?
+    FreeDrive    //Dev mode, free fly/drive ?
 }
 
 
@@ -91,10 +130,12 @@ public class DevTools : MonoBehaviour
 
     //Variables and references for the visible command prompt game objects
     private string textLog;
+    private string defaultText;
     [SerializeField] private Canvas commandPromptCanvas;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private Scrollbar scrollBar;
     private bool isScrolling;
 
     //Variables and references for GiveItem command
@@ -103,14 +144,20 @@ public class DevTools : MonoBehaviour
     private BaseItem baseItem;
 
 
+    //[SerializeField] private GameObject pausePanel;
+
+
     // Start is called before the first frame update
     void Start()
     {
         AddListener(gameObject);
 
+        isScrolling = false;
+
         commandPromptCanvas.enabled = false;
-        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                "or [methodName] Options for Param options";
+        defaultText = "Welcome to Command Prompt\nType ShowMethods for methods " +
+                "or \n[MethodName] Options for Param options";
+        textLog = defaultText;
 
         //Debug.Log("length " + textLog.Length);
         //gameManager = SceneLoader.GetComponent<GameManager>();
@@ -119,31 +166,31 @@ public class DevTools : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //TODO trying to fix issue where prompt dissapears between menu scenes (this code works
+        //trying to fix issue where prompt dissapears between menu scenes (this code works
         //to keep it enabled but it still doesn't show until the key is pressed again)
-
+        #region Commented out testing
         //Debug.Log("loading " + sceneLoader.loading);
         //if (sceneLoader.loading)
         //{
-            //inputField.ActivateInputField();
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
-            //Debug.Log("Length " + textLog.Length);
+        //inputField.ActivateInputField();
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //Debug.Log("Length " + textLog.Length);
 
-            //TODO FIX! won't work if log has been cleared, run secondary check?
-            //  ALSO overrides disabling when entering a map
-            //if (textLog.Length > 131)   
-            //{
-            //    commandPromptCanvas.enabled = true;
-            //    inputField.ActivateInputField();
-            //}
-            //else
-            //{
-            //    commandPromptCanvas.enabled = false;
-            //}
-            //sceneLoader.loading = false;
-            //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //TODO FIX! won't work if log has been cleared, run secondary check?
+        //  ALSO overrides disabling when entering a map
+        //if (textLog.Length > 131)   
+        //{
+        //    commandPromptCanvas.enabled = true;
+        //    inputField.ActivateInputField();
         //}
-      
+        //else
+        //{
+        //    commandPromptCanvas.enabled = false;
+        //}
+        //sceneLoader.loading = false;
+        //Debug.Log("enabled " + commandPromptCanvas.enabled);
+        //}
+        #endregion
 
         //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -151,6 +198,7 @@ public class DevTools : MonoBehaviour
             if (commandPromptCanvas.enabled == false)
             {
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
             }
             else
@@ -167,21 +215,26 @@ public class DevTools : MonoBehaviour
             inputField.text = "";
             inputField.ActivateInputField();
             isScrolling = false;
+            AutoScroll(scrollRect);
         }
 
-        //Turns on auto-scroll when the user isn't scrolling
-        if(!isScrolling)
+        //Turns on auto - scroll when the user isn't scrolling
+        if (!isScrolling)
         {
             AutoScroll(scrollRect);
         }
-        
+        //else
+        //{
+        //    StopAutoScroll();
+        //}
+
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
     }
 
 
     /// <summary>
-    /// Singleton functionality for promt to remain across scenes.
+    /// Singleton functionality for prompt to remain across scenes.
     /// </summary>
     private void Awake()
     {
@@ -242,12 +295,14 @@ public class DevTools : MonoBehaviour
 
             if (parts != null)
             {
-
                 switch (parts[0])
                 {
                     case "ShowMethods":
-                        textLog += "\nMethod Options:\nShowMethods\nLoadMap" +
-                            "\nLoadScene\nGameModeChange\nGiveItem\nClearLog";
+                        textLog += "\nMethod Command Options: ";
+                        foreach (MethodName method in Enum.GetValues(typeof(MethodName)))
+                        {
+                            textLog += "\n" + method;
+                        }
                         break;
 
                     case "LoadMap":
@@ -293,7 +348,7 @@ public class DevTools : MonoBehaviour
                         {
                             GiveItem(parts[1], parts[2]);
                         }
-                        else if (parts[1] == "Options")
+                        else if (parts.Length > 1 && parts[1] == "Options")
                         {
                             textLog += "\nOptions for Param 1 [ItemType]: ";
                             foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
@@ -306,13 +361,31 @@ public class DevTools : MonoBehaviour
                         }             
                         else
                         {
-                            textLog += "\nError: No or Invalid Param 1 [ItemType] or Param 2 [ItemTier] was Entered.";
+                            textLog += "\nError: No or Invalid Param 1 [ItemType] \nor Param 2 [ItemTier] was Entered.";
+                        }
+                        break;
+
+                    case "ChangeSpeed":
+                        if (parts.Length > 2)
+                        {
+                            ChangeSpeed(parts[1], parts[2]);
+                        }
+                        else if (parts.Length > 1 && parts[1] == "Options")
+                        {
+                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
+                            
+                            textLog += "\nOptions for Param 2 [Speed]: " +
+                                "\nEnter a number";     //TODO Determine possible values
+                            break;
+                        }
+                        else
+                        {
+                            textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
                         }
                         break;
 
                     case "ClearLog":
-                        textLog = "Welcome to Command Prompt\nType ShowMethods for methods " +
-                        "or [methodName] Options for Param options";
+                        textLog = defaultText;
                         break;
 
                     default:
@@ -332,6 +405,7 @@ public class DevTools : MonoBehaviour
     /// specify the map/track that the user wants to go to.</param>
     public void LoadMap(string mapName)
     {
+        //DeactivatePause();
         switch (mapName)
         {
             //Displays all of the parameter options for the LoadMap method
@@ -368,6 +442,12 @@ public class DevTools : MonoBehaviour
                 inputField.DeactivateInputField();
                 break;
 
+            case "QuarterMile":
+                sceneLoader.LoadScene("GSP_RITQuarterMile");
+                commandPromptCanvas.enabled = false;
+                inputField.DeactivateInputField();
+                break;
+
             case "TestGrid":
                 sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
@@ -390,6 +470,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [MapName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -400,6 +481,7 @@ public class DevTools : MonoBehaviour
     /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
+        //DeactivatePause();
         switch (sceneName)
         {
             //Displays all of the parameter options for the LoadScene method
@@ -415,30 +497,35 @@ public class DevTools : MonoBehaviour
                 sceneLoader.LoadScene("StartScene");
                 //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MultiSingle":
                 sceneLoader.LoadScene("MultiSinglePlayerScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "ModeSelect":
                 sceneLoader.LoadScene("GameModeSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "PlayerKart":
                 sceneLoader.LoadScene("PlayerKartScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MapSelect":
                 sceneLoader.LoadScene("MapSelectScene");
                 commandPromptCanvas.enabled = true;
+                inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
@@ -452,6 +539,7 @@ public class DevTools : MonoBehaviour
                 textLog += "\nError: Param 1 [SceneName] Command Not Found.";
                 break;
         }
+
     }
 
 
@@ -462,7 +550,6 @@ public class DevTools : MonoBehaviour
     /// specify the game mode that the user wants to change to.</param>
     public void GameModeChange(string gameMode)
     {
-
         switch (gameMode)
         {
             //Displays all of the parameter options for the GameModeChange method
@@ -475,6 +562,28 @@ public class DevTools : MonoBehaviour
                 break;
 
             //TODO Mode cases go here
+            /*  Race,
+                GrandPrix,
+                TimeTrial,
+                FreeDrive
+            */
+
+            case "Race":
+                //Use game mode handler script
+                //Send to map select if not already in map or use a map command
+                break;
+
+            case "GrandPrix":
+                break;
+
+            case "TimeTrial":
+                //Not availible in multiplayer
+                break;
+
+            case "FreeDrive":
+                //Disable NPCs, countdown/timer/leaderboard/placement?
+                //In multiplayer, enable give item
+                break;
 
             case "":
                 textLog += "\nError: No Param 1 [GameMode] was Entered.";
@@ -535,7 +644,7 @@ public class DevTools : MonoBehaviour
         {
             if(tier >= 1 && tier <= 4)
             {
-                itemHolder.DriverItemTier = tier;
+                itemHolder.ItemTier = tier;
             }
             else
             {
@@ -593,12 +702,84 @@ public class DevTools : MonoBehaviour
 
         //Setting appropriate variables for the held item, regardless of item type
         //Note: Does not run if a parameter is invalid because of return statements
-        itemHolder.HoldingItem = true;
+        //itemHolder.HoldingItem = true;
         itemHolder.HeldItem.ItemTier = tier;
         itemHolder.HeldItem.OnLevelUp(tier);
         itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
         itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
+
+
+
+
+    /// <summary>
+    /// Handles the ChangeSpeed command based on the inputted paramaters entered after it.
+    /// </summary>
+    /// <param name="kartType">The first inputted parameter after the ChangeSpeed command 
+    /// to specify if the player wants to change the speed of the player or NPC karts.</param>
+    /// <param name="speed">The second inputted parameter after the ChangeSpeed command 
+    /// to specify the speed that the user wants to change the kart speed to.</param>
+    public void ChangeSpeed(string kartType, string speed)
+    {
+        int speedInt;   //float instead?
+        //KartCheckpoint kartChosen;
+
+        switch (kartType) 
+        {
+            case ("Player"):
+                //Checks if you are in a track scene or not (such as a menu)
+                GameObject kart = GameObject.Find("Kart 1/Kart");
+                if (kart != null)
+                {
+                    //kartChosen = kart;
+                }
+                else
+                {
+                    textLog += "\nError: No Kart found in scene, cannot use command.";
+                    return;
+                }
+                break;
+
+            case ("NPC"):
+                break;
+
+            case "":
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+
+            case null:
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+
+            default:
+                textLog += "\nError: No Param 1 [KartType] was Entered.";
+                return;
+        }
+
+
+        //Checks if the second parameter inputted is a valid number, then sets karts speed
+        if (Int32.TryParse(speed, out speedInt))
+        {
+            if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
+            {
+                //set chosenKart speed to speed
+            }
+            else
+            {
+                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+                return;
+            }
+        }
+        else
+        {
+            textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
+            return;
+        }
+
+    }
+
+
+
 
 
     /// <summary>
@@ -607,7 +788,10 @@ public class DevTools : MonoBehaviour
     /// <param name="scrollRect">The rect transform of the scroll view bar game object.</param>
     public void AutoScroll(ScrollRect scrollRect)
     {
-        scrollRect.verticalNormalizedPosition = 0;
+        isScrolling = false;
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;
+        //scrollBar.value = 0;
     }
 
 
@@ -621,10 +805,28 @@ public class DevTools : MonoBehaviour
         isScrolling = true;
         scrollRect.verticalNormalizedPosition = scrollRect.verticalNormalizedPosition;
 
-        if(scrollRect.verticalNormalizedPosition == 0)
-        {
-            isScrolling = false;
-        }
+        //if(scrollRect.verticalNormalizedPosition == 0)
+        //{
+        //    isScrolling = false;
+        //}
     }
+
+
+    //public void DeactivatePause()
+    //{
+    //    //Checks if pause panel is active and deactivates if so
+    //    //GameObject pausePanel = GameObject.Find("PausePanel");
+    //    if (pausePanel != null)
+    //    {
+    //        pausePanel.SetActive(false);
+    //        Time.timeScale = 1;
+    //    }
+
+    //    //if (pausePanel != null)
+    //    //{
+    //    //    //pausePanel.SetActive(true);
+    //    //    pausePanel.SetActive(false);
+    //    //}
+    //}
 
 }

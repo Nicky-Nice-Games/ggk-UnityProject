@@ -1,46 +1,58 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ItemBox : MonoBehaviour
+public class ItemBox : NetworkBehaviour
 {
-
-
-    [SerializeField]
-    protected List<BaseItem> items;   // List of items the box can give
-    [SerializeField] protected string itemBoxType;
-
-    protected float respawnTimer = 5.0f;  // The seconds the box respawns after
-
-    // [SerializeField]
-    // AudioClip itemBoxSound;
-
-
-    /// <summary>
-    /// Read and write property for the respawn timer
-    /// </summary>
-    public float RespawnTimer { get { return respawnTimer; } set { respawnTimer = value; } }
-    public string ItemBoxType { get { return itemBoxType; } set { itemBoxType = value; } }
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
+        if (!IsSpawned && randomizeOnStart)
+        {
+            SetItemBoxType(ItemHolder.RandomItemType());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnNetworkSpawn()
     {
-        // Rotates the box
-        RotateBox();
+        if (IsServer && randomizeOnStart)
+        {
+            SetItemBoxTypeRpc(ItemHolder.RandomItemType());
+        }
     }
 
-    /// <summary>
-    /// Gives the driver a random item
-    /// </summary>
-    public void RandomizeItem(GameObject kart)
+    private void Update()
     {
-        GiveItem(kart, Random.Range(0, items.Count));
+        if (IsSpawned && !IsServer)
+        {
+            if (!isTimerActive)
+            {
+                RotateBox();
+            }
+        }
+        else if (IsSpawned && IsServer)
+        {
+            if (isTimerActive)
+            {
+                HandleTimer(Time.deltaTime);
+            }
+            else
+            {
+                RotateBox();
+            }
+        }
+        else
+        {
+            if (isTimerActive)
+            {
+                HandleTimer(Time.deltaTime);
+            }
+            else
+            {
+                RotateBox();
+            }
+        }
     }
 
     public void GiveItem(GameObject kart, int index)
@@ -48,10 +60,10 @@ public class ItemBox : MonoBehaviour
         ItemHolder itemScript = kart.GetComponent<ItemHolder>();
 
         Debug.Log("Collided!");
-        BaseItem bItem = Instantiate(items[index]);
-        itemScript.HeldItem = bItem;
-        itemScript.HeldItem.ItemTier = 1;
-        bItem.gameObject.SetActive(false);
+        // BaseItem bItem = Instantiate(items[index]);
+        // itemScript.HeldItem = bItem;
+        // itemScript.HeldItem.ItemTier = 1;
+        // bItem.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -62,36 +74,105 @@ public class ItemBox : MonoBehaviour
         transform.rotation *= new Quaternion(0.0f, 2.0f * Time.deltaTime, 0.0f, 1.0f);
     }
 
+    // new code
+    [Header("Type")]
+    [SerializeField] private ItemHolder.ItemTypeEnum itemType = ItemHolder.ItemTypeEnum.NoItem;
+    public ItemHolder.ItemTypeEnum ItemType { get { return itemType; } private set { itemType = value; } }
+    [Header("Respawning")]
+    [SerializeField] private bool isActive = true;
+    [SerializeField] private bool isTimerActive = false;
+    [SerializeField] private float timerDuration = 0.0f;
+    const float defaultTimerDuration = 2.5f;
+    [Header("Randomization")]
+    [SerializeField] private bool randomRespawnType = false;
+    [SerializeField] private bool randomizeOnStart = false;
+    [SerializeField] private List<Material> ItemBrickMaterials;
 
-    private void OnDisable()
+    private void ShowAndEnable()
     {
-        // makes sure scene is loaded to not cause error
-        // if (gameObject.scene.isLoaded)
-        // {
-        //     AudioSource.PlayClipAtPoint(itemBoxSound, transform.position);
-        // }
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
+        isActive = true;
     }
 
-    /// <summary>
-    /// Upgrades item one tier.
-    /// </summary>
-    /// <param name="kart">The kart that hit it</param>
-    public void UpgradeItem(GameObject kart)
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void ShowAndEnableRpc()
     {
-        //BaseItem itemUpgraded = new BaseItem();
-        ItemHolder itemScript = kart.GetComponent<ItemHolder>();
+        ShowAndEnable();
+    }
 
-        // Gives driver a random item if they don't have one
-        //if (itemScript.HeldItem == null)
-        //{
-        //    RandomizeItem(kart);
-        //}
+    private void HideAndDisable()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+        isActive = false;
+    }
 
-        // Upgrades the item and returns it
-        if (itemScript.HeldItem.ItemTier < 4)
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void HideAndDisableRpc()
+    {
+        HideAndDisable();
+    }
+
+    public void StartTimer(float duration = defaultTimerDuration)
+    {
+        timerDuration = duration;
+        isTimerActive = true;
+        HideAndDisable();
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    public void StartTimerRpc(float duration = defaultTimerDuration)
+    {
+        isTimerActive = true;
+        if (IsServer)
         {
-            itemScript.HeldItem.ItemTier++;
+            timerDuration = duration;
+            HideAndDisableRpc();
         }
     }
 
+    private void HandleTimer(float delta)
+    {
+        timerDuration -= delta;
+        if (timerDuration < 0.0f)
+        {
+            if (IsSpawned)
+            {
+                if (randomRespawnType)
+                {
+                    SetItemBoxTypeRpc(ItemHolder.RandomItemType());
+                }
+                StopTimerRpc();
+                ShowAndEnableRpc();
+            }
+            else
+            {
+                if (randomRespawnType)
+                {
+                    SetItemBoxType(ItemHolder.RandomItemType());
+                }
+                isTimerActive = false;
+                ShowAndEnable();
+            }
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void StopTimerRpc()
+    {
+        isTimerActive = false;
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void SetItemBoxTypeRpc(ItemHolder.ItemTypeEnum typeEnum)
+    {
+        SetItemBoxType(typeEnum);
+    }
+
+    private void SetItemBoxType(ItemHolder.ItemTypeEnum typeEnum)
+    {
+        ItemType = typeEnum;
+        GetComponent<MeshRenderer>().SetMaterials(new List<Material> { ItemBrickMaterials[(int)ItemType + 1] });
+    }
 }

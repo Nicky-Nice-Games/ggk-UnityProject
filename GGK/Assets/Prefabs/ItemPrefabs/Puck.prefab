@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3825975900280407381}
   - component: {fileID: 7126194168840124124}
   - component: {fileID: 928149475739924505}
+  - component: {fileID: -2451396029727509108}
   - component: {fileID: 2055685921588137374}
   - component: {fileID: 7924491827093875233}
   m_Layer: 8
@@ -135,6 +136,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-2451396029727509108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719725890108810590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 990237424
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &2055685921588137374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +179,9 @@ MonoBehaviour:
   tierTwoItemIcon: {fileID: 2800000, guid: 61c9d2ea5c8c50247a5104aac6bb3a04, type: 3}
   tierThreeItemIcon: {fileID: 2800000, guid: 0298f09ad1e2a36469dc7a91e9db2827, type: 3}
   tierFourItemIcon: {fileID: 2800000, guid: 54e7abc4b46f41d4fae5641de1766dae, type: 3}
+  shieldEffect: {fileID: 0}
+  currentPos:
+    m_InternalValue: {x: 0, y: 0, z: 0}
   maxBounces: 4
   agent: {fileID: 7924491827093875233}
   karts: []

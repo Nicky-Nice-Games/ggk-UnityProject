@@ -1,11 +1,12 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCPhysics : MonoBehaviour
+public class NPCPhysics : NetworkBehaviour
 {
     // Keep
     [Header("Do not Change")]
@@ -131,6 +132,7 @@ public class NPCPhysics : MonoBehaviour
     float driftTweenDuration = 0.4f;
 
     //Stun Settings
+    [SerializeField]
     bool isStunned;
 
     [Header("Sound Settings")]
@@ -146,6 +148,10 @@ public class NPCPhysics : MonoBehaviour
     public float confusedTimer;
     public Transform childNormal;
 
+    private float backingOutTimer = 0f;
+    private float backingOutDuration = 1.2f; // seconds
+    private bool isBackingOut = false;
+    private Vector2 backingOutDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -166,7 +172,26 @@ public class NPCPhysics : MonoBehaviour
         Transform childTransform = parent.transform.GetChild(1);
 
         KC = childTransform.GetComponent<KartCheckpoint>();
+        if (!IsSpawned)
+        {
+            MiniMapHud.instance.AddKart(gameObject);
+            PlacementManager.instance.AddKart(gameObject, KC);
+        }
+    }
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log("NetworkNPC");
+        Transform childTransform = parent.transform.GetChild(1);
+        KC = childTransform.GetComponent<KartCheckpoint>();
+        MiniMapHud.instance.AddKart(gameObject);
 
+        if (IsOwner)
+        {
+            AppearanceSettings settings = GetComponent<AppearanceSettings>();
+            settings.SetKartAppearanceRpc(settings.name, settings.color);
+        }
+
+        PlacementManager.instance.AddKart(gameObject, KC);
     }
 
     public void StopParticles()
@@ -199,10 +224,10 @@ public class NPCPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (IsSpawned)
-        //{
-        //    if (!IsOwner) return;
-        //}
+        if (IsSpawned)
+        {
+            if (!IsOwner) return;
+        }
         HandleGroundCheck();
         ApplyWheelVisuals();
 
@@ -214,7 +239,11 @@ public class NPCPhysics : MonoBehaviour
         //------------Movement stuff---------------------
 
         //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
+        if (isStunned)
+        { 
+            movementDirection = Vector3.zero;
+            return;
+        }
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -388,24 +417,44 @@ public class NPCPhysics : MonoBehaviour
         {
             destinationID = 0;
         }
-        destination = KC.checkpointList[destinationID];
-        randomizedTarget = destination.transform.position + checkpointOffset;
+        if (KC.checkpointList.Count > 0)
+        {
+            destination = KC.checkpointList[destinationID];
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 offsetBehindCheckpoint = destination.transform.position - checkpointForward * 2f; // 2 units behind
 
-
+            randomizedTarget = destination.transform.position + checkpointOffset;
+        }
 
         if (isGrounded)
         {
-            Vector3 dirToTarget = destination.transform.position - transform.position;
-            dirToTarget.y = 0f; // Flatten vertical influence
-            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
+            Vector3 checkpointForward = destination.transform.forward;
+            Vector3 targetPos = destination.transform.position - checkpointForward * 2f;
 
+            Vector3 dirToTarget = targetPos - transform.position;
+            dirToTarget.y = 0f;
+
+            if (dirToTarget.magnitude < 1f)
+            {
+                // You're too close to the target, extend further back so there's a clear direction
+                targetPos = destination.transform.position - checkpointForward * 5f;
+                dirToTarget = targetPos - transform.position;
+                dirToTarget.y = 0f;
+            }
+            Vector3 localDir = transform.InverseTransformDirection(dirToTarget.normalized);
             movementDirection = new Vector3(localDir.x, 0f, localDir.z);
 
+            // --- Fix for stuck-turning (no forward movement)
+            if (isGrounded && movementDirection.z <= 0.05f)
+            {
+                movementDirection.z = 0.25f;
+            }
             CheckRoadEdges();
 
             //movementDirection = Vector3.ClampMagnitude(localDir, 1f);
             AvoidObstacle();
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 3f, Color.green);
 
 
 
@@ -449,7 +498,7 @@ public class NPCPhysics : MonoBehaviour
 
     void AvoidObstacle()
     {
-        float rayForwardLength = 7f;
+        float rayForwardLength = 4f;
         float raySideOffset = 1.0f;
         float rayVerticalOffset = 1.2f;
         float avoidStrength = 2f;
@@ -481,8 +530,7 @@ public class NPCPhysics : MonoBehaviour
             }
             else
             {
-                // If both sides are blocked or both are open, pick a default direction
-                movementDirection.x += Random.value > 0.5f ? avoidStrength : -avoidStrength;
+                movementDirection.z -= avoidStrength;
             }
 
             movementDirection.z = Mathf.Max(movementDirection.z - 0.5f, 0f); // brake slightly
@@ -496,12 +544,43 @@ public class NPCPhysics : MonoBehaviour
             movementDirection.x -= avoidStrength;
         }
 
-        // Clamp for safety
+        // ========== PERPENDICULAR STUCK CHECK ==========
+
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        Vector3 velocity = sphere.velocity;
+        velocity.y = 0;
+
+        float dot = Vector3.Dot(forward, velocity.normalized);
+
+        if (!isBackingOut && Mathf.Abs(dot) < 0.25f && velocity.magnitude < 1f && obstacleCenter)
+        {
+            isBackingOut = true;
+            backingOutTimer = backingOutDuration;
+
+            // Choose a consistent backward + slight left or right offset
+            float sideOffset = Random.value > 0.5f ? 0.8f : -0.8f;
+            backingOutDirection = new Vector2(sideOffset, -1f); // (x: side, z: reverse)
+        }
+
+        if (isBackingOut)
+        {
+            backingOutTimer -= Time.deltaTime;
+
+            movementDirection.x = backingOutDirection.x;
+            movementDirection.z = backingOutDirection.y;
+
+
+            if (backingOutTimer <= 0f)
+            {
+                isBackingOut = false;
+            }
+        }
+
         movementDirection.x = Mathf.Clamp(movementDirection.x, -1f, 1f);
     }
-
-
-
 
     void HandleGroundCheck()
     {
@@ -896,5 +975,37 @@ public class NPCPhysics : MonoBehaviour
         turboTwisting = false; //Reset the turbo twisting state
     }
 
+    public void Stun(float duration)
+    {
+        StopCoroutine(TurboTwist());
+        StopCoroutine(Boost(driftBoostForce, 0.4f));
+
+        driftTime = 0f;
+        isDrifting = false;
+        AirTricking = false;
+        airTrickInProgress = false;
+        airTrickTween?.Kill();
+        driftRotationTween?.Kill();
+
+        StartCoroutine(StunCoroutine(duration));
+
+
+
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+
+        driftRotationTween = DOTween.Sequence()
+            .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad));
+
+        yield return new WaitForSeconds(duration);
+
+        driftRotationTween?.Kill();
+        kartModel.localRotation = Quaternion.identity; // Reset kart model rotation after stun
+        isStunned = false;
+    }
 
 }

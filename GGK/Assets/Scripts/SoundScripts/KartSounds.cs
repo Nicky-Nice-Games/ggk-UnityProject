@@ -10,33 +10,15 @@ public class KartSounds : MonoBehaviour
     //These are Wwise events that must be assigned in the Inspector to work properly.
     [Header("Wwise Events")]
     [SerializeField] AK.Wwise.Event ItemPickup;
-    [SerializeField] AK.Wwise.Event HitSpinout;
     [SerializeField] AK.Wwise.Event Thud;
-    [SerializeField] AK.Wwise.Event CanOpen;
-    [SerializeField] AK.Wwise.Event Crash;
 
     public void PlayItemPickup()
     {
         ItemPickup.Post(gameObject);
     }
 
-    public void PlayHitSpinout()
-    {
-        HitSpinout.Post(gameObject);
-    }
-
     public void PlayThud()
     {
         Thud.Post(gameObject);
-    }
-
-    public void PlayCanOpen()
-    {
-        CanOpen.Post(gameObject);
-    }
-
-    public void PlayCrash()
-    {
-        Crash.Post(gameObject);
     }
 }
