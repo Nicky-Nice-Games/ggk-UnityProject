@@ -8,8 +8,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static ItemHolder;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
 
@@ -18,7 +16,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 //  Other possible commands: show debug messages, remove NPCs, toggle checkpoints, restart game
 //  Fix Bugs:
 //      Fix deactivate pause/pause issue: Can't load into another map or scene when paused, it goes
-//          to a black screen but works after you unpause
+//          to a black screen but works after you unpause, see line 972
 //      Typing letters in the input that are keybinds will do their actions in game
 //      Trim beginning of input or ignore if first index of method is null/empty? (for if the
 //          player types a space before a method name on accident, prevents having to retype)
@@ -170,10 +168,8 @@ public class DevTools : MonoBehaviour
                 {
                     if (Input.GetKeyDown(enablePass[keyCount]))
                     {
-                        Debug.Log("key pressed");
                         if (lastKey != KeyCode.Backspace)
                         {
-                            Debug.Log("here");
                             if (lastKey == enablePass[keyCount - 1])
                             {
                                 lastKey = enablePass[keyCount];
@@ -190,7 +186,7 @@ public class DevTools : MonoBehaviour
                 }
                 else if (keyCount == enablePass.Length)
                 {
-                    Debug.Log("enabled!");
+                    Debug.Log("Command Prompt Enabled");
                     devToolsKeyEnabled = true;
                     keyCount = 0;
                     lastKey = KeyCode.Backspace;
@@ -202,10 +198,8 @@ public class DevTools : MonoBehaviour
                 {
                     if (Input.GetKeyDown(disablePass[keyCount]))
                     {
-                        Debug.Log("key pressed");
                         if (lastKey != KeyCode.Backspace)
                         {
-                            Debug.Log("here");
                             if (lastKey == disablePass[keyCount - 1])
                             {
                                 lastKey = disablePass[keyCount];
@@ -222,7 +216,7 @@ public class DevTools : MonoBehaviour
                 }
                 else if (keyCount == disablePass.Length)
                 {
-                    Debug.Log("disabled!");
+                    Debug.Log("Command Prompt Disabled");
                     devToolsKeyEnabled = false;
                     keyCount = 0;
                     lastKey = KeyCode.Backspace;
