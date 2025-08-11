@@ -21,6 +21,7 @@ public class NEWDriver : NetworkBehaviour
     public Vector3 acceleration; //How fast karts velocity changes        
     public Vector3 movementDirection;
     public Quaternion turning;
+    Vector3 inputFixed;
 
 
     [Header("Kart Settings")]
@@ -33,7 +34,8 @@ public class NEWDriver : NetworkBehaviour
     public float maxSteerAngleTires = 20f; //Multiplier for wheel turning speed    
     public float maxSteeringAngle = 10f; //Maximum steering angle for the steering wheel
     public Transform kartNormal;
-    public float gravity = 20;    
+    public float gravity = 20;
+    public float inputLerpSpeed = 5f; //Lerp speed for input smoothing
     float controllerX;
     float controllerZ;
 
@@ -277,12 +279,16 @@ public class NEWDriver : NetworkBehaviour
             spherePosTransform.transform.position.y - colliderOffset, 
             spherePosTransform.transform.position.z);
 
-        
+
 
         //------------Movement stuff---------------------
+        //float inputX;
+        //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
+        movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
+        movementDirection.z = inputFixed.z; 
 
         //Stunned
-        if(isStunned) movementDirection = Vector3.zero;
+        if (isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -947,11 +953,16 @@ public class NEWDriver : NetworkBehaviour
             input *= -1;
         }
 
-        movementDirection = input;
+        inputFixed = new Vector3(input.x, 0, input.y);
+        //movementDirection = fixedInput;
+        
 
-        movementDirection.z = movementDirection.y;
+        //movementDirection.z = movementDirection.y;
+        //float inputZ = movementDirection.z;
 
-        movementDirection.y = 0; //We are not gonna jump duh
+        //movementDirection.x = Mathf.Lerp(movementDirection.x, fixedInput.x, inputLerpSpeed * Time.deltaTime);
+        //movementDirection.z = fixedInput.z;
+        //movementDirection.y = 0; //We are not gonna jump duh
 
         // determines when driving starts and when driving ends
         if (context.started)
@@ -1052,8 +1063,8 @@ public class NEWDriver : NetworkBehaviour
 
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-        movementDirection.x = moveInput.x;
-        movementDirection.z = moveInput.y;
+        inputFixed.x = moveInput.x;
+        inputFixed.z = moveInput.y;
     }
 
     private void OnDrawGizmosSelected()
