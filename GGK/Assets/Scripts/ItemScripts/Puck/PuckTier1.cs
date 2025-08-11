@@ -244,24 +244,38 @@ public class PuckTier1 : BaseItem
                 }
 
                 // Otherwise destroys puck regardless of kart hit
-                //if (!MultiplayerManager.Instance.IsMultiplayer)
-                //{
-                //    Destroy(this.gameObject);
-                //}
-                //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
-                //{
-                //    this.NetworkObject.Despawn();
-                //    Destroy(this.gameObject);
-                //}
-
-                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                if (!MultiplayerManager.Instance.IsMultiplayer)
-                {
-                    Destroy(this.gameObject);
-                }
                 else
                 {
-                    DestroyItemRpc(this);
+                    //if (!MultiplayerManager.Instance.IsMultiplayer)
+                    //{
+                    //    Destroy(this.gameObject);
+                    //}
+                    //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                    //{
+                    //    this.NetworkObject.Despawn();
+                    //    Destroy(this.gameObject);
+                    //}
+
+                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                    {
+                        playerKart.Stun(2.0f);
+                    }
+
+                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                    {
+                        NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                        npcPhys.Stun(2.0f);
+                    }
+
+                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else
+                    {
+                        DestroyItemRpc(this);
+                    }
                 }
             }
         }
