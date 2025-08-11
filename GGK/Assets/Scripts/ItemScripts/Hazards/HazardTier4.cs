@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Blizzard
+/// </summary>
 public class HazardTier4 : BaseItem
 {
     private void Start()
@@ -17,7 +18,7 @@ public class HazardTier4 : BaseItem
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
         }
     }
 

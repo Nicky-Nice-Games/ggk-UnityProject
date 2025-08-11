@@ -1152,19 +1152,19 @@ public class NEWDriver : NetworkBehaviour
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier2Rpc()
     {
-        playerInfo.defenseUsage["brickwall"]++;
+        playerInfo.defenseUsage["fakepowerupbrick"]++;
     }
 
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier3Rpc()
     {
-        playerInfo.defenseUsage["confuseritchie"]++;
+        playerInfo.defenseUsage["brickwall"]++;
     }
 
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier4Rpc()
     {
-        playerInfo.defenseUsage["fakepowerupbrick"]++;
+        playerInfo.defenseUsage["confuseritchie"]++;
     }
 
     [Rpc(SendTo.Owner, RequireOwnership = false)]
