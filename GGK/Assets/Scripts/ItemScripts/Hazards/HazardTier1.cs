@@ -14,7 +14,6 @@ public class HazardTier1 : BaseItem
         // Checking for multiplayer
         if(IsSpawned)
         {
-            Debug.Log($"Client {kart.OwnerClientId} kart spawned hazardT1\n{kart}");
             kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
         }
         else
