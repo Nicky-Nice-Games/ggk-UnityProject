@@ -8,7 +8,8 @@ public class DeathZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Kart"))
-        {          
+        {
+            other.GetComponent<NEWDriver>().IncrementFellOffMapRpc();
 
             DynamicRecovery recovery = other.GetComponent<DynamicRecovery>();
             if (recovery != null)
@@ -17,8 +18,6 @@ public class DeathZone : MonoBehaviour
                 recovery.StartRecovery();
 
             }
-
-            other.GetComponent<NEWDriver>().playerInfo.fellOffMap++;
         }
     }
 

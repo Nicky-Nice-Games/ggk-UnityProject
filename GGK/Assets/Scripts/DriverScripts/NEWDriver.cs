@@ -1144,6 +1144,12 @@ public class NEWDriver : NetworkBehaviour
     // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
     // SendTo.Owner should work
     [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementFellOffMapRpc()
+    {
+        playerInfo.fellOffMap++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier1Rpc()
     {
         playerInfo.defenseUsage["oilSpill1"]++;
