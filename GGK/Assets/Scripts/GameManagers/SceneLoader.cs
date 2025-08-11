@@ -12,24 +12,27 @@ public class SceneLoader : NetworkBehaviour
 
     public bool loading = false;
 
-    public void LoadScene(string sceneName)
+    public void LoadScene(string sceneName, bool restart = false)
     {
-        StartCoroutine(LoadAnimation(sceneName));
+        StartCoroutine(LoadAnimation(sceneName, restart));
         loading = true;
     }
 
-    IEnumerator LoadAnimation(string sceneName)
+    IEnumerator LoadAnimation(string sceneName, bool restart = false)
     {
-        // Play start scene transition animation
-        StartAnimation();
+        if (SceneManager.GetActiveScene().name != sceneName || restart)
+        {
+            // Play start scene transition animation
+            StartAnimation();
+            
+            // Wait
+            if (transitionActive)
+                yield return new WaitForSeconds(transitionTime);
 
-        // Wait
-        if (transitionActive)
-            yield return new WaitForSeconds(transitionTime);
-
-        // Load Scene and play end scene transition animation
-        SceneManager.LoadScene(sceneName);
-        EndAnimation();
+            // Load Scene and play end scene transition animation
+            SceneManager.LoadScene(sceneName); 
+            EndAnimation(); 
+        }
     }
 
     public IEnumerator ServerLoadScene(string sceneName)
