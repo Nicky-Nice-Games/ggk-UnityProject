@@ -1131,7 +1131,7 @@ public class NEWDriver : NetworkBehaviour
         // }
 
         //client sending their own data
-        gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+        if (!playerInfo.isGuest) { gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); }
 
     }
 
