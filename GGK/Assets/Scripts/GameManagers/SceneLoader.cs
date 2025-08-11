@@ -10,10 +10,12 @@ public class SceneLoader : NetworkBehaviour
     public float transitionTime;
     public bool transitionActive;
 
+    public bool loading = false;
 
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadAnimation(sceneName));
+        loading = true;
     }
 
     IEnumerator LoadAnimation(string sceneName)
@@ -22,14 +24,14 @@ public class SceneLoader : NetworkBehaviour
         {
             // Play start scene transition animation
             StartAnimation();
-            
+
             // Wait
             if (transitionActive)
                 yield return new WaitForSeconds(transitionTime);
 
             // Load Scene and play end scene transition animation
-            SceneManager.LoadScene(sceneName); 
-            EndAnimation(); 
+            SceneManager.LoadScene(sceneName);
+            EndAnimation();
         }
     }
 
@@ -39,14 +41,14 @@ public class SceneLoader : NetworkBehaviour
         {
             StartAnimationRpc();
             if (transitionActive) yield return new WaitForSeconds(transitionTime);
-        
+
             SceneEventProgressStatus status = NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
             if (status != SceneEventProgressStatus.Started)
             {
                 Debug.LogWarning($"Failed to load {sceneName} with a {nameof(SceneEventProgressStatus)}: {status}");
             }
         }
-       
+
     }
 
     [Rpc(SendTo.ClientsAndHost)]
