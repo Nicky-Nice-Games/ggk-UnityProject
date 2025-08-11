@@ -118,6 +118,11 @@ public class PlacementManager : NetworkBehaviour
         // Assign placements
         for (int i = 0; i < sortedList.Count; i++)
         {
+            if (sortedList[i] == trackedKart)
+            {
+                trackedKart.OnPlacementChange(i + 1);
+            }
+
             sortedList[i].placement = i + 1; // 1st place is index 0
         }
     }
