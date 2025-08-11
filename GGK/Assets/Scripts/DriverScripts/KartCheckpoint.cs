@@ -124,9 +124,9 @@ public class KartCheckpoint : NetworkBehaviour
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
                     // raceposition data to playerinfo
-                    //parent.transform.GetChild(0).GetComponent<NEWDriver>().AssignPlacementRpc(placement);
-                    //Debug.Log("Finish line! Assigned pos: " + placement + "\nTo player: " + 
-                    //    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.pid);
+                    parent.transform.GetChild(0).GetComponent<NEWDriver>().AssignPlacementRpc(placement);
+                    Debug.Log("Finish line! Assigned pos: " + placement + "\nTo player: " + 
+                        parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.pid);
                     StartCoroutine(FinalizeFinish());
                 }
             }
