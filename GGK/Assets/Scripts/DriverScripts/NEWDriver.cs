@@ -1141,6 +1141,8 @@ public class NEWDriver : NetworkBehaviour
         gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
     }
 
+    // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
+    // SendTo.Owner should work
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier1Rpc()
     {
@@ -1165,8 +1167,6 @@ public class NEWDriver : NetworkBehaviour
         playerInfo.defenseUsage["fakepowerupbrick"]++;
     }
 
-    // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
-    // SendTo.Owner should work
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementDefenseUsageTier1Rpc()
     {

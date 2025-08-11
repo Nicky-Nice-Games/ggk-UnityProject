@@ -18,7 +18,16 @@ public class HazardTier2 : BaseItem
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
-        kart.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
+
+        // Checking for multiplayer
+        if (IsSpawned)
+        {
+            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
+        }
+        else
+        {
+            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+        }
     }
 
     // Update is called once per frame

@@ -12,7 +12,16 @@ public class HazardTier1 : BaseItem
     {
         Vector3 behindPos = transform.position - transform.forward * 6;
         transform.position = behindPos;
-        kart.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
+
+        // Checking for multiplayer
+        if(IsSpawned)
+        {
+            kart.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
+        }
+        else
+        {
+            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill1"]++;
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
