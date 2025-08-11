@@ -1190,4 +1190,28 @@ public class NEWDriver : NetworkBehaviour
     {
         playerInfo.offenceUsage["puck4"]++;
     }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier1Rpc()
+    {
+        playerInfo.boostUsage["speedBoost1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier2Rpc()
+    {
+        playerInfo.boostUsage["speedBoost2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier3Rpc()
+    {
+        playerInfo.boostUsage["speedBoost3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier4Rpc()
+    {
+        playerInfo.boostUsage["speedBoost4"]++;
+    }
 }
