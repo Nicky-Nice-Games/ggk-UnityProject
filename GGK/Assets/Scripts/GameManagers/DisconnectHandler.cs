@@ -77,7 +77,7 @@ public class DisconnectHandler : NetworkBehaviour
         Debug.Log($"Client Disconnected\nClientId in parameter is {clientId}");
         if (NetworkManager.ConnectedClients.Count <= 1)
         {
-            NetworkManager.Singleton.Shutdown();
+            //NetworkManager.Singleton.Shutdown();
             GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
             GameManager.thisManagerInstance.curState = GameStates.multiSingle;
         }
