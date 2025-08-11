@@ -42,14 +42,6 @@ public class LobbyCreateUI : MonoBehaviour
         LobbyManager.Instance.OnJoinedLobby -= LobbyManager_OnJoinedLobby;
     }
 
-    private void OnDestroy() {
-
-        createButton.onClick.RemoveListener(CreateLobbyButtonClick);
-        backButton.onClick.RemoveListener(BackButtonClick);
-        playersButton.onClick.RemoveListener(PlayersButtonClick);
-        LobbyManager.Instance.OnJoinedLobby -= LobbyManager_OnJoinedLobby;
-    }
-
     private void Start()
     {
         LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
