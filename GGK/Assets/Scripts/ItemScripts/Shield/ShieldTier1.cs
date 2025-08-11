@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -23,7 +22,6 @@ public class ShieldTier1 : BaseItem
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
         {
-            Debug.Log("Player used shield 1");
             // find the visual effect script from the kart
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
             
