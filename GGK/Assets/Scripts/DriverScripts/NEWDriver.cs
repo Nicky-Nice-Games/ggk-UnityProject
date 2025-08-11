@@ -1150,6 +1150,12 @@ public class NEWDriver : NetworkBehaviour
     }
 
     [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void AssignPlacementRpc(int pos)
+    {
+        playerInfo.racePos = pos;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier1Rpc()
     {
         playerInfo.trapUsage["oilSpill1"]++;
