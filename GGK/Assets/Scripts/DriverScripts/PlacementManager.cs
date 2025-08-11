@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlacementManager : NetworkBehaviour
 {
@@ -17,12 +18,14 @@ public class PlacementManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI placementDisplay;
     [SerializeField] private TextMeshProUGUI lapDisplay;
     [SerializeField] private KartCheckpoint trackedKart;
+    [SerializeField] private Image positionDisplay;
 
     [Header("List References")]
     private List<GameObject> checkpointList = new List<GameObject>();
     [SerializeField] List<KartCheckpoint> kartCheckpointList = new List<KartCheckpoint>();
     public List<KartCheckpoint> sortedList;
     public List<GameObject> kartsList;
+    public List<Sprite> spritePlacementList;
 
     private void Awake()
     {
@@ -102,8 +105,38 @@ public class PlacementManager : NetworkBehaviour
     void Update()
     {
         checkPlacement();
-        placementDisplay.text = $"Placement: {trackedKart.placement}";
-        lapDisplay.text = $"Lap: {trackedKart.lap + 1}";
+        switch (trackedKart.placement)
+        {
+            case 1:
+                positionDisplay.sprite = spritePlacementList[0];
+                break;
+            case 2:
+                positionDisplay.sprite = spritePlacementList[1];
+                break;
+            case 3:
+                positionDisplay.sprite = spritePlacementList[2];
+                break;
+            case 4:
+                positionDisplay.sprite = spritePlacementList[3];
+                break;
+            case 5:
+                positionDisplay.sprite = spritePlacementList[4];
+                break;
+            case 6:
+                positionDisplay.sprite = spritePlacementList[5];
+                break;
+            case 7:
+                positionDisplay.sprite = spritePlacementList[6];
+                break;
+            case 8:
+                positionDisplay.sprite = spritePlacementList[7];
+                break;
+        }
+
+        if (trackedKart.lap < 3)
+        {
+            lapDisplay.text = $"LAP: {trackedKart.lap + 1}/3";
+        }
     }
 
     private void checkPlacement()
