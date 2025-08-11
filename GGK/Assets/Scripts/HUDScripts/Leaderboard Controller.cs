@@ -142,6 +142,7 @@ public class LeaderboardController : NetworkBehaviour
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
+            player.playerInfo.raceTime = curTime * 1000f;
 
             if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId) {
                 player.SendThisPlayerData();
@@ -161,7 +162,6 @@ public class LeaderboardController : NetworkBehaviour
                 leaderboard.SetActive(true);
                 allPlayerKartsFinished.Value = true;
             }
-            player.playerInfo.raceTime = curTime * 1000f;
         }
 
         // Sort by actual finish time
