@@ -26,11 +26,12 @@ public class ShieldTier1 : BaseItem
             Debug.Log("Player used shield 1");
             // find the visual effect script from the kart
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
-
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense1"]++;
             
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
+            
+            // increment counter
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementDefenseUsageTier1Rpc();
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {
