@@ -8,7 +8,8 @@ public class DisconnectHandler : NetworkBehaviour
 {
     public static DisconnectHandler instance;
 
-    private void Awake() {
+    private void Awake()
+    {
         instance = this;
     }
 
@@ -74,5 +75,21 @@ public class DisconnectHandler : NetworkBehaviour
     private void ClientDisconnectHandler(ulong clientId)
     {
         Debug.Log($"Client Disconnected\nClientId in parameter is {clientId}");
-    }  
+        if (NetworkManager.ConnectedClients.Count <= 1)
+        {
+            NetworkManager.Singleton.Shutdown();
+            GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+            GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+        }
+    }
+    public void SafeDisconnect()
+    {
+        if (IsServer) return;
+        Debug.Log("before");
+        NetworkManager.Singleton.Shutdown();
+        Debug.Log("after");
+        Time.timeScale = 1;
+        GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
+        GameManager.thisManagerInstance.curState = GameStates.multiSingle;
+    }
 }
