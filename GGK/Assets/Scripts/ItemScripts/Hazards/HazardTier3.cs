@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +7,7 @@ public class HazardTier3 : BaseItem
 {
     private void Start()
     {
+        base.Start();
         Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
         transform.position = behindPos;
 
@@ -20,7 +18,7 @@ public class HazardTier3 : BaseItem
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
         }
     }
 

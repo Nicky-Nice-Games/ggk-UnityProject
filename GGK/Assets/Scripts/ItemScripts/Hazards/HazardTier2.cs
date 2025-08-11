@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Fake Item Box
 /// </summary>
 public class HazardTier2 : BaseItem
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        base.Start();
         timer = 10.0f;
 
         // sends the hazard slightly up and behind the player before landing on the ground
@@ -26,7 +22,7 @@ public class HazardTier2 : BaseItem
         }
         else
         {
-            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+            kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
         }
     }
 

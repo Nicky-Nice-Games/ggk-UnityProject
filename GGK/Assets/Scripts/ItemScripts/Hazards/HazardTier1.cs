@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +7,7 @@ public class HazardTier1 : BaseItem
 {
     private void Start()
     {
+        base.Start();
         Vector3 behindPos = transform.position - transform.forward * 6;
         transform.position = behindPos;
 
