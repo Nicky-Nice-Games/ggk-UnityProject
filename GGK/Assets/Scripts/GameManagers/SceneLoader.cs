@@ -20,19 +20,16 @@ public class SceneLoader : NetworkBehaviour
 
     IEnumerator LoadAnimation(string sceneName)
     {
-        if (SceneManager.GetActiveScene().name != sceneName)
-        {
-            // Play start scene transition animation
-            StartAnimation();
-            
-            // Wait
-            if (transitionActive)
-                yield return new WaitForSeconds(transitionTime);
+        // Play start scene transition animation
+        StartAnimation();
 
-            // Load Scene and play end scene transition animation
-            SceneManager.LoadScene(sceneName); 
-            EndAnimation(); 
-        }
+        // Wait
+        if (transitionActive)
+            yield return new WaitForSeconds(transitionTime);
+
+        // Load Scene and play end scene transition animation
+        SceneManager.LoadScene(sceneName);
+        EndAnimation();
     }
 
     public IEnumerator ServerLoadScene(string sceneName)
