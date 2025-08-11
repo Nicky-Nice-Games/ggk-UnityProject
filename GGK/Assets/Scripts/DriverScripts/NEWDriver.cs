@@ -1148,4 +1148,22 @@ public class NEWDriver : NetworkBehaviour
     {
         playerInfo.defenseUsage["defense1"]++;
     }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier2Rpc()
+    {
+        playerInfo.defenseUsage["defense2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier3Rpc()
+    {
+        playerInfo.defenseUsage["defense3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier4Rpc()
+    {
+        playerInfo.defenseUsage["defense4"]++;
+    }
 }
