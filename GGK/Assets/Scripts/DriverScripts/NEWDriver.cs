@@ -907,8 +907,13 @@ public class NEWDriver : NetworkBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        float recenBoostvalue = 10000f;
         //The closer the value is to 1 from below the closer we are to the minimum drift time
-        float recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
+        if (currentDriftTier != 0)
+        {
+            recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
+        }
+        
 
         if (TurnCount > 3)
         {
@@ -916,7 +921,7 @@ public class NEWDriver : NetworkBehaviour
 
             if(recenBoostvalue <= turboTwistWindow)
             {
-                StartCoroutine(Boost(driftBoostForce, 0.4f));
+                StartCoroutine(Boost(driftBoostForce, 0.5f));
             }
 
 
