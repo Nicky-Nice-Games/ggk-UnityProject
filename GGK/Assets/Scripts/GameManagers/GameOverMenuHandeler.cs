@@ -100,6 +100,7 @@ public class GameOverMenuHandeler : MonoBehaviour
                 else
                 {
                     playAgainPanel.SetActive(true);
+                    waiting.gameObject.SetActive(false);
                 }
             }
 
