@@ -61,7 +61,7 @@ public class ColorSelect : MonoBehaviour
     /// </summary>
     public void Confirm()
     {
-        if (charData.characterColor != null)
+        if (charData.characterColor != default)
         {
             SendAppearanceToPlayerInfo();
             gameManager.PlayerSelected();

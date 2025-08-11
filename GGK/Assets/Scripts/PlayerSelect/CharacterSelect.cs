@@ -114,7 +114,7 @@ public class CharacterSelect : MonoBehaviour
     /// </summary>
     public void Confirm()
     {
-        if (CharacterData.Instance.characterName != null)
+        if (CharacterData.Instance.characterName != "")
         {
             colorSelectMenu.SetActive(true);
             charSelectMenu.SetActive(false);
