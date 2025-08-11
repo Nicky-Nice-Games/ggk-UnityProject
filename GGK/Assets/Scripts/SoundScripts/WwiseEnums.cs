@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//These are a set of enums to manage the Wwise music states.
+//These are a set of enums to manage Wwise states and values.
 
 /// <summary>
 /// Determines which music track should be playing.
@@ -40,4 +40,12 @@ public enum ResultsState
     None,
     Starting,
     Win
+}
+
+public enum WwiseSlider
+{
+    Master,
+    Music,
+    SFX,
+    Dialogue
 }
