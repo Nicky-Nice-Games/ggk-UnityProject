@@ -12,19 +12,16 @@ public class DeathZone : MonoBehaviour
         {
             if (other.transform.parent.GetChild(0).TryGetComponent<NEWDriver>(out NEWDriver kart))
             {
-                if (other == other.transform.parent.GetChild(0))
+                if (MultiplayerManager.Instance.IsMultiplayer)
                 {
                     if (kart.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                     {
-                        if (MultiplayerManager.Instance.IsMultiplayer)
-                        {
-                            kart.IncrementFellOffMapRpc();
-                        }
-                        else
-                        {
-                            kart.playerInfo.fellOffMap++;
-                        }
+                        kart.IncrementFellOffMapRpc();
                     }
+                }
+                else
+                {
+                    kart.playerInfo.fellOffMap++;
                 }
             }
 
