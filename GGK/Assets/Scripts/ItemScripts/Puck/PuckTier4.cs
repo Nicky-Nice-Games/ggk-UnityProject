@@ -20,6 +20,9 @@ public class PuckTier4 : BaseItem
     // Start is called before the first frame update
     void Start()
     {
+        agent.updateRotation = true;
+        agent.angularSpeed = 750.0f;
+
         // If the kart is looking backwards
         // sends puck backwards
         if (!MultiplayerManager.Instance.IsMultiplayer)
@@ -40,7 +43,7 @@ public class PuckTier4 : BaseItem
                                 transform.position.y,
                                 transform.position.z + transform.forward.z * 5f);
             }
-
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck4"]++;
         }
         else
         {
@@ -75,6 +78,7 @@ public class PuckTier4 : BaseItem
         {
             transform.position = currentPos.Value;
         }
+
     }
 
     void FixedUpdate()
@@ -84,6 +88,9 @@ public class PuckTier4 : BaseItem
 
         // Counts down to despawn
         DecreaseTimer();
+
+        transform.rotation = Quaternion.LookRotation(agent.velocity.normalized);
+        Debug.Log(transform.rotation);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -106,6 +113,7 @@ public class PuckTier4 : BaseItem
                 crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 
                 collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                playerKart.Stun(2.0f);
                 Debug.Log(collision.transform.root.GetChild(0).gameObject);
             }
             // Stops NPC and starts recovery

@@ -21,6 +21,13 @@ public class PuckTier1 : BaseItem
     // Start is called before the first frame update
     void Start()
     {
+        // ignore thrower when first used
+        SphereCollider kartCollider = kart.transform.parent.Find("Collider").GetComponent<SphereCollider>();
+        Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), kartCollider, true);
+
+        GameObject driver = kart.gameObject;
+
+        float yPos;
 
         // If the kart is looking backwards
         // sends puck backwards
@@ -28,29 +35,76 @@ public class PuckTier1 : BaseItem
         {
             if (kart.camera && kart.camera.IsHoldingTab && itemTier < 2)
             {
-                // The puck spawns 15 units behind of the kart
-                transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
-                                transform.position.y,
-                                transform.position.z - transform.forward.z * 10f);
+                RaycastHit hit;
+                if (Physics.Raycast(driver.transform.position, -driver.transform.up, out hit, 4.0f))
+                {
+                    if (Vector3.Angle(hit.normal, Vector3.up) > 20.0f)
+                    {
+                        // The puck spawns 15 units behind of the kart
+                        transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                        transform.position.y + 3.0f,
+                                        transform.position.z - transform.forward.z * 10f);
+                    }
+                    else
+                    {
+                        // The puck spawns 15 units behind of the kart
+                        transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                        transform.position.y + 1.0f,
+                                        transform.position.z - transform.forward.z * 10f);
+                    }
+                }
+                else
+                {
+                    // The puck spawns 15 units behind of the kart
+                    transform.position = new Vector3(transform.position.x - transform.forward.x * 10f,
+                                    transform.position.y + 1.0f,
+                                    transform.position.z - transform.forward.z * 10f);
+                }
 
                 // The speed of the puck times 200
                 // Keeps the player from hitting it during use regardless of speed
-                direction = -(transform.forward * 200.0f);
+                direction = -(transform.forward * 100.0f);
             }
             // If the kart is looking forwards
             // sends puck forwards
             else
             {
+                RaycastHit hit;
+                if (Physics.Raycast(driver.transform.position, -driver.transform.up, out hit, 4.0f))
+                {
+                    float angle = Vector3.Angle(hit.normal, Vector3.up);
+                    if (angle > 10.0f)
+                    {
+                        yPos = transform.position.y + 3.0f;
+                    }
+                    else if (angle > 25.0f)
+                    {
+                        yPos = transform.position.y + 4.0f;
+                    }
+                    else if (angle > 40.0f)
+                    {
+                        yPos = transform.position.y + 5.0f;
+                    }
+                    else
+                    {
+                        yPos = transform.position.y + 1.0f;
+                    }
+                }
+                else
+                {
+                    yPos = transform.position.y + 1.0f;
+                }
+
                 // The puck spawns 15 units in front of the kart
                 transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
-                                transform.position.y,
+                                yPos,
                                 transform.position.z + transform.forward.z * 5f);
 
                 // The speed of the puck times 200
                 // Keeps the player from hitting it during use regardless of speed
-                direction = transform.forward * 200.0f;
+                direction = transform.forward * 100.0f;
             }
-
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck1"]++;
 
             // Starts the puck with 0 bounces
             bounceCount = 0;
@@ -81,8 +135,18 @@ public class PuckTier1 : BaseItem
     {
         startTimer += Time.deltaTime;
 
+        //transform.position += direction * Time.deltaTime;
+
+        // turn collision back on for user who threw the puck
+        if (startTimer > 1.0f)
+        {
+            SphereCollider kartCollider = kart.transform.parent.Find("Collider").GetComponent<SphereCollider>();
+
+            Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), kartCollider, false);
+        }
+
         // Acts as stronger gravity to bring the puck down
-        rb.AddForce(Vector3.down * 40.0f, ForceMode.Acceleration);
+        //rb.AddForce(Vector3.down * 100.0f, ForceMode.Acceleration);
 
         if (!IsSpawned)
         {
@@ -126,8 +190,27 @@ public class PuckTier1 : BaseItem
                 DestroyItemRpc(this);
             }
         }
+        
+        // perform a raycast forward from the back of the puck to avoid clipping
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position - transform.forward, transform.forward, out hit, 2.0f))
+        {
+            if (hit.collider.gameObject.CompareTag("Road"))
+            {
+                Vector3 newPos = hit.point;
+                newPos -= transform.forward;
+                transform.position = newPos;
+            }
+        }
 
-
+        // performs a raycast down to find ground
+        if (Physics.Raycast(transform.position + transform.forward * 0.5f, -transform.up, out hit, 7.0f))
+        {
+            // snaps puck to .5f off ground
+            Vector3 newPos = hit.point;
+            newPos.y += 0.5f;
+            transform.position = newPos;
+        }
 
         // Counts down to despawn
         DecreaseTimer();
@@ -170,6 +253,7 @@ public class PuckTier1 : BaseItem
                     crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    playerKart.Stun(2.0f);
                     Debug.Log(collision.transform.root.GetChild(0).gameObject);
                 }
                 // Stops NPC and starts recovery

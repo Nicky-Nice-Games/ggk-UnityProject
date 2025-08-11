@@ -34,7 +34,7 @@ public class PuckTier3 : BaseItem
             transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
                             transform.position.y,
                             transform.position.z + transform.forward.z * 5f);
-
+            kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck3"]++;
         }
         else
         {
@@ -111,6 +111,7 @@ public class PuckTier3 : BaseItem
                     crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    playerKart.Stun(2.0f);
                     Debug.Log(collision.transform.root.GetChild(0).gameObject);
                 }
                 // Stops NPC and starts recovery

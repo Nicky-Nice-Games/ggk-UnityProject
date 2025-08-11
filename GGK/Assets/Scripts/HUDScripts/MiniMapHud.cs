@@ -127,13 +127,17 @@ public class MiniMapHud : MonoBehaviour
             EstablishBounds(points);
         }
         DebugBounds();
-        
+
+        // clearing lists before populating them again
+
+        CleanLists();
+
         //If there are objects to track..
         if (objects.Count > 0)
         {
-            if(objects[0])
-            //add objects to the icon list
-            iconRef.SetActive(true);
+            if (objects[0])
+                //add objects to the icon list
+                iconRef.SetActive(true);
             Image refImage = iconRef.GetComponent<Image>();
             mapIcons.Add(refImage);
 
@@ -155,7 +159,7 @@ public class MiniMapHud : MonoBehaviour
                 mapIcons[trackingIndex].transform.SetAsLastSibling();
                 mapIcons[trackingIndex].rectTransform.sizeDelta *= 1.15f;
             }
-            
+
             foreach (GameObject obj in objects)
             {
                 ItemHolder holder = obj.GetComponent<ItemHolder>();
@@ -224,7 +228,6 @@ public class MiniMapHud : MonoBehaviour
                     mapIcons[i].rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
                 }
             }
-            
         }
     }
 
@@ -418,7 +421,35 @@ public class MiniMapHud : MonoBehaviour
             mapIcons[trackingIndex].transform.SetAsLastSibling();
             mapIcons[trackingIndex].rectTransform.sizeDelta = iconRef.GetComponent<Image>().rectTransform.sizeDelta * 1.15f;
         }
-        
+    }
+
+    /// <summary>
+    /// Allows for the removal of a kart icon during the race
+    /// </summary>
+    /// <param name="kart"></param>
+    public void RemoveKart(GameObject kart)
+    {
+        Debug.Log("attempting to remove kart from minimap");
+        if (objects.Contains(kart))
+        {
+            Debug.Log("kart found");
+            int index = objects.FindIndex(obj => obj == kart);
+            Debug.Log($"kart found at index {index}");
+            objects.RemoveAt(index);
+            mapIcons.RemoveAt(index);
+            Debug.Log("map icons removed for kart");
+        }
+    }
+
+    public void CleanLists()
+    {
+        // removing preexisting map icons
+        foreach (Image img in mapIcons)
+        {
+            Destroy(img);
+        }
+        mapIcons.Clear();
+        objects.Clear();
     }
 }
 

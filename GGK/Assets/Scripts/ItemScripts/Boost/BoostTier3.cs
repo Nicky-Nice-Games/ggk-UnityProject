@@ -146,6 +146,8 @@ public class BoostTier3 : BaseItem
         driver.doGroundCheck = true;
         driver.turnWheels = true;
 
+        // add boost usage
+        driver.playerInfo.boostUsage["speedBoost3"]++;
         Destroy(this.gameObject);
     }
 

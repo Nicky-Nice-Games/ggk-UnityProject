@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -45,8 +46,7 @@ public class PlayerKartHandeler : MonoBehaviour
             Image[] images = characterButton.GetComponentsInChildren<Image>();
 
             Button btn = characterButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], btn.name));
+            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], characterButton.name));
         }
 
         // Invoke default selection
@@ -87,7 +87,7 @@ public class PlayerKartHandeler : MonoBehaviour
     }
 
     // Select this character button
-    public void ChangeCharacter(Image characterImage, Image border, string name)
+    public void ChangeCharacter(Image characterImage, Image border, string charName)
     {
         // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
@@ -102,12 +102,12 @@ public class PlayerKartHandeler : MonoBehaviour
         // Change selected character information to those on the button
         characterSelectedImage = characterImage;
         ColorChange(); // Change color of selected character image
-        characterName.text = name;
+        characterName.text = charName;
         
         // Set active the correct character model
         foreach(GameObject characterModel in characterModels)
         {
-            if (characterModel.name.ToLower() != name.ToLower())
+            if (characterModel.name.ToLower() != charName.ToLower())
             {
                 characterModel.SetActive(false);
             }
@@ -124,9 +124,57 @@ public class PlayerKartHandeler : MonoBehaviour
         if (characterData != null)
         {
             characterData.characterSprite = characterImage.sprite;
-            characterData.characterName = name;
+            characterData.characterName = charName;
+            SendAppearanceToPlayerInfo();
         }
             
+    }
+
+    /// <summary>
+    /// Organizes the models name to a number based off of organization in backend
+    /// </summary>
+    private void SendAppearanceToPlayerInfo()
+    {
+        int index = 0;
+        switch (characterData.characterName)
+        {
+            case "Gizmo":
+                index = 1;
+                break;
+
+            case "Morgan":
+                index = 2;
+                break;
+
+            case "Reese":
+                index = 3;
+                break;
+
+            case "Emma":
+                index = 4;
+                break;
+
+            case "Kai":
+                index = 5;
+                break;
+
+            case "Jamster":
+                index = 6;
+                break;
+
+            default:
+                index = 1;
+                break;
+        }
+        if(gameManager.playerInfo != null)
+        {
+            gameManager.playerInfo.characterUsed = index;
+            //Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
+        }
+        else
+        {
+            //Debug.Log("Playerinfo was null!");
+        }
     }
 
     // Which direction for the color carousel?

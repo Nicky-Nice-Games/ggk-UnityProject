@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -20,6 +21,7 @@ public class NEWDriver : NetworkBehaviour
     public Vector3 acceleration; //How fast karts velocity changes        
     public Vector3 movementDirection;
     public Quaternion turning;
+    Vector3 inputFixed;
 
 
     [Header("Kart Settings")]
@@ -32,7 +34,8 @@ public class NEWDriver : NetworkBehaviour
     public float maxSteerAngleTires = 20f; //Multiplier for wheel turning speed    
     public float maxSteeringAngle = 10f; //Maximum steering angle for the steering wheel
     public Transform kartNormal;
-    public float gravity = 20;    
+    public float gravity = 20;
+    public float inputLerpSpeed = 5f; //Lerp speed for input smoothing
     float controllerX;
     float controllerZ;
 
@@ -106,6 +109,7 @@ public class NEWDriver : NetworkBehaviour
     public ParticleSystem driftSparksRightFront;
     public ParticleSystem driftSparksRightBack;
     public List<ParticleSystem> boostFlames;
+    public ParticleSystem dazedStars;
     public VFXHandler vfxHandler;
     int driftTier;
     int currentDriftTier = 0; //To check if we are in the same drift tier or not, so we can change the color of the particles accordingly
@@ -148,9 +152,7 @@ public class NEWDriver : NetworkBehaviour
 
 
     // Player info for API
-    // The player info should be created in the Login handeler and player data filled out in here   TODO (Logan)
-    // Any game related data will be filled in in the game scene handeler or manager
-    private PlayerInfo playerInfo;
+    public PlayerInfo playerInfo;
     private GameManager gameManagerObj;
 
     //Wwise sound ID's
@@ -168,6 +170,8 @@ public class NEWDriver : NetworkBehaviour
             playerInfo = gameManagerObj.playerInfo;
         }
 
+        gameManagerObj.FillMapRaced(this);
+
         sphere.drag = 0.5f;
         sphere.isKinematic = false;
         StopParticles();
@@ -177,8 +181,10 @@ public class NEWDriver : NetworkBehaviour
 
         if (!IsSpawned)
         {
-
             playerInput.enabled = true;
+            Debug.Log("Before get pause");
+            playerInput.actions["Pause"].started += PauseHandler.instance.TogglePause;
+            Debug.Log("After get pause");
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             MiniMapHud.instance.trackingPlayer = gameObject;
@@ -186,8 +192,7 @@ public class NEWDriver : NetworkBehaviour
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-
-            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+            
         }
         
     }
@@ -197,6 +202,7 @@ public class NEWDriver : NetworkBehaviour
         if (IsOwner)
         {
             playerInput.enabled = true;
+            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
             SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
@@ -205,9 +211,11 @@ public class NEWDriver : NetworkBehaviour
             if (appearance) appearance.SetKartAppearanceRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
 
             MiniMapHud.instance.trackingPlayer = gameObject;
-            SpeedLineHandler.instance.trackingPlayer = this;
-
-            playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
+            if (SpeedLineHandler.instance != null)
+            {
+                SpeedLineHandler.instance.trackingPlayer = this;
+            }
+            
         }
         if (IsServer)
         {
@@ -220,6 +228,13 @@ public class NEWDriver : NetworkBehaviour
         TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
 
+        playerInfo.raceStartTime = DateTime.Now;
+    }
+    
+    public override void OnNetworkDespawn()
+    {
+        MiniMapHud.instance.RemoveKart(gameObject);
+        Debug.Log($"ClientId {OwnerClientId} has despawned/disconnected");
     }
 
     public void StopParticles()
@@ -318,9 +333,13 @@ public class NEWDriver : NetworkBehaviour
 
 
         //------------Movement stuff---------------------
+        //float inputX;
+        //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
+        movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
+        movementDirection.z = inputFixed.z; 
 
         //Stunned
-        if(isStunned) movementDirection = Vector3.zero;
+        if (isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
@@ -988,11 +1007,16 @@ public class NEWDriver : NetworkBehaviour
             input *= -1;
         }
 
-        movementDirection = input;
+        inputFixed = new Vector3(input.x, 0, input.y);
+        //movementDirection = fixedInput;
+        
 
-        movementDirection.z = movementDirection.y;
+        //movementDirection.z = movementDirection.y;
+        //float inputZ = movementDirection.z;
 
-        movementDirection.y = 0; //We are not gonna jump duh
+        //movementDirection.x = Mathf.Lerp(movementDirection.x, fixedInput.x, inputLerpSpeed * Time.deltaTime);
+        //movementDirection.z = fixedInput.z;
+        //movementDirection.y = 0; //We are not gonna jump duh
 
         // determines when driving starts and when driving ends
         if (context.started)
@@ -1070,6 +1094,11 @@ public class NEWDriver : NetworkBehaviour
         }
     }
 
+    public void OnLookBack(InputAction.CallbackContext context)
+    {
+        SpeedCameraEffect.instance.OnLookBack(context);
+    }
+
     private void UpdateControllerMovement(InputAction.CallbackContext context)
     {
         Vector2 moveInput = new Vector2(controllerX, controllerZ);
@@ -1088,8 +1117,8 @@ public class NEWDriver : NetworkBehaviour
 
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-        movementDirection.x = moveInput.x;
-        movementDirection.z = moveInput.y;
+        inputFixed.x = moveInput.x;
+        inputFixed.z = moveInput.y;
     }
 
     private void OnDrawGizmosSelected()
@@ -1161,5 +1190,14 @@ public class NEWDriver : NetworkBehaviour
         airTrickInProgress = false;
         airTrickTween?.Kill();
         driftRotationTween?.Kill();
+    }
+
+    public void SendThisPlayerData()
+    {
+        Debug.Log("Called SendPlayerData from NEWDriver");
+        if(!playerInfo.isGuest)
+        {
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+        }
     }
 }

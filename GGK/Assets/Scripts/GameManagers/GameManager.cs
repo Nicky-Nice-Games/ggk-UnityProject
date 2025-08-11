@@ -24,9 +24,17 @@ public enum GameStates
     gameOver
 }
 
+public enum GameModes
+{
+    quickRace,
+    timeTrial,
+    grandPrix
+}
+
 public class GameManager : NetworkBehaviour
 {
     public GameStates curState;
+    public GameModes curGameMode;
     public static GameManager thisManagerInstance;
     public static GameObject thisManagerObjInstance;
     public SceneLoader sceneLoader;
@@ -37,6 +45,9 @@ public class GameManager : NetworkBehaviour
 
     //the first button that should be selected should a controller need input
     public GameObject currentSceneFirst;
+
+    // grand prix stuff
+    private List<string> grandPrixMaps = new List<string>();
 
     void Awake()
     {
@@ -77,7 +88,6 @@ public class GameManager : NetworkBehaviour
     {
         sceneLoader.LoadScene("Login");
         curState = GameStates.login;
-        playerInfo = new PlayerInfo();
     }
 
     /// <summary>
@@ -133,8 +143,8 @@ public class GameManager : NetworkBehaviour
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
         //ToGameModeSelectScene();
-        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
-        curState = GameStates.gameMode;
+        MultiplayerSceneManager.Instance.ToConnectionBuffer();
+        curState = GameStates.playerKart;
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
@@ -185,6 +195,11 @@ public class GameManager : NetworkBehaviour
         curState = GameStates.playerKart;
     }
 
+    public void ChangeGameMode(GameModes gameMode)
+    {
+        curGameMode = gameMode;
+    }
+
     /// <summary>
     /// Holds logic for when the player selects their cart
     /// Basic for now but might need to be ediited when
@@ -196,10 +211,29 @@ public class GameManager : NetworkBehaviour
         {
             MultiplayerManager.Instance.PlayerKartSelectedRpc(CharacterData.Instance.characterName, CharacterData.Instance.characterColor);
         }
+        else if (curGameMode == GameModes.grandPrix)
+        {
+            ToGrandPrixSelectScreen();
+        }
         else
         {
             ToMapSelectScreen();
         }
+    }
+
+    public void GrandPrixSelected(List<string> grandPrixMaps)
+    {
+        this.grandPrixMaps = grandPrixMaps;
+
+        sceneLoader.LoadScene(grandPrixMaps[0]);
+
+        curState = GameStates.game;
+    }
+
+    public void ToGrandPrixSelectScreen()
+    {
+        SceneManager.LoadScene("GrandPrixSelectScene");
+        curState = GameStates.map;
     }
 
     public void ToMapSelectScreen() {
@@ -252,22 +286,28 @@ public class GameManager : NetworkBehaviour
         else
         {
            // Loads the race based on the name of the button clicked
+           // Note: change scenes in FillMapRaced when changing the scene names here
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
             case "RIT Outer Loop":
-                sceneLoader.LoadScene("LD_RITOuterLoop");
+
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITOuterLoop");
+                else sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
             case "Golisano":
-                sceneLoader.LoadScene("GSP_Golisano");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_Golisano");
+                else sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
-                sceneLoader.LoadScene("LD_RITDorm");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITDorm");
+                else sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
             case "Finals Brick Road":
-                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_FinalsBrickRoad");
+                else sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;
@@ -281,18 +321,35 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     public void GameFinished()
     {
-        curState = GameStates.gameOver;
-        //apiManager.PostPlayerData(playerInfo);
+        if (curGameMode == GameModes.grandPrix)
+        {
+            int index = grandPrixMaps.IndexOf(SceneManager.GetActiveScene().name);
+            
+            if (index != grandPrixMaps.Count - 1)
+            {
+                sceneLoader.LoadScene(grandPrixMaps[index + 1]);
+            }
+            else
+            {
+                curState = GameStates.gameOver;
+                //apiManager.PostPlayerData(playerInfo);
 
-        sceneLoader.LoadScene("GameOverScene");
+                sceneLoader.LoadScene("GameOverScene");
+            }
+        }
+        else
+        {
+            curState = GameStates.gameOver;
+            //apiManager.PostPlayerData(playerInfo);
+
+            sceneLoader.LoadScene("GameOverScene");
+        }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     public void GameFinishedRpc()
     {
         curState = GameStates.gameOver;
-        //apiManager.PostPlayerData(playerInfo);
-
         sceneLoader.LoadScene("GameOverScene");
     }
 
@@ -367,6 +424,31 @@ public class GameManager : NetworkBehaviour
             sceneLoader = thisManagerObjInstance.GetComponent<SceneLoader>();
         }
         sceneLoader.LoadScene(sceneToLoad);
+    }
+
+    public void FillMapRaced(NEWDriver player)
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "LD_RITOuterLoop":
+                Debug.Log("Map data: Outer Loop (1)");
+                player.playerInfo.mapRaced = 1;
+                break;
+            case "LD_RITDorm":
+                Debug.Log("Map data: Dorm (2)");
+                player.playerInfo.mapRaced = 2;
+                break;
+            case "GSP_Golisano":
+                Debug.Log("Map data: Golisano (3)");
+                player.playerInfo.mapRaced = 3;
+                break;
+            case "GSP_FinalsBrickRoad":
+                Debug.Log("Map data: Finals Brick (4)");
+                player.playerInfo.mapRaced = 4;
+                break;
+            default:
+                break;
+        }
     }
 }
 

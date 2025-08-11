@@ -14,6 +14,7 @@ public class HazardTier1 : BaseItem
     {
         Vector3 behindPos = transform.position - transform.forward * 6;
         transform.position = behindPos;
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill1"]++;
     }
 
     private void OnTriggerEnter(Collider collision)
