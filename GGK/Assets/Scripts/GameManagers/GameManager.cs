@@ -143,8 +143,8 @@ public class GameManager : NetworkBehaviour
     public void RelayManager_OnRelayStarted(object sender, EventArgs e)
     {
         //ToGameModeSelectScene();
-        MultiplayerSceneManager.Instance.ToGameModeSelectScene();
-        curState = GameStates.gameMode;
+        MultiplayerSceneManager.Instance.ToConnectionBuffer();
+        curState = GameStates.playerKart;
     }
 
     public void RelayManager_OnRelayJoined(object sender, EventArgs e)
@@ -225,14 +225,9 @@ public class GameManager : NetworkBehaviour
     {
         this.grandPrixMaps = grandPrixMaps;
 
-        if (MultiplayerManager.Instance.IsMultiplayer)
-        {
+        sceneLoader.LoadScene(grandPrixMaps[0]);
 
-        }
-        else
-        {
-            sceneLoader.LoadScene(grandPrixMaps[0]);
-        }
+        curState = GameStates.game;
     }
 
     public void ToGrandPrixSelectScreen()
@@ -293,19 +288,24 @@ public class GameManager : NetworkBehaviour
             switch (GetComponent<ButtonBehavior>().buttonClickedName)
             {
             case "RIT Outer Loop":
-                sceneLoader.LoadScene("LD_RITOuterLoop");
+
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITOuterLoop");
+                else sceneLoader.LoadScene("LD_RITOuterLoop");
                 break;
             case "Golisano":
-                sceneLoader.LoadScene("GSP_Golisano");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_Golisano");
+                else sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
-                sceneLoader.LoadScene("LD_RITDorm");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITDorm");
+                else sceneLoader.LoadScene("LD_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
                 break;
             case "Finals Brick Road":
-                sceneLoader.LoadScene("GSP_FinalsBrickRoad");
+                if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_FinalsBrickRoad");
+                else sceneLoader.LoadScene("GSP_FinalsBrickRoad");
                 break;
             default:
                 break;

@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class DisconnectHandler : NetworkBehaviour
 {
+    public static DisconnectHandler instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -28,7 +34,6 @@ public class DisconnectHandler : NetworkBehaviour
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
-            NetworkManager.Singleton.OnClientConnectedCallback -= ClientConnectHandler;
         }
         else
         {
@@ -57,6 +62,7 @@ public class DisconnectHandler : NetworkBehaviour
         // IsSpawned = true
         //this sends the clients back to the multi single select screen
         Debug.Log($"Server Disconnected\nClientId in parameter is {clientId}");
+        Time.timeScale = 1;
         GameManager.thisManagerInstance.sceneLoader.LoadScene("MultiSinglePlayerScene");
         GameManager.thisManagerInstance.curState = GameStates.multiSingle;
     }
