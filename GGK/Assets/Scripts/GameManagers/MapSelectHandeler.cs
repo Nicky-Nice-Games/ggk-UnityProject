@@ -35,6 +35,8 @@ public class MapSelectHandeler : MonoBehaviour
     private Sprite mapSelectedTexture;
     [SerializeField]
     private Sprite mapDefaultTexture;
+    [SerializeField]
+    private Image trackPreview;
 
 
     // Start is called before the first frame update
@@ -54,7 +56,8 @@ public class MapSelectHandeler : MonoBehaviour
             {
                 CharacterData.Instance.mapVote = obj.name;
                 trackDisplay.text = obj.name;
-                foreach(GameObject button in mapOptions)
+                trackPreview.sprite = obj.transform.GetChild(0).GetComponent<Image>().sprite;
+                foreach (GameObject button in mapOptions)
                 {
                     button.GetComponent<Image>().sprite = mapDefaultTexture;
                 }
