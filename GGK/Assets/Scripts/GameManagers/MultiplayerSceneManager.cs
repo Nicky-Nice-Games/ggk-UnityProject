@@ -53,6 +53,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
 
     private void ClientsHaveLoadedScene(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
+        GameManager.thisManagerInstance.sceneLoader.EndAnimation();
         Debug.Log($"{clientsCompleted.Count} clients have completed loading the scene {sceneName} \n"+
                   $"{clientsTimedOut.Count} clients have not loaded the scene {sceneName}");
     }
@@ -70,11 +71,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
             return;
         }
         SceneAnnouncementRpc(sceneName);
-        SceneEventProgressStatus status = NetworkManager.SceneManager.LoadScene(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
-        if (status != SceneEventProgressStatus.Started)
-        {
-            Debug.LogWarning($"Failed to load {sceneName} with a {nameof(SceneEventProgressStatus)}: {status}");
-        }
+        GameManager.thisManagerInstance.sceneLoader.StartCoroutine(GameManager.thisManagerInstance.sceneLoader.ServerLoadScene(sceneName));
     }
     // Specific menu load functions
     public void ToGameModeSelectScene()

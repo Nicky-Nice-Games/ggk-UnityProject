@@ -474,6 +474,16 @@ public class MultiplayerManager : NetworkBehaviour
             // pick random map
             List<Map> mapOptions = new List<Map>(playerMapSelections.Values);
             Map votedMap = mapOptions[random.Next(mapOptions.Count)];
+
+            //clear the selections (AFTER the map has been chosen already) so they can vote again next time     
+            playerMapSelectionChecks.Clear();
+            foreach (ulong clientId in NetworkManager.ConnectedClientsIds)
+            {
+                playerMapSelectionChecks.Add(clientId, false);
+
+                // default to the map they selected nex time if they selected a map this time, otherwise OuterLoop
+                if (!playerMapSelections.ContainsKey(clientId)) playerMapSelections.Add(clientId, Map.RITOuterLoop);
+            }
             switch (votedMap)
             {
                 case Map.RITOuterLoop:
@@ -502,6 +512,8 @@ public class MultiplayerManager : NetworkBehaviour
                 default:
                     break;
             }
+
+            
         }
     }
 
