@@ -111,5 +111,8 @@ public class MultiplayerSceneManager : NetworkBehaviour
     {
         LoadScene("GSP_FinalsBrickRoad");
     }
-
+    public void ToConnectionBuffer()
+    {
+        LoadScene("MultiplayerConnectionBufferScene");
+    }
 }
