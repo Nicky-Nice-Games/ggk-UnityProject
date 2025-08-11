@@ -79,7 +79,7 @@ public class BoostTier1 : BaseItem
         //warpBoostEffect.SetActive(false);
 
         // add boost usage
-        driver.playerInfo.boostUsage["speedBoost1"]++;
+        driver.IncrementBoostUsageTier1Rpc();
         Destroy(this.gameObject);
     }
 
