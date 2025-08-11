@@ -1131,7 +1131,7 @@ public class NEWDriver : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SendThisPlayerDataRpc()
     {
         gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
