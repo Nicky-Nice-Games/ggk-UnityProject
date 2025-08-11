@@ -142,14 +142,11 @@ public class LeaderboardController : NetworkBehaviour
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
-            player.SendThisPlayerData();
+
+            if (player.OwnerClientId == NetworkManager.Singleton.LocalClientId) {
+                player.SendThisPlayerData();
+            }
         }
-
-        //if multiplayer, figure out number of clients +1, for each player kart, ++ until matches # of clients(+1)
-
-        //if (kart.GetComponent<NEWDriver>() != null)
-        //{
-        //leaderboard.SetActive(true);
 
         if (player != null)
         {
@@ -167,32 +164,8 @@ public class LeaderboardController : NetworkBehaviour
             player.playerInfo.raceTime = curTime * 1000f;
         }
 
-        // if(allPlayerKartsFinished.Value)
-        // {
-        //     leaderboard.SetActive(true);
-        // }
-
-        //if (IsClient || IsServer)
-        //{
-        //    numOfPlayerKarts++;
-        //    Debug.Log("Player kart added, total: " + numOfPlayerKarts);
-        //}
-        //else if (kart.GetComponent<NEWDriver>() != null)
-        //{
-        //    numOfPlayerKarts = 1;
-        //}
-
-        //}
-
-
         // Sort by actual finish time
         finishedKarts.Sort((a, b) => a.finishTime.CompareTo(b.finishTime));
-
-        //// Clear old entries (optional, if leaderboard is visual only)
-        //for (int i = 1; i < leaderboard.transform.childCount; i++)
-        //{
-        //    Destroy(leaderboard.transform.GetChild(i).gameObject);
-        //}
 
         // Add leaderboard entries in correct order
         for (int i = 0; i < finishedKarts.Count; i++)
