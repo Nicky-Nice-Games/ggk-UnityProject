@@ -12,15 +12,15 @@ public class SceneLoader : NetworkBehaviour
 
     public bool loading = false;
 
-    public void LoadScene(string sceneName)
+    public void LoadScene(string sceneName, bool restart = false)
     {
-        StartCoroutine(LoadAnimation(sceneName));
+        StartCoroutine(LoadAnimation(sceneName, restart));
         loading = true;
     }
 
-    IEnumerator LoadAnimation(string sceneName)
+    IEnumerator LoadAnimation(string sceneName, bool restart = false)
     {
-        if (SceneManager.GetActiveScene().name != sceneName)
+        if (SceneManager.GetActiveScene().name != sceneName || restart)
         {
             // Play start scene transition animation
             StartAnimation();
