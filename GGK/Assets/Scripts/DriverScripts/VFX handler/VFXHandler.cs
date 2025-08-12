@@ -249,7 +249,7 @@ public class VFXHandler : NetworkBehaviour
         transitionSparksLtoR[0].Play();
         transitionSparksLtoR[2].Play();
         transitionSparksLtoR[4].Play();
-        transitionSparksLtoR[5].Play();
+        transitionSparksLtoR[6].Play();
     }
 
     void TierTransitionSparksR_Local()
@@ -259,7 +259,7 @@ public class VFXHandler : NetworkBehaviour
         transitionSparksLtoR[1].Play();
         transitionSparksLtoR[3].Play();
         transitionSparksLtoR[5].Play();
-        transitionSparksLtoR[6].Play();
+        transitionSparksLtoR[7].Play();
     }
 
     void ColorDriftLocal(Color c)

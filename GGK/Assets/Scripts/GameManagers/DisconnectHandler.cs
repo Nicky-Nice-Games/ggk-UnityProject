@@ -12,7 +12,6 @@ public class DisconnectHandler : NetworkBehaviour
     {
         instance = this;
     }
-
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -32,12 +31,9 @@ public class DisconnectHandler : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
-        {
+        if (IsServer) {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnectHandler;
-        }
-        else
-        {
+        } else {
             NetworkManager.Singleton.OnClientDisconnectCallback -= ServerDisconnectHandler;
             NetworkManager.Singleton.OnClientConnectedCallback -= ServerConnectHandler;
         }

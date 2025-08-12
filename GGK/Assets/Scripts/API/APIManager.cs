@@ -150,20 +150,16 @@ public class APIManager : MonoBehaviour
             email = thisPlayer.playerEmail
         };
 
-        string createPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
+        string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
         string json = JsonUtility.ToJson(webUserData);
 
         bool playerExists = await CheckForPlayerInDataAsync(webUserData.email, webUserData.username);
         Debug.Log("Player found in server?: " + playerExists);
 
-        // If the player is not found in the database it will be cvreated then assigned its pid
         if (!playerExists)
         {
-            await PostJsonAsync(createPath, json);
+            await PostJsonAsync(path, json);
             Debug.Log("Player created");
-
-            bool setPid = await GetPlayerWithNamePassAsync(webUserData.username, webUserData.password, thisPlayer);
-
             return true;
         }
 
