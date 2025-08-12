@@ -293,6 +293,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 72343425}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &72343426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,6 +1188,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 191474670}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &191474671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1815,6 +1839,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 249675942}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &249675943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2394,6 +2430,7 @@ MonoBehaviour:
   buttonDeselected: {fileID: 21300000, guid: 8856e1d8ecfe9f2419a76922a5bdb785, type: 3}
   buttonSelectedSprite: {fileID: 21300000, guid: 9d8d18fb885d50846a39196d9a7912f2, type: 3}
   buttons: {fileID: 323147349}
+  kart: {fileID: 1697138976}
 --- !u!1 &403394229
 GameObject:
   m_ObjectHideFlags: 0
@@ -2451,7 +2488,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '-'
+  m_text: Pick a Color
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac72608d56d5b4161a30f30e3cf04fbe, type: 2}
   m_sharedMaterial: {fileID: -8028905572983496056, guid: ac72608d56d5b4161a30f30e3cf04fbe, type: 2}
@@ -2829,7 +2866,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '-'
+  m_text: Pick a Driver
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac72608d56d5b4161a30f30e3cf04fbe, type: 2}
   m_sharedMaterial: {fileID: -8028905572983496056, guid: ac72608d56d5b4161a30f30e3cf04fbe, type: 2}
@@ -2990,7 +3027,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 475398935}
-  - component: {fileID: 475398936}
   m_Layer: 0
   m_Name: jamster
   m_TagString: Untagged
@@ -3014,27 +3050,6 @@ Transform:
   - {fileID: 918582376}
   m_Father: {fileID: 1956884470}
   m_LocalEulerAnglesHint: {x: 0, y: 13.111, z: 0}
---- !u!95 &475398936
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475398934}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 1ed40588bed5624429486c3803fe30c6, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &540445736
 GameObject:
   m_ObjectHideFlags: 0
@@ -3492,6 +3507,18 @@ MonoBehaviour:
       - m_Target: {fileID: 323147351}
         m_TargetAssemblyTypeName: ColorSelect, Assembly-CSharp
         m_MethodName: SelectColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 636496712}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 636496712}
@@ -4117,6 +4144,18 @@ MonoBehaviour:
       - m_Target: {fileID: 323147351}
         m_TargetAssemblyTypeName: ColorSelect, Assembly-CSharp
         m_MethodName: SelectColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 724232245}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 724232245}
@@ -5194,10 +5233,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 583850472697085522, guid: c68345601149776429994a586dfaeb61, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 59154aa33301bad47bd5c466ad777b5b, type: 2}
     - target: {fileID: 919132149155446097, guid: c68345601149776429994a586dfaeb61, type: 3}
       propertyPath: m_Name
       value: model_jamster_fixed_skinning (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1801010833366180029, guid: c68345601149776429994a586dfaeb61, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0829f3abdb3936e40bff5a91c5fccda0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5891,10 +5938,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1852909328}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1121452899
 MonoBehaviour:
@@ -5990,9 +6037,9 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 2055387538}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 1313160056}
     m_SelectOnLeft: {fileID: 1337925783}
-    m_SelectOnRight: {fileID: 1313160056}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -6021,6 +6068,18 @@ MonoBehaviour:
       - m_Target: {fileID: 323147351}
         m_TargetAssemblyTypeName: ColorSelect, Assembly-CSharp
         m_MethodName: SelectColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1139664201}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1139664201}
@@ -6808,6 +6867,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1313160056}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1313160057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7193,6 +7264,18 @@ MonoBehaviour:
       - m_Target: {fileID: 323147351}
         m_TargetAssemblyTypeName: ColorSelect, Assembly-CSharp
         m_MethodName: SelectColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1337925783}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1337925783}
@@ -7991,6 +8074,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1492858989}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1492858990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8478,6 +8573,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1579515381}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1579515382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8786,43 +8893,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.007
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0084
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.0301
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.97210276
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.090351604
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.1887463
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.10596075
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 7.797
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 140
+      value: -22.937
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -14.026
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
       propertyPath: m_Name
@@ -8835,7 +8942,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1697138977}
   m_SourcePrefab: {fileID: 100100000, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
 --- !u!4 &1697138975 stripped
 Transform:
@@ -8845,6 +8955,25 @@ Transform:
 --- !u!1 &1697138976 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
+  m_PrefabInstance: {fileID: 1697138974}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1697138977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697138976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48daa0ab171a85d498c2d42e74f99f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 0, b: 0, a: 0}
+  renderer: {fileID: 1697138978}
+--- !u!23 &1697138978 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8230876336975989264, guid: 37864caf907a5e8499d4dceffaf4d7c0, type: 3}
   m_PrefabInstance: {fileID: 1697138974}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1719670811
@@ -9019,8 +9148,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.11416822, z: -0, w: 0.99346143}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4036608, y: 1.4036608, z: 1.4036608}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.75, y: 1.75, z: 1.75}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2107289643}
   - {fileID: 1719670812}
@@ -9602,6 +9731,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1814786929}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1814786930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10015,14 +10156,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868908865}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.11416822, z: -0, w: 0.99346143}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.2134681, z: -0, w: 0.97695005}
+  m_LocalPosition: {x: 0.00069302006, y: 0.00000009907195, z: -0.00037020445}
   m_LocalScale: {x: 1.4036608, y: 1.4036608, z: 1.4036608}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1265678115}
   m_Father: {fileID: 1956884470}
-  m_LocalEulerAnglesHint: {x: 0, y: 13.111, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 24.651, z: 0}
 --- !u!1 &1869209184
 GameObject:
   m_ObjectHideFlags: 0
@@ -11332,6 +11473,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1697138977}
+        m_TargetAssemblyTypeName: ChangeMenuKartColor, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2055387538}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2055387539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11472,7 +11625,7 @@ MonoBehaviour:
           m_MethodName: ExitHover
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 72608292}
+            m_ObjectArgument: {fileID: 2055387536}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
@@ -11951,6 +12104,7 @@ MonoBehaviour:
   firstColor: {fileID: 191474668}
   colorOptionsPanel: {fileID: 203228802}
   charOptionsPanel: {fileID: 540445739}
+  kartDisplay: {fileID: 1697138976}
 --- !u!1 &2145882294
 GameObject:
   m_ObjectHideFlags: 0
