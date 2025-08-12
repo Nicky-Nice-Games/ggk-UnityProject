@@ -1164,6 +1164,12 @@ public class NEWDriver : NetworkBehaviour
         playerInfo.racePos = pos;
     }
 
+    public void AssignPlacement(int pos)
+    {
+        Debug.Log("Placement: " + pos);
+        playerInfo.racePos = pos;
+    }
+
     [Rpc(SendTo.Owner, RequireOwnership = false)]
     public void IncrementHazardUsageTier1Rpc()
     {

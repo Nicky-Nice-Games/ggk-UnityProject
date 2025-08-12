@@ -201,6 +201,9 @@ public class LeaderboardController : NetworkBehaviour
                     tempArray[i].color = Color.white;
                 }
             }
+
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacement(kart.placement);
         }
         else if (IsServer)
         {

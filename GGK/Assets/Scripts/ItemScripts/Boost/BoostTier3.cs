@@ -143,7 +143,8 @@ public class BoostTier3 : BaseItem
         driver.turnWheels = true;
 
         // add boost usage
-        driver.IncrementBoostUsageTier3Rpc();
+        if (driver.IsSpawned) { driver.IncrementBoostUsageTier3Rpc(); }
+        else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.boostUsage["speedBoost3"]++; }
         Destroy(this.gameObject);
     }
 
