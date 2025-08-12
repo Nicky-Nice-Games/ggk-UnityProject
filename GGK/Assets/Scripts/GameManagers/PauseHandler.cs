@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,20 +17,12 @@ public class PauseHandler : NetworkBehaviour
     public GameObject restartBtn;
     public GameObject mapBtn;
     public GameObject startBtn;
-    public TMP_Text startBtnText;
 
     public Vector3 initalScale;
 
     // Multiplayer Pausing
     public bool isHostPaused;
     public GameObject hostPausedText;
-    public static PauseHandler instance;
-
-    private void Awake()
-    {
-        instance = this;
-
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -77,10 +68,6 @@ public class PauseHandler : NetworkBehaviour
                     else
                     {
                         pausePanel.SetActive(true);
-                        restartBtn.SetActive(false);
-                        mapBtn.SetActive(true);
-                        startBtn.SetActive(false);
-                        EnableButtons();
                         Time.timeScale = 0;
                     }
 
@@ -101,10 +88,7 @@ public class PauseHandler : NetworkBehaviour
                     else
                     {
                         pausePanel.SetActive(true);
-                        restartBtn.SetActive(false);
-                        mapBtn.SetActive(false);
-                        startBtn.SetActive(true);
-                        EnableButtons();
+                        Time.timeScale = 0;
                     }
                 }
             }
@@ -118,10 +102,6 @@ public class PauseHandler : NetworkBehaviour
                 else
                 {
                     pausePanel.SetActive(true);
-                    restartBtn.SetActive(true);
-                    mapBtn.SetActive(true);
-                    startBtn.SetActive(true);
-                    EnableButtons();
                     Time.timeScale = 0;
                 }
             }
@@ -140,17 +120,9 @@ public class PauseHandler : NetworkBehaviour
     // Return to start menu
     public void ReturnToStart()
     {
-        Debug.Log("running ReturnToStart()");
         DisableButtons();
-        if (IsSpawned)
-        {
-            Debug.Log($"attempting safe disconnect");
-            DisconnectHandler.instance.SafeDisconnect();
-        }
-        else
-        {
-            gameManager.LoadStartMenu();
-        }
+
+        gameManager.LoadStartMenu();
         Time.timeScale = 1;
     }
 
@@ -158,16 +130,8 @@ public class PauseHandler : NetworkBehaviour
     public void ReturnToMapSelect()
     {
         DisableButtons();
-        if (IsSpawned)
-        {
-            MultiplayerSceneManager.Instance.ToMapSelectScene();
-            MultiplayerManager.Instance.SoftResetMapSelection();
-            MultiplayerManager.Instance.ResetTimers();
-        }
-        else
-        {
-            gameManager.PlayerSelected();
-        }
+
+        gameManager.PlayerSelected();
         Time.timeScale = 1;
     }
 
@@ -185,7 +149,6 @@ public class PauseHandler : NetworkBehaviour
             if (pausePanel.activeSelf)
             {
                 hostPausedText.SetActive(false);
-                Time.timeScale = 1;
             }
             // Client not paused
             else
@@ -203,7 +166,6 @@ public class PauseHandler : NetworkBehaviour
             if (pausePanel.activeSelf)
             {
                 hostPausedText.SetActive(true);
-                Time.timeScale = 0;
             }
             // Client not paused
             else
@@ -220,12 +182,5 @@ public class PauseHandler : NetworkBehaviour
         restartBtn.GetComponent<Button>().enabled = false;
         mapBtn.GetComponent<Button>().enabled = false;
         startBtn.GetComponent<Button>().enabled = false;
-    }
-    
-    private void EnableButtons()
-    {
-        restartBtn.GetComponent<Button>().enabled = true;
-        mapBtn.GetComponent<Button>().enabled = true;
-        startBtn.GetComponent<Button>().enabled = true;
     }
 }

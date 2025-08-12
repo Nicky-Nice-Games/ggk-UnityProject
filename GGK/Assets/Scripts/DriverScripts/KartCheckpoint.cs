@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -142,7 +143,7 @@ public class KartCheckpoint : NetworkBehaviour
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
                     // raceposition data to playerinfo
-                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePos = placement;
+                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
 
                     if (this.GetComponent<NPCDriver>() == null && physicsNPC == null
                         && MusicStateManager.instance != null)
@@ -218,6 +219,19 @@ public class KartCheckpoint : NetworkBehaviour
         {
             Debug.Log("Inside");
             StartCoroutine(GameOverWait());
+        }
+    }
+
+    // Something happens when placement changes
+    public void OnPlacementChange(int newPlacement)
+    {
+        if (newPlacement < placement)
+        {
+            Debug.Log("Placement up - Passed Kart");
+        }
+        else if (newPlacement > placement)
+        {
+            Debug.Log("Placement Down - Kart Passed");
         }
     }
 }

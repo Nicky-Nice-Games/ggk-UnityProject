@@ -30,7 +30,7 @@ public class ShieldTier2 : BaseItem
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
 
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense2"]++;
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["shield2"]++;
 
             shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", gameObject);
             StartCoroutine(StopPlayingShieldNoise());

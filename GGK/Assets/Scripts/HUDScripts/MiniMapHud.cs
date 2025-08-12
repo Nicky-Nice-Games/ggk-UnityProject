@@ -340,7 +340,7 @@ public class MiniMapHud : MonoBehaviour
 
     private void DebugBounds()
     {
-        if (showDebug)
+        if (showDebug && boundsMaker)
         {
             boundsMaker.positionCount = 5;
             boundsMaker.gameObject.transform.position = center;

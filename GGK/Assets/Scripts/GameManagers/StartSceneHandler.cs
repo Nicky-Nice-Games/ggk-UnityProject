@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class StartSceneHandler : MonoBehaviour
 {
@@ -22,6 +24,9 @@ public class StartSceneHandler : MonoBehaviour
         startButton.onClick.AddListener(() => gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
         quitButton.onClick.AddListener(() => gamemanagerObj.ExitGame());
 
+        // listens for any button press on the start screen
+        InputSystem.onAnyButtonPress.CallOnce(OnAnyButton);
+        
         if (MusicStateManager.instance != null)
         {
             MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
@@ -34,5 +39,16 @@ public class StartSceneHandler : MonoBehaviour
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// takes in which button is pressed then starts game
+    /// </summary>
+    /// <param name="control">which button was pressed</param>
+    private void OnAnyButton(InputControl control)
+    {
+        Debug.Log("Pressed: " + control.name);
+
+        gamemanagerObj.StartGame();
     }
 }

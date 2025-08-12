@@ -198,13 +198,14 @@ public class Countdown : NetworkBehaviour
         Time.timeScale = 0;
 
         // Host in Multiplayer 
-        if (IsServer && NetworkManager.Singleton.IsListening)
-        {
-            StartCoroutine(ServerCountdownRoutine());
-        }
+        // this functionality is moved over to PlayerSpawner, line 186
+        //if (IsServer && NetworkManager.Singleton.IsListening)
+        //{
+        //StartCoroutine(ServerCountdownRoutine());
+        //}
 
         // Singleplayer
-        else if (!NetworkManager.Singleton.IsListening)
+        if (!NetworkManager.Singleton.IsListening)
         {
             StartCoroutine(LocalCountdownRoutine());
         }
@@ -225,7 +226,7 @@ public class Countdown : NetworkBehaviour
         //}
     }
 
-    IEnumerator ServerCountdownRoutine()
+    public IEnumerator ServerCountdownRoutine()
     {
         yield return new WaitForSecondsRealtime(countdownSpeed);
 

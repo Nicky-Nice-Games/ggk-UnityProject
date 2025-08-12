@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts;
+using TMPro;
 
 /// <summary>
 /// Map Enum by Phillip Brown
@@ -22,8 +23,20 @@ public class MapSelectHandeler : MonoBehaviour
 {
     [SerializeField] private List<GameObject> mapOptions = new List<GameObject>();
     private GameManager gamemanagerObj;
+    [SerializeField]
+    private TextMeshProUGUI trackDisplay;
+
+    [SerializeField]
+    private Button confirmBtn;
     // [SerializeField] private Transform waitingScreen;
     // [SerializeField] private Transform mapButtons;
+
+    [SerializeField]
+    private Sprite mapSelectedTexture;
+    [SerializeField]
+    private Sprite mapDefaultTexture;
+    [SerializeField]
+    private Image trackPreview;
 
 
     // Start is called before the first frame update
@@ -40,9 +53,18 @@ public class MapSelectHandeler : MonoBehaviour
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            gamemanagerObj.GetComponent<GameManager>().MapSelected());
+            {
+                CharacterData.Instance.mapVote = obj.name;
+                trackDisplay.text = obj.name;
+                trackPreview.sprite = obj.transform.GetChild(0).GetComponent<Image>().sprite;
+                foreach (GameObject button in mapOptions)
+                {
+                    button.GetComponent<Image>().sprite = mapDefaultTexture;
+                }
+                obj.GetComponent<Image>().sprite = mapSelectedTexture;
+            });
 
-            button.onClick.AddListener(() => DisableButtons());
+            //button.onClick.AddListener(() => DisableButtons());
         }
 
         if (MusicStateManager.instance != null)
@@ -51,6 +73,12 @@ public class MapSelectHandeler : MonoBehaviour
             MusicLapStateManager.instance.SetLapState(LapState.None);
             MusicStateManager.instance.SetMusicState(MusicState.Menu);
         }
+        confirmBtn.onClick.AddListener(() => ConfirmVote());
+    }
+
+    public void ConfirmVote()
+    {
+        gamemanagerObj.MapSelected();
     }
 
     private void DisableButtons()
