@@ -22,7 +22,10 @@ public class ChangeMenuKartColor : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Run on-click of the color buttons and changes the color of the kart in the scene.
+    /// </summary>
+    /// <param name="_color">The selected color.</param>
     public void SetColor(Button _color)
     {
         color = _color.transform.GetChild(0).GetComponent<Image>().color;
