@@ -46,6 +46,8 @@ public class CharacterSelect : MonoBehaviour
     private Button colorOptionsPanel;
     [SerializeField]
     private Button charOptionsPanel;
+    [SerializeField]
+    private GameObject kartDisplay;
 
     // Start is called before the first frame update
     void Start()
@@ -115,6 +117,7 @@ public class CharacterSelect : MonoBehaviour
         if (CharacterData.Instance.characterName != "")
         {
             colorSelectMenu.SetActive(true);
+            kartDisplay.SetActive(true);
             charSelectMenu.SetActive(false);
             eventSystem.SetSelectedGameObject(firstColor);
             colorOptionsPanel.onClick = charOptionsPanel.onClick;
