@@ -90,29 +90,33 @@ public class PuckTier2 : BaseItem
     void OnCollisionEnter(Collision collision)
     {
         // If puck hits a kart
-        if (startTimer >= 0.1f)
+        if (collision.gameObject.CompareTag("Kart"))
         {
+            // If puck hits a kart
+            if (startTimer >= 0.1f)
+            {
 
-            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
-            {
-                NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
-                playerKart.Stun(2.0f);
-            }
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                {
+                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    playerKart.Stun(2.0f);
+                }
 
-            if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
-            {
-                NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
-                npcKart.Stun(2.0f);
-            }
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                {
+                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcKart.Stun(2.0f);
+                }
 
-            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-            if (!MultiplayerManager.Instance.IsMultiplayer)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                DestroyItemRpc(this);
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    DestroyItemRpc(this);
+                }
             }
         }
         // Pucks can destroy other pucks
