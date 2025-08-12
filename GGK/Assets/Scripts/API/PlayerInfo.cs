@@ -28,9 +28,9 @@ public class PlayerInfo : ScriptableObject
     // Basic player and match stats
     [Header("Do not Change")]
     public string pid;
-    public int racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public DateTime raceStartTime;
     public float raceTime;
+    public int racePos, mapRaced, characterUsed, collisionsWithPlayers, collisionWithWalls, fellOffMap;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
@@ -51,7 +51,7 @@ public class PlayerInfo : ScriptableObject
         pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
-        racePosition = 0;
+        racePos = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
         collisionWithWalls = 0;
@@ -79,17 +79,17 @@ public class PlayerInfo : ScriptableObject
         };
         trapUsage = new Dictionary<string, int>
         {
-            {"oilSpill", 0 },
+            {"oilSpill1", 0 },
             {"brickwall", 0 },
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
         };
         defenseUsage = new Dictionary<string, int>
         {
-            {"shield1", 0 },
-            {"shield2", 0 },
-            {"shield3", 0 },
-            {"shield4", 0 }
+            {"defense1", 0 },
+            {"defense2", 0 },
+            {"defense3", 0 },
+            {"defense4", 0 }
         };
 
         isGuest = false;
@@ -102,7 +102,7 @@ public class PlayerInfo : ScriptableObject
         pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
-        racePosition = 0;
+        racePos = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
         collisionWithWalls = 0;
@@ -153,7 +153,7 @@ public class PlayerInfo : ScriptableObject
         pid = other.pid;
         raceStartTime = other.raceStartTime;
         raceTime = other.raceTime;
-        racePosition = other.racePosition;
+        racePos = other.racePos;
         mapRaced = other.mapRaced;
         collisionsWithPlayers = other.collisionsWithPlayers;
         collisionWithWalls = other.collisionWithWalls;

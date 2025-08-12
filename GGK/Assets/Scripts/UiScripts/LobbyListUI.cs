@@ -86,7 +86,15 @@ public class LobbyListUI : MonoBehaviour
             Transform lobbySingleTransform = Instantiate(lobbySingleTemplate, container);
             lobbySingleTransform.gameObject.SetActive(true);
             LobbyListSingleUI lobbyListSingleUI = lobbySingleTransform.GetComponent<LobbyListSingleUI>();
-            lobbyListSingleUI.UpdateLobby(lobby);
+            if (lobbyList.IndexOf(lobby) % 2 == 0)
+            {
+                lobbySingleTransform.gameObject.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0.25f);
+            }
+            else
+            {
+                lobbySingleTransform.gameObject.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0.4f);
+            }
+                lobbyListSingleUI.UpdateLobby(lobby);
         }
     }
 
@@ -98,6 +106,7 @@ public class LobbyListUI : MonoBehaviour
     private void CreateLobbyButtonClick()
     {
         LobbyCreateUI.Instance.Show();
+        Hide();
     }
 
     public void Hide()

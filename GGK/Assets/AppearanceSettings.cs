@@ -10,6 +10,8 @@ public class AppearanceSettings : NetworkBehaviour
     public Sprite icon;
     public Color color;
     public string kartName;
+    
+    public Renderer renderer;
 
     public List<GameObject> models; // List of GameObjects representing different character models
     CharacterData characterData; // Reference to CharacterData script
@@ -59,13 +61,28 @@ public class AppearanceSettings : NetworkBehaviour
 
     public void UpdateModel()
     {
+        if (color != null && GetComponent<NEWDriver>())
+        {
+            Material[] materials = renderer.materials;
+
+            // Create a new instance of the existing material so we don't modify the shared one
+            Material newMaterial = new Material(materials[3]);
+            newMaterial.color = color;
+
+            // Replace the old material in the array
+            materials[3] = newMaterial;
+
+            // Assign the array back to the renderer
+            renderer.materials = materials;
+        }
+
         // Set correct character model active
         if (models != null)
         {
             for (int i = 0; i < models.Count; i++)
             {
                 //Setting active correct model
-                if (name == models[i].name || CharacterBuilder.ModelToName(name) == models[i].name)
+                if (name == models[i].name)
                 {
                     models[i].SetActive(true);
                     break;
@@ -75,6 +92,7 @@ public class AppearanceSettings : NetworkBehaviour
                 //bugs out in multiplayer :(
                 //Destroy(models[i])
             }
+            
         }
         else
         {

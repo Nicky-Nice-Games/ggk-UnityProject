@@ -150,16 +150,20 @@ public class APIManager : MonoBehaviour
             email = thisPlayer.playerEmail
         };
 
-        string path = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
+        string createPath = "https://maventest-a9cc74b8d5cf.herokuapp.com/gameservice/playerlog/create";
         string json = JsonUtility.ToJson(webUserData);
 
         bool playerExists = await CheckForPlayerInDataAsync(webUserData.email, webUserData.username);
         Debug.Log("Player found in server?: " + playerExists);
 
+        // If the player is not found in the database it will be cvreated then assigned its pid
         if (!playerExists)
         {
-            await PostJsonAsync(path, json);
+            await PostJsonAsync(createPath, json);
             Debug.Log("Player created");
+
+            bool setPid = await GetPlayerWithNamePassAsync(webUserData.username, webUserData.password, thisPlayer);
+
             return true;
         }
 
@@ -197,7 +201,7 @@ public class APIManager : MonoBehaviour
             signInManager.emailError.SetActive(true);
             return true;
         }
-        if(!usernameAvailable)
+        if (!usernameAvailable)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
             kbController.ResetCurrentFields();
@@ -230,7 +234,7 @@ public class APIManager : MonoBehaviour
         {
             gameManager.LoggedIn();
         }
-        
+
     }
 
     /// <summary>

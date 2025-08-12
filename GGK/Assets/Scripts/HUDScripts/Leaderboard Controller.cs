@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaderboardController : NetworkBehaviour
 {
@@ -51,14 +52,14 @@ public class LeaderboardController : NetworkBehaviour
             // Format and display time
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.000}", minutes, seconds);
+            timeDisplay.text = string.Format("{0:00}:{1:00.000}", minutes, seconds);
         }
         else
         {
             curTime = 0;
             float seconds = curTime % 60;
             int minutes = (int)curTime / 60;
-            timeDisplay.text = "Time: " + string.Format("{0:00}:{1:00.000}", minutes, seconds);
+            timeDisplay.text = string.Format("{0:00}:{1:00.000}", minutes, seconds);
         }
     }
 
@@ -137,18 +138,13 @@ public class LeaderboardController : NetworkBehaviour
 
     public void Finished(KartCheckpoint kart)
     {
+        NEWDriver player = kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+
         if (!finishedKarts.Contains(kart))
         {
             finishedKarts.Add(kart);
         }
 
-        //if multiplayer, figure out number of clients +1, for each player kart, ++ until matches # of clients(+1)
-
-        //if (kart.GetComponent<NEWDriver>() != null)
-        //{
-        //leaderboard.SetActive(true);
-
-        NEWDriver player = kart.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
         if (player != null)
         {
             numOfPlayerKarts++;
@@ -162,36 +158,10 @@ public class LeaderboardController : NetworkBehaviour
                 leaderboard.SetActive(true);
                 allPlayerKartsFinished.Value = true;
             }
-            player.playerInfo.raceTime = curTime * 1000f;
-            player.SendThisPlayerData();
         }
-
-        // if(allPlayerKartsFinished.Value)
-        // {
-        //     leaderboard.SetActive(true);
-        // }
-
-        //if (IsClient || IsServer)
-        //{
-        //    numOfPlayerKarts++;
-        //    Debug.Log("Player kart added, total: " + numOfPlayerKarts);
-        //}
-        //else if (kart.GetComponent<NEWDriver>() != null)
-        //{
-        //    numOfPlayerKarts = 1;
-        //}
-
-        //}
-
 
         // Sort by actual finish time
         finishedKarts.Sort((a, b) => a.finishTime.CompareTo(b.finishTime));
-
-        //// Clear old entries (optional, if leaderboard is visual only)
-        //for (int i = 1; i < leaderboard.transform.childCount; i++)
-        //{
-        //    Destroy(leaderboard.transform.GetChild(i).gameObject);
-        //}
 
         // Add leaderboard entries in correct order
         for (int i = 0; i < finishedKarts.Count; i++)
@@ -204,24 +174,31 @@ public class LeaderboardController : NetworkBehaviour
         {
             Debug.Log("single player");
             GameObject tempItem = Instantiate(leaderboardItem);
+            UnityEngine.UI.Image tempBackground = tempItem.GetComponent<UnityEngine.UI.Image>();
             TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
 
             tempArray[0].text = kart.placement.ToString();
             tempArray[1].text = kart.name;
             tempArray[2].text = string.Format("{0:00}:{1:00.000}", (int)kart.finishTime / 60, kart.finishTime % 60);
 
-
-
             tempItem.transform.SetParent(leaderboard.transform);
             tempItem.transform.localScale = Vector3.one;
 
-
+            // adjust color every other kart placement
+            if(kart.placement % 2 == 0)
+            {
+                tempBackground.color = new Color(0, 0, 0, 0.7f);
+            }
+            else
+            {
+                tempBackground.color = new Color (0, 0, 0, 0.4f);
+            }
 
             if (kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null) // local player
             {
                 for (int i = 0; i < tempArray.Length; i++)
                 {
-                    tempArray[i].color = Color.red;
+                    tempArray[i].color = Color.yellow;
                 }
             }
             else
@@ -231,6 +208,10 @@ public class LeaderboardController : NetworkBehaviour
                     tempArray[i].color = Color.white;
                 }
             }
+
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacement(kart.placement);
+            leaderboard.transform.SetAsLastSibling();
         }
         else if (IsServer)
         {
@@ -240,13 +221,24 @@ public class LeaderboardController : NetworkBehaviour
             float tempFinishTime = kart.finishTime;
             bool isPlayerKart = kart.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null;
             ulong ownerClientId = kart.transform.parent.GetComponent<NetworkObject>().OwnerClientId;
+
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacementRpc(kart.placement);
+
             SendTimeDisplayRpc(new LeaderboardDisplayCard(tempPlacement, tempName, tempFinishTime, ownerClientId, isPlayerKart));
         }
         else
         {
             Debug.Log("this is client");
+            player.playerInfo.raceTime = curTime * 1000f;
+            player.AssignPlacementRpc(kart.placement);
         }
 
+        if ( player != null && 
+            player.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            player.SendThisPlayerData();
+        }
     }
 
     /// <summary>
@@ -269,6 +261,7 @@ public class LeaderboardController : NetworkBehaviour
     {
         Debug.Log("SendTimeDisplayRPC called");
         GameObject tempItem = Instantiate(leaderboardItem);
+        UnityEngine.UI.Image tempBackground = tempItem.GetComponent<UnityEngine.UI.Image>();
         TextMeshProUGUI[] tempArray = tempItem.GetComponentsInChildren<TextMeshProUGUI>();
 
         tempArray[0].text = card.Placement.ToString();
@@ -278,11 +271,21 @@ public class LeaderboardController : NetworkBehaviour
         tempItem.transform.SetParent(leaderboard.transform);
         tempItem.transform.localScale = Vector3.one;
 
+        // adjust color every other kart placement
+        if (card.Placement % 2 == 0)
+        {
+            tempBackground.color = new Color(0, 0, 0, 0.7f);
+        }
+        else
+        {
+            tempBackground.color = new Color(0, 0, 0, 0.4f);
+        }
+
         if (card.IsPlayerKart && card.OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
             for (int i = 0; i < tempArray.Length; i++)
             {
-                tempArray[i].color = Color.red;
+                tempArray[i].color = Color.yellow;
             }
         }
         else
@@ -292,6 +295,7 @@ public class LeaderboardController : NetworkBehaviour
                 tempArray[i].color = Color.white;
             }
         }
+        leaderboard.transform.SetAsLastSibling();
 
         Debug.Log("added card to leaderboard");
     }

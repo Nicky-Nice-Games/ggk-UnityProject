@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -123,9 +124,6 @@ public class KartCheckpoint : NetworkBehaviour
                 if (lap >= totalLaps)
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
-                    // raceposition data to playerinfo
-                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
-                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -175,13 +173,24 @@ public class KartCheckpoint : NetworkBehaviour
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        Debug.Log(gameObject.transform.parent.GetChild(0));
-        Debug.Log(gameObject.transform.parent.GetChild(0).gameObject);
         if (leaderboardController.allPlayerKartsFinished.Value /*&& 
             gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null*/)
         {
             Debug.Log("Inside");
             StartCoroutine(GameOverWait());
+        }
+    }
+
+    // Something happens when placement changes
+    public void OnPlacementChange(int newPlacement)
+    {
+        if (newPlacement < placement)
+        {
+            Debug.Log("Placement up - Passed Kart");
+        }
+        else if (newPlacement > placement)
+        {
+            Debug.Log("Placement Down - Kart Passed");
         }
     }
 }
