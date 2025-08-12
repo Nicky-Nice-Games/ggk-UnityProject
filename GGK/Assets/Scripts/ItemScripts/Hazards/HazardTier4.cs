@@ -1,14 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Blizzard
+/// </summary>
 public class HazardTier4 : BaseItem
 {
+    GameObject hazardVFX;
+
     private void Start()
     {
         Vector3 behindPos = transform.position - transform.forward * 11;
         behindPos.y += 0.8f;
         transform.position = behindPos;
+
+        // Checking for multiplayer
+        if (IsSpawned)
+        {
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier4Rpc();
+        }
+        else
+        {
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+        }
+
+        // get a reference to only the vfx
+        hazardVFX = GameObject.Find("VFX");
     }
 
     private new void Update()
@@ -19,7 +35,8 @@ public class HazardTier4 : BaseItem
 
     private void RotateBox()
     {
-        transform.rotation *= new Quaternion(0.0f, 1.5f * Time.deltaTime, 0.0f, 1.0f);
+        // only rotate the vfx portion of the hazard and not the cloud
+        hazardVFX.transform.rotation *= new Quaternion(0.0f, 1.5f * Time.deltaTime, 0.0f, 1.0f);
     }
 
     private void OnTriggerEnter(Collider collision)

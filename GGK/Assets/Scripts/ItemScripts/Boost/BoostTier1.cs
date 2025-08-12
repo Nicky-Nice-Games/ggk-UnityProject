@@ -77,6 +77,10 @@ public class BoostTier1 : BaseItem
         //boostEffect.Stop();
         vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
+
+        // add boost usage
+        if (driver.IsSpawned) { driver.IncrementBoostUsageTier1Rpc(); }
+        else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.boostUsage["speedBoost1"]++; }
         Destroy(this.gameObject);
     }
 

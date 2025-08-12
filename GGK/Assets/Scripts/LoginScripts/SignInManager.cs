@@ -47,13 +47,11 @@ public class SignInManager : MonoBehaviour
             button.onClick.AddListener(() =>
             gameManager.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            {
-                StartCoroutine(HandleLoginSuccess());
-            });
+            gameManager.LoggedIn());
         }
 
         // Getting Client ID / creating player info
-        playerInfo = new PlayerInfo();
+        playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         gameManager.playerInfo = playerInfo;
 
         // Organizing fields list into dict

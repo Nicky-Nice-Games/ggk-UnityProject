@@ -170,6 +170,10 @@ public class BoostTier4 : BaseItem
         //boostEffect.Stop();
         vfxScript.StopItemEffects();
         //warpBoostEffect.SetActive(false);
+
+        // add boost usage
+        if (driver.IsSpawned) { driver.IncrementBoostUsageTier4Rpc(); }
+        else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.boostUsage["speedBoost4"]++; }
         Destroy(this.gameObject);
     }
 

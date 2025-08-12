@@ -474,9 +474,19 @@ MonoBehaviour:
   placementDisplay: {fileID: 30088673}
   lapDisplay: {fileID: 1288898459}
   trackedKart: {fileID: 0}
+  positionDisplay: {fileID: 246380984}
   kartCheckpointList: []
   sortedList: []
   kartsList: []
+  spritePlacementList:
+  - {fileID: 21300000, guid: e2084500f3aa75d4ea257ac740553510, type: 3}
+  - {fileID: 21300000, guid: a36de5e524d2add4a8f4d29d68e4bd20, type: 3}
+  - {fileID: 21300000, guid: 2fb82e7cd4add10498e25dbcd664fe27, type: 3}
+  - {fileID: 21300000, guid: 65c7831b2296931468fcd0614785ad84, type: 3}
+  - {fileID: 21300000, guid: 9ccc318c681f8034bb6c2d1cb2747d68, type: 3}
+  - {fileID: 21300000, guid: fce70dffe1893ac49a63c5f296d0f58d, type: 3}
+  - {fileID: 21300000, guid: ebd2e2e6742f70d4a8a3846b55015af8, type: 3}
+  - {fileID: 21300000, guid: 4fb0db3e2fdedb44a9ad94d6d02be68a, type: 3}
 --- !u!4 &26513595
 Transform:
   m_ObjectHideFlags: 0
@@ -547,7 +557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 428.51373, y: 74}
+  m_AnchoredPosition: {x: -1086, y: 465}
   m_SizeDelta: {x: 483.0275, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &30088673
@@ -2492,6 +2502,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2020482317}
   - {fileID: 1376644065}
   - {fileID: 1907458773}
   - {fileID: 697003252}
@@ -2500,7 +2511,9 @@ RectTransform:
   - {fileID: 1192446277}
   - {fileID: 455216419}
   - {fileID: 795795857}
+  - {fileID: 246380986}
   - {fileID: 1483597930}
+  - {fileID: 1948391904}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8444,6 +8457,22 @@ PrefabInstance:
     - target: {fileID: -2367733819248507835, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2430106599
+      objectReference: {fileID: 0}
+    - target: {fileID: -2367733819248507835, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 4017083756
+      objectReference: {fileID: 0}
+    - target: {fileID: 471504874506883914, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: bb11b495ec21c7343b04110aa989c6ee, type: 2}
+    - target: {fileID: 471504874506883914, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2042873504735978995, guid: bb11b495ec21c7343b04110aa989c6ee, type: 2}
+    - target: {fileID: 471504874506883914, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3764642559374090144, guid: d9593fa36c39d724e8df175aacb3130c, type: 3}
       propertyPath: m_Name

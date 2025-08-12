@@ -99,7 +99,6 @@ public class LobbyUI : MonoBehaviour
 
     private void EnableStartButton()
     {
-        startButton.gameObject.GetComponent<Image>().color = Color.white;
         startButton.gameObject.GetComponentInChildren<TMP_Text>().color = Color.white;
         startButton.gameObject.GetComponent<Button>().enabled = true;
     }

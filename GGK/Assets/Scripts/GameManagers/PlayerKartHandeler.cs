@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -45,8 +46,7 @@ public class PlayerKartHandeler : MonoBehaviour
             Image[] images = characterButton.GetComponentsInChildren<Image>();
 
             Button btn = characterButton.GetComponentInChildren<Button>();
-
-            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], btn.name));
+            btn.onClick.AddListener(() => ChangeCharacter(images[1], images[2], characterButton.name));
         }
 
         // Invoke default selection
@@ -62,11 +62,11 @@ public class PlayerKartHandeler : MonoBehaviour
             gameManager.GetComponentInChildren<GameManager>().PlayerSelected());
         }
 
-        // During multiplayer build multiplayer panel
-        if (MultiplayerManager.Instance.IsMultiplayer)
-        {
-            MultiplayerManager.Instance.AddPlayerToPanelRpc();
-        }
+        //// During multiplayer build multiplayer panel
+        //if (MultiplayerManager.Instance.IsMultiplayer)
+        //{
+        //    MultiplayerManager.Instance.AddPlayerToPanelRpc();
+        //}
     }
 
     public void SwitchToWaitingScreen()
@@ -87,7 +87,7 @@ public class PlayerKartHandeler : MonoBehaviour
     }
 
     // Select this character button
-    public void ChangeCharacter(Image characterImage, Image border, string name)
+    public void ChangeCharacter(Image characterImage, Image border, string charName)
     {
         // Reset previous character button's border color to gray
         if (prevCharacterImageBorder != null)
@@ -101,13 +101,13 @@ public class PlayerKartHandeler : MonoBehaviour
 
         // Change selected character information to those on the button
         characterSelectedImage = characterImage;
-        ColorChange(); // Change color of selected character image
-        characterName.text = name;
+        //ColorChange(); // Change color of selected character image
+        characterName.text = charName;
         
         // Set active the correct character model
         foreach(GameObject characterModel in characterModels)
         {
-            if (characterModel.name.ToLower() != name.ToLower())
+            if (characterModel.name.ToLower() != charName.ToLower())
             {
                 characterModel.SetActive(false);
             }
@@ -117,82 +117,130 @@ public class PlayerKartHandeler : MonoBehaviour
             }
         }
         // Save selected button information to change back later and change border color to yellow
-        border.enabled = true;
-        prevCharacterImageBorder = border;
+       //border.enabled = true;
+       //prevCharacterImageBorder = border;
 
         // Save information to characterData script if it exist
         if (characterData != null)
         {
             characterData.characterSprite = characterImage.sprite;
-            characterData.characterName = name;
+            characterData.characterName = charName;
+            SendAppearanceToPlayerInfo();
         }
             
     }
 
+    /// <summary>
+    /// Organizes the models name to a number based off of organization in backend
+    /// </summary>
+    private void SendAppearanceToPlayerInfo()
+    {
+        int index = 0;
+        switch (characterData.characterName)
+        {
+            case "Gizmo":
+                index = 1;
+                break;
+
+            case "Morgan":
+                index = 2;
+                break;
+
+            case "Reese":
+                index = 3;
+                break;
+
+            case "Emma":
+                index = 4;
+                break;
+
+            case "Kai":
+                index = 5;
+                break;
+
+            case "Jamster":
+                index = 6;
+                break;
+
+            default:
+                index = 1;
+                break;
+        }
+        if(gameManager.playerInfo != null)
+        {
+            gameManager.playerInfo.characterUsed = index;
+            //Debug.Log("Character selected: " + gameManager.playerInfo.characterUsed + "\nShould be: " + index);
+        }
+        else
+        {
+            //Debug.Log("Playerinfo was null!");
+        }
+    }
+
     // Which direction for the color carousel?
-    public void LeftColor()
-    {
-        // Create a new list that shifts everything to the Right
-        // Moving the left color towards middle
-        List<Color> temp = new List<Color>();
-
-        temp.Add(colors[colors.Count - 1]);
-
-        for (int i = 0; i < colors.Count - 1; i++)
-        {
-            temp.Add(colors[i]);
-        }
-
-        // New list overwrites old list
-        colors = temp;
-
-        // Call this to set color of the color carousel
-        ColorChange();
-    }
-    public void RightColor()
-    {
-        // Create a new list that shifts everything to the left
-        // Moving the right color towards middle
-        List<Color> temp = new List<Color>();
-
-        for (int i = 1; i < colorButtons.Count; i++)
-        {
-            temp.Add(colors[i]);
-        }
-        temp.Add(colors[0]);
-
-        // New list overwrites old list
-        colors = temp;
-
-        // Call this to set color of the color carousel
-        ColorChange();
-    }
-    public void ColorChange()
-    {
-        // Color Carousel Update
-        for (int i = 0; i < colorButtons.Count; i++)
-        {
-            Image[] images = colorButtons[i].GetComponentsInChildren<Image>();
-
-            // This should be the inner color
-            images[1].color = colors[i];
-        }
-
-        // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
-        Color middleColor = colors[3];
-        characterSelectedImage.color = middleColor;
-
-        /*
-        foreach (GameObject characterButton in characterButtons)
-        {
-            Button button = characterButton.GetComponentInChildren<Button>();
-            ColorBlock colorBlock = button.colors;
-            colorBlock.selectedColor = middleColor;
-            button.colors = colorBlock;
-        }
-        */
-
-        if (characterData != null)
-            characterData.characterColor = middleColor;
-    }
+    //public void LeftColor()
+    //{
+    //    // Create a new list that shifts everything to the Right
+    //    // Moving the left color towards middle
+    //    List<Color> temp = new List<Color>();
+    //
+    //    temp.Add(colors[colors.Count - 1]);
+    //
+    //    for (int i = 0; i < colors.Count - 1; i++)
+    //    {
+    //        temp.Add(colors[i]);
+    //    }
+    //
+    //    // New list overwrites old list
+    //    colors = temp;
+    //
+    //    // Call this to set color of the color carousel
+    //    ColorChange();
+    //}
+    //public void RightColor()
+    //{
+    //    // Create a new list that shifts everything to the left
+    //    // Moving the right color towards middle
+    //    List<Color> temp = new List<Color>();
+    //
+    //    for (int i = 1; i < colorButtons.Count; i++)
+    //    {
+    //        temp.Add(colors[i]);
+    //    }
+    //    temp.Add(colors[0]);
+    //
+    //    // New list overwrites old list
+    //    colors = temp;
+    //
+    //    // Call this to set color of the color carousel
+    //    ColorChange();
+    //}
+    //public void ColorChange()
+    //{
+    //    // Color Carousel Update
+    //    for (int i = 0; i < colorButtons.Count; i++)
+    //    {
+    //        Image[] images = colorButtons[i].GetComponentsInChildren<Image>();
+    //
+    //        // This should be the inner color
+    //        images[1].color = colors[i];
+    //    }
+    //
+    //    // Change sprite color (SHOULD THIS CHANGE THE COLOR OF THE SPRITE OR THE KART?)
+    //    Color middleColor = colors[3];
+    //    characterSelectedImage.color = middleColor;
+    //
+    //    /*
+    //    foreach (GameObject characterButton in characterButtons)
+    //    {
+    //        Button button = characterButton.GetComponentInChildren<Button>();
+    //        ColorBlock colorBlock = button.colors;
+    //        colorBlock.selectedColor = middleColor;
+    //        button.colors = colorBlock;
+    //    }
+    //    */
+    //
+    //    if (characterData != null)
+    //        characterData.characterColor = middleColor;
+    //}
 }

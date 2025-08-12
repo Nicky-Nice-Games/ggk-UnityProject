@@ -209,7 +209,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if (lobbyName == "") lobbyName = playerName + "\'s MyLobby";
+            if (lobbyName == "") lobbyName = playerName + "\'s Lobby";
             Player player = GetPlayer();
             CreateLobbyOptions options = new CreateLobbyOptions
             {
@@ -546,6 +546,7 @@ public class LobbyManager : MonoBehaviour
                         {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
                     }
                 });
+                MultiplayerManager.Instance.expectedPlayerCount = lobby.Players.Count;
                 joinedLobby = null;
             }
             catch (LobbyServiceException e)

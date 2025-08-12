@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,56 +10,34 @@ using UnityEngine;
 /// This class is not used for gameplay logic
 /// </summary>
 [System.Serializable]
-public class SerializablePlayerInfo : MonoBehaviour
+public class SerializablePlayerInfo : ScriptableObject
 {
-    public int playerID, racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
+    public string pid;
     public string raceStartTime;
     public float raceTime;
-    public List<ItemUsageEntry> boostUsage = new List<ItemUsageEntry>();
-    public List<ItemUsageEntry> offenceUsage = new List<ItemUsageEntry>();
-    public List<ItemUsageEntry> trapUsage = new List<ItemUsageEntry>();
+    public int racePos, mapRaced, characterUsed, collisionsWithPlayers, collisionWithWalls, fellOffMap;
+    public Dictionary<string, int> boostStat = new Dictionary<string, int>();
+    public Dictionary<string, int> offenseStat = new Dictionary<string, int>();
+    public Dictionary<string, int> trapUsage = new Dictionary<string, int>();
+    public Dictionary<string, int> defenseUsage = new Dictionary<string, int>();
 
     public SerializablePlayerInfo ConvertToSerializable(PlayerInfo player)
     {
-        playerID = player.playerID;
-        raceStartTime = player.raceStartTime.ToString();
+        Debug.Log("Called ConvertToSerializable in SerializablePlayerInfo");
+        pid = player.pid;
+        raceStartTime = player.raceStartTime.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
         raceTime = player.raceTime;
-        racePosition = player.racePosition;
+        racePos = player.racePos;
         mapRaced = player.mapRaced;
         collisionsWithPlayers = player.collisionsWithPlayers;
         collisionWithWalls = player.collisionWithWalls;
         characterUsed = player.characterUsed;
         fellOffMap = player.fellOffMap;
 
-        // Serializing boost usage dict
-        foreach (KeyValuePair<string, int> kvp in player.boostUsage)
-        {
-            boostUsage.Add(new ItemUsageEntry
-            {
-                itemName = kvp.Key,
-                usageCount = kvp.Value
-            });
-        }
-
-        // Serializing offence usage dict
-        foreach (KeyValuePair<string, int> kvp in player.offenceUsage)
-        {
-            offenceUsage.Add(new ItemUsageEntry
-            {
-                itemName = kvp.Key,
-                usageCount = kvp.Value
-            });
-        }
-
-        // Serializing trap usage dict
-        foreach (KeyValuePair<string, int> kvp in player.trapUsage)
-        {
-            trapUsage.Add(new ItemUsageEntry
-            {
-                itemName = kvp.Key,
-                usageCount = kvp.Value
-            });
-        }
+        boostStat = new Dictionary<string, int>(player.boostUsage);
+        offenseStat = new Dictionary<string, int>(player.offenceUsage);
+        trapUsage = new Dictionary<string, int>(player.trapUsage);
+        defenseUsage = new Dictionary<string, int>(player.defenseUsage);
         return this;
     }
 }
