@@ -113,7 +113,7 @@ public class PauseHandler : NetworkBehaviour
     {
         DisableButtons();
 
-        sceneLoader.LoadScene(SceneManager.GetActiveScene().name);
+        sceneLoader.LoadScene(SceneManager.GetActiveScene().name, true);
         Time.timeScale = 1;
     }
 

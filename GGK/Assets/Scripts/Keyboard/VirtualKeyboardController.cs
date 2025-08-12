@@ -167,7 +167,7 @@ public class VirtualKeyboardController : MonoBehaviour
 
         else if (value == "Tab")
         {
-            if (curText.Length == 0 && curField > 0)
+            if ( curField > 0)
             {
                 // If the text is empty and the current field is not the first one, go back to the previous field
 
