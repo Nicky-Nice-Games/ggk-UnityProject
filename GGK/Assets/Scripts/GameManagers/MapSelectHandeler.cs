@@ -57,6 +57,7 @@ public class MapSelectHandeler : MonoBehaviour
                 CharacterData.Instance.mapVote = obj.name;
                 trackDisplay.text = obj.name;
                 trackPreview.sprite = obj.transform.GetChild(0).GetComponent<Image>().sprite;
+                trackPreview.color = new Color(255, 255, 255, 255);
                 foreach (GameObject button in mapOptions)
                 {
                     button.GetComponent<Image>().sprite = mapDefaultTexture;
