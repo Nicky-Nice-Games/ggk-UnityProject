@@ -299,7 +299,7 @@ public class GameManager : NetworkBehaviour
                 sceneLoader.LoadScene("GSP_Golisano");
                 break;
             case "RIT Dorm":
-                sceneLoader.LoadScene("LD_RITDorm");
+                sceneLoader.LoadScene("GSP_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
