@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 /// </summary>
 public class HazardTier2 : BaseItem
 {
+
+    [SerializeField] private MeshRenderer meshRenderer; // The fake item brick's mesh renderer
+
     // Start is called before the first frame update
     void Start()
     {
