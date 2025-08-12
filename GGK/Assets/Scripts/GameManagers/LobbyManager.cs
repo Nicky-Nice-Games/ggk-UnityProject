@@ -209,7 +209,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if (lobbyName == "") lobbyName = playerName + "\'s MyLobby";
+            if (lobbyName == "") lobbyName = playerName + "\'s Lobby";
             Player player = GetPlayer();
             CreateLobbyOptions options = new CreateLobbyOptions
             {
