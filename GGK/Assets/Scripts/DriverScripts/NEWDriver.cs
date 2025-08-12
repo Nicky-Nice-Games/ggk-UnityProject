@@ -9,10 +9,10 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
-     // root reference of the prefab
+    // root reference of the prefab
     public Transform rootTransform;
     public KartCheckpoint kartCheckpoint;
-    
+
     [Header("Input System Settings")]
     public PlayerInput playerInput;
     public bool STUNBUTTON = false; //To determine if the stun button is pressed or not, used in the input system
@@ -30,7 +30,7 @@ public class NEWDriver : NetworkBehaviour
     public float minSpeed = 5f;
     public float maxSpeed = 60f;
     public float airTurnSpeed = 30f; //Turning speed in the air, to prevent kart from turning too fast in the air
-    public float turnSpeed = 40;   
+    public float turnSpeed = 40;
     public float maxSteerAngleTires = 20f; //Multiplier for wheel turning speed    
     public float maxSteeringAngle = 10f; //Maximum steering angle for the steering wheel
     public Transform kartNormal;
@@ -85,7 +85,7 @@ public class NEWDriver : NetworkBehaviour
 
     [Header("Wheel references")]
     //Front tires GO
-    public GameObject frontTireR;    
+    public GameObject frontTireR;
     public GameObject frontTireL;
     public GameObject backTireR;
     public GameObject backTireL;
@@ -116,12 +116,12 @@ public class NEWDriver : NetworkBehaviour
 
 
     [Header("Raycast Settings")]
-    public LayerMask groundLayer;        
+    public LayerMask groundLayer;
     // Ground snapping variables
     public bool isGrounded;
     public bool attemptingDrift;
     float airTime;
-    public float groundCheckDistance = 1.05f;    
+    public float groundCheckDistance = 1.05f;
     public float rotationAlignSpeed = 0.05f;
     public float horizontalOffset = 0.2f; // Horizontal offset for ground check raycast
     [HideInInspector]
@@ -192,7 +192,7 @@ public class NEWDriver : NetworkBehaviour
 
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
-        
+
     }
 
     public override void OnNetworkSpawn()
@@ -219,13 +219,13 @@ public class NEWDriver : NetworkBehaviour
         PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
 
         MiniMapHud.instance.AddKart(gameObject);
-        
+
         TwoDimensionalAnimMultiplayer multiplayerAnim = transform.parent.GetComponent<TwoDimensionalAnimMultiplayer>();
         if (multiplayerAnim) multiplayerAnim.driver = this;
 
         playerInfo.raceStartTime = DateTime.Now;
     }
-    
+
     public override void OnNetworkDespawn()
     {
         MiniMapHud.instance.RemoveKart(gameObject);
@@ -272,9 +272,9 @@ public class NEWDriver : NetworkBehaviour
         }
 
         //Follow Collider
-        transform.position = 
-            new Vector3(spherePosTransform.transform.position.x, 
-            spherePosTransform.transform.position.y - colliderOffset, 
+        transform.position =
+            new Vector3(spherePosTransform.transform.position.x,
+            spherePosTransform.transform.position.y - colliderOffset,
             spherePosTransform.transform.position.z);
 
         if (isDriving && drivingSoundID == 0)
@@ -331,16 +331,16 @@ public class NEWDriver : NetworkBehaviour
         //float inputX;
         //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
         movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.z = inputFixed.z; 
+        movementDirection.z = inputFixed.z;
 
         //Stunned
         if (isStunned) movementDirection = Vector3.zero;
 
         //Acceleration
         if (movementDirection.z != 0f && isGrounded)
-        {              
+        {
             //Setting acceleration 
-            if((sphere.velocity.magnitude > maxSpeed ) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+            if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
             {
                 acceleration = Vector3.zero; //If we are going too fast, stop accelerating
             }
@@ -348,9 +348,9 @@ public class NEWDriver : NetworkBehaviour
             {
                 acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
             }
-            
+
         }
-        else if(isGrounded)
+        else if (isGrounded)
         {
             //Decceleration
             acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
@@ -428,9 +428,9 @@ public class NEWDriver : NetworkBehaviour
 
             if (isGrounded && movementDirection.x != 0f)
             {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate  * 0.0075f * Mathf.Abs(movementDirection.x));
+                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
                 sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
-                
+
             }
 
             acceleration = turning * acceleration;
@@ -444,7 +444,7 @@ public class NEWDriver : NetworkBehaviour
 
         //Falling down
         if (!isGrounded && !attemptingDrift)
-        {       
+        {
             float airRotationSpeed = 2.0f;
 
             // Target upright rotation based on Yaw (keep current Y, reset pitch/roll)
@@ -454,7 +454,7 @@ public class NEWDriver : NetworkBehaviour
             kartNormal.rotation = Quaternion.Slerp(kartNormal.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetUpright, Time.deltaTime * airRotationSpeed);
 
-            if(AirTricking)
+            if (AirTricking)
             {
 
             }
@@ -465,7 +465,7 @@ public class NEWDriver : NetworkBehaviour
         }
         else
         {
-            if(AirTricking)
+            if (AirTricking)
             {
                 StartCoroutine(Boost(airTrickBoostForce, 0.5f * airTrickCount)); //Apply boost when landing
                 airTrickInProgress = false;
@@ -475,14 +475,14 @@ public class NEWDriver : NetworkBehaviour
 
             }
             AirTricking = false; //Reset air tricking state
-            
+
         }
 
         // Apply extra downward force to fall faster
-        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration); 
+        sphere.AddForce(-kartNormal.up * gravity, ForceMode.Acceleration);
 
 
-        sphere.AddForce(acceleration, ForceMode.Acceleration);       
+        sphere.AddForce(acceleration, ForceMode.Acceleration);
         transform.rotation = transform.rotation * turning;
 
         //------------Traction---------------------
@@ -594,7 +594,7 @@ public class NEWDriver : NetworkBehaviour
                 .Append(kartModel.parent.DOScale(new Vector3(1.1f, 0.9f, 1.1f), 0.05f)
                 .SetLoops(2, LoopType.Yoyo)
                 .SetEase(Ease.OutSine));
-                      
+
         }
     }
 
@@ -640,7 +640,7 @@ public class NEWDriver : NetworkBehaviour
                     break;
                 //Turning left
                 case < -0.1f:
-                    driftTime += (Time.deltaTime + 1)  + -movementDirection.x;
+                    driftTime += (Time.deltaTime + 1) + -movementDirection.x;
                     break;
                 default:
                     driftTime += (Time.deltaTime + 1) * 1.5f;
@@ -648,19 +648,19 @@ public class NEWDriver : NetworkBehaviour
             }
         }
 
-        if(movementDirection.z == 0)
-        {   
-            if(turboTwisting)
+        if (movementDirection.z == 0)
+        {
+            if (turboTwisting)
             {
-                
+
             }
             else
             {
-                
+
                 StartCoroutine(TurboTwist());
                 turboTwisting = true;
             }
-            
+
         }
 
         float direction = isDriftingLeft ? -1f : 1f;
@@ -672,7 +672,7 @@ public class NEWDriver : NetworkBehaviour
 
         if (isDriftingLeft)
         {
-            if(driftTier > 0)
+            if (driftTier > 0)
             {
                 vfxHandler.ParticleSystemsL();
 
@@ -685,7 +685,7 @@ public class NEWDriver : NetworkBehaviour
         }
         else if (!isDriftingLeft)
         {
-            if(driftTier > 0)
+            if (driftTier > 0)
             {
                 vfxHandler.ParticleSystemsR();
                 if (driftTier > currentDriftTier)
@@ -695,7 +695,7 @@ public class NEWDriver : NetworkBehaviour
             }
             vfxHandler.TireScreechesR();
 
-        }       
+        }
         currentDriftTier = driftTier;
     }
 
@@ -712,9 +712,9 @@ public class NEWDriver : NetworkBehaviour
         //---------Boost Types----------------
         if (driftTime > minDriftTime * 3f)
         {
-            StartCoroutine(Boost(driftBoostForce, 1.6f));            
+            StartCoroutine(Boost(driftBoostForce, 1.6f));
         }
-        else if(driftTime > minDriftTime * 2f)
+        else if (driftTime > minDriftTime * 2f)
         {
             StartCoroutine(Boost(driftBoostForce, 0.8f));
         }
@@ -735,7 +735,7 @@ public class NEWDriver : NetworkBehaviour
         driftRotationTween?.Kill();
         driftRotationTween = kartModel.DOLocalRotate(Vector3.zero, driftTweenDuration)
             .SetEase(Ease.InOutSine);
-        driftRotationTween = kartModel.DOLocalMoveY(0f, driftTweenDuration/3f)
+        driftRotationTween = kartModel.DOLocalMoveY(0f, driftTweenDuration / 3f)
             .SetEase(Ease.InOutSine);
 
         vfxHandler.StopDriftVFX();
@@ -745,25 +745,25 @@ public class NEWDriver : NetworkBehaviour
     {
         Color c = Color.clear;
 
-        
+
         if (driftTime > minDriftTime * 3f)
         {
             //red
             c = turboColors[3];
-            driftTier = 3; 
+            driftTier = 3;
         }
-        else if(driftTime > minDriftTime * 2f)
+        else if (driftTime > minDriftTime * 2f)
         {
             //Orange
             c = turboColors[2];
-            driftTier = 2; 
+            driftTier = 2;
         }
         else if (driftTime > minDriftTime)
         {
             //Red
             c = turboColors[1];
             driftTier = 1;
-        }        
+        }
         else
         {
             //Default color
@@ -778,8 +778,8 @@ public class NEWDriver : NetworkBehaviour
     public void AirTrick()
     {
         AirTricking = true;
-        
-        if(!airTrickInProgress)
+
+        if (!airTrickInProgress)
         {
             if (movementDirection.x > 0.1f)
             {
@@ -787,9 +787,9 @@ public class NEWDriver : NetworkBehaviour
                 //Perform right air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
-                vfxHandler.PlayAirTrickVFX(false);                
-                
-                airTrickTween = DOTween.Sequence() 
+                vfxHandler.PlayAirTrickVFX(false);
+
+                airTrickTween = DOTween.Sequence()
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, -360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
                 {
                     airTrickInProgress = false;
@@ -806,7 +806,7 @@ public class NEWDriver : NetworkBehaviour
                 //Perform left air trick
                 driftRotationTween?.Kill(); // Kill any existing drift rotation tween
 
-                vfxHandler.PlayAirTrickVFX(true);                
+                vfxHandler.PlayAirTrickVFX(true);
 
                 airTrickTween = DOTween.Sequence()
                 .Append(kartModel.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).OnComplete(() =>
@@ -832,7 +832,7 @@ public class NEWDriver : NetworkBehaviour
                     airTrickCount++;
                 }));
 
-                
+
             }
         }
     }
@@ -846,7 +846,7 @@ public class NEWDriver : NetworkBehaviour
             if (sphere.velocity.magnitude < boostMaxSpeed)
             {
                 boostDirection = kartNormal.forward * driftBoostForce;
-            }            
+            }
 
             sphere.AddForce(boostDirection, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
@@ -865,7 +865,7 @@ public class NEWDriver : NetworkBehaviour
 
         for (int i = 0; i < 22; i++)
         {
-            
+
 
             //Check if player wants to drift either direction
             if (Mathf.Abs(movementDirection.x) > 0.1f && Mathf.Abs(sphere.velocity.x) > 5 && isDrifting)
@@ -873,17 +873,17 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount++;
                 isInputLeft = movementDirection.x < 0f;
 
-                if(TurnCount > 6 && i > 12)
+                if (TurnCount > 6 && i > 12)
                 {
                     break;
                 }
             }
-            else if(!isDrifting)
+            else if (!isDrifting)
             {
                 TurnCount = 0;
                 yield return null;
             }
-            else if(TurnCount !> 6)
+            else if (TurnCount! > 6)
             {
                 TurnCount--;
             }
@@ -900,7 +900,7 @@ public class NEWDriver : NetworkBehaviour
 
             isDriftingLeft = isInputLeft;
             driftTime = 0f;
-            
+
 
             //--------------Drift Animation-----------------
 
@@ -924,9 +924,9 @@ public class NEWDriver : NetworkBehaviour
         }
         else
         {
-            EndDrift();            
+            EndDrift();
         }
-        
+
         attemptingDrift = false;
     }
 
@@ -938,7 +938,7 @@ public class NEWDriver : NetworkBehaviour
         for (int i = 0; i < 25; i++)
         {
             //Check if player wants to drift the opposite direction
-            if(isDriftingLeft && movementDirection.x > 0.1f && movementDirection.z == 0)
+            if (isDriftingLeft && movementDirection.x > 0.1f && movementDirection.z == 0)
             {
                 TurnCount++;
             }
@@ -947,9 +947,9 @@ public class NEWDriver : NetworkBehaviour
                 TurnCount++;
             }
 
-            if(TurnCount > 3)
+            if (TurnCount > 3)
             {
-                
+
                 break;
             }
 
@@ -962,13 +962,12 @@ public class NEWDriver : NetworkBehaviour
         {
             recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
         }
-        
 
         if (TurnCount > 3)
         {
             isDriftingLeft = !isDriftingLeft; //Change the direction of the drift
 
-            if(recenBoostvalue <= turboTwistWindow)
+            if (recenBoostvalue <= turboTwistWindow)
             {
                 StartCoroutine(Boost(driftBoostForce, 0.5f));
             }
@@ -1009,7 +1008,7 @@ public class NEWDriver : NetworkBehaviour
 
         inputFixed = new Vector3(input.x, 0, input.y);
         //movementDirection = fixedInput;
-        
+
 
         //movementDirection.z = movementDirection.y;
         //float inputZ = movementDirection.z;
@@ -1122,7 +1121,7 @@ public class NEWDriver : NetworkBehaviour
     }
 
     private void OnDrawGizmosSelected()
-    {        
+    {
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, sphere.velocity);
         Gizmos.color = Color.magenta;
@@ -1169,7 +1168,7 @@ public class NEWDriver : NetworkBehaviour
         driftRotationTween = DOTween.Sequence()
             .Append(kartModel.DOLocalRotate(new Vector3(0f, 360f, 0f), duration, RotateMode.FastBeyond360)
             .SetEase(Ease.OutQuad));
-            
+
         yield return new WaitForSeconds(duration);
 
         driftRotationTween?.Kill();
@@ -1195,7 +1194,7 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         Debug.Log("Called SendPlayerData from NEWDriver");
-        if(!playerInfo.isGuest)
+        if (!playerInfo.isGuest)
         {
             gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
         }
