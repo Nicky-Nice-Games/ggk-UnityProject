@@ -216,66 +216,52 @@ public class PuckTier1 : BaseItem
     void OnCollisionEnter(Collision collision)
     {
         // If puck hits a kart
-        if (collision.gameObject.CompareTag("Kart"))
+        if (startTimer >= 0.1f)
         {
-            if (startTimer >= 0.1f)
+            // Detects if puck hit an NPC or player
+            NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+            NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
+
+            // Stops player
+            if (playerKart)
             {
-                // Detects if puck hit an NPC or player
-                NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
-                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
+                playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
+                playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                playerKart.Stun(2.0f);
+                Debug.Log(collision.transform.root.GetChild(0).gameObject);
+            }
+            // Stops NPC and starts recovery
+            else if (npcKart)
+            {
+                npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                npcKart.StartRecovery();
+                NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                npcPhys.Stun(2.0f);
+                collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
+            }
 
-                // Stops player
-                if (playerKart)
-                {
-                    playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
-                    playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                    collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
-                    playerKart.Stun(2.0f);
-                    Debug.Log(collision.transform.root.GetChild(0).gameObject);
-                }
-                // Stops NPC and starts recovery
-                else if (npcKart)
-                {
-                    npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                    npcKart.StartRecovery();
-                    NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
-                    npcPhys.Stun(2.0f);
-                    collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
-                }
+            // Otherwise destroys puck regardless of kart hit
+            else
+            {
+                //if (!MultiplayerManager.Instance.IsMultiplayer)
+                //{
+                //    Destroy(this.gameObject);
+                //}
+                //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
+                //{
+                //    this.NetworkObject.Despawn();
+                //    Destroy(this.gameObject);
+                //}
 
-                // Otherwise destroys puck regardless of kart hit
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
                 else
                 {
-                    //if (!MultiplayerManager.Instance.IsMultiplayer)
-                    //{
-                    //    Destroy(this.gameObject);
-                    //}
-                    //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
-                    //{
-                    //    this.NetworkObject.Despawn();
-                    //    Destroy(this.gameObject);
-                    //}
-
-                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
-                    {
-                        playerKart.Stun(2.0f);
-                    }
-
-                    if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
-                    {
-                        NPCPhysics npcPhys = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
-                        npcPhys.Stun(2.0f);
-                    }
-
-                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                    if (!MultiplayerManager.Instance.IsMultiplayer)
-                    {
-                        Destroy(this.gameObject);
-                    }
-                    else
-                    {
-                        DestroyItemRpc(this);
-                    }
+                    DestroyItemRpc(this);
                 }
             }
         }
@@ -331,31 +317,7 @@ public class PuckTier1 : BaseItem
     // If colliding with cracked brick wall
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
-        {
-            Rigidbody kartRigidbody;
-            if (other.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
-            {
-                kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
-
-                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
-                {
-                    NEWDriver playerKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
-                    playerKart.Stun(2.0f);
-                }
-
-                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                if (!MultiplayerManager.Instance.IsMultiplayer)
-                {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    DestroyItemRpc(this);
-                }
-            }
-        }
-        else if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
+        if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 3)
         {
             Destroy(other.gameObject);
             //if (!MultiplayerManager.Instance.IsMultiplayer)
