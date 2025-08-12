@@ -164,7 +164,7 @@ public class NEWDriver : NetworkBehaviour
 
         if (gameManagerObj)
         {
-            playerInfo = gameManagerObj.playerInfo;
+            playerInfo = new PlayerInfo(gameManagerObj.playerInfo);
         }
 
         gameManagerObj.FillMapRaced(this);
@@ -1139,10 +1139,129 @@ public class NEWDriver : NetworkBehaviour
 
     public void SendThisPlayerData()
     {
-        Debug.Log("Called SendPlayerData from NEWDriver");
-        if (!playerInfo.isGuest)
+        //client sending their own data
+        if (!playerInfo.isGuest) 
         {
-            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+            playerInfo.fellOffMap /= 2;
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
         }
+
+    }
+
+    // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
+    // SendTo.Owner should work
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementFellOffMapRpc()
+    {
+        playerInfo.fellOffMap++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void AssignPlacementRpc(int pos)
+    {
+        Debug.Log("Placement: " + pos);
+        playerInfo.racePos = pos;
+    }
+
+    public void AssignPlacement(int pos)
+    {
+        Debug.Log("Placement: " + pos);
+        playerInfo.racePos = pos;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier1Rpc()
+    {
+        playerInfo.trapUsage["oilSpill1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier2Rpc()
+    {
+        playerInfo.trapUsage["fakepowerupbrick"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier3Rpc()
+    {
+        playerInfo.trapUsage["brickwall"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier4Rpc()
+    {
+        playerInfo.trapUsage["confuseritchie"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier1Rpc()
+    {
+        playerInfo.defenseUsage["defense1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier2Rpc()
+    {
+        playerInfo.defenseUsage["defense2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier3Rpc()
+    {
+        playerInfo.defenseUsage["defense3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier4Rpc()
+    {
+        playerInfo.defenseUsage["defense4"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier1Rpc()
+    {
+        playerInfo.offenceUsage["puck1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier2Rpc()
+    {
+        playerInfo.offenceUsage["puck2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier3Rpc()
+    {
+        playerInfo.offenceUsage["puck3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier4Rpc()
+    {
+        playerInfo.offenceUsage["puck4"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier1Rpc()
+    {
+        playerInfo.boostUsage["speedBoost1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier2Rpc()
+    {
+        playerInfo.boostUsage["speedBoost2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier3Rpc()
+    {
+        playerInfo.boostUsage["speedBoost3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier4Rpc()
+    {
+        playerInfo.boostUsage["speedBoost4"]++;
     }
 }

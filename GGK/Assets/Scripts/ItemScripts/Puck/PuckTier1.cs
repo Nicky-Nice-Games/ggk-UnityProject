@@ -125,6 +125,7 @@ public class PuckTier1 : BaseItem
             {
                 currentPos.Value = transform.position;
             }
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier1Rpc();
         }
     }
 

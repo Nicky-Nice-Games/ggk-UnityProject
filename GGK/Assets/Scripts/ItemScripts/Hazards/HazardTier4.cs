@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Blizzard
+/// </summary>
 public class HazardTier4 : BaseItem
 {
     GameObject hazardVFX;
@@ -11,7 +12,16 @@ public class HazardTier4 : BaseItem
         Vector3 behindPos = transform.position - transform.forward * 11;
         behindPos.y += 0.8f;
         transform.position = behindPos;
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+
+        // Checking for multiplayer
+        if (IsSpawned)
+        {
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier4Rpc();
+        }
+        else
+        {
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+        }
 
         // get a reference to only the vfx
         hazardVFX = GameObject.Find("VFX");

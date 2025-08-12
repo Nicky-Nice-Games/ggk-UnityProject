@@ -1,27 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Fake Item Box
 /// </summary>
 public class HazardTier2 : BaseItem
 {
-
     [SerializeField] private MeshRenderer meshRenderer; // The fake item brick's mesh renderer
 
     // Start is called before the first frame update
     void Start()
     {
+        base.Start();
         timer = 10.0f;
 
         // sends the hazard slightly up and behind the player before landing on the ground
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+
+        // Checking for multiplayer
+        if (IsSpawned)
+        {
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
+        }
+        else
+        {
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
+        }
     }
 
     // Update is called once per frame
