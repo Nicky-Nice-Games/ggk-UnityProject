@@ -52,11 +52,16 @@ public class MapSelectHandeler : MonoBehaviour
             Button button = obj.GetComponent<Button>();
             button.onClick.AddListener(() =>
             gamemanagerObj.GetComponent<ButtonBehavior>().OnClick());
+
+            // Button behavior for map select
+            // Update choice, display text, track preview, and track buttons
+            // to be up to date with player's choice.
             button.onClick.AddListener(() =>
             {
                 CharacterData.Instance.mapVote = obj.name;
                 trackDisplay.text = obj.name;
                 trackPreview.sprite = obj.transform.GetChild(0).GetComponent<Image>().sprite;
+                trackPreview.color = new Color(255, 255, 255, 255);
                 foreach (GameObject button in mapOptions)
                 {
                     button.GetComponent<Image>().sprite = mapDefaultTexture;
@@ -70,6 +75,9 @@ public class MapSelectHandeler : MonoBehaviour
         confirmBtn.onClick.AddListener(() => ConfirmVote());
     }
 
+    /// <summary>
+    /// If a choice has been made, cast "vote" and move to race
+    /// </summary>
     public void ConfirmVote()
     {
         gamemanagerObj.MapSelected();

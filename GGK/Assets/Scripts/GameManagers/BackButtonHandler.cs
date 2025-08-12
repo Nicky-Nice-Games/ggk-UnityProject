@@ -16,10 +16,7 @@ public class BackButtonHandler : MonoBehaviour
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
 
-        // assign back button
         Button button = backOption.GetComponent<Button>();
-        button.onClick.AddListener(() =>
-            GetComponent<BackButtonHandler>().GoBack());
 
         // back button is inactive during multiplayer
         if (MultiplayerManager.Instance.IsMultiplayer)
@@ -97,7 +94,7 @@ public class BackButtonHandler : MonoBehaviour
                 gamemanagerObj.curState = GameStates.gameMode;
                 break;
             case GameStates.map:
-                gamemanagerObj.sceneLoader.LoadScene("PlayerKartScene");
+                gamemanagerObj.sceneLoader.LoadScene("CharSelectMenu");
                 gamemanagerObj.curState = GameStates.playerKart;
                 break;
             default:
