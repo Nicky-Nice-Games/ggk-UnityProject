@@ -331,7 +331,31 @@ public class PuckTier1 : BaseItem
     // If colliding with cracked brick wall
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
+        if (other.gameObject.CompareTag("Kart")) // checks if kart gameobject player or npc
+        {
+            Rigidbody kartRigidbody;
+            if (other.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
+            {
+                kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                {
+                    NEWDriver playerKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    playerKart.Stun(2.0f);
+                }
+
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    DestroyItemRpc(this);
+                }
+            }
+        }
+        else if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
         {
             Destroy(other.gameObject);
             //if (!MultiplayerManager.Instance.IsMultiplayer)
