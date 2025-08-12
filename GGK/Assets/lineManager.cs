@@ -14,7 +14,8 @@ public class lineManager : MonoBehaviour
     {
         _lineRenderer = GetComponent<LineRenderer>();
 
-       
+        _lineRenderer.startWidth = 0.05f;
+        _lineRenderer.endWidth = 0.05f;
 
     }
 
