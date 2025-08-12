@@ -10,11 +10,12 @@ using UnityEngine.UIElements;
 public class HazardTier2 : BaseItem
 {
 
-    [SerializeField] private MeshRenderer meshRenderer; // The fake item brick's mesh renderer
+    [SerializeField] private Material[] fakeMaterials; // The fake item brick's mesh renderer
 
     // Start is called before the first frame update
     void Start()
     {
+        
         timer = 10.0f;
 
         // sends the hazard slightly up and behind the player before landing on the ground
@@ -22,6 +23,12 @@ public class HazardTier2 : BaseItem
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
         kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+        if (fakeMaterials.Length == 0) return;
+        // Apply it to this object's MeshRenderer
+        MeshRenderer myRenderer = GetComponent<MeshRenderer>();
+       
+            myRenderer.material = fakeMaterials[Random.Range(0, fakeMaterials.Length)];
+        
     }
 
     // Update is called once per frame

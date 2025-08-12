@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 474482432562938953}
   - component: {fileID: 6700976075920660207}
   - component: {fileID: -2140440458312195221}
+  - component: {fileID: 5332121462614960258}
   - component: {fileID: -6932321184112653294}
   m_Layer: 3
   m_Name: FakeItemBox
@@ -134,6 +135,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &5332121462614960258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117759039799724987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 161033588
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &-6932321184112653294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,8 +170,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: 30
   rb: {fileID: -2140440458312195221}
+  kart: {fileID: 0}
   itemCategory: FakeItemBox
   useCount: 1
   isTimed: 0
   itemIcon: {fileID: 2800000, guid: 1ad214199b390f440bba4813bde47118, type: 3}
-  hazardSound: {fileID: 8300000, guid: a7c27e308abc8c14cacb62041ebc16d2, type: 3}
+  tierOneItemIcon: {fileID: 0}
+  tierTwoItemIcon: {fileID: 0}
+  tierThreeItemIcon: {fileID: 0}
+  tierFourItemIcon: {fileID: 0}
+  currentPos:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  fakeMaterials:
+  - {fileID: 2100000, guid: 1e4963db442fe154891b5e45599af734, type: 2}
+  - {fileID: 2100000, guid: d5e384d72f4573d4695aa4350ce5c562, type: 2}
+  - {fileID: 2100000, guid: 00833fb5ce80202468c3a54b98e8465a, type: 2}
+  - {fileID: 2100000, guid: 0e2a8530a92e1264fba5111877d1ba9e, type: 2}

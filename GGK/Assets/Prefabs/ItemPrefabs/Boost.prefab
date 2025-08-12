@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8042517428908944054}
   - component: {fileID: 1257197925269620148}
+  - component: {fileID: -3310772102466506066}
   - component: {fileID: 4452591039646941683}
   - component: {fileID: 1030214434015564131}
   m_Layer: 3
@@ -55,6 +56,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-3310772102466506066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946477701164829535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3383786083
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &4452591039646941683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: 1
   rb: {fileID: 1030214434015564131}
+  kart: {fileID: 0}
   itemCategory: Boost
   useCount: 1
   isTimed: 0
@@ -77,7 +100,8 @@ MonoBehaviour:
   tierTwoItemIcon: {fileID: 2800000, guid: 3f2cc56be0445fb419d73b151aee8219, type: 3}
   tierThreeItemIcon: {fileID: 2800000, guid: bbb2ae3fc278a4e4c9f6b480d450eb0e, type: 3}
   tierFourItemIcon: {fileID: 2800000, guid: b6355c8061d93c6408bee787c3829662, type: 3}
-  shieldEffect: {fileID: 0}
+  currentPos:
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!54 &1030214434015564131
 Rigidbody:
   m_ObjectHideFlags: 0
