@@ -1140,21 +1140,13 @@ public class NEWDriver : NetworkBehaviour
 
     public void SendThisPlayerData()
     {
-        // Debug.Log("Called SendPlayerData from NEWDriver");
-        // if (!playerInfo.isGuest && IsOwner)
-        // {
-        //     SendThisPlayerDataRpc();
-        // }
-
         //client sending their own data
-        if (!playerInfo.isGuest) { gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); }
+        if (!playerInfo.isGuest) 
+        {
+            playerInfo.fellOffMap /= 2;
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
+        }
 
-    }
-
-    [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SendThisPlayerDataRpc()
-    {
-        gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
     }
 
     // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
