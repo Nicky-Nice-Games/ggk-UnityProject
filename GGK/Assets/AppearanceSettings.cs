@@ -63,10 +63,17 @@ public class AppearanceSettings : NetworkBehaviour
     {
         if (color != null && GetComponent<NEWDriver>())
         {
-            Material[] materials = renderer.materials; // Get the materials of the renderer
+            Material[] materials = renderer.materials;
 
-            materials[3] = new Material(materials[3]); // Create a new instance of the material to avoid modifying the shared material
-            materials[3].color = color; // Set the kart's color material to the selected color
+            // Create a new instance of the existing material so we don't modify the shared one
+            Material newMaterial = new Material(materials[3]);
+            newMaterial.color = color;
+
+            // Replace the old material in the array
+            materials[3] = newMaterial;
+
+            // Assign the array back to the renderer
+            renderer.materials = materials;
         }
 
         // Set correct character model active
