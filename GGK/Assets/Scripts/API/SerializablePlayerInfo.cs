@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,9 +13,9 @@ using UnityEngine;
 public class SerializablePlayerInfo : ScriptableObject
 {
     public string pid;
-    public int racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public string raceStartTime;
     public float raceTime;
+    public int racePos, mapRaced, characterUsed, collisionsWithPlayers, collisionWithWalls, fellOffMap;
     public Dictionary<string, int> boostStat = new Dictionary<string, int>();
     public Dictionary<string, int> offenseStat = new Dictionary<string, int>();
     public Dictionary<string, int> trapUsage = new Dictionary<string, int>();
@@ -26,7 +27,7 @@ public class SerializablePlayerInfo : ScriptableObject
         pid = player.pid;
         raceStartTime = player.raceStartTime.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
         raceTime = player.raceTime;
-        racePosition = player.racePosition;
+        racePos = player.racePos;
         mapRaced = player.mapRaced;
         collisionsWithPlayers = player.collisionsWithPlayers;
         collisionWithWalls = player.collisionWithWalls;
