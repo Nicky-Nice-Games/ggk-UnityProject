@@ -9,6 +9,7 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 //using UnityEditor.UIElements; this is causing a conflict
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.DefaultInputActions;
@@ -21,7 +22,7 @@ public class SignInManager : MonoBehaviour
     [SerializeField] GameObject signUpUI;
     [SerializeField] GameObject loginOptions;
     [SerializeField] VirtualKeyboardController keyboard;
-    [SerializeField]GameObject successMessage;
+    [SerializeField] GameObject successMessage;
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
@@ -59,7 +60,7 @@ public class SignInManager : MonoBehaviour
         // Organizing fields list into dict
         foreach (TMP_InputField field in inputFieldsList)
         {
-            inputFields[field.name] = field; 
+            inputFields[field.name] = field;
         }
     }
 
@@ -76,7 +77,7 @@ public class SignInManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-             
+
     }
 
     /// <summary>
@@ -123,10 +124,10 @@ public class SignInManager : MonoBehaviour
                     break;
 
                 case "Confirm Password":
-                    if(data != playerInfo.playerPassword)
+                    if (data != playerInfo.playerPassword)
                     {
                         Debug.Log("Passwords do not match!");
-                        keyboard.curField --;
+                        keyboard.curField--;
                         return;
                     }
                     await apiManager.CreatePlayer(playerInfo);
@@ -150,6 +151,8 @@ public class SignInManager : MonoBehaviour
 
         keyboard.inputField.Add(inputFields["Username Login"]);
         keyboard.inputField.Add(inputFields["Password Login"]);
+        DisplayKeyboard();
+        keyboard.StartKeyboardSelect(true);
     }
 
     /// <summary>
@@ -165,6 +168,8 @@ public class SignInManager : MonoBehaviour
         keyboard.inputField.Add(inputFields["Username Sign Up"]);
         keyboard.inputField.Add(inputFields["Password Sign Up"]);
         keyboard.inputField.Add(inputFields["Confirm Password"]);
+        DisplayKeyboard();
+        keyboard.StartKeyboardSelect(true);
     }
 
     /// <summary>
@@ -175,16 +180,29 @@ public class SignInManager : MonoBehaviour
         loginOptions.SetActive(true);
         signUpUI.SetActive(false);
         loginUI.SetActive(false);
+        HideKeyboard();
     }
 
     public void DisplayKeyboard(GameObject sender)
     {
-        TMP_InputField input = sender.GetComponent<TMP_InputField>();
-        keyboard.gameObject.SetActive(true);
+        //brings up the virtual keyboard if a gamepad is detected
+        if (Gamepad.all.Count > 0)
+        {
+            keyboard.a = true;
+            TMP_InputField input = sender.GetComponent<TMP_InputField>();
+            keyboard.gameObject.SetActive(true);
+            keyboard.StartKeyboardSelect(false);
+        }
+    }
+
+    public void DisplayKeyboard()
+    {
+        if (Gamepad.all.Count > 0) keyboard.gameObject.SetActive(true);
     }
 
     public void HideKeyboard()
     {
         keyboard.gameObject.SetActive(false);
+        //keyboard.inputField.Clear();
     }
 }
