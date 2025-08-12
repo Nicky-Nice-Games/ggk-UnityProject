@@ -5,7 +5,10 @@ using UnityEngine;
 /// </summary>
 public class HazardTier2 : BaseItem
 {
-    private void Start()
+    [SerializeField] private MeshRenderer meshRenderer; // The fake item brick's mesh renderer
+
+    // Start is called before the first frame update
+    void Start()
     {
         base.Start();
         timer = 10.0f;
@@ -46,6 +49,18 @@ public class HazardTier2 : BaseItem
             if (collision.gameObject.TryGetComponent<Rigidbody>(out kartRigidbody)) // checks if they have rb while also assigning if they do
             {
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
+
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                {
+                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    playerKart.Stun(2.0f);
+                }
+
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                {
+                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcKart.Stun(2.0f);
+                }
 
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {
