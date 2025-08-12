@@ -82,7 +82,7 @@ public class AppearanceSettings : NetworkBehaviour
             for (int i = 0; i < models.Count; i++)
             {
                 //Setting active correct model
-                if (name == models[i].name || CharacterBuilder.ModelToName(name) == models[i].name)
+                if (name == models[i].name)
                 {
                     models[i].SetActive(true);
                     break;
