@@ -280,7 +280,7 @@ public class NEWDriver : NetworkBehaviour
         //float inputX;
         //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
         movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.z = inputFixed.z; 
+        movementDirection.z = inputFixed.z;
 
         //Stunned
         if (isStunned) movementDirection = Vector3.zero;
@@ -908,7 +908,6 @@ public class NEWDriver : NetworkBehaviour
         {
             recenBoostvalue = Mathf.Abs(driftTime - minDriftTime * currentDriftTier);
         }
-        
 
         if (TurnCount > 3)
         {
@@ -955,7 +954,7 @@ public class NEWDriver : NetworkBehaviour
 
         inputFixed = new Vector3(input.x, 0, input.y);
         //movementDirection = fixedInput;
-        
+
 
         //movementDirection.z = movementDirection.y;
         //float inputZ = movementDirection.z;
