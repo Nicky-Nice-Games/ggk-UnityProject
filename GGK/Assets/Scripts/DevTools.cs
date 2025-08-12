@@ -5,51 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static ItemHolder;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 //Gina Piccirilli
 
-//OTHER TODOs (not listed elsewhere)
-
-//Fix issue where when clicking a button with the mouse it thinks input has been
-//  entered (likely something to do with On End Edit)
-//If seen as an issue (which I think it probably is), make it so that the command
-//  prompt is hidden when entering a map which happens when the prompt was already open
-//  and you go into a track not using a command
-//Add other commands (see dev keyboard shortcuts; restart command?)
-//Typing letters in the input that are keybinds such as WASD and P will do their actions in game
-//Trim beginning of input or ignore if first index of method is null/empty? (for if the player types
-//  a space before a method name, prevent having to retype)
-//Can't load into another map or scene when paused, it goes to a black screen but works after you
-//  unpause - make it auto-unpause/disable pause menu when load command happens
-//  FIX DEACTIVATE PAUSE! works to deactivate when loading a new scene but causes the same problem as 
-//  activating and deactivating the command prompt, you need to press the keybind to reopen or re-close
-//  the prompt or pause panel before it actually registers 
-//Ability to adjust player and npc speed
-//Debug GiveItem (implement with new item system)
-//Toggle checkpoints method?
-//Remove NPCs?
-
-//Fix issue where you are unable to type while in dev maps (and sometimes other tracks?)
-//  Update: can type if you close and reopen prompt but not initially even though cursor is there
-//UPDATE: fixed, but only works if the prompt is reactivated, doesnt work if it stays open but works 
-//  works when you load into a map and then open the prompt
-
-//Done
-//Prompt persists through menu scenes
-//Scrollbar works with autoscroll
-
-
-
-//If multiplayer
-//  Make sure speed change is all player karts
-//  Make sure all players load into a map or scene (use multiplayer scene manager)
-//  Should game mode change be inaccessible? Or only for multiplayer possible modes?
-//  Make GiveItem only availible in test/free mode?
-
+//Additional/stretch tasks
+//  Fix GiveItem in multiplayer (maybe make not work or all players can, etc.) - Disabled currently
+//  Other possible commands: show debug messages, remove NPCs, toggle checkpoints, restart game
+//  Fix Bugs:
+//      Fix deactivate pause/pause issue: Can't load into another map or scene when paused, it goes
+//          to a black screen but works after you unpause, see line 972
+//      Typing letters in the input that are keybinds will do their actions in game
+//      Trim beginning of input or ignore if first index of method is null/empty? (for if the
+//          player types a space before a method name on accident, prevents having to retype)
+//      Fix issue where when clicking a button with the mouse it thinks input has been
+//          entered (likely something to do with On End Edit), and pressing enter after the prompt is
+//          closed still enters a line (even after adding additional statement to if)
+//      Sometimes it will still type in the input field while driving while the prompt is closed
 
 
 #region Enums
@@ -103,8 +77,8 @@ public enum GameMode
 {
     Race,
     GrandPrix,
-    TimeTrial,
-    FreeDrive    //Dev mode, free fly/drive ?
+    TimeTrial
+    //FreeDrive    //Dev mode, free fly/drive ?
 }
 
 
@@ -123,17 +97,28 @@ public enum GameMode
 
 public class DevTools : MonoBehaviour
 {
+    #region Fields
     //Variables and references for setting up the DevTools object and references to other scripts
     public static DevTools Instance;
     [SerializeField] public SceneLoader sceneLoader;
     [SerializeField] public MultiplayerSceneManager multiSceneLoader;    
     [SerializeField] public CharacterData characterData;
-    //public PlayerKartHandeler playerKartHandeler;
     private PlacementManager placementManager;
     private AppearanceSettings appearanceSettings;
-    //[SerializeField] public GameObject gameManagerObj;
-    //[SerializeField] public GameManager gameManager;
+    [SerializeField] public GameManager gameManager;
     private List<GameObject> listeners = new List<GameObject>();
+
+    //Variables for password protection
+    public GameObject optionsPanel;
+    private bool devToolsKeyEnabled = false;
+    private int keyCount = 0;
+    private KeyCode lastKey = KeyCode.Backspace;
+    private KeyCode[] enablePass = 
+        {KeyCode.E, KeyCode.N, KeyCode.A, KeyCode.B, KeyCode.L, KeyCode.E, KeyCode.D, KeyCode.E, 
+        KeyCode.V, KeyCode.P, KeyCode.R, KeyCode.O, KeyCode.M, KeyCode.P, KeyCode.T};
+    private KeyCode[] disablePass =
+        {KeyCode.D, KeyCode.I, KeyCode.S, KeyCode.A, KeyCode.B, KeyCode.L, KeyCode.E, KeyCode.D, KeyCode.E,
+        KeyCode.V, KeyCode.P, KeyCode.R, KeyCode.O, KeyCode.M, KeyCode.P, KeyCode.T};
 
     //Variables and references for the visible command prompt game objects
     private string textLog;
@@ -145,15 +130,13 @@ public class DevTools : MonoBehaviour
     [SerializeField] private Scrollbar scrollBar;
     private bool isScrolling;
 
-    //Variables and references for GiveItem command
-    //[SerializeField] private List<BaseItem> baseItems = new List<BaseItem>();
+    //Variable for GiveItem command
     private ItemHolder itemHolder;
-    //private BaseItem baseItem;
 
+    //Variables for default character model
     [SerializeField] public Sprite defaultSprite;
     [SerializeField] public Color defaultColor;
-
-    //[SerializeField] private GameObject pausePanel;
+    #endregion
 
 
     // Start is called before the first frame update
@@ -167,64 +150,106 @@ public class DevTools : MonoBehaviour
         defaultText = "Welcome to Command Prompt\nType ShowMethods for methods " +
                 "or \n[MethodName] Options for Param options";
         textLog = defaultText;
-
-        
-
-        //Debug.Log("length " + textLog.Length);
-        //gameManager = SceneLoader.GetComponent<GameManager>();
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        //trying to fix issue where prompt dissapears between menu scenes (this code works
-        //to keep it enabled but it still doesn't show until the key is pressed again)
-        #region Commented out testing
-        //Debug.Log("loading " + sceneLoader.loading);
-        //if (sceneLoader.loading)
-        //{
-        //inputField.ActivateInputField();
-        //Debug.Log("enabled " + commandPromptCanvas.enabled);
-        //Debug.Log("Length " + textLog.Length);
+        //Sets the options panel variable to the currently open options panel
+        optionsPanel = GameObject.FindGameObjectWithTag("Options");
 
-        //TODO FIX! won't work if log has been cleared, run secondary check?
-        //  ALSO overrides disabling when entering a map
-        //if (textLog.Length > 131)   
-        //{
-        //    commandPromptCanvas.enabled = true;
-        //    inputField.ActivateInputField();
-        //}
-        //else
-        //{
-        //    commandPromptCanvas.enabled = false;
-        //}
-        //sceneLoader.loading = false;
-        //Debug.Log("enabled " + commandPromptCanvas.enabled);
-        //}
-        #endregion
-
-       
-
-
-        //Shows and hides the canvas (prompt) when `/~ is pressed (KeyCode.Tilda not working)
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        //Makes command prompt password protected for final build
+        if (optionsPanel != null && optionsPanel.activeSelf == true)
         {
-            if (commandPromptCanvas.enabled == false)
+            if (!devToolsKeyEnabled)
             {
-                commandPromptCanvas.enabled = true;
-                inputField.DeactivateInputField();
-                inputField.ActivateInputField();
+                if (keyCount < enablePass.Length)
+                {
+                    if (Input.GetKeyDown(enablePass[keyCount]))
+                    {
+                        if (lastKey != KeyCode.Backspace)
+                        {
+                            if (lastKey == enablePass[keyCount - 1])
+                            {
+                                lastKey = enablePass[keyCount];
+
+                                keyCount++;
+                            }
+                        }
+                        else
+                        {
+                            lastKey = enablePass[keyCount];
+                            keyCount++;
+                        }
+                    }
+                }
+                else if (keyCount == enablePass.Length)
+                {
+                    Debug.Log("Command Prompt Enabled");
+                    devToolsKeyEnabled = true;
+                    keyCount = 0;
+                    lastKey = KeyCode.Backspace;
+                }
             }
-            else
+            else if (devToolsKeyEnabled)
             {
-                commandPromptCanvas.enabled = false;
-                inputField.DeactivateInputField();
+                if (keyCount < disablePass.Length)
+                {
+                    if (Input.GetKeyDown(disablePass[keyCount]))
+                    {
+                        if (lastKey != KeyCode.Backspace)
+                        {
+                            if (lastKey == disablePass[keyCount - 1])
+                            {
+                                lastKey = disablePass[keyCount];
+
+                                keyCount++;
+                            }
+                        }
+                        else
+                        {
+                            lastKey = disablePass[keyCount];
+                            keyCount++;
+                        }
+                    }
+                }
+                else if (keyCount == disablePass.Length)
+                {
+                    Debug.Log("Command Prompt Disabled");
+                    devToolsKeyEnabled = false;
+                    keyCount = 0;
+                    lastKey = KeyCode.Backspace;
+                }
             }
+        }
+
+
+        if (devToolsKeyEnabled) 
+        {
+            //Shows and hides the canvas (prompt) when `/~ is pressed and prompt is enabled
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                if (commandPromptCanvas.enabled == false)
+                {
+                    commandPromptCanvas.enabled = true;
+                    inputField.DeactivateInputField();
+                    inputField.ActivateInputField();
+                }
+                else
+                {
+                    inputField.text = "";
+                    commandPromptCanvas.enabled = false;
+                    inputField.DeactivateInputField();
+                }
+            }
+
         }
 
         //Clears input field, returns cursor to field, and turns on auto-scroll when the user
         //enters new input
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) 
+            && commandPromptCanvas.enabled == true)
         {
             inputField.text = "";
             inputField.ActivateInputField();
@@ -237,10 +262,6 @@ public class DevTools : MonoBehaviour
         {
             AutoScroll(scrollRect);
         }
-        //else
-        //{
-        //    StopAutoScroll();
-        //}
 
         //Sets text of command prompt equal to the textLog variable that is added to
         textBox.text = textLog;
@@ -289,18 +310,15 @@ public class DevTools : MonoBehaviour
         //Puts user entered text into the prompt log
         textLog += "\n\t>_ " + input;
 
-        //Splits input into substrings with a space as the delimiter (Pre-method chaining)
-        //string[] parts = input.Split(new char[] { ' ' });
-
         //Splits input into substrings with a colon as the delimiter
         string[] methods = input.Split(new char[] { ':' });
 
-        //Format:
-        //or MethodName Param:MethodName Param
-        //  methods[0] = Method1 Param1
-        //  methods[1] = Method2 Param2
-        //  parts[0] = MethodName
-        //  parts[1] = Param
+        /*Format:
+            MethodName Param:MethodName Param
+            methods[0] = Method1 Param1
+            methods[1] = Method2 Param2
+            parts[0] = MethodName
+            parts[1] = Param */
 
         //For each method inputted, checks method name and parameters
         for (int i = 0; i < methods.Length; i++)
@@ -344,17 +362,15 @@ public class DevTools : MonoBehaviour
                         }
                         break;
 
-                    case "GameModeChange":
-                        //TODO set up gamemode method command to change game mode without changing map
+                    case "ChangeGameMode":
                         if (parts.Length > 1)
                         {
-                            GameModeChange(parts[1]);
+                            ChangeGameMode(parts[1]);
                         }
                         else
                         {
                             textLog += "\nError: No Param 1 [GameMode] was Entered.";
                         }
-                        textLog += "\nMethod not yet set up :)";
                         break;
 
                     case "GiveItem":
@@ -386,17 +402,12 @@ public class DevTools : MonoBehaviour
                         }
                         else if (parts.Length > 1 && parts[1] == "Options")
                         {
-                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC";
+                            textLog += "\nOptions for Param 1 [KartType]: \nPlayer\nNPC\nAll";
                             
                             textLog += "\nOptions for Param 2 [Speed]: " +
                                 "\nEnter a number or Reset";  
                             break;
                         }
-                        //else if (parts.Length > 1 && parts[1] == "Reset")
-                        //{
-                        //    ChangeSpeed("Reset", "-1");
-                        //    break;
-                        //}
                         else
                         {
                             textLog += "\nError: No or Invalid Param 1 [KartType] \nor Param 2 [Speed] was Entered.";
@@ -418,6 +429,7 @@ public class DevTools : MonoBehaviour
 
 
     /// <summary>
+    /// <summary>
     /// Handles the LoadMap command based on the inputted paramater entered after it. 
     /// </summary>
     /// <param name="mapName">The inputted parameter after the LoadMap command to 
@@ -426,29 +438,14 @@ public class DevTools : MonoBehaviour
     {
         bool multiplayer = false;
 
-        //if (GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>() != null)
-        //{
-        //    playerKartHandeler = GameObject.Find("PlayerKartHandler").GetComponent<PlayerKartHandeler>();
-        //}
-
-        //if (GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>() != null
-        //    && characterData.characterSprite == defaultSprite)
-        //{
-        //appearanceSettings = GameObject.Find("Kart 1(Clone)").GetComponentInChildren<AppearanceSettings>();
-        //appearanceSettings.UpdateAppearance();
-        //}
-
         if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
 
         //Sets default character when loading into a map if one hasn't already been chosen
         if (characterData.characterSprite == null)
         {
             characterData.characterName = "Gizmo";
-            //characterData.characterColor = playerKartHandeler.colors[3];
             characterData.characterColor = defaultColor;
-            characterData.characterSprite = defaultSprite;
-            //Image[] images = playerKartHandeler.characterButtons[1].GetComponentsInChildren<Image>();
-            //playerKartHandeler.characterSelectedImage =             
+            characterData.characterSprite = defaultSprite;             
         }
 
         //DeactivatePause();
@@ -466,7 +463,6 @@ public class DevTools : MonoBehaviour
             case "CampusCircuit":                
                 if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop"); }
                 else { multiSceneLoader.LoadScene("LD_RITOuterLoop"); }                
-                //Can be removed if prefered, maybe when in certain modes?
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();                
                 break;
@@ -495,7 +491,6 @@ public class DevTools : MonoBehaviour
             case "QuarterMile":
                 if (!multiplayer) { sceneLoader.LoadScene("GSP_RITQuarterMile"); }
                 else { multiSceneLoader.LoadScene("GSP_RITQuarterMile"); }
-                //sceneLoader.LoadScene("GSP_RITQuarterMile");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -503,7 +498,6 @@ public class DevTools : MonoBehaviour
             case "TestGrid":
                 if (!multiplayer) { sceneLoader.LoadScene("Testing_Grid"); }
                 else { multiSceneLoader.LoadScene("Testing_Grid"); }
-                //sceneLoader.LoadScene("Testing_Grid");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -511,7 +505,6 @@ public class DevTools : MonoBehaviour
             case "TestTube":
                 if (!multiplayer) { sceneLoader.LoadScene("Testing_Tube"); }
                 else { multiSceneLoader.LoadScene("Testing_Tube"); }
-                //sceneLoader.LoadScene("Testing_Tube");
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -537,6 +530,11 @@ public class DevTools : MonoBehaviour
     /// specify the scene that the user wants to go to.</param>
     public void LoadScene(string sceneName)
     {
+
+        bool multiplayer = false;
+
+        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+
         //DeactivatePause();
         switch (sceneName)
         {
@@ -550,36 +548,40 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "Start":
-                sceneLoader.LoadScene("StartScene");
-                //Can be removed if prefered, maybe when in certain modes?
+                if (!multiplayer) { sceneLoader.LoadScene("StartScene"); }
+                else { multiSceneLoader.LoadScene("StartScene"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MultiSingle":
-                sceneLoader.LoadScene("MultiSinglePlayerScene");
+                if (!multiplayer) { sceneLoader.LoadScene("MultiSinglePlayerScene"); }
+                else { multiSceneLoader.LoadScene("MultiSinglePlayerScene"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "ModeSelect":
-                sceneLoader.LoadScene("GameModeSelectScene");
+                if (!multiplayer) { sceneLoader.LoadScene("GameModeSelectScene"); }
+                else { multiSceneLoader.LoadScene("GameModeSelectScene"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "PlayerKart":
-                sceneLoader.LoadScene("PlayerKartScene");
+                if (!multiplayer) { sceneLoader.LoadScene("PlayerKartScene"); }
+                else { multiSceneLoader.LoadScene("PlayerKartScene"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
                 break;
 
             case "MapSelect":
-                sceneLoader.LoadScene("MapSelectScene");
+                if (!multiplayer) { sceneLoader.LoadScene("MapSelectScene"); }
+                else { multiSceneLoader.LoadScene("MapSelectScene"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
@@ -600,15 +602,19 @@ public class DevTools : MonoBehaviour
 
 
     /// <summary>
-    /// Handles the GameModeChange command based on the inputted paramater entered after it.
+    /// Handles the ChangeGameMode command based on the inputted paramater entered after it.
     /// </summary>
-    /// <param name="gameMode">The inputted parameter after the GameModeChange command to 
+    /// <param name="gameMode">The inputted parameter after the ChangeGameMode command to 
     /// specify the game mode that the user wants to change to.</param>
-    public void GameModeChange(string gameMode)
+    public void ChangeGameMode(string gameMode)
     {
+        bool multiplayer = false;
+
+        if (MultiplayerManager.Instance.IsMultiplayer) { multiplayer = true; }
+
         switch (gameMode)
         {
-            //Displays all of the parameter options for the GameModeChange method
+            //Displays all of the parameter options for the ChangeGameMode method
             case "Options":
                 textLog += "\nOptions for Param 1 [GameMode]: ";
                 foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
@@ -617,29 +623,36 @@ public class DevTools : MonoBehaviour
                 }
                 break;
 
-            //TODO Mode cases go here
-            /*  Race,
-                GrandPrix,
-                TimeTrial,
-                FreeDrive
-            */
-
             case "Race":
-                //Use game mode handler script
-                //Send to map select if not already in map or use a map command
+                gameManager.curGameMode = GameModes.quickRace;
                 break;
 
             case "GrandPrix":
+                //Not availible in multiplayer
+                if (!multiplayer) 
+                {
+                    gameManager.ChangeGameMode(GameModes.grandPrix); ;
+                    gameManager.GrandPrixSelected(new List<string> 
+                    { "LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" });
+                }
+                else { textLog += "\nError: Grand Prix not availible \nin multiplayer."; return; }                
                 break;
 
             case "TimeTrial":
-                //Not availible in multiplayer
+                //Not availible in multiplayer                
+                if (!multiplayer) 
+                { 
+                    gameManager.ChangeGameMode(GameModes.timeTrial);
+                    string scene = SceneManager.GetActiveScene().name;
+                    LoadTimeTrialMap(scene);
+                }
+                else { textLog += "\nError: Time Trial not availible \nin multiplayer."; return; }
                 break;
 
-            case "FreeDrive":
-                //Disable NPCs, countdown/timer/leaderboard/placement?
-                //In multiplayer, enable give item
-                break;
+            //case "FreeDrive":
+            //    //Disable NPCs, countdown/timer/leaderboard/placement?
+            //    //In multiplayer, enable give item
+            //    break;
 
             case "":
                 textLog += "\nError: No Param 1 [GameMode] was Entered.";
@@ -665,35 +678,34 @@ public class DevTools : MonoBehaviour
     public void GiveItem(string itemType, string itemTier)
     {
         int tier;
+        bool multiplayer = false;
 
-        //TODO remove? check moved to command; Check for options before tier to prevent check for tier
-        if (itemType == "Options")
-        {
-            textLog += "\nOptions for Param 1 [ItemType]: ";
-            foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
-            {
-                textLog += "\n" + type;
-            }
-            textLog += "\nOptions for Param 2 [ItemTier]: " +
-                "\nEnter a number 1-4";
+        if (MultiplayerManager.Instance.IsMultiplayer) 
+        { 
+            multiplayer = true;
+            textLog += "\nError: Command not currently supported in \nmultiplayer.";
             return;
+        }
+
+        if (gameManager.curGameMode == GameModes.timeTrial)
+        {
+            textLog += "\nError: Command not allowed in Time Trial.";
+            return;
+        }
+
+
+        //Checks if you are in a track scene or not (such as a menu)
+        GameObject kart = GameObject.Find("Kart 1(Clone)");
+        if (kart != null)
+        {
+            itemHolder = kart.GetComponentInChildren<ItemHolder>();
         }
         else
         {
-            //Checks if you are in a track scene or not (such as a menu)
-            GameObject kart = GameObject.Find("Kart 1(Clone)");
-            if (kart != null)
-            {
-                itemHolder = kart.GetComponentInChildren<ItemHolder>();
-            }
-            else
-            {
-                textLog += "\nError: No Kart found in scene, cannot use command.";
-                return;
-            }
+            textLog += "\nError: No Kart found in scene, cannot use command.";
+            return;
         }
 
-        
 
         //Checks if the second parameter inputted is a number 1-4
         if (Int32.TryParse(itemTier, out tier))
@@ -715,18 +727,7 @@ public class DevTools : MonoBehaviour
         }
 
         switch (itemType)
-        {
-            //Displays all of the parameter options for the GiveItem method
-            case "Options":
-                textLog += "\nOptions for Param 1 [ItemType]: ";
-                foreach (ItemHolder.ItemTypeEnum type in Enum.GetValues(typeof(ItemHolder.ItemTypeEnum)))
-                {
-                    textLog += "\n" + type;
-                }
-                textLog += "\nOptions for Param 2 [ItemTier]: " +
-                    "\nEnter a number 1-4";
-                break;
-
+        {           
             case "Puck":             
                 itemHolder.ItemType = ItemHolder.ItemTypeEnum.Puck;                
                 break;
@@ -761,13 +762,6 @@ public class DevTools : MonoBehaviour
                 return;
         }
 
-        //Setting appropriate variables for the held item, regardless of item type
-        //Note: Does not run if a parameter is invalid because of return statements
-        //itemHolder.HoldingItem = true;
-        //itemHolder.HeldItem.ItemTier = tier;
-        //itemHolder.HeldItem.OnLevelUp(tier);
-        //itemHolder.ApplyItemTween(itemHolder.HeldItem.itemIcon);
-        //itemHolder.uses = itemHolder.HeldItem.UseCount;
     }
 
 
@@ -782,6 +776,12 @@ public class DevTools : MonoBehaviour
     {
         float speedFloat;
 
+        if (gameManager.curGameMode == GameModes.timeTrial)
+        {
+            textLog += "\nError: Command not allowed in Time Trial.";
+            return;
+        }
+
         GameObject kartCheck = GameObject.FindGameObjectWithTag("Kart");
         if (!kartCheck)
         {
@@ -795,28 +795,15 @@ public class DevTools : MonoBehaviour
         }       
 
         //Checks if the second parameter inputted is a valid number, then sets karts speed
-        if (float.TryParse(speed, out speedFloat))
+        if (!float.TryParse(speed, out speedFloat))
         {
-            /*if (speedInt >= 1 && speedInt <= 4) //TODO Change range, loop through NPCs?
-            {
-                //set chosenKart speed to speed
-            }
-            else
+            if (speed != "Reset")
             {
                 textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
                 return;
             }
-            Debug.Log("here");*/
         }
-        else
-        {
-            if(speed != "Reset")
-            {
-                textLog += "\nError: Invalid Param 2 [Speed] was Entered.";
-                return;
-            }
-         
-        }
+
 
         switch (kartType) 
         {
@@ -870,10 +857,39 @@ public class DevTools : MonoBehaviour
                 }                
                 break;
 
-            case ("Reset"):
-
-                
-
+            case ("All"):
+                if (speed == "Reset")
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = 38;
+                            kart.GetComponent<NEWDriver>().accelerationRate = 2700;
+                        }
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = 38;
+                            kart.GetComponent<NPCPhysics>().accelerationRate = 2300;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (GameObject kart in placementManager.kartsList)
+                    {
+                        if (kart.GetComponent<NEWDriver>() != null)
+                        {
+                            kart.GetComponent<NEWDriver>().maxSpeed = speedFloat;
+                            kart.GetComponent<NEWDriver>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                        if (kart.GetComponent<NPCPhysics>() != null)
+                        {
+                            kart.GetComponent<NPCPhysics>().maxSpeed = speedFloat;
+                            kart.GetComponent<NPCPhysics>().accelerationRate *= speedFloat / (speedFloat / 2);
+                        }
+                    }
+                }
                 break;
 
             case "":
@@ -892,6 +908,37 @@ public class DevTools : MonoBehaviour
     }
 
 
+/// <summary>
+/// Helper method used in ChangeGameMode to load into the correct time trial map based 
+/// on the current map.
+/// </summary>
+/// <param name="name">The name of the current scene.</param>
+    public void LoadTimeTrialMap(string name)
+    {
+        switch (name) 
+        {
+            case "LD_RITOuterLoop":
+                sceneLoader.LoadScene("TT_RITOuterLoop");
+                break;
+
+            case "LD_RITDorm":
+                sceneLoader.LoadScene("TT_RITDorm");
+                break;
+
+            case "GSP_Golisano":
+                sceneLoader.LoadScene("TT_Golisano");
+                break;
+
+            case "GSP_FinalsBrickRoad":
+                sceneLoader.LoadScene("TT_FinalsBrickRoad");
+                break;
+
+            default:
+                return;
+        }
+    }
+
+
     /// <summary>
     /// Keeps scroll bar at bottom of the prompt to show the most recent inputs and outputs.
     /// </summary>
@@ -901,27 +948,23 @@ public class DevTools : MonoBehaviour
         isScrolling = false;
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
-        //scrollBar.value = 0;
     }
 
 
     /// <summary>
     /// Keeps the scroll bar from trying to stay at the bottom when the user is trying to scroll 
     /// up to view previous text. Auto-scrolling continues when either the bar is scrolled back to 
-    /// the bottom or the user enters another input. 
+    /// the bottom or the user enters another input. Called OnEndEdit of input field.
     /// </summary>
     public void StopAutoScroll()
     {
         isScrolling = true;
         scrollRect.verticalNormalizedPosition = scrollRect.verticalNormalizedPosition;
-
-        //if(scrollRect.verticalNormalizedPosition == 0)
-        //{
-        //    isScrolling = false;
-        //}
     }
 
 
+    //Attempt at solving issue where screen turns black when trying to load somewhere else while
+    //paused, just need to press escape again to fix but wanted an automatic fix
     //public void DeactivatePause()
     //{
     //    //Checks if pause panel is active and deactivates if so
