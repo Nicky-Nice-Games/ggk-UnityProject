@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ItemBox : NetworkBehaviour
+public class ItemBox_3Part : NetworkBehaviour
 {
     // Change from ItemBox Script: Save reference to other 2 components
     // So they can be hidden and unhidden
     [SerializeField]
     private MeshRenderer boxColor;
     [SerializeField]
-    private GameObject boxIcon; // The Icon does not have a mesh renderer, made it a game object
+    private GameObject boxIcon; // The Icon does not have a mesh renderer
 
     private void Start()
     {
@@ -114,7 +114,7 @@ public class ItemBox : NetworkBehaviour
     private void HideAndDisable()
     {
         GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<BoxCollider>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false; 
         // Level Design Addition: disable Color and Icon MeshRenderers
         boxColor.enabled = false;
         boxIcon.SetActive(false);
