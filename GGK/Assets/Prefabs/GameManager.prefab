@@ -221,6 +221,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6377467600523965404}
+  - component: {fileID: 5399168345693712128}
   - component: {fileID: 630032558444301263}
   - component: {fileID: 5319999044948849092}
   - component: {fileID: 2722897749934232790}
@@ -228,7 +229,6 @@ GameObject:
   - component: {fileID: 6517648660312200592}
   - component: {fileID: 8793965261568892320}
   - component: {fileID: 6842283557527862271}
-  - component: {fileID: 7734052207256240662}
   - component: {fileID: 6189517630539807215}
   m_Layer: 0
   m_Name: GameManager
@@ -253,6 +253,27 @@ Transform:
   - {fileID: 2730420457519044278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5399168345693712128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4570902627928011834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &630032558444301263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,7 +287,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curState: 0
+  curGameMode: 0
   sceneLoader: {fileID: 8793965261568892320}
+  playerInfo: {fileID: 0}
+  postGameManager: {fileID: 0}
   currentSceneFirst: {fileID: 0}
 --- !u!114 &5319999044948849092
 MonoBehaviour:
@@ -294,9 +318,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterSprite: {fileID: 0}
-  characterModelSelected: {fileID: 0}
   characterName: 
   characterColor: {r: 0, g: 0, b: 0, a: 0}
+  mapVote: 
 --- !u!114 &5927589027962868877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,6 +337,8 @@ MonoBehaviour:
   dialougeVolume: 100
   sfxVolume: 100
   musicVolume: 100
+  IsFullScreen: 1
+  resolution: {x: 0, y: 0}
 --- !u!114 &6517648660312200592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,6 +367,7 @@ MonoBehaviour:
   transition: {fileID: 4459490462642657458}
   transitionTime: 0.5
   transitionActive: 1
+  loading: 0
 --- !u!114 &6842283557527862271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,29 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f16414b1ae0d9724ea8353cb4104a55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7734052207256240662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4570902627928011834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 656cedfb7724f1f4282a306d0808d34f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerID: 0
-  raceStartTime: 0
-  racePosition: 0
-  mapRaced: 0
-  collisionsWithPlayers: 0
-  collisionWithWalls: 0
-  characterUsed: 0
-  fellOffMap: 0
-  boostUsage: []
-  offenceUsage: []
-  trapUsage: []
 --- !u!114 &6189517630539807215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,9 +392,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00894873f405d541beefa881c795112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allowDevShortcuts: 0
   devEnabled: 0
   manager: {fileID: 0}
   charData: {fileID: 0}
+  devIcon: {fileID: 0}
   itemBoxReference: {fileID: 1093172496520741459, guid: eb931ffa2ae727e44b93c585f8461c6f, type: 3}
   upgradeBoxReference: {fileID: 3251909550354428211, guid: 8d5888da726e11b4b9d5ed2d054683b3, type: 3}
   managerPrefabReference: {fileID: 630032558444301263}
+  shortcutText: {fileID: 0}
