@@ -12,6 +12,13 @@ public class GameModeHandeler : MonoBehaviour
     // [SerializeField] private Transform gameModeButtons;
     // [SerializeField] private Transform waitingScreen;
 
+    [SerializeField] private List<Button> confirmButtons = new List<Button>();
+    [SerializeField] private List<Button> backButtons = new List<Button>();
+    [SerializeField] private Button grandPrixButton;
+    [SerializeField] private Button raceButton;
+    [SerializeField] private Button timeTrialButton;
+    private UIClickSound clickSound;
+    private AnnouncerLines announcerLines;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +29,8 @@ public class GameModeHandeler : MonoBehaviour
         else if multiplayer client show waiting screen
         */
         gamemanagerObj = FindAnyObjectByType<GameManager>();
+        clickSound = FindAnyObjectByType<UIClickSound>();
+        announcerLines = FindAnyObjectByType<AnnouncerLines>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in modeOptions)
@@ -56,6 +65,32 @@ public class GameModeHandeler : MonoBehaviour
                 gamemanagerObj.ChangeGameMode(GameModes.grandPrix));
             }
         }
+
+        // Buttons playing Confirm Sound
+        foreach (Button button in confirmButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickConfirm());
+        }
+
+        // Buttons playing Back Sound
+        foreach (Button button in backButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickBack());
+        }
+
+        // Play "Grand Prix" Announcer Voice line
+        grandPrixButton.onClick.AddListener(() =>
+        announcerLines.PlayGrandPrix());
+
+        // Play "Race" Announcer Voice line
+        raceButton.onClick.AddListener(() =>
+        announcerLines.PlayRace());
+
+        // Play "Time Trial" Announcer Voice line
+        timeTrialButton.onClick.AddListener(() =>
+        announcerLines.PlayTimeTrial());
 
         // this is to bring up the waiting screens for clients when in multiplayer
         // if (!MultiplayerManager.Instance.IsMultiplayer)

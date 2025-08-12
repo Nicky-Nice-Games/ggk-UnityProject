@@ -38,11 +38,21 @@ public class MapSelectHandeler : MonoBehaviour
     [SerializeField]
     private Image trackPreview;
 
+    [SerializeField] private List<Button> confirmButtons = new List<Button>();
+    [SerializeField] private List<Button> backButtons = new List<Button>();
+    [SerializeField] private Button campusButton;
+    [SerializeField] private Button dormButton;
+    [SerializeField] private Button techHouseButton;
+    [SerializeField] private Button allNighterButton;
+    private UIClickSound clickSound;
+    private AnnouncerLines announcerLines;
 
     // Start is called before the first frame update
     void Start()
     {
         gamemanagerObj = FindAnyObjectByType<GameManager>();
+        clickSound = FindAnyObjectByType<UIClickSound>();
+        announcerLines = FindAnyObjectByType<AnnouncerLines>();
         // waitingScreen.gameObject.SetActive(false);
         // mapButtons.gameObject.SetActive(true);
 
@@ -74,6 +84,36 @@ public class MapSelectHandeler : MonoBehaviour
             MusicStateManager.instance.SetMusicState(MusicState.Menu);
         }
         confirmBtn.onClick.AddListener(() => ConfirmVote());
+
+        // Buttons playing Confirm Sound
+        foreach (Button button in confirmButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickConfirm());
+        }
+
+        // Buttons playing Back Sound
+        foreach (Button button in backButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickBack());
+        }
+
+        // Play "Campus Circuit" Announcer Voice line
+        campusButton.onClick.AddListener(() =>
+        announcerLines.PlayCampusCircuit());
+
+        // Play "Dorm Room Derby" Announcer Voice line
+        dormButton.onClick.AddListener(() =>
+        announcerLines.PlayDormRoomDerby());
+
+        // Play "Tech House Turnpike" Announcer Voice line
+        techHouseButton.onClick.AddListener(() =>
+        announcerLines.PlayTechHouseTurnpike());
+
+        // Play "All Nighter Expressway" Announcer Voice line
+        allNighterButton.onClick.AddListener(() =>
+        announcerLines.PlayAllNighterExpressway());
     }
 
     public void ConfirmVote()

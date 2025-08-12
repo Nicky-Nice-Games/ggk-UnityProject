@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class AnnouncerLines : MonoBehaviour
 {
+    public static AnnouncerLines instance;
+
     //These are all the Wwise Events for the announcer.
     [Header("Wwise Sound Events")]
     [SerializeField] AK.Wwise.Event AllNighterExpressway;
@@ -26,84 +28,101 @@ public class AnnouncerLines : MonoBehaviour
     [SerializeField] AK.Wwise.Event TechHouseTurnpike;
     [SerializeField] AK.Wwise.Event TimeTrial;
 
+    void Awake()
+    {
+        // only have one instance of this script at a time
+        if (instance == null)
+        {
+            instance = this;
+
+            // persists across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            // destroy this script if one already exists
+            Destroy(gameObject);
+        }
+    }
+
     //These scripts play each of the Wwise sound events for the announcer lines.
-    void PlayAllNighterExpressway()
+    public void PlayAllNighterExpressway()
     {
         AllNighterExpressway.Post(gameObject);
     }
 
-    void PlayCampusCircuit()
+    public void PlayCampusCircuit()
     {
         CampusCircuit.Post(gameObject);
     }
 
-    void PlayDormRoomDerby()
+    public void PlayDormRoomDerby()
     {
         DormRoomDerby.Post(gameObject);
     }
 
-    void PlayEmma()
+    public void PlayEmma()
     {
         Emma.Post(gameObject);
     }
 
-    void PlayGizmo()
+    public void PlayGizmo()
     {
         Gizmo.Post(gameObject);
     }
 
-    void PlayGrandPrix()
+    public void PlayGrandPrix()
     {
         GrandPrix.Post(gameObject);
     }
 
-    void PlayJamster()
+    public void PlayJamster()
     {
         Jamster.Post(gameObject);
     }
 
-    void PlayKai()
+    public void PlayKai()
     {
         Kai.Post(gameObject);
     }
 
-    void PlayMorgan()
+    public void PlayMorgan()
     {
         Morgan.Post(gameObject);
     }
 
-    void PlayMultiplayer()
+    public void PlayMultiplayer()
     {
         Multiplayer.Post(gameObject);
     }
 
-    void PlayQuickRace()
+    public void PlayQuickRace()
     {
         QuickRace.Post(gameObject);
     }
 
-    void PlayRace()
+    public void PlayRace()
     {
         Race.Post(gameObject);
     }
 
-    void PlayReese()
+    public void PlayReese()
     {
         Reese.Post(gameObject);
     }
 
-    void PlaySingleplayer()
+    public void PlaySingleplayer()
     {
         Singleplayer.Post(gameObject);
     }
 
-    void PlayTechHouseTurnpike()
+    public void PlayTechHouseTurnpike()
     {
         TechHouseTurnpike.Post(gameObject);
     }
 
-    void PlayTimeTrial()
-    {
+    public void PlayTimeTrial()
+    { 
         TimeTrial.Post(gameObject);
     }
 }

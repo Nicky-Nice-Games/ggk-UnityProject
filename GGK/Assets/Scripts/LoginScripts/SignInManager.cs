@@ -34,11 +34,16 @@ public class SignInManager : MonoBehaviour
     [SerializeField] private List<TMP_InputField> inputFieldsList = new List<TMP_InputField>();         // Holds all fields
     private Dictionary<string, TMP_InputField> inputFields = new Dictionary<string, TMP_InputField>();  // Organizes fields
 
+    [SerializeField] private List<Button> confirmButtons = new List<Button>();
+    [SerializeField] private List<Button> backButtons = new List<Button>();
+    private UIClickSound clickSound;
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         apiManager = FindAnyObjectByType<APIManager>();
+        clickSound = FindAnyObjectByType<UIClickSound>();
 
         // Assigning the buttons their listeners
         foreach (GameObject obj in continueButtons)
@@ -60,6 +65,20 @@ public class SignInManager : MonoBehaviour
         foreach (TMP_InputField field in inputFieldsList)
         {
             inputFields[field.name] = field; 
+        }
+
+        // Buttons playing Confirm Sound
+        foreach (Button button in confirmButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickConfirm());
+        }
+
+        // Buttons playing Back Sound
+        foreach (Button button in backButtons)
+        {
+            button.onClick.AddListener(() =>
+            clickSound.onClickBack());
         }
     }
 
