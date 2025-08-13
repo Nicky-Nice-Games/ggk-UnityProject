@@ -213,7 +213,7 @@ public class GameManager : NetworkBehaviour
         }
         else if (curGameMode == GameModes.grandPrix)
         {
-            List<string> maps = new List<string> { "LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" };
+            List<string> maps = new List<string> { "LD_RITOuterLoop-Backup", "GSP_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" };
             GrandPrixSelected(maps);
         }
         else
