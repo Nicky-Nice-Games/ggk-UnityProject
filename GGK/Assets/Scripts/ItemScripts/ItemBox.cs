@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class ItemBox : NetworkBehaviour
 {
+    // Change from ItemBox Script: Save reference to other 2 components
+    // So they can be hidden and unhidden
+    [SerializeField]
+    private MeshRenderer boxColor;
+    [SerializeField]
+    private GameObject boxIcon; // The Icon does not have a mesh renderer, made it a game object
+
     private void Start()
     {
         if (!IsSpawned && randomizeOnStart)
@@ -92,6 +99,9 @@ public class ItemBox : NetworkBehaviour
     {
         GetComponent<MeshRenderer>().enabled = true;
         GetComponent<BoxCollider>().enabled = true;
+        // Level Design Addition: enable Color and Icon MeshRenderers
+        boxColor.enabled = true;
+        boxIcon.SetActive(true);
         isActive = true;
     }
 
@@ -105,6 +115,9 @@ public class ItemBox : NetworkBehaviour
     {
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<BoxCollider>().enabled = false;
+        // Level Design Addition: disable Color and Icon MeshRenderers
+        boxColor.enabled = false;
+        boxIcon.SetActive(false);
         isActive = false;
     }
 
