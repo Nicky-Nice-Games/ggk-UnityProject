@@ -34,7 +34,7 @@ public class KartCheckpoint : NetworkBehaviour
 
     void Start()
     {
-        totalLaps = 3;
+        totalLaps = 1;
         checkpointId = 0;
         checkPointParent = PlacementManager.instance.checkpointManager;
         Transform childTransform = parent.transform.GetChild(0);
