@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
@@ -93,43 +94,55 @@ public class PuckTier4 : BaseItem
     void OnCollisionEnter(Collision collision)
     {
 
+       
+
+    }
+
+    // If colliding with cracked brick wall
+    void OnTriggerEnter(Collider other)
+    {
         // If puck hits a kart
-        if (collision.gameObject.CompareTag("Kart"))
+        if (other.gameObject.CompareTag("Kart"))
         {
             // If puck hits a kart
             if (startTimer >= 0.1f)
             {
 
-                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
                 {
-                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    Debug.Log("Tier 4 Puck Hit Kart");
+                    NEWDriver playerKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
                     playerKart.Stun(2.0f);
                 }
 
-                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
                 {
-                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    NPCPhysics npcKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
                     npcKart.Stun(2.0f);
                 }
 
-                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                if (!MultiplayerManager.Instance.IsMultiplayer)
+                // Prevent puck from being destroyed until it hits the kart in first place.
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == this.kart)
                 {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    DestroyItemRpc(this);
+                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else
+                    {
+                        DestroyItemRpc(this);
+                    }
                 }
             }
         }
         // Pucks can destroy other pucks
-        else if (collision.gameObject.CompareTag("Projectile"))
+        else if (other.gameObject.CompareTag("Projectile"))
         {
             // Prevents puck from destroying tier 4 puck
-            if (collision.gameObject.GetComponent<PuckTier4>())
+            if (other.gameObject.GetComponent<PuckTier4>())
             {
-                Destroy(collision.gameObject);
+                Destroy(other.gameObject);
                 //if (!MultiplayerManager.Instance.IsMultiplayer)
                 //{
                 //    Destroy(this.gameObject);
@@ -151,13 +164,7 @@ public class PuckTier4 : BaseItem
                 }
             }
         }
-
-    }
-
-    // If colliding with cracked brick wall
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
+        else if (other.gameObject.GetComponent<TrapItem>() && other.gameObject.GetComponent<TrapItem>().ItemTier == 2)
         {
             Destroy(other.gameObject);
             //if (!MultiplayerManager.Instance.IsMultiplayer)
@@ -183,13 +190,18 @@ public class PuckTier4 : BaseItem
     }
 
     /// <summary>
-    /// Finds what kart is in first place
+    /// Finds what kart is in first place.
     /// </summary>
     /// <returns>The kart in first place</returns>
     public Transform FindFirstPlace()
     {
         // Finds first place kart
         Transform firstPlaceKart = GameObject.Find("PlacementManager").GetComponent<PlacementManager>().sortedList[0].gameObject.transform;
+        // if the kart in first place is the user, then track to the kart in second
+        if (firstPlaceKart.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == this.kart)
+        {
+            firstPlaceKart = GameObject.Find("PlacementManager").GetComponent<PlacementManager>().sortedList[1].gameObject.transform;
+        }
         // Sets the kart target
         kartTarget = firstPlaceKart.root.gameObject;
         return firstPlaceKart;
