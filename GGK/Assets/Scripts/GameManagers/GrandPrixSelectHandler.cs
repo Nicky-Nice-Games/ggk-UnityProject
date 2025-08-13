@@ -29,6 +29,13 @@ public class GrandPrixSelectHandler : MonoBehaviour
         // Grand Prix 1 maps
         grandPrix1.onClick.AddListener(() =>
         gamemanagerObj.GrandPrixSelected(new List<string> {"LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad"}));
+
+        if(MusicStateManager.instance != null)
+        {
+            MusicLapStateManager.instance.SetLapState(LapState.None);
+            MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
+            MusicStateManager.instance.SetMusicState(MusicState.Menu);
+        }
     }
 
     private void DisableButtons()
