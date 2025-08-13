@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -10,10 +7,20 @@ public class HazardTier3 : BaseItem
 {
     private void Start()
     {
+        base.Start();
         Vector3 behindPos = transform.position - transform.forward * 6 + transform.up * 3;
         behindPos.y += 3.0f;
         transform.position = behindPos;
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["confuseritchie"]++;
+
+        // Checking for multiplayer
+        if (IsSpawned)
+        {
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier3Rpc();
+        }
+        else
+        {
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+        }
     }
 
     private void OnTriggerEnter(Collider collision)

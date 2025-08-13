@@ -78,7 +78,8 @@ public class BoostTier2 : BaseItem
         //warpBoostEffect.SetActive(false);
 
         // add boost usage
-        driver.playerInfo.boostUsage["speedBoost2"]++;
+        if (driver.IsSpawned) { driver.IncrementBoostUsageTier2Rpc(); }
+        else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.boostUsage["speedBoost2"]++; }
         Destroy(this.gameObject);
     }
 
