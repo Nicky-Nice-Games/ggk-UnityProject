@@ -17,6 +17,13 @@ public class StartSceneHandler : MonoBehaviour
     
     private GameManager gamemanagerObj;
 
+    private void Awake()
+    {
+        AkBankManager.UnloadAllBanks();
+        AkBankManager.LoadBank("SFX", false, false);
+        AkBankManager.LoadBank("Music", false, false);
+    }
+
     void Start()
     {
         gamemanagerObj = FindObjectOfType<GameManager>();
@@ -33,6 +40,8 @@ public class StartSceneHandler : MonoBehaviour
             MusicLapStateManager.instance.SetLapState(LapState.None);
             MusicStateManager.instance.SetMusicState(MusicState.Menu);
         }
+
+
     }
 
     // Update is called once per frame
