@@ -124,9 +124,6 @@ public class KartCheckpoint : NetworkBehaviour
                 if (lap >= totalLaps)
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
-                    // raceposition data to playerinfo
-                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
-                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -176,8 +173,6 @@ public class KartCheckpoint : NetworkBehaviour
 
         LeaderboardController leaderboardController = FindAnyObjectByType<LeaderboardController>();
         leaderboardController.Finished(this);
-        Debug.Log(gameObject.transform.parent.GetChild(0));
-        Debug.Log(gameObject.transform.parent.GetChild(0).gameObject);
         if (leaderboardController.allPlayerKartsFinished.Value /*&& 
             gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null*/)
         {

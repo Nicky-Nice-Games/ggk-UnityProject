@@ -70511,7 +70511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3900838970
+  GlobalObjectIdHash: 3433765063
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -110806,7 +110806,7 @@ MonoBehaviour:
   maxSteeringAngle: 10
   kartNormal: {fileID: 2772615197910849762}
   gravity: 30
-  inputLerpSpeed: 5
+  inputLerpSpeed: 22
   tractionCoefficient: 6
   tractionLerpSpeed: 2
   currentTraction: 6
@@ -110818,7 +110818,7 @@ MonoBehaviour:
   driftFactor: 1
   driftTurnMultiplier: 0.7
   driftFowardCompensation: 52
-  minDriftTime: 130
+  minDriftTime: 110
   driftBoostForce: 2
   hopForce: 8
   minDriftSteer: 40
@@ -110930,9 +110930,9 @@ MonoBehaviour:
   - {fileID: 7445175988010204192, guid: 246d02636966ef94ca09ee2318afa45c, type: 3}
   HazardArray:
   - {fileID: 7837964673616166884, guid: 6aece729a10356d42ba5111c039d69e6, type: 3}
+  - {fileID: 6181112050242537461, guid: 55aa4467dffa2c24e83ee339dc6ba070, type: 3}
   - {fileID: 7170534580459787604, guid: a14434a4591835e49b0ac4efed41f8d4, type: 3}
   - {fileID: 2161231715911477302, guid: 73b47707e9f2e8048828b8709e03b862, type: 3}
-  - {fileID: 6181112050242537461, guid: 55aa4467dffa2c24e83ee339dc6ba070, type: 3}
   PuckArray:
   - {fileID: 7708316758954177235, guid: cb14a64132daae94a9b5e3beec5ab6c3, type: 3}
   - {fileID: 7708316758954177235, guid: 950b74b59a625df42802ef486dcf0d5d, type: 3}
@@ -116209,7 +116209,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1c2484e101ac12a40b7470718284d751, type: 2}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -121585,6 +121585,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: 7842891381905885049, guid: 4f864eb9a59799446acfbfbe0b2aaf00, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -122425,7 +122429,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4706953441784853372, guid: df3ddff0f580f9c4b8d911fbff90c686, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7237725363786680136, guid: df3ddff0f580f9c4b8d911fbff90c686, type: 3}
       propertyPath: m_LocalPosition.x
@@ -122826,6 +122830,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6376315731487377587, guid: 4f864eb9a59799446acfbfbe0b2aaf00, type: 3}
+      propertyPath: m_Asset
+      value: 
+      objectReference: {fileID: 8926484042661614526, guid: d3d3eee1717208045bf41cf2786cad6c, type: 3}
     - target: {fileID: 7842891381905885049, guid: 4f864eb9a59799446acfbfbe0b2aaf00, type: 3}
       propertyPath: m_CastShadows
       value: 1
