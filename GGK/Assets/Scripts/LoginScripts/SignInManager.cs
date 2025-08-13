@@ -185,4 +185,9 @@ public class SignInManager : MonoBehaviour
     {
         keyboard.gameObject.SetActive(false);
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }
