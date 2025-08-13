@@ -25,7 +25,7 @@ public class UIClickSound : MonoBehaviour
 
     public void onClickConfirm()
     {
-        Debug.Log(AkUnitySoundEngine.PostEvent("Play_select_confirm", gameObject));
+        AkUnitySoundEngine.PostEvent("Play_select_confirm", gameObject);
     }
 
     public void onClickBack()
