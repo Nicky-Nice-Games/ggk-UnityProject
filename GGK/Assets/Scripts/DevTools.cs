@@ -461,15 +461,15 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "CampusCircuit":                
-                if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop"); }
-                else { multiSceneLoader.LoadScene("LD_RITOuterLoop"); }                
+                if (!multiplayer) { sceneLoader.LoadScene("LD_RITOuterLoop-Backup"); }
+                else { multiSceneLoader.LoadScene("LD_RITOuterLoop-Backup"); }                
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();                
                 break;
 
             case "DormRoomDerby":
-                if (!multiplayer) { sceneLoader.LoadScene("LD_RITDorm"); }
-                else { multiSceneLoader.LoadScene("LD_RITDorm"); }                
+                if (!multiplayer) { sceneLoader.LoadScene("GSP_RITDorm"); }
+                else { multiSceneLoader.LoadScene("GSP_RITDorm"); }                
                 commandPromptCanvas.enabled = false;
                 inputField.DeactivateInputField();
                 break;
@@ -572,8 +572,8 @@ public class DevTools : MonoBehaviour
                 break;
 
             case "PlayerKart":
-                if (!multiplayer) { sceneLoader.LoadScene("PlayerKartScene"); }
-                else { multiSceneLoader.LoadScene("PlayerKartScene"); }
+                if (!multiplayer) { sceneLoader.LoadScene("CharSelectMenu"); }
+                else { multiSceneLoader.LoadScene("CharSelectMenu"); }
                 commandPromptCanvas.enabled = true;
                 inputField.DeactivateInputField();
                 inputField.ActivateInputField();
@@ -633,7 +633,7 @@ public class DevTools : MonoBehaviour
                 {
                     gameManager.ChangeGameMode(GameModes.grandPrix); ;
                     gameManager.GrandPrixSelected(new List<string> 
-                    { "LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" });
+                    { "LD_RITOuterLoop-Backup", "GSP_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" });
                 }
                 else { textLog += "\nError: Grand Prix not availible \nin multiplayer."; return; }                
                 break;
