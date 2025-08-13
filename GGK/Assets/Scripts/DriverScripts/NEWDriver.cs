@@ -9,6 +9,8 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+    public bool raceEnded = false;
+
     // root reference of the prefab
     public Transform rootTransform;
     public KartCheckpoint kartCheckpoint;
@@ -275,49 +277,50 @@ public class NEWDriver : NetworkBehaviour
             spherePosTransform.transform.position.z);
 
 
-
-        //------------Movement stuff---------------------
-        //float inputX;
-        //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.z = inputFixed.z;
-
-        //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
-
-        //Acceleration
-        if (movementDirection.z != 0f && isGrounded)
+        // Once the race ends the playes movement will be turned off
+        if(!raceEnded)
         {
-            //Setting acceleration 
-            if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+            //------------Movement stuff---------------------
+            //float inputX;
+            //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.z = inputFixed.z;
+
+            //Stunned
+            if (isStunned) movementDirection = Vector3.zero;
+
+            //Acceleration
+            if (movementDirection.z != 0f && isGrounded)
             {
-                acceleration = Vector3.zero; //If we are going too fast, stop accelerating
+                //Setting acceleration 
+                if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+                {
+                    acceleration = Vector3.zero; //If we are going too fast, stop accelerating
+                }
+                else
+                {
+                    acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
+                }
+
+            }
+            else if (isGrounded)
+            {
+                //Decceleration
+                acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
+
+                //Stop the vehicle once we reach a certain minimum speed
+                if (sphere.velocity.magnitude < minSpeed)
+                {
+                    sphere.velocity = Vector3.zero;
+                    acceleration = Vector3.zero;
+                }
             }
             else
             {
-                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
-            }
-
-        }
-        else if (isGrounded)
-        {
-            //Decceleration
-            acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
-
-            //Stop the vehicle once we reach a certain minimum speed
-            if (sphere.velocity.magnitude < minSpeed)
-            {
-                sphere.velocity = Vector3.zero;
-                acceleration = Vector3.zero;
+                //In the air, decelerating bc of drag
+                acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
             }
         }
-        else
-        {
-            //In the air, decelerating bc of drag
-            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
-        }
-
-
 
         //------------Turning stuff---------------------
 
@@ -1140,9 +1143,11 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         //client sending their own data
-        if (!playerInfo.isGuest) 
+        if (!playerInfo.isGuest ) 
         {
             playerInfo.fellOffMap /= 2;
+            Debug.Log("Is on time trial? " + playerInfo.curGameMode);
+            if (playerInfo.curGameMode == GameModes.timeTrial) { playerInfo.DeleteDataForTimeTrial(); }
             gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
         }
 
