@@ -238,6 +238,7 @@ public class LeaderboardController : NetworkBehaviour
             player.OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
             player.SendThisPlayerData();
+            player.raceEnded = true;
         }
     }
 
