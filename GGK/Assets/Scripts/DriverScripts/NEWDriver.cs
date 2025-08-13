@@ -1143,9 +1143,11 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         //client sending their own data
-        if (!playerInfo.isGuest) 
+        if (!playerInfo.isGuest ) 
         {
             playerInfo.fellOffMap /= 2;
+            Debug.Log("Is on time trial? " + playerInfo.curGameMode);
+            if (playerInfo.curGameMode == GameModes.timeTrial) { playerInfo.DeleteDataForTimeTrial(); }
             gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
         }
 
