@@ -30,8 +30,10 @@ public class GrandPrixSelectHandler : MonoBehaviour
         grandPrix1.onClick.AddListener(() =>
         gamemanagerObj.GrandPrixSelected(new List<string> {"LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad"}));
 
-        if(MusicStateManager.instance != null)
+        if (MusicStateManager.instance != null)
         {
+            grandPrix1.onClick.AddListener(() =>
+            MusicStateManager.instance.ResetToLimbo());
             MusicLapStateManager.instance.SetLapState(LapState.None);
             MusicResultsStateManager.instance.SetResultsState(ResultsState.None);
             MusicStateManager.instance.SetMusicState(MusicState.Menu);
