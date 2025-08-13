@@ -215,7 +215,7 @@ public class GameManager : NetworkBehaviour
         }
         else if (curGameMode == GameModes.grandPrix)
         {
-            List<string> maps = new List<string> { "LD_RITOuterLoop", "LD_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" };
+            List<string> maps = new List<string> { "LD_RITOuterLoop-Backup", "GSP_RITDorm", "GSP_Golisano", "GSP_FinalsBrickRoad" };
             GrandPrixSelected(maps);
         }
         else
@@ -292,7 +292,7 @@ public class GameManager : NetworkBehaviour
             {
             case "Campus Circuit":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITOuterLoop");
-                else sceneLoader.LoadScene("LD_RITOuterLoop");
+                else sceneLoader.LoadScene("LD_RITOuterLoop-Backup");
                 break;
             case "Tech House Turnpike":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_Golisano");
@@ -300,7 +300,7 @@ public class GameManager : NetworkBehaviour
                 break;
             case "Dorm Room Derby":
                 if (curGameMode == GameModes.timeTrial) sceneLoader.LoadScene("TT_RITDorm");
-                else sceneLoader.LoadScene("LD_RITDorm");
+                else sceneLoader.LoadScene("GSP_RITDorm");
                 break;
             case "RIT Quarter Mile":
                 sceneLoader.LoadScene("GSP_RITQuarterMile");
