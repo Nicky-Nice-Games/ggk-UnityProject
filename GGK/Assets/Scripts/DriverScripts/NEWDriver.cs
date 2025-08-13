@@ -320,78 +320,78 @@ public class NEWDriver : NetworkBehaviour
                 //In the air, decelerating bc of drag
                 acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
             }
-        }
 
-        //------------Turning stuff---------------------
+            //------------Turning stuff---------------------
 
-        //to check if we are going backwards...
-        float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
+            //to check if we are going backwards...
+            float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
 
-        //Applies a turn multiplier when drifting
-        float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
+            //Applies a turn multiplier when drifting
+            float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
 
-        //If we are not stationary
-        if (!(sphere.velocity == Vector3.zero))
-        {
-            //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
-            float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
-            //float turningDirection = movementDirection.x * driftTurnSpeed;
-
-            //drifting
-            if (driftMethodCaller)
+            //If we are not stationary
+            if (!(sphere.velocity == Vector3.zero))
             {
-                //Gradually increase traction during drift
-                currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
+                //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
+                float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
+                //float turningDirection = movementDirection.x * driftTurnSpeed;
 
-
-                //Keep drifting
-                Drift();
-
-                //Recalculate our turningDirection value bc of drifting
-                turningDirection = movementDirection.x * driftTurnSpeed;
-
-                // turn influence to apply to turning variable
-                turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
-
-                if (isGrounded && airTime < 1.5f)
+                //drifting
+                if (driftMethodCaller)
                 {
-                    acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    //Gradually increase traction during drift
+                    currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
+
+
+                    //Keep drifting
+                    Drift();
+
+                    //Recalculate our turningDirection value bc of drifting
+                    turningDirection = movementDirection.x * driftTurnSpeed;
+
+                    // turn influence to apply to turning variable
+                    turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
+
+                    if (isGrounded && airTime < 1.5f)
+                    {
+                        acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    }
+                    else
+                    {
+                        EndDrift();
+                    }
+
+                }
+
+                //If we are going backwards, we need to turn in the opposite direction
+                if (backwardsCheck < 0)
+                {
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+
+                    EndDrift();
                 }
                 else
                 {
-                    EndDrift();
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
                 }
 
-            }
+                if (isGrounded && movementDirection.x != 0f)
+                {
+                    Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
+                    sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
 
-            //If we are going backwards, we need to turn in the opposite direction
-            if (backwardsCheck < 0)
-            {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+                }
 
-                EndDrift();
+                acceleration = turning * acceleration;
             }
+            //If we are not moving, we don't need to turn
             else
             {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                turning = Quaternion.Euler(0f, 0f, 0f);
+                EndDrift();
             }
-
-            if (isGrounded && movementDirection.x != 0f)
-            {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
-                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
-
-            }
-
-            acceleration = turning * acceleration;
-        }
-        //If we are not moving, we don't need to turn
-        else
-        {
-            turning = Quaternion.Euler(0f, 0f, 0f);
-            EndDrift();
         }
 
         //Falling down
