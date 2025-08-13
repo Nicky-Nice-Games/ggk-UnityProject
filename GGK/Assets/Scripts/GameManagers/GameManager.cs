@@ -254,7 +254,6 @@ public class GameManager : NetworkBehaviour
     public void MapSelected()
     {
         curState = GameStates.game;
-        if (MusicStateManager.instance != null) { MusicStateManager.instance.ResetToLimbo(); }
         if (MultiplayerManager.Instance.IsMultiplayer)
         {
             switch (CharacterData.Instance.mapVote)
@@ -285,8 +284,9 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-           // Loads the race based on the name of the button clicked
-           // Note: change scenes in FillMapRaced when changing the scene names here
+            if (MusicStateManager.instance != null) { MusicStateManager.instance.ResetToLimbo(); }
+            // Loads the race based on the name of the button clicked
+            // Note: change scenes in FillMapRaced when changing the scene names here
             switch (CharacterData.Instance.mapVote)
             {
             case "Campus Circuit":
