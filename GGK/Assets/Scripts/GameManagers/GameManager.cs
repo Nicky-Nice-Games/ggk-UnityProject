@@ -430,22 +430,30 @@ public class GameManager : NetworkBehaviour
     {
         switch (SceneManager.GetActiveScene().name)
         {
-            case "LD_RITOuterLoop":
+            case "TT_RITOuterLoop":
+            case "LD_RITOuterLoop-Backup":
                 Debug.Log("Map data: Outer Loop (1)");
                 player.playerInfo.mapRaced = 1;
                 break;
-            case "LD_RITDorm":
+
+            case "TT_RITDorm":
+            case "GSP_RITDorm":
                 Debug.Log("Map data: Dorm (2)");
                 player.playerInfo.mapRaced = 2;
                 break;
+
+            case "TT_Golisano":
             case "GSP_Golisano":
                 Debug.Log("Map data: Golisano (3)");
                 player.playerInfo.mapRaced = 3;
                 break;
+
+            case "TT_FinalsBrickRoad":
             case "GSP_FinalsBrickRoad":
                 Debug.Log("Map data: Finals Brick (4)");
                 player.playerInfo.mapRaced = 4;
                 break;
+
             default:
                 break;
         }
