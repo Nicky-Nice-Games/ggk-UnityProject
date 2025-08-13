@@ -197,7 +197,9 @@ public class GameManager : NetworkBehaviour
 
     public void ChangeGameMode(GameModes gameMode)
     {
+        playerInfo.curGameMode = gameMode;
         curGameMode = gameMode;
+        Debug.Log("Changing game mode to " + gameMode);
     }
 
     /// <summary>

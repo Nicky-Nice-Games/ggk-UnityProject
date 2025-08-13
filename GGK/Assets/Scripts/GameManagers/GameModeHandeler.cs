@@ -41,7 +41,6 @@ public class GameModeHandeler : MonoBehaviour
             }
             else if(obj.name == "Time Trial")
             {
-                gamemanagerObj.playerInfo.curGameMode = GameModes.timeTrial;
                 button.onClick.AddListener(() =>
                 gamemanagerObj.GetComponent<GameManager>().LoadedGameMode());
 

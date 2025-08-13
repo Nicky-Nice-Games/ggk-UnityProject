@@ -168,6 +168,9 @@ public class PlayerInfo : ScriptableObject
         defenseUsage = new Dictionary<string, int>(other.defenseUsage);
     }
 
+    /// <summary>
+    /// Gets rid of unneeded data for time trial
+    /// </summary>
     public void DeleteDataForTimeTrial()
     {
         Debug.Log("Called DeleteDataForTimeTrial");
