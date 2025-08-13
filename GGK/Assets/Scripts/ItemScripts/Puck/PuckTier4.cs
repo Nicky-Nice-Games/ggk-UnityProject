@@ -88,14 +88,8 @@ public class PuckTier4 : BaseItem
         DecreaseTimer();
 
         transform.rotation = Quaternion.LookRotation(agent.velocity.normalized);
-        Debug.Log(transform.rotation);
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-
-       
-
+        Debug.Log("Kart target is: " + kartTarget);
     }
 
     // If colliding with cracked brick wall
@@ -121,10 +115,12 @@ public class PuckTier4 : BaseItem
                     npcKart.Stun(2.0f);
                 }
 
+                Debug.Log(other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>());
+
                 // Prevent puck from being destroyed until it hits the kart in first place.
-                if (other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == this.kart)
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>())
                 {
-                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
                     if (!MultiplayerManager.Instance.IsMultiplayer)
                     {
                         Destroy(this.gameObject);
@@ -202,8 +198,9 @@ public class PuckTier4 : BaseItem
         {
             firstPlaceKart = GameObject.Find("PlacementManager").GetComponent<PlacementManager>().sortedList[1].gameObject.transform;
         }
+        Debug.Log("Tracked kart is: " + firstPlaceKart.root.gameObject);
         // Sets the kart target
-        kartTarget = firstPlaceKart.root.gameObject;
+        kartTarget = firstPlaceKart.parent.GetChild(0).gameObject;
         return firstPlaceKart;
     }
 }
