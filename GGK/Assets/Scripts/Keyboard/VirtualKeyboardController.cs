@@ -61,7 +61,7 @@ public class VirtualKeyboardController : MonoBehaviour
         }
         if(Input.GetKeyUp(KeyCode.Backspace))
         {
-            KeyPressed("Backspace");
+            //KeyPressed("Backspace");
         }
         if (Input.GetKeyUp(KeyCode.Tab))
         {

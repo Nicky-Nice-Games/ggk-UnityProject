@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -10,10 +7,20 @@ public class HazardTier1 : BaseItem
 {
     private void Start()
     {
+        base.Start();
         Vector3 behindPos = transform.position - transform.forward * 6;
         behindPos.y += 3.5f;
         transform.position = behindPos;
-        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill"]++;
+
+        // Checking for multiplayer
+        if(IsSpawned)
+        {
+            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier1Rpc();
+        }
+        else
+        {
+            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["oilSpill1"]++;
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
