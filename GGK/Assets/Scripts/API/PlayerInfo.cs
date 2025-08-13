@@ -44,6 +44,7 @@ public class PlayerInfo : ScriptableObject
     public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
     public Color PlayerColor;
     public ulong clientID;
+    public GameModes curGameMode;
 
     //Default constructor
     public PlayerInfo()
@@ -159,10 +160,27 @@ public class PlayerInfo : ScriptableObject
         collisionWithWalls = other.collisionWithWalls;
         characterUsed = other.characterUsed;
         fellOffMap = other.fellOffMap;
+        curGameMode = other.curGameMode;
 
         boostUsage = new Dictionary<string, int>(other.boostUsage);
         offenceUsage = new Dictionary<string, int>(other.offenceUsage);
         trapUsage = new Dictionary<string, int>(other.trapUsage);
         defenseUsage = new Dictionary<string, int>(other.defenseUsage);
+    }
+
+    /// <summary>
+    /// Gets rid of unneeded data for time trial
+    /// </summary>
+    public void DeleteDataForTimeTrial()
+    {
+        Debug.Log("Called DeleteDataForTimeTrial");
+        racePos = 0;
+        collisionsWithPlayers = 0;
+        collisionWithWalls = 0;
+        fellOffMap = 0;
+        boostUsage.Clear();
+        offenceUsage.Clear();
+        trapUsage.Clear();  
+        defenseUsage.Clear();
     }
 }
