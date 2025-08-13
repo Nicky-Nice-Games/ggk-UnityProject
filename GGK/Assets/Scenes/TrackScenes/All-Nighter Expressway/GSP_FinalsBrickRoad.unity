@@ -3061,63 +3061,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1001 &591308617
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018559851448567762, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7114235975888580772, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
-      propertyPath: m_Name
-      value: MiniMapDebugLines
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 3eef30e274153194e81cf38e66ef98fa, type: 3}
 --- !u!1 &592464570
 GameObject:
   m_ObjectHideFlags: 0
@@ -3608,8 +3551,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1763108779}
-  - {fileID: 1409323187}
   - {fileID: 879716270}
   m_Father: {fileID: 1716925573}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6080,7 +6021,7 @@ MonoBehaviour:
   placementDisplay: {fileID: 879716271}
   lapDisplay: {fileID: 1306591417}
   trackedKart: {fileID: 0}
-  positionDisplay: {fileID: 1871889002}
+  positionDisplay: {fileID: 0}
   kartCheckpointList: []
   sortedList: []
   kartsList: []
@@ -6632,7 +6573,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1409323187}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -8491,7 +8432,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1763108779}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -8673,7 +8614,7 @@ MonoBehaviour:
   maxDepthTracking: 70
   minDepthTracking: -70
   sizeOffset: 1.5
-  showDebug: 1
+  showDebug: 0
   trackingPlayer: {fileID: 0}
   miniMap: {fileID: 8797107}
   iconRef: {fileID: 8797106}
@@ -8752,14 +8693,12 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2087002038}
   - {fileID: 665241096}
   - {fileID: 8797105}
   - {fileID: 1057273976}
   - {fileID: 2081161022}
   - {fileID: 647375697}
   - {fileID: 691790974}
-  - {fileID: 1871889001}
   - {fileID: 1613820596}
   - {fileID: 199561960}
   - {fileID: 348188871}
@@ -10502,4 +10441,5 @@ SceneRoots:
   - {fileID: 1427297881}
   - {fileID: 1976941}
   - {fileID: 1827374790}
-  - {fileID: 591308617}
+  - {fileID: 1306591416}
+  - {fileID: 1665841045}
