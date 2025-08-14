@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEditor;
+using System;
 
 public class VirtualKeyboardController : MonoBehaviour
 {
@@ -33,6 +35,11 @@ public class VirtualKeyboardController : MonoBehaviour
     // holding delete variables
     private bool holdingBackspace = false;
     private float timer = 0;
+
+    //terrible terrible bandaid fix to a problem with being unable to use the
+    //virtual keyboard.. FIX WHEN THERE IS TIME (if this project gets picked back up in the future)!!!
+    //this used to be called "a" cuz we had like 10 minutes left on work when we typed it. whoops
+    public bool inputFieldSelected;
 
     void Start()
     {
@@ -68,6 +75,12 @@ public class VirtualKeyboardController : MonoBehaviour
             KeyPressed("Tab");
         }
 
+        if (inputFieldSelected)
+        {
+            //allows the keyboard to be navigated if an input field is currently being selected
+            StartKeyboardSelect(false);
+            inputFieldSelected = false;
+        }
     }
 
     void HandleNavigation()
@@ -77,7 +90,7 @@ public class VirtualKeyboardController : MonoBehaviour
         // read controller left stick and dpad inputs
         float stickX = Input.GetAxisRaw("Horizontal");
         float stickY = Input.GetAxisRaw("Vertical");
-        float dpadX = Input.GetAxisRaw("DPadX");          
+        float dpadX = Input.GetAxisRaw("DPadX");
         float dpadY = Input.GetAxisRaw("DPadY");
 
         // read keyboard inputs
@@ -167,21 +180,32 @@ public class VirtualKeyboardController : MonoBehaviour
 
         else if (value == "Tab")
         {
-            if ( curField > 0)
+            Selectable nextSelected = inputField[curField].navigation.selectOnUp;
+            TMP_InputField nextInputField = nextSelected.GetComponent<TMP_InputField>();
+            //print(nextSelected + ", " + nextInputField);
+            if (curField > 0)
             {
                 // If the text is empty and the current field is not the first one, go back to the previous field
 
-
-
-                curField--;
-
-                curText = inputField[curField].text;
-
-                //Activating OnSelect triggers for inputfield
-                if (curField < inputField.Count)
+                //if the next selected item is NOT in the tmp list
+                if (nextSelected && !inputField.Contains(nextInputField))
                 {
-                    inputField[curField].ActivateInputField();
-                    inputField[curField].Select();
+                    print("hi");
+                    UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(nextSelected.gameObject);
+                    gameObject.SetActive(false);
+                    //curText = "";
+                }
+                else
+                {
+                    curField--;
+                    curText = inputField[curField].text;
+
+                    //Activating OnSelect triggers for inputfield
+                    if (curField < inputField.Count)
+                    {
+                        inputField[curField].ActivateInputField();
+                        inputField[curField].Select();
+                    }
                 }
             }
         }
@@ -193,45 +217,52 @@ public class VirtualKeyboardController : MonoBehaviour
         }
 
         // Swapping input fields
-        else if(value == "Enter")
+        else if (value == "Enter")
         {
             signInScript.SetPlayerLoginData(inputField[curField].name, curText);
-            curText = "";
-
-            curField++;
-
-            //Activating OnSelect triggers for inputfield
-            if (curField < inputField.Count)
+            Selectable nextSelected = inputField[curField].navigation.selectOnDown;
+            TMP_InputField nextInputField = nextSelected.GetComponent<TMP_InputField>();
+            //print(inputField[curField]+ ": " + nextSelected + ", " + nextInputField);
+            if (curField < inputField.Count - 1)
             {
-                inputField[curField].ActivateInputField();
-                inputField[curField].Select();
+                if (nextSelected && !inputField.Contains(nextInputField))
+                {
+                    UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(inputField[curField].navigation.selectOnDown.gameObject);
+                    gameObject.SetActive(false);
+                    //curText = "";
+                }
+                else
+                {
+                    curField++;
+                    curText = inputField[curField].text;
+                }
             }
+
         }
 
-        // Letters and shift
-        else
-        {
-            // Checking for shift key to handle capitalization
-            if (value == "Shift")
-            {
-                toCapitol = true;
-                return;
-            }
-
-            // Checking for next letter capitalization
-            if (toCapitol)
-            {
-                curText += value.ToUpper();
-                toCapitol = false;
-            }
+            // Letters and shift
             else
             {
-                curText += value;
-            }
-        }
-        inputField[curField].text = curText;
+                // Checking for shift key to handle capitalization
+                if (value == "Shift")
+                {
+                    toCapitol = true;
+                    return;
+                }
 
-    }
+                // Checking for next letter capitalization
+                if (toCapitol)
+                {
+                    curText += value.ToUpper();
+                    toCapitol = false;
+                }
+                else
+                {
+                    curText += value;
+                }
+            }
+        inputField[curField].text = curText;
+   }
 
     /// <summary>
     /// input method for controllers to delete a character
@@ -255,7 +286,7 @@ public class VirtualKeyboardController : MonoBehaviour
         {
             holdingBackspace = true;
         }
-        
+
         if (context.canceled)
         {
             holdingBackspace = false;
@@ -264,14 +295,35 @@ public class VirtualKeyboardController : MonoBehaviour
 
     public void ResetCurrentFields()
     {
-        Debug.Log("Resetting input fields");
-        
-        foreach(TMP_InputField field in inputField)
-        {
-            field.text = "";
-        }
-        curField = 0;
-        Debug.Log(curField);
+        ResetCurrentFields(0);
     }
+
+    public void ResetCurrentFields(int startIndex)
+    {
+        if (gameObject.activeSelf)
+        {
+            Debug.Log("Resetting all input fields past " + startIndex);
+
+            curText = "";
+            for (int i = startIndex; i < inputField.Count; i++)
+            {
+                inputField[i].text = "";
+            }
+            curField = startIndex;
+            inputField[curField].ActivateInputField();
+            inputField[curField].Select();
+        }
+    }
+
+    public void StartKeyboardSelect(bool reset)
+    {
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(keyButtons[0].gameObject);
+        if (reset)
+        {
+            ResetCurrentFields();
+        }
+    }
+    
+
 }
 

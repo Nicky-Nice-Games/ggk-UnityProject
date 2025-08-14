@@ -9,6 +9,7 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 //using UnityEditor.UIElements; this is causing a conflict
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.DefaultInputActions;
@@ -21,7 +22,7 @@ public class SignInManager : MonoBehaviour
     [SerializeField] GameObject signUpUI;
     [SerializeField] GameObject loginOptions;
     [SerializeField] VirtualKeyboardController keyboard;
-    [SerializeField]GameObject successMessage;
+    [SerializeField] GameObject successMessage;
     private GameManager gameManager;
     [SerializeField] private List<GameObject> continueButtons;
     private string logInOption;
@@ -57,7 +58,7 @@ public class SignInManager : MonoBehaviour
         // Organizing fields list into dict
         foreach (TMP_InputField field in inputFieldsList)
         {
-            inputFields[field.name] = field; 
+            inputFields[field.name] = field;
         }
     }
 
@@ -74,7 +75,11 @@ public class SignInManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-             
+        //handle enter key being pressed in the event of no gamepad
+        if (Input.GetKeyUp(KeyCode.Return) && Gamepad.all.Count == 0)
+        {
+            SetPlayerLoginData(keyboard.inputField);
+        }
     }
 
     /// <summary>
@@ -121,10 +126,10 @@ public class SignInManager : MonoBehaviour
                     break;
 
                 case "Confirm Password":
-                    if(data != playerInfo.playerPassword)
+                    if (data != playerInfo.playerPassword)
                     {
                         Debug.Log("Passwords do not match!");
-                        keyboard.curField --;
+                        keyboard.ResetCurrentFields(2);
                         return;
                     }
                     await apiManager.CreatePlayer(playerInfo);
@@ -134,6 +139,13 @@ public class SignInManager : MonoBehaviour
                 default:
                     break;
             }
+        }
+    }
+
+    public async void SetPlayerLoginData(List<TMP_InputField> data)
+    {
+        foreach (TMP_InputField d in data) {
+            SetPlayerLoginData(d.name, d.text);
         }
     }
 
@@ -148,6 +160,13 @@ public class SignInManager : MonoBehaviour
 
         keyboard.inputField.Add(inputFields["Username Login"]);
         keyboard.inputField.Add(inputFields["Password Login"]);
+
+        //brings up the virtual keyboard if a gamepad is detected
+        if (Gamepad.all.Count > 0)
+        {
+            DisplayKeyboard();
+            keyboard.StartKeyboardSelect(true);
+        }
     }
 
     /// <summary>
@@ -163,6 +182,13 @@ public class SignInManager : MonoBehaviour
         keyboard.inputField.Add(inputFields["Username Sign Up"]);
         keyboard.inputField.Add(inputFields["Password Sign Up"]);
         keyboard.inputField.Add(inputFields["Confirm Password"]);
+
+        //brings up the virtual keyboard if a gamepad is detected
+        if (Gamepad.all.Count > 0)
+        {
+            DisplayKeyboard();
+            keyboard.StartKeyboardSelect(true);
+        }
     }
 
     /// <summary>
@@ -173,11 +199,28 @@ public class SignInManager : MonoBehaviour
         loginOptions.SetActive(true);
         signUpUI.SetActive(false);
         loginUI.SetActive(false);
+        HideKeyboard();
+        keyboard.inputField.Clear();
     }
 
     public void DisplayKeyboard(GameObject sender)
     {
-        TMP_InputField input = sender.GetComponent<TMP_InputField>();
+        //brings up the virtual keyboard if a gamepad is detected
+        if (Gamepad.all.Count > 0)
+        {
+            keyboard.inputFieldSelected = true;
+            TMP_InputField input = sender.GetComponent<TMP_InputField>();
+
+            if (keyboard.inputField.Contains(input))
+            {
+                keyboard.curField = keyboard.inputField.IndexOf(input);
+            }
+            keyboard.gameObject.SetActive(true);
+        }
+    }
+
+    public void DisplayKeyboard()
+    {
         keyboard.gameObject.SetActive(true);
     }
 

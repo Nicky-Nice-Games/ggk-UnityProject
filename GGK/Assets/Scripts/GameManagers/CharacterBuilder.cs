@@ -52,20 +52,30 @@ public static class CharacterBuilder
 
         colors = new List<Color>()
         {
-            //black
-            new Color(0.1568628f, 0.1568628f, 0.1568628f),
-            //gray
-            new Color(0.6784314f, 0.6392157f, 6039216f),
-            //greenish
-            new Color(0.5176471f, 0.7411765f, 0),
-            //orange
-            new Color(0.9686275f, 0.4117647f, 0.01568628f),
-            //tealish-blue
-            new Color(0, 0.6117647f, 0.7411765f),
-            //poiple
-            new Color(0.4941177f, 0.3333333f, 0.7764707f),
+            //maroon
+            new Color(0.482353f, 0.09019608f, 0.1568628f),
             //red
-            new Color(0.854902f, 0.1568628f, 0.1098039f)
+            new Color(0.8392158f, 0.2117647f, 0.145098f),
+            //orange
+            new Color(0.9686275f, 0.3960785f, 0.1333333f),
+            //yeller
+            new Color(0.9058824f, 0.937255f, 0.2f),
+            //green
+            new Color(0.1058824f, 0.8431373f, 0.3686275f),
+            //cyan
+            new Color(0.1137255f, 0.8901961f, 0.8941177f),
+            //blue
+            new Color(0f, 0.4196079f, 0.7960785f),
+            //indigo
+            new Color(0.1882353f, 0.1764706f, 0.5333334f),
+            //poiple
+            new Color(0.4745098f, 0.1882353f, 0.654902f),
+            //magenta
+            new Color(0.8705883f, 0.1764706f, 0.482353f),
+            //ivory
+            new Color(0.9843138f, 0.9686275f, 0.937255f),
+            //midnighttuh
+            new Color(0.09019608f, 0.07843138f, 0.1058824f),
         };
         lastPlayerAdded = UnityEngine.Random.Range(0, characterCount - 1);
         lastColorAdded = UnityEngine.Random.Range(0, colors.Count - 1);
