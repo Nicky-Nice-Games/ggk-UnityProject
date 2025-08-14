@@ -260,7 +260,7 @@ public class Countdown : NetworkBehaviour
 
         if (MusicStateManager.instance != null)
         {
-            MusicStateManager.instance.ResetToLimbo();
+            //MusicStateManager.instance.ResetToLimbo();
             MusicResultsStateManager.instance.SetResultsState(ResultsState.InProgress);
             MusicLapStateManager.instance.SetLapState(LapState.Lap1);
             MusicStateManager.instance.SetMusicState(musicState);
