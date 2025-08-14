@@ -1952,6 +1952,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8028137853784400169}
   - component: {fileID: 3234325533003028562}
+  - component: {fileID: 5398497599080119230}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -2044,6 +2045,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5398497599080119230}
+        m_TargetAssemblyTypeName: WwiseVolumeSliders, Assembly-CSharp
+        m_MethodName: SetDialogueVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5398497599080119230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927421833505681406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7dcc8119b7deb6479bcaf3f2e04ad9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisSlider: {fileID: 3234325533003028562}
+  masterVolume: 0
+  musicVolume: 0
+  SFXVolume: 0
+  dialogueVolume: 0
 --- !u!1 &939162470577878504
 GameObject:
   m_ObjectHideFlags: 0
@@ -3617,6 +3647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5349798857865411669}
   - component: {fileID: 6699903076686665876}
+  - component: {fileID: 3867574820351069086}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -3709,6 +3740,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3867574820351069086}
+        m_TargetAssemblyTypeName: WwiseVolumeSliders, Assembly-CSharp
+        m_MethodName: SetSFXVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3867574820351069086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546685966363747334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7dcc8119b7deb6479bcaf3f2e04ad9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisSlider: {fileID: 6699903076686665876}
+  masterVolume: 0
+  musicVolume: 0
+  SFXVolume: 0
+  dialogueVolume: 0
 --- !u!1 &1761897759334235272
 GameObject:
   m_ObjectHideFlags: 0
@@ -6077,6 +6137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4288855541711224240}
   - component: {fileID: 6444674993391356355}
+  - component: {fileID: 1742208810713867995}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -6169,6 +6230,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1742208810713867995}
+        m_TargetAssemblyTypeName: WwiseVolumeSliders, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1742208810713867995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3135730839834878199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7dcc8119b7deb6479bcaf3f2e04ad9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisSlider: {fileID: 6444674993391356355}
+  masterVolume: 0
+  musicVolume: 0
+  SFXVolume: 0
+  dialogueVolume: 0
 --- !u!1 &3266552818711615182
 GameObject:
   m_ObjectHideFlags: 0
@@ -8153,6 +8243,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4368344885996391780}
   - component: {fileID: 73029798243354252}
+  - component: {fileID: 6753673346809609186}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -8245,6 +8336,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6753673346809609186}
+        m_TargetAssemblyTypeName: WwiseVolumeSliders, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6753673346809609186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4275917469170544148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7dcc8119b7deb6479bcaf3f2e04ad9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisSlider: {fileID: 73029798243354252}
+  masterVolume: 0
+  musicVolume: 0
+  SFXVolume: 0
+  dialogueVolume: 0
 --- !u!1 &4370115581524298894
 GameObject:
   m_ObjectHideFlags: 0

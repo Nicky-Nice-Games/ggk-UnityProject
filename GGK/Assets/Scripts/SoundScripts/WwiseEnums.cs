@@ -41,11 +41,3 @@ public enum ResultsState
     Starting,
     Win
 }
-
-public enum WwiseSlider
-{
-    Master,
-    Music,
-    SFX,
-    Dialogue
-}

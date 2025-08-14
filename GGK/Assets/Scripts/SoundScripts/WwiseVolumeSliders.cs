@@ -11,32 +11,27 @@ public class WwiseVolumeSliders : MonoBehaviour
     [SerializeField] float SFXVolume;
     [SerializeField] float dialogueVolume;
 
-    public void SetWwiseVolume(WwiseSlider slider)
+    public void SetMasterVolume()
     {
-        float sliderValue = thisSlider.value;
+        masterVolume = thisSlider.value;
+        AkUnitySoundEngine.SetRTPCValue("MasterVolume", masterVolume);
+    }
 
-        if(slider == WwiseSlider.Master)
-        {
-            masterVolume = thisSlider.value;
-            AkUnitySoundEngine.SetRTPCValue("MasterVolume", masterVolume);
-        }
+    public void SetMusicVolume()
+    {
+        musicVolume = thisSlider.value;
+        AkUnitySoundEngine.SetRTPCValue("MusicVolume", musicVolume);
+    }
 
-        if(slider == WwiseSlider.Music)
-        {
-            musicVolume = thisSlider.value;
-            AkUnitySoundEngine.SetRTPCValue("MusicVolume", musicVolume);
-        }
+    public void SetSFXVolume()
+    {
+        SFXVolume = thisSlider.value;
+        AkUnitySoundEngine.SetRTPCValue("SFXVolume", SFXVolume);
+    }
 
-        if(slider == WwiseSlider.SFX)
-        {
-            SFXVolume = thisSlider.value;
-            AkUnitySoundEngine.SetRTPCValue("SFXVolume", SFXVolume);
-        }
-
-        if (slider == WwiseSlider.Dialogue)
-        {
-            dialogueVolume = thisSlider.value;
-            AkUnitySoundEngine.SetRTPCValue("VoiceVolume", dialogueVolume);
-        }
+    public void SetDialogueVolume()
+    {
+        dialogueVolume = thisSlider.value;
+        AkUnitySoundEngine.SetRTPCValue("VoiceVolume", dialogueVolume);
     }
 }
