@@ -219,7 +219,6 @@ public class VirtualKeyboardController : MonoBehaviour
         // Swapping input fields
         else if (value == "Enter")
         {
-            print("hi");
             signInScript.SetPlayerLoginData(inputField[curField].name, curText);
             Selectable nextSelected = inputField[curField].navigation.selectOnDown;
             TMP_InputField nextInputField = nextSelected.GetComponent<TMP_InputField>();
