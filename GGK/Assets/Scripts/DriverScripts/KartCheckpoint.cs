@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class KartCheckpoint : NetworkBehaviour
 {
@@ -34,6 +35,7 @@ public class KartCheckpoint : NetworkBehaviour
 
     [Header("Wwise VoiceLines")]
     public VoiceLines voiceLines;
+    bool playRacerPassed = true;
 
     void Start()
     {
@@ -152,11 +154,13 @@ public class KartCheckpoint : NetworkBehaviour
                         {
                             Debug.Log("You Win");
                             MusicResultsStateManager.instance.SetResultsState(ResultsState.Win);
+                            if (voiceLines != null) { voiceLines.PlayLapMade(); }
                         }
                         else
                         {
                             Debug.Log("You Lose");
                             MusicResultsStateManager.instance.SetResultsState(ResultsState.Loss);
+                            if (voiceLines != null) { voiceLines.PlayHitCollision(); }
                         }
                         MusicLapStateManager.instance.SetLapState(LapState.None);
                         MusicStateManager.instance.SetMusicState(MusicState.PostRace);
@@ -228,10 +232,23 @@ public class KartCheckpoint : NetworkBehaviour
         if (newPlacement < placement)
         {
             Debug.Log("Placement up - Passed Kart");
+            if(playRacerPassed && voiceLines != null)
+            {
+                voiceLines.PlayRacerPassed();
+                playRacerPassed = false;
+                StartCoroutine(RacerPassedSoundCooldown());
+            }
         }
         else if (newPlacement > placement)
         {
             Debug.Log("Placement Down - Kart Passed");
         }
+    }
+
+    IEnumerator RacerPassedSoundCooldown()
+    {
+        int randNum = Random.Range(3, 20);
+        yield return new WaitForSeconds(randNum);
+        playRacerPassed = true;
     }
 }
