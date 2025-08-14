@@ -117,7 +117,7 @@ public class LobbyManager : MonoBehaviour
     #region looping functions
     private void Update()
     {
-        //HandleRefreshLobbyList(); // Disabled for testing so that we dont hit rate limit within the same IP
+        HandleRefreshLobbyList(); // Disabled for testing so that we dont hit rate limit within the same IP
         HandleLobbyHeartbeat();
         HandleLobbyPollForUpdates();
     }
@@ -209,7 +209,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if (lobbyName == "") lobbyName = playerName + "\'s MyLobby";
+            if (lobbyName == "") lobbyName = playerName + "\'s Lobby";
             Player player = GetPlayer();
             CreateLobbyOptions options = new CreateLobbyOptions
             {

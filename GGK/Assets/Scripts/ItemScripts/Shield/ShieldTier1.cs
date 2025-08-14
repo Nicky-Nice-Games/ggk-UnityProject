@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -25,17 +24,17 @@ public class ShieldTier1 : BaseItem
 
         if (kart.gameObject.GetComponent<NEWDriver>() != null) // for players
         {
-            Debug.Log("Player used shield 1");
             // find the visual effect script from the kart
             vfxScript = kart.gameObject.GetComponent<NEWDriver>().vfxHandler;
-
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["shield1"]++;
             
             // play shield effect from VFXHandler script 
             vfxScript.PlayShieldVFX(timer);
 
             shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", gameObject);
             StartCoroutine(StopPlayingShieldNoise());
+            // increment counter
+            if (IsSpawned) { kart.gameObject.GetComponent<NEWDriver>().IncrementDefenseUsageTier1Rpc(); }
+            else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense1"]++; }
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {

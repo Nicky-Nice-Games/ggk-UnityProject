@@ -9,6 +9,8 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+    public bool raceEnded = false;
+
     // root reference of the prefab
     public Transform rootTransform;
     public KartCheckpoint kartCheckpoint;
@@ -167,7 +169,7 @@ public class NEWDriver : NetworkBehaviour
 
         if (gameManagerObj)
         {
-            playerInfo = gameManagerObj.playerInfo;
+            playerInfo = new PlayerInfo(gameManagerObj.playerInfo);
         }
 
         gameManagerObj.FillMapRaced(this);
@@ -183,13 +185,13 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
-            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            //SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
 
@@ -201,7 +203,7 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
-            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            //SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             //if it's the owner, send its CharacterData settings over to other clients
             AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
@@ -326,120 +328,121 @@ public class NEWDriver : NetworkBehaviour
 
 
 
-
-        //------------Movement stuff---------------------
-        //float inputX;
-        //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.z = inputFixed.z;
-
-        //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
-
-        //Acceleration
-        if (movementDirection.z != 0f && isGrounded)
+        // Once the race ends the playes movement will be turned off
+        if(!raceEnded)
         {
-            //Setting acceleration 
-            if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+            //------------Movement stuff---------------------
+            //float inputX;
+            //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.z = inputFixed.z;
+
+            //Stunned
+            if (isStunned) movementDirection = Vector3.zero;
+
+            //Acceleration
+            if (movementDirection.z != 0f && isGrounded)
             {
-                acceleration = Vector3.zero; //If we are going too fast, stop accelerating
-            }
-            else
-            {
-                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
-            }
-
-        }
-        else if (isGrounded)
-        {
-            //Decceleration
-            acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
-
-            //Stop the vehicle once we reach a certain minimum speed
-            if (sphere.velocity.magnitude < minSpeed)
-            {
-                sphere.velocity = Vector3.zero;
-                acceleration = Vector3.zero;
-            }
-        }
-        else
-        {
-            //In the air, decelerating bc of drag
-            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
-        }
-
-
-
-        //------------Turning stuff---------------------
-
-        //to check if we are going backwards...
-        float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
-
-        //Applies a turn multiplier when drifting
-        float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
-
-        //If we are not stationary
-        if (!(sphere.velocity == Vector3.zero))
-        {
-            //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
-            float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
-            //float turningDirection = movementDirection.x * driftTurnSpeed;
-
-            //drifting
-            if (driftMethodCaller)
-            {
-                //Gradually increase traction during drift
-                currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
-
-
-                //Keep drifting
-                Drift();
-
-                //Recalculate our turningDirection value bc of drifting
-                turningDirection = movementDirection.x * driftTurnSpeed;
-
-                // turn influence to apply to turning variable
-                turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
-
-                if (isGrounded && airTime < 1.5f)
+                //Setting acceleration 
+                if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
                 {
-                    acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    acceleration = Vector3.zero; //If we are going too fast, stop accelerating
                 }
                 else
                 {
-                    EndDrift();
+                    acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
                 }
 
             }
-
-            //If we are going backwards, we need to turn in the opposite direction
-            if (backwardsCheck < 0)
+            else if (isGrounded)
             {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+                //Decceleration
+                acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
 
-                EndDrift();
+                //Stop the vehicle once we reach a certain minimum speed
+                if (sphere.velocity.magnitude < minSpeed)
+                {
+                    sphere.velocity = Vector3.zero;
+                    acceleration = Vector3.zero;
+                }
             }
             else
             {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                //In the air, decelerating bc of drag
+                acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
             }
 
-            if (isGrounded && movementDirection.x != 0f)
+            //------------Turning stuff---------------------
+
+            //to check if we are going backwards...
+            float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
+
+            //Applies a turn multiplier when drifting
+            float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
+
+            //If we are not stationary
+            if (!(sphere.velocity == Vector3.zero))
             {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
-                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
+                //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
+                float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
+                //float turningDirection = movementDirection.x * driftTurnSpeed;
 
+                //drifting
+                if (driftMethodCaller)
+                {
+                    //Gradually increase traction during drift
+                    currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
+
+
+                    //Keep drifting
+                    Drift();
+
+                    //Recalculate our turningDirection value bc of drifting
+                    turningDirection = movementDirection.x * driftTurnSpeed;
+
+                    // turn influence to apply to turning variable
+                    turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
+
+                    if (isGrounded && airTime < 1.5f)
+                    {
+                        acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    }
+                    else
+                    {
+                        EndDrift();
+                    }
+
+                }
+
+                //If we are going backwards, we need to turn in the opposite direction
+                if (backwardsCheck < 0)
+                {
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+
+                    EndDrift();
+                }
+                else
+                {
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                }
+
+                if (isGrounded && movementDirection.x != 0f)
+                {
+                    Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
+                    sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
+
+                }
+
+                acceleration = turning * acceleration;
             }
-
-            acceleration = turning * acceleration;
-        }
-        //If we are not moving, we don't need to turn
-        else
-        {
-            turning = Quaternion.Euler(0f, 0f, 0f);
-            EndDrift();
+            //If we are not moving, we don't need to turn
+            else
+            {
+                turning = Quaternion.Euler(0f, 0f, 0f);
+                EndDrift();
+            }
         }
 
         //Falling down
@@ -1193,10 +1196,131 @@ public class NEWDriver : NetworkBehaviour
 
     public void SendThisPlayerData()
     {
-        Debug.Log("Called SendPlayerData from NEWDriver");
-        if (!playerInfo.isGuest)
+        //client sending their own data
+        if (!playerInfo.isGuest ) 
         {
-            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo);
+            playerInfo.fellOffMap /= 2;
+            Debug.Log("Is on time trial? " + playerInfo.curGameMode);
+            if (playerInfo.curGameMode == GameModes.timeTrial) { playerInfo.DeleteDataForTimeTrial(); }
+            gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
         }
+
+    }
+
+    // client rpc for each server controlled value that the client needs to know for it's PlayerInfo.cs
+    // SendTo.Owner should work
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementFellOffMapRpc()
+    {
+        playerInfo.fellOffMap++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void AssignPlacementRpc(int pos)
+    {
+        Debug.Log("Placement: " + pos);
+        playerInfo.racePos = pos;
+    }
+
+    public void AssignPlacement(int pos)
+    {
+        Debug.Log("Placement: " + pos);
+        playerInfo.racePos = pos;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier1Rpc()
+    {
+        playerInfo.trapUsage["oilSpill1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier2Rpc()
+    {
+        playerInfo.trapUsage["fakepowerupbrick"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier3Rpc()
+    {
+        playerInfo.trapUsage["brickwall"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementHazardUsageTier4Rpc()
+    {
+        playerInfo.trapUsage["confuseritchie"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier1Rpc()
+    {
+        playerInfo.defenseUsage["defense1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier2Rpc()
+    {
+        playerInfo.defenseUsage["defense2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier3Rpc()
+    {
+        playerInfo.defenseUsage["defense3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementDefenseUsageTier4Rpc()
+    {
+        playerInfo.defenseUsage["defense4"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier1Rpc()
+    {
+        playerInfo.offenceUsage["puck1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier2Rpc()
+    {
+        playerInfo.offenceUsage["puck2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier3Rpc()
+    {
+        playerInfo.offenceUsage["puck3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementOffenseUsageTier4Rpc()
+    {
+        playerInfo.offenceUsage["puck4"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier1Rpc()
+    {
+        playerInfo.boostUsage["speedBoost1"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier2Rpc()
+    {
+        playerInfo.boostUsage["speedBoost2"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier3Rpc()
+    {
+        playerInfo.boostUsage["speedBoost3"]++;
+    }
+
+    [Rpc(SendTo.Owner, RequireOwnership = false)]
+    public void IncrementBoostUsageTier4Rpc()
+    {
+        playerInfo.boostUsage["speedBoost4"]++;
     }
 }

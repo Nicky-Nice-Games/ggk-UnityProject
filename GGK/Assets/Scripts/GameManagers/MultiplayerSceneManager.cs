@@ -93,7 +93,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
     // Specific track load functions
     public void ToRITOuterLoop()
     {
-        LoadScene("LD_RITOuterLoop");
+        LoadScene("LD_RITOuterLoop-Backup");
     }
     public void ToGolisano()
     {
@@ -101,7 +101,7 @@ public class MultiplayerSceneManager : NetworkBehaviour
     }
     public void ToRITDorm()
     {
-        LoadScene("LD_RITDorm");
+        LoadScene("GSP_RITDorm");
     }
     public void ToRITQuarterMile()
     {
