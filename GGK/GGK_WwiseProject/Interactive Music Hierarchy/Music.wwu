@@ -319,6 +319,32 @@
 												<TransitionObjectRef Name="RaceStart" ID="{7DD77154-E56D-4203-AF28-5C005E2301E9}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
 											</TransitionInfo>
 										</MusicTransition>
+										<MusicTransition Name="Transition" ID="{7FE1EFE8-2050-4087-9C47-17B128C8B59F}">
+											<PropertyList>
+												<Property Name="DestinationContextType" Type="int16" Value="2"/>
+												<Property Name="ExitSourceAt" Type="int16" Value="0"/>
+												<Property Name="SourceContextType" Type="int16" Value="2"/>
+												<Property Name="UseTransitionObject" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="DestinationContextObject">
+													<ObjectRef Name="Golisano" ID="{AD6F42FF-6B5D-46C7-8B06-D43EE90DE61F}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												</Reference>
+												<Reference Name="SourceContextObject">
+													<ObjectRef Name="Limbo" ID="{778EC35D-29ED-49A1-BA01-15D68C53D9FE}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												</Reference>
+											</ReferenceList>
+											<TransitionInfo>
+												<TransitionObjectRef Name="RaceStart" ID="{7DD77154-E56D-4203-AF28-5C005E2301E9}" WorkUnitID="{C55ABE1F-EA19-44C1-848F-7E8EAFCA0C2F}"/>
+												<SourceFadeOut>
+													<MusicFade Name="Source Fade-out" ID="{6E1E3831-70E9-47F2-B8D1-4F19F7AB80CF}">
+														<PropertyList>
+															<Property Name="FadeType" Type="int16" Value="1"/>
+														</PropertyList>
+													</MusicFade>
+												</SourceFadeOut>
+											</TransitionInfo>
+										</MusicTransition>
 										<MusicTransition Name="Transition" ID="{D22DF29B-A8E9-4BE2-9C13-7709776FD6BB}">
 											<PropertyList>
 												<Property Name="EnableSourceFadeOut" Type="bool" Value="True"/>
