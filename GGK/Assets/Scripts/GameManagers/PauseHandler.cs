@@ -79,16 +79,16 @@ public class PauseHandler : NetworkBehaviour
                     {
                         pausePanel.SetActive(false);
 
-                        // // If host not paused resume game, else wait for host to unpause
-                        // if (!isHostPaused)
-                        // {
-                        //     Time.timeScale = 1;
-                        // }
+                        // If host not paused resume game, else wait for host to unpause
+                        if (!isHostPaused)
+                        {
+                            Time.timeScale = 1;
+                        }
                     }
                     else
                     {
                         pausePanel.SetActive(true);
-                        // Time.timeScale = 0;
+                        Time.timeScale = 0;
                     }
                 }
             }

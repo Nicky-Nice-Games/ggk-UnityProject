@@ -25,17 +25,12 @@ public class ColorSelect : MonoBehaviour
     [SerializeField]
     private GameObject buttons;
 
-    [SerializeField]
-    private GameObject kart;
-
 
     void Start()
     {
         // Get character data
         charData = FindAnyObjectByType<CharacterData>();
         gameManager = FindAnyObjectByType<GameManager>();
-        kart.SetActive(true);
-
     }
 
 
@@ -45,7 +40,6 @@ public class ColorSelect : MonoBehaviour
     /// <param name="color"></param>
     public void SelectColor(Button color)
     {
-        
         // Get all buttons and update sprites
         Button[] colors = buttons.transform.GetComponentsInChildren<Button>();
         for (int i = 0; i < colors.Length; i++)
@@ -67,7 +61,7 @@ public class ColorSelect : MonoBehaviour
     /// </summary>
     public void Confirm()
     {
-        if (charData.characterColor != default)
+        if (charData.characterColor != null)
         {
             SendAppearanceToPlayerInfo();
             gameManager.PlayerSelected();

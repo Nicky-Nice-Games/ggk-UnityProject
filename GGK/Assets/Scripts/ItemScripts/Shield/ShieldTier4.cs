@@ -34,8 +34,6 @@ public class ShieldTier4 : BaseItem
 
             shieldID = AkUnitySoundEngine.PostEvent("Play_Shield", gameObject);
             StartCoroutine(StopPlayingShieldNoise());
-            if (IsSpawned) { kart.gameObject.GetComponent<NEWDriver>().IncrementDefenseUsageTier4Rpc(); }
-            else { kart.gameObject.GetComponent<NEWDriver>().playerInfo.defenseUsage["defense4"]++; }
         }
         else if (kart.gameObject.GetComponent<NPCPhysics>() != null) // for npcs
         {

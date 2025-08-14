@@ -1,4 +1,4 @@
-// Joshua Chisholm, Yusef
+// Joshua Chisholm
 // 8/7/25
 // Character select logic
 using System.Collections;
@@ -28,7 +28,6 @@ public class CharacterSelect : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> characterModels;
-    private GameObject kart;
     private GameManager gameManager;
 
     [SerializeField]
@@ -46,8 +45,6 @@ public class CharacterSelect : MonoBehaviour
     private Button colorOptionsPanel;
     [SerializeField]
     private Button charOptionsPanel;
-    [SerializeField]
-    private GameObject kartDisplay;
 
     // Start is called before the first frame update
     void Start()
@@ -55,10 +52,17 @@ public class CharacterSelect : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+
     /// <summary>
     /// On click for character buttons. It will record the player's choice
     /// </summary>
-    /// <param name="character">The button the user selected</param>
+    /// <param name="character"></param>
     public void SelectCharacter(Button character)
     {
         // Get all the buttons and update sprites
@@ -77,10 +81,6 @@ public class CharacterSelect : MonoBehaviour
         character.GetComponent<Image>().sprite = buttonSelectedSprite;
         characterNameDisplay.text = character.name;
 
-
-        // Logic for the character model visuals. Set all the models
-        // to be not be active, but then set the chosen character's
-        // model to be active and visible
         foreach(GameObject model in characterModels)
         {
             model.SetActive(false);
@@ -114,19 +114,12 @@ public class CharacterSelect : MonoBehaviour
     /// </summary>
     public void Confirm()
     {
-        if (CharacterData.Instance.characterName != "")
+        if (CharacterData.Instance.characterName != null)
         {
             colorSelectMenu.SetActive(true);
-            kartDisplay.SetActive(true);
             charSelectMenu.SetActive(false);
             eventSystem.SetSelectedGameObject(firstColor);
             colorOptionsPanel.onClick = charOptionsPanel.onClick;
-
-            // disable all character models
-            foreach (GameObject model in characterModels)
-            {
-                model.SetActive(false);
-            }
         }
     }
 }

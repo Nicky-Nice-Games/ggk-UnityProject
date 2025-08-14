@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
  * mapRaced - GameManager::FillMapRaced (called in NEWDriver::Start)
  * collisionsWithPlayers - KartCheckpoint::OnCollisionEnter
  * collisionWithWalls - BonkCollision::OnCollisionEnter
- * characterUsed - PlayerKartHandeler::SendAppearanceToPlayerInfo
+ * characterUsed - ColorSelect::SendAppearanceToPlayerInfo
  * fellOffMap - DeathZone::OnTriggerEnter
  * raceStartTime - NEWDriver::OnNtetworkSpawn
  * raceTime - LeaderboardController::Finished
@@ -28,9 +28,9 @@ public class PlayerInfo : ScriptableObject
     // Basic player and match stats
     [Header("Do not Change")]
     public string pid;
+    public int racePosition, mapRaced, collisionsWithPlayers, collisionWithWalls, characterUsed, fellOffMap;
     public DateTime raceStartTime;
     public float raceTime;
-    public int racePos, mapRaced, characterUsed, collisionsWithPlayers, collisionWithWalls, fellOffMap;
     public Dictionary<string, int> boostUsage;
     public Dictionary<string, int> offenceUsage;
     public Dictionary<string, int> trapUsage;
@@ -44,7 +44,6 @@ public class PlayerInfo : ScriptableObject
     public PlayerKart PlayerCharacter; // should probably be an enum referencing each character
     public Color PlayerColor;
     public ulong clientID;
-    public GameModes curGameMode;
 
     //Default constructor
     public PlayerInfo()
@@ -52,7 +51,7 @@ public class PlayerInfo : ScriptableObject
         pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
-        racePos = 0;
+        racePosition = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
         collisionWithWalls = 0;
@@ -80,17 +79,17 @@ public class PlayerInfo : ScriptableObject
         };
         trapUsage = new Dictionary<string, int>
         {
-            {"oilSpill1", 0 },
+            {"oilSpill", 0 },
             {"brickwall", 0 },
             {"confuseritchie", 0 },
             {"fakepowerupbrick", 0 }
         };
         defenseUsage = new Dictionary<string, int>
         {
-            {"defense1", 0 },
-            {"defense2", 0 },
-            {"defense3", 0 },
-            {"defense4", 0 }
+            {"shield1", 0 },
+            {"shield2", 0 },
+            {"shield3", 0 },
+            {"shield4", 0 }
         };
 
         isGuest = false;
@@ -103,7 +102,7 @@ public class PlayerInfo : ScriptableObject
         pid = "";
         raceStartTime = DateTime.Now;
         raceTime = 0.0f;
-        racePos = 0;
+        racePosition = 0;
         mapRaced = 0;
         collisionsWithPlayers = 0;
         collisionWithWalls = 0;
@@ -154,33 +153,16 @@ public class PlayerInfo : ScriptableObject
         pid = other.pid;
         raceStartTime = other.raceStartTime;
         raceTime = other.raceTime;
-        racePos = other.racePos;
+        racePosition = other.racePosition;
         mapRaced = other.mapRaced;
         collisionsWithPlayers = other.collisionsWithPlayers;
         collisionWithWalls = other.collisionWithWalls;
         characterUsed = other.characterUsed;
         fellOffMap = other.fellOffMap;
-        curGameMode = other.curGameMode;
 
         boostUsage = new Dictionary<string, int>(other.boostUsage);
         offenceUsage = new Dictionary<string, int>(other.offenceUsage);
         trapUsage = new Dictionary<string, int>(other.trapUsage);
         defenseUsage = new Dictionary<string, int>(other.defenseUsage);
-    }
-
-    /// <summary>
-    /// Gets rid of unneeded data for time trial
-    /// </summary>
-    public void DeleteDataForTimeTrial()
-    {
-        Debug.Log("Called DeleteDataForTimeTrial");
-        racePos = 0;
-        collisionsWithPlayers = 0;
-        collisionWithWalls = 0;
-        fellOffMap = 0;
-        boostUsage.Clear();
-        offenceUsage.Clear();
-        trapUsage.Clear();  
-        defenseUsage.Clear();
     }
 }

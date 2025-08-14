@@ -201,7 +201,7 @@ public class APIManager : MonoBehaviour
             signInManager.emailError.SetActive(true);
             return true;
         }
-        if (!usernameAvailable)
+        if(!usernameAvailable)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
             kbController.ResetCurrentFields();
@@ -234,7 +234,7 @@ public class APIManager : MonoBehaviour
         {
             gameManager.LoggedIn();
         }
-
+        
     }
 
     /// <summary>

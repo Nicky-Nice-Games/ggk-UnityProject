@@ -1,4 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Fake Item Box
@@ -7,28 +11,16 @@ public class HazardTier2 : BaseItem
 {
     uint hitSpinoutID = 0;
 
-    [SerializeField] private MeshRenderer meshRenderer;    // The fake item brick's mesh renderer
-
     // Start is called before the first frame update
     void Start()
     {
-        base.Start();
         timer = 10.0f;
 
         // sends the hazard slightly up and behind the player before landing on the ground
         transform.position = transform.position
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
-
-        // Checking for multiplayer
-        if (IsSpawned)
-        {
-            kart.gameObject.GetComponent<NEWDriver>().IncrementHazardUsageTier2Rpc();
-        }
-        else
-        {
-            kart.gameObject.GetComponent<NEWDriver>().playerInfo.trapUsage["fakepowerupbrick"]++;
-        }
+        kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
     }
 
     // Update is called once per frame
@@ -53,17 +45,6 @@ public class HazardTier2 : BaseItem
                 kartRigidbody.velocity *= 0.125f; //this slows a kart down to an eighth of its speed
 
                 hitSpinoutID = AkUnitySoundEngine.PostEvent("Play_hit_spinout", gameObject);
-                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
-                {
-                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
-                    playerKart.Stun(2.0f);
-                }
-
-                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
-                {
-                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
-                    npcKart.Stun(2.0f);
-                }
 
                 if (!MultiplayerManager.Instance.IsMultiplayer)
                 {

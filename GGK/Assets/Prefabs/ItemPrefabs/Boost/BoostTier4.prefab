@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8042517428908944054}
   - component: {fileID: 1257197925269620148}
   - component: {fileID: 1030214434015564131}
-  - component: {fileID: 5519019578005315171}
   - component: {fileID: -795138992978774796}
   m_Layer: 3
   m_Name: BoostTier4
@@ -83,27 +82,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &5519019578005315171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1946477701164829535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 186983780
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &-795138992978774796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,7 +96,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: 0
   rb: {fileID: 0}
-  kart: {fileID: 0}
   itemCategory: Boost
   useCount: 1
   isTimed: 0
@@ -127,6 +104,7 @@ MonoBehaviour:
   tierTwoItemIcon: {fileID: 0}
   tierThreeItemIcon: {fileID: 0}
   tierFourItemIcon: {fileID: 0}
+  shieldEffect: {fileID: 0}
   currentPos:
     m_InternalValue: {x: 0, y: 0, z: 0}
   warpBoostEffect: {fileID: 0}
