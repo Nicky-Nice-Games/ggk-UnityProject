@@ -188,7 +188,7 @@ public class APIManager : MonoBehaviour
         if (!emailAvailable && !usernameAvailable)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-            kbController.ResetCurrentFields();
+            if (kbController) kbController.ResetCurrentFields();
             signInManager.usernameError.SetActive(true);
             signInManager.emailError.SetActive(true);
             return true;
@@ -196,7 +196,7 @@ public class APIManager : MonoBehaviour
         if (!emailAvailable)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-            kbController.ResetCurrentFields();
+            if (kbController) kbController.ResetCurrentFields();
             signInManager.usernameError.SetActive(false);
             signInManager.emailError.SetActive(true);
             return true;
@@ -204,7 +204,7 @@ public class APIManager : MonoBehaviour
         if (!usernameAvailable)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-            kbController.ResetCurrentFields();
+            if (kbController) kbController.ResetCurrentFields();
             signInManager.usernameError.SetActive(true);
             signInManager.emailError.SetActive(false);
             return true;
@@ -227,7 +227,7 @@ public class APIManager : MonoBehaviour
         if (!wasCreated)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-            kbController.ResetCurrentFields();
+            if (kbController) kbController.ResetCurrentFields();
             return;
         }
         else
@@ -251,7 +251,7 @@ public class APIManager : MonoBehaviour
         if (!wasFound)
         {
             VirtualKeyboardController kbController = FindAnyObjectByType<VirtualKeyboardController>();
-            kbController.ResetCurrentFields();
+            if (kbController) kbController.ResetCurrentFields();
             signInManager.loginError.SetActive(true);
             return;
         }

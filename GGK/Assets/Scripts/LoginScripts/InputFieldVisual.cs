@@ -13,6 +13,7 @@ public class InputFieldVisual : MonoBehaviour
     public RectTransform animTarget;
     public float animDuration = 0.3f;
     public float animScale = 20f;
+    public Vector2 anchoredPos;
 
     public void OnSelect(BaseEventData eventData)
     {
@@ -21,7 +22,7 @@ public class InputFieldVisual : MonoBehaviour
 
     void Start()
     {
-        
+        anchoredPos = animTarget.anchoredPosition;
     }
 
     // Update is called once per frame
@@ -32,6 +33,13 @@ public class InputFieldVisual : MonoBehaviour
 
     void DoWave()
     {
+        //kill tweens and reset position if it's not in the right place for a tween
+        if (anchoredPos != new Vector2(0f, 0f) && animTarget.anchoredPosition != anchoredPos)
+        {
+            animTarget.DOKill();
+            animTarget.anchoredPosition = anchoredPos;
+        }
+
         animTarget.DOScaleY(1.5f, animDuration * 0.5f).SetEase(Ease.OutQuad)
             .OnComplete(() => animTarget.DOScaleY(1f, animDuration * 0.5f).SetEase(Ease.OutBack));
 
