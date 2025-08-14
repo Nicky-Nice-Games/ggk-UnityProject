@@ -182,7 +182,7 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
-            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            //SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
@@ -200,7 +200,7 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
-            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
+            //SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             //if it's the owner, send its CharacterData settings over to other clients
             AppearanceSettings appearance = gameObject.GetComponent<AppearanceSettings>();
