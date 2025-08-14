@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class KartCheckpoint : NetworkBehaviour
 {
@@ -49,15 +48,19 @@ public class KartCheckpoint : NetworkBehaviour
             if (child != checkPointParent.transform) // Avoid adding the parent itself
                 checkpointList.Add(child.gameObject);
         }
-        if(IsSpawned && IsOwner){
-            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null) {
-                lapDisplay.text = "Lap: " + (lap + 1);
-            }   
-        }else{
+        if (IsSpawned && IsOwner)
+        {
             if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
             {
                 lapDisplay.text = "Lap: " + (lap + 1);
-            }   
+            }
+        }
+        else
+        {
+            if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+            {
+                lapDisplay.text = "Lap: " + (lap + 1);
+            }
         }
 
         name = transform.parent.GetChild(0).gameObject.name;
@@ -67,7 +70,7 @@ public class KartCheckpoint : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(name.Length < 1)
+        if (name.Length < 1)
         {
             name = transform.parent.GetChild(0).gameObject.name;
         }
@@ -90,6 +93,7 @@ public class KartCheckpoint : NetworkBehaviour
             }
             passedWithWarp = false;
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -118,13 +122,7 @@ public class KartCheckpoint : NetworkBehaviour
         {
             if (checkpointId >= checkpointList.Count - 10 && checkpointId < checkpointList.Count)
             {
-                lap++;
-                checkpointId = 0;
-                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
-                {
-                    //lapDisplay.text = "Lap: " + (lap + 1);
-                }
-
+                //Music stuff to be put wherever we are confirmed to have crossed the finish line and it counts
                 if (MusicLapStateManager.instance != null &&
                     this.GetComponent<NPCDriver>() == null && physicsNPC == null)
                 {
@@ -141,32 +139,16 @@ public class KartCheckpoint : NetworkBehaviour
                     }
                 }
 
+                lap++;
+                checkpointId = 0;
+                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+                {
+                    //lapDisplay.text = "Lap: " + (lap + 1);
+                }
+
                 if (lap >= totalLaps)
                 {
                     finishTime = IsSpawned ? LeaderboardController.instance.networkTime.Value : LeaderboardController.instance.curTime;
-                    // raceposition data to playerinfo
-                    parent.transform.GetChild(0).GetComponent<NEWDriver>().playerInfo.racePosition = placement;
-
-                    if (this.GetComponent<NPCDriver>() == null && physicsNPC == null
-                        && MusicStateManager.instance != null)
-                    {
-                        if (placement < 4)
-                        {
-                            Debug.Log("You Win");
-                            MusicResultsStateManager.instance.SetResultsState(ResultsState.Win);
-                            if (voiceLines != null) { voiceLines.PlayLapMade(); }
-                        }
-                        else
-                        {
-                            Debug.Log("You Lose");
-                            MusicResultsStateManager.instance.SetResultsState(ResultsState.Loss);
-                            if (voiceLines != null) { voiceLines.PlayHitCollision(); }
-                        }
-                        MusicLapStateManager.instance.SetLapState(LapState.None);
-                        MusicStateManager.instance.SetMusicState(MusicState.PostRace);
-                    }
-
-                    Debug.Log("this is the if where it should call FinalizeFinish");
                     StartCoroutine(FinalizeFinish());
                 }
             }
@@ -180,7 +162,7 @@ public class KartCheckpoint : NetworkBehaviour
         {
             // avoid doubling collisions by only checking the Kart child
             // only count collisions from a player into any other kart
-            if(collision.gameObject.GetComponent<KartCheckpoint>() != null &&
+            if (collision.gameObject.GetComponent<KartCheckpoint>() != null &&
                 this.transform.parent.transform.GetChild(0).gameObject.GetComponent<NEWDriver>() != null)
             {
                 Debug.Log("Collision with kart");
@@ -230,23 +212,10 @@ public class KartCheckpoint : NetworkBehaviour
         if (newPlacement < placement)
         {
             Debug.Log("Placement up - Passed Kart");
-            if(playRacerPassed && voiceLines != null)
-            {
-                voiceLines.PlayRacerPassed();
-                playRacerPassed = false;
-                StartCoroutine(RacerPassedSoundCooldown());
-            }
         }
         else if (newPlacement > placement)
         {
             Debug.Log("Placement Down - Kart Passed");
         }
-    }
-
-    IEnumerator RacerPassedSoundCooldown()
-    {
-        int randNum = Random.Range(3, 20);
-        yield return new WaitForSeconds(randNum);
-        playRacerPassed = true;
     }
 }

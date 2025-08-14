@@ -24,7 +24,9 @@ public class LeaderboardController : NetworkBehaviour
     public NetworkVariable<bool> allPlayerKartsFinished = new NetworkVariable<bool>(false);
     public List<KartCheckpoint> finishedPlayerKarts = new List<KartCheckpoint>();
 
-
+    [Header("Wwise VoiceLines")]
+    public VoiceLines voiceLines;
+    bool playRacerPassed = true;
     private void Awake()
     {
         instance = this;
@@ -212,6 +214,22 @@ public class LeaderboardController : NetworkBehaviour
             player.playerInfo.raceTime = curTime * 1000f;
             player.AssignPlacement(kart.placement);
             leaderboard.transform.SetAsLastSibling();
+
+            //Victory Music/ finish music Stuff
+            if (kart.placement < 4)
+            {
+                Debug.Log("You Win");
+                MusicResultsStateManager.instance.SetResultsState(ResultsState.Win);
+                if (voiceLines != null) { voiceLines.PlayLapMade(); }
+            }
+            else
+            {
+                Debug.Log("You Lose");
+                MusicResultsStateManager.instance.SetResultsState(ResultsState.Loss);
+                if (voiceLines != null) { voiceLines.PlayHitCollision(); }
+            }
+            MusicLapStateManager.instance.SetLapState(LapState.None);
+            MusicStateManager.instance.SetMusicState(MusicState.PostRace);
         }
         else if (IsServer)
         {
