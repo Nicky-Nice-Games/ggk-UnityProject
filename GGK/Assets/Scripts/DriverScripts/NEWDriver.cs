@@ -188,7 +188,7 @@ public class NEWDriver : NetworkBehaviour
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
 
