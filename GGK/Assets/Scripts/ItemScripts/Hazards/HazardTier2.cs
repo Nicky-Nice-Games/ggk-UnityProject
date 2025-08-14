@@ -11,6 +11,7 @@ public class HazardTier2 : BaseItem
 {
 
     [SerializeField] private Material[] fakeMaterials; // The fake item brick's mesh renderer
+    public int index;
 
     // Start is called before the first frame update
     void Start()
@@ -23,11 +24,13 @@ public class HazardTier2 : BaseItem
                              - transform.forward * 5f   // behind the kart
                              + transform.up * 1.5f;       // slightly above ground
         kart.GetComponent<NEWDriver>().playerInfo.trapUsage["brickwall"]++;
+        //apply the random material to the fake item box
+        index = Random.Range(0, fakeMaterials.Length);
         if (fakeMaterials.Length == 0) return;
         // Apply it to this object's MeshRenderer
         MeshRenderer myRenderer = GetComponent<MeshRenderer>();
        
-            myRenderer.material = fakeMaterials[Random.Range(0, fakeMaterials.Length)];
+            myRenderer.material = fakeMaterials[index];
         
     }
 
