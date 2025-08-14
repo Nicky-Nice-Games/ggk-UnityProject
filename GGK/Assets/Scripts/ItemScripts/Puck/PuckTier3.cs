@@ -50,6 +50,8 @@ public class PuckTier3 : BaseItem
             {
                 currentPos.Value = transform.position;
             }
+            if (IsSpawned) kart.gameObject.GetComponent<NEWDriver>().IncrementOffenseUsageTier3Rpc();
+
         }
     }
 
@@ -95,14 +97,11 @@ public class PuckTier3 : BaseItem
         // If puck hits a kart
         if (collision.gameObject.CompareTag("Kart"))
         {
+            // If puck hits a kart
             if (startTimer >= 0.1f)
             {
-                // Detects if puck hit an NPC or player
-                NEWDriver playerKart = collision.transform.root.GetChild(0).GetComponent<NEWDriver>();
-                NPCDriver npcKart = collision.gameObject.GetComponent<NPCDriver>();
 
-                // Stops player
-                if (playerKart)
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
                 {
                     playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
                     playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
@@ -111,39 +110,24 @@ public class PuckTier3 : BaseItem
                     crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 
                     collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
+                    NEWDriver playerKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
                     playerKart.Stun(2.0f);
-                    Debug.Log(collision.transform.root.GetChild(0).gameObject);
-                }
-                // Stops NPC and starts recovery
-                else if (npcKart)
-                {
-                    npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                    npcKart.StartRecovery();
-                    collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
                 }
 
-                // Otherwise destroys puck regardless of kart hit
+                if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
+                {
+                    NPCPhysics npcKart = collision.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcKart.Stun(2.0f);
+                }
+
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (!MultiplayerManager.Instance.IsMultiplayer)
+                {
+                    Destroy(this.gameObject);
+                }
                 else
                 {
-                    //if (!MultiplayerManager.Instance.IsMultiplayer)
-                    //{
-                    //    Destroy(this.gameObject);
-                    //}
-                    //else if (MultiplayerManager.Instance.IsMultiplayer && IsServer)
-                    //{
-                    //    this.NetworkObject.Despawn();
-                    //    Destroy(this.gameObject);
-                    //}
-
-                    // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-                    if (!MultiplayerManager.Instance.IsMultiplayer)
-                    {
-                        Destroy(this.gameObject);
-                    }
-                    else
-                    {
-                        DestroyItemRpc(this);
-                    }
+                    DestroyItemRpc(this);
                 }
             }
         }

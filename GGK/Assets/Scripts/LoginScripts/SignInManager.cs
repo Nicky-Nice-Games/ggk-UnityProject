@@ -52,9 +52,7 @@ public class SignInManager : MonoBehaviour
             button.onClick.AddListener(() =>
             gameManager.GetComponent<ButtonBehavior>().OnClick());
             button.onClick.AddListener(() =>
-            {
-                StartCoroutine(HandleLoginSuccess());
-            });
+            gameManager.LoggedIn());
         }
 
         // Getting Client ID / creating player info
@@ -205,5 +203,10 @@ public class SignInManager : MonoBehaviour
     public void HideKeyboard()
     {
         keyboard.gameObject.SetActive(false);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

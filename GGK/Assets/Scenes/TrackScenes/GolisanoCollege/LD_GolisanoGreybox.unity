@@ -175,8 +175,9 @@ MonoBehaviour:
   minDepthTracking: -70
   sizeOffset: 1.5
   showDebug: 1
-  iconSpinoutSpeed: 0
   trackingPlayer: {fileID: 0}
+  miniMap: {fileID: 0}
+  iconRef: {fileID: 0}
 --- !u!114 &168774465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -668,7 +669,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df3a3039c1512448af2e3101d88cec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointList: []
+  maxSkip: 10
+  checkpointManager: {fileID: 0}
+  placementDisplay: {fileID: 0}
+  lapDisplay: {fileID: 0}
+  trackedKart: {fileID: 0}
+  kartCheckpointList: []
   sortedList: []
   kartsList: []
 --- !u!4 &395054086
@@ -1683,6 +1689,10 @@ PrefabInstance:
       propertyPath: checkpointList.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3651042994045691783, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2363192483
+      objectReference: {fileID: 0}
     - target: {fileID: 4107905189492007490, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
       propertyPath: itemDisplay
       value: 
@@ -2046,7 +2056,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaderboard: {fileID: 517547463}
   leaderboardItem: {fileID: 2025370594096732721, guid: 048e9d4df3668cd46b33144720f14e35, type: 3}
+  timeDisplay: {fileID: 0}
   curTime: 0
+  networkTime:
+    m_InternalValue: 0
+  numOfPlayerKarts: 0
+  allPlayerKartsFinished:
+    m_InternalValue: 0
+  finishedPlayerKarts: []
 --- !u!4 &1702365725
 Transform:
   m_ObjectHideFlags: 0
@@ -2189,7 +2206,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6866088379297677056, guid: 70f3f5e5c45e980468240d1d68b45b1d, type: 3}
   m_PrefabInstance: {fileID: 1507418568}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6279440883027744990
+--- !u!1001 &2967194903350270284
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -2197,55 +2214,112 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 847660934074048482, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
+      propertyPath: m_Name
+      value: TechHouseTurnpike_V4.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1842250325073149676, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+    - target: {fileID: 2620441904419591033, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7940467736058727079, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
-      propertyPath: m_Name
-      value: TechHouse_V3.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9e45a6a31e716544499ba2764a0913b8, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 8556e908d543a7842bd5b4256f082245, type: 3}
+--- !u!1001 &5257347286788640204
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722679498624833292, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5646844990552743615, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
+      propertyPath: m_Name
+      value: Tech House Outside
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b721fc374cd212b4dab4f240bec340f5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2258,4 +2332,5 @@ SceneRoots:
   - {fileID: 1485284744}
   - {fileID: 1702365725}
   - {fileID: 395054086}
-  - {fileID: 6279440883027744990}
+  - {fileID: 2967194903350270284}
+  - {fileID: 5257347286788640204}
