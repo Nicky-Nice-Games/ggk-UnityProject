@@ -203,4 +203,9 @@ public class SignInManager : MonoBehaviour
         keyboard.gameObject.SetActive(false);
         //keyboard.inputField.Clear();
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

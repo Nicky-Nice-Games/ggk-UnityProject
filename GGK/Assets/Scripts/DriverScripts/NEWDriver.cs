@@ -9,6 +9,8 @@ using UnityEngine.U2D;
 
 public class NEWDriver : NetworkBehaviour
 {
+    public bool raceEnded = false;
+
     // root reference of the prefab
     public Transform rootTransform;
     public KartCheckpoint kartCheckpoint;
@@ -275,120 +277,121 @@ public class NEWDriver : NetworkBehaviour
             spherePosTransform.transform.position.z);
 
 
-
-        //------------Movement stuff---------------------
-        //float inputX;
-        //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
-        movementDirection.z = inputFixed.z;
-
-        //Stunned
-        if (isStunned) movementDirection = Vector3.zero;
-
-        //Acceleration
-        if (movementDirection.z != 0f && isGrounded)
+        // Once the race ends the playes movement will be turned off
+        if(!raceEnded)
         {
-            //Setting acceleration 
-            if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
+            //------------Movement stuff---------------------
+            //float inputX;
+            //inputX = Mathf.Lerp(0, movementDirection.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.x = Mathf.Lerp(movementDirection.x, inputFixed.x, inputLerpSpeed * Time.deltaTime);
+            movementDirection.z = inputFixed.z;
+
+            //Stunned
+            if (isStunned) movementDirection = Vector3.zero;
+
+            //Acceleration
+            if (movementDirection.z != 0f && isGrounded)
             {
-                acceleration = Vector3.zero; //If we are going too fast, stop accelerating
-            }
-            else
-            {
-                acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
-            }
-
-        }
-        else if (isGrounded)
-        {
-            //Decceleration
-            acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
-
-            //Stop the vehicle once we reach a certain minimum speed
-            if (sphere.velocity.magnitude < minSpeed)
-            {
-                sphere.velocity = Vector3.zero;
-                acceleration = Vector3.zero;
-            }
-        }
-        else
-        {
-            //In the air, decelerating bc of drag
-            acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
-        }
-
-
-
-        //------------Turning stuff---------------------
-
-        //to check if we are going backwards...
-        float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
-
-        //Applies a turn multiplier when drifting
-        float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
-
-        //If we are not stationary
-        if (!(sphere.velocity == Vector3.zero))
-        {
-            //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
-            float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
-            //float turningDirection = movementDirection.x * driftTurnSpeed;
-
-            //drifting
-            if (driftMethodCaller)
-            {
-                //Gradually increase traction during drift
-                currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
-
-
-                //Keep drifting
-                Drift();
-
-                //Recalculate our turningDirection value bc of drifting
-                turningDirection = movementDirection.x * driftTurnSpeed;
-
-                // turn influence to apply to turning variable
-                turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
-
-                if (isGrounded && airTime < 1.5f)
+                //Setting acceleration 
+                if ((sphere.velocity.magnitude > maxSpeed) || (isDrifting && sphere.velocity.magnitude > driftMaxSpeed))
                 {
-                    acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    acceleration = Vector3.zero; //If we are going too fast, stop accelerating
                 }
                 else
                 {
-                    EndDrift();
+                    acceleration = kartModel.forward * movementDirection.z * accelerationRate * Time.deltaTime;
                 }
 
             }
-
-            //If we are going backwards, we need to turn in the opposite direction
-            if (backwardsCheck < 0)
+            else if (isGrounded)
             {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+                //Decceleration
+                acceleration *= 1f - (deccelerationRate * Time.fixedDeltaTime);
 
-                EndDrift();
+                //Stop the vehicle once we reach a certain minimum speed
+                if (sphere.velocity.magnitude < minSpeed)
+                {
+                    sphere.velocity = Vector3.zero;
+                    acceleration = Vector3.zero;
+                }
             }
             else
             {
-                //Applying our calculated turning direction to the turning variable
-                turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                //In the air, decelerating bc of drag
+                acceleration *= 1f - (airDeccelerationRate * Time.fixedDeltaTime);
             }
 
-            if (isGrounded && movementDirection.x != 0f)
+            //------------Turning stuff---------------------
+
+            //to check if we are going backwards...
+            float backwardsCheck = Vector3.Dot(transform.forward, sphere.velocity);
+
+            //Applies a turn multiplier when drifting
+            float driftTurnSpeed = isDrifting ? turnSpeed * driftTurnMultiplier : turnSpeed;
+
+            //If we are not stationary
+            if (!(sphere.velocity == Vector3.zero))
             {
-                Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
-                sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
+                //Calculate the turning direction based on the movement direction input and multiply it by our turn speed
+                float turningDirection = isGrounded ? movementDirection.x * driftTurnSpeed : movementDirection.x * airTurnSpeed;
+                //float turningDirection = movementDirection.x * driftTurnSpeed;
 
+                //drifting
+                if (driftMethodCaller)
+                {
+                    //Gradually increase traction during drift
+                    currentTraction = Mathf.Lerp(currentTraction, tractionCoefficient, Time.fixedDeltaTime * tractionLerpSpeed);
+
+
+                    //Keep drifting
+                    Drift();
+
+                    //Recalculate our turningDirection value bc of drifting
+                    turningDirection = movementDirection.x * driftTurnSpeed;
+
+                    // turn influence to apply to turning variable
+                    turningDirection += isDriftingLeft ? -minDriftSteer : minDriftSteer;
+
+                    if (isGrounded && airTime < 1.5f)
+                    {
+                        acceleration *= driftFowardCompensation * Time.deltaTime; //Compensate for the forward force when drifting
+                    }
+                    else
+                    {
+                        EndDrift();
+                    }
+
+                }
+
+                //If we are going backwards, we need to turn in the opposite direction
+                if (backwardsCheck < 0)
+                {
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, -(turningDirection * Time.fixedDeltaTime), 0f);
+
+                    EndDrift();
+                }
+                else
+                {
+                    //Applying our calculated turning direction to the turning variable
+                    turning = Quaternion.Euler(0f, turningDirection * Time.fixedDeltaTime, 0f);
+                }
+
+                if (isGrounded && movementDirection.x != 0f)
+                {
+                    Vector3 turnCompensationForce = kartModel.forward * (accelerationRate * 0.0075f * Mathf.Abs(movementDirection.x));
+                    sphere.AddForce(turnCompensationForce, ForceMode.Acceleration);
+
+                }
+
+                acceleration = turning * acceleration;
             }
-
-            acceleration = turning * acceleration;
-        }
-        //If we are not moving, we don't need to turn
-        else
-        {
-            turning = Quaternion.Euler(0f, 0f, 0f);
-            EndDrift();
+            //If we are not moving, we don't need to turn
+            else
+            {
+                turning = Quaternion.Euler(0f, 0f, 0f);
+                EndDrift();
+            }
         }
 
         //Falling down
@@ -1140,9 +1143,11 @@ public class NEWDriver : NetworkBehaviour
     public void SendThisPlayerData()
     {
         //client sending their own data
-        if (!playerInfo.isGuest) 
+        if (!playerInfo.isGuest ) 
         {
             playerInfo.fellOffMap /= 2;
+            Debug.Log("Is on time trial? " + playerInfo.curGameMode);
+            if (playerInfo.curGameMode == GameModes.timeTrial) { playerInfo.DeleteDataForTimeTrial(); }
             gameManagerObj.GetComponent<APIManager>().PostPlayerData(playerInfo); 
         }
 

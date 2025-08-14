@@ -48,10 +48,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5754084199372789682, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -8655394658003162778, guid: d756bbb76a2873c4d848fd55ad3c2de1, type: 3}
+    - target: {fileID: -4022332623716197389, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2043824594191276443, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2799443289001122840, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+    - target: {fileID: -379274949968502088, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
       propertyPath: m_Name
       value: puck_spiked_wings_animation_new (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7406861949678009611, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -4826807438089139733, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -64,7 +84,7 @@ PrefabInstance:
       addedObject: {fileID: -3132809539408879389}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -1536611318307216344}
+      addedObject: {fileID: 5401339138379091206}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be4e4523d45c6f541b980cfa94974fdb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3863920324774101467}
@@ -103,13 +123,13 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 4.5, y: 1.2, z: 4.5}
-  m_Center: {x: -0.13, y: -1.09, z: -0.00000008940697}
---- !u!54 &-1536611318307216344
+  m_Center: {x: -0.13, y: 0, z: -0.00000008940697}
+--- !u!54 &5401339138379091206
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,11 +151,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &3863920324774101467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +196,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1.9999999
-  m_BaseOffset: 3.4
+  m_BaseOffset: 0.86
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &8045103762388646939
@@ -192,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 200
-  rb: {fileID: -1536611318307216344}
+  rb: {fileID: 5401339138379091206}
   kart: {fileID: 0}
   itemCategory: Puck
   useCount: 1
