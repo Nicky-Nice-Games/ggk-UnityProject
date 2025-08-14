@@ -182,13 +182,12 @@ public class NEWDriver : NetworkBehaviour
         {
             playerInput.enabled = true;
             SpeedCameraEffect.instance.FollowKart(rootTransform);
-            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             MiniMapHud.instance.trackingPlayer = gameObject;
             MiniMapHud.instance.AddKart(gameObject);
             PlacementManager.instance.AddKart(gameObject, kartCheckpoint);
             PlacementManager.instance.TrackKart(kartCheckpoint);
             SpeedLineHandler.instance.trackingPlayer = this;
-
+            SpeedAndTimeDisplay.instance.TrackKart(gameObject);
             playerInput.actions["Pause"].started += FindAnyObjectByType<PauseHandler>(FindObjectsInactive.Include).TogglePause;
         }
 
