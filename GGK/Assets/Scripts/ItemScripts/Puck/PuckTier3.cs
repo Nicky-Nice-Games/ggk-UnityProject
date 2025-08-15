@@ -105,9 +105,7 @@ public class PuckTier3 : BaseItem
 
                 if (collision.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
                 {
-                    playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
-                    playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-
+                    //Plays a sound when the player is hit by a puck
                     hitSpinoutID = AkUnitySoundEngine.PostEvent("Play_hit_spinout", gameObject);
                     crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 

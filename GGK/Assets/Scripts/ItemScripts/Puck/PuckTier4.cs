@@ -107,50 +107,37 @@ public class PuckTier4 : BaseItem
             // If puck hits a kart
             if (startTimer >= 0.1f)
             {
-                playerKart.acceleration = new Vector3(0.0f, 0.0f, 0.0f);
-                playerKart.sphere.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-
+                //plays a sound when puck hits any kart
                 hitSpinoutID = AkUnitySoundEngine.PostEvent("Play_hit_spinout", gameObject);
                 crashID = AkUnitySoundEngine.PostEvent("Play_crash", gameObject);
 
-                collision.transform.root.GetChild(0).GetComponent<ItemHolder>().ApplyIconSpin(collision.transform.root.GetChild(0).gameObject, 1);
-                playerKart.Stun(2.0f);
-                Debug.Log(collision.transform.root.GetChild(0).gameObject);
-            }
-            // Stops NPC and starts recovery
-            else if (npcKart)
-            {
-                npcKart.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-                npcKart.StartRecovery();
-                collision.gameObject.GetComponent<ItemHolder>().ApplyIconSpin(collision.gameObject, 1);
-            }
-
-            if (other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
-            {
-                Debug.Log("Tier 4 Puck Hit Kart");
-                NEWDriver playerKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
-                playerKart.Stun(2.0f);
-            }
-
-            if (other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
-            {
-                NPCPhysics npcKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
-                npcKart.Stun(2.0f);
-            }
-
-            Debug.Log(other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>());
-
-            // Prevent puck from being destroyed until it hits the kart in first place.
-            // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
-            if (other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>())
-            {
-                if (!MultiplayerManager.Instance.IsMultiplayer)
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>() != null)
                 {
-                    Destroy(this.gameObject);
+                    Debug.Log("Tier 4 Puck Hit Kart");
+                    NEWDriver playerKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NEWDriver>();
+                    playerKart.Stun(2.0f);
                 }
-                else
+
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>() != null)
                 {
-                    DestroyItemRpc(this);
+                    NPCPhysics npcKart = other.gameObject.transform.parent.GetChild(0).GetComponent<NPCPhysics>();
+                    npcKart.Stun(2.0f);
+                }
+
+                Debug.Log(other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>());
+
+                // Prevent puck from being destroyed until it hits the kart in first place.
+                // destroy puck if single player, if multiplayer call rpc in base item to destroy and despawn
+                if (other.gameObject.transform.parent.GetChild(0).GetComponent<ItemHolder>() == kartTarget.GetComponent<ItemHolder>())
+                {
+                    if (!MultiplayerManager.Instance.IsMultiplayer)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    else
+                    {
+                        DestroyItemRpc(this);
+                    }
                 }
             }
         }
