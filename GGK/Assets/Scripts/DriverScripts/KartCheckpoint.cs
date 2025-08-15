@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class KartCheckpoint : NetworkBehaviour
 {
@@ -130,7 +131,8 @@ public class KartCheckpoint : NetworkBehaviour
                 }
 
                 //Music stuff to be put wherever we are confirmed to have crossed the finish line and it counts
-                if (MusicLapStateManager.instance != null)
+                if (MusicLapStateManager.instance != null &&
+                    this.transform.parent.transform.GetChild(0).gameObject.GetComponent<NEWDriver>() != null)
                 {
                     if (lap + 1 == 2)
                     {
@@ -213,10 +215,23 @@ public class KartCheckpoint : NetworkBehaviour
         if (newPlacement < placement)
         {
             Debug.Log("Placement up - Passed Kart");
+            if (playRacerPassed && voiceLines != null)
+            {
+                voiceLines.PlayRacerPassed();
+                playRacerPassed = false;
+                StartCoroutine(RacerPassedSoundCooldown());
+            }
         }
         else if (newPlacement > placement)
         {
             Debug.Log("Placement Down - Kart Passed");
         }
+    }
+
+    IEnumerator RacerPassedSoundCooldown()
+    {
+        int randNum = Random.Range(3, 20);
+        yield return new WaitForSeconds(randNum);
+        playRacerPassed = true;
     }
 }

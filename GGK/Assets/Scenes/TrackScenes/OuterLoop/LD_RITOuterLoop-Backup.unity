@@ -2653,6 +2653,7 @@ GameObject:
   - component: {fileID: 169196879}
   - component: {fileID: 169196881}
   - component: {fileID: 169196880}
+  - component: {fileID: 169196882}
   m_Layer: 0
   m_Name: Squirel Sound 02
   m_TagString: Untagged
@@ -2704,6 +2705,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169196878}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &169196882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169196878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433c5231c2b7db74ca2b3edd6cfdf1c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Squirrels:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 6e57f4b8af9cd964699d97c0dd1a06ee, type: 2}
 --- !u!1001 &175013547
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9452,6 +9469,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6902153406782371190, guid: daf45f51995f6424eb5f675cac955be4, type: 3}
   m_PrefabInstance: {fileID: 595749131}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &597945392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 597945394}
+  - component: {fileID: 597945393}
+  m_Layer: 0
+  m_Name: WwiseGlobal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &597945393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597945392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b9f99da4dde524c8c1acaf56bc961f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializationSettings: {fileID: 11400000, guid: 38f447111e1e84a4e9e7ee788042784c, type: 2}
+  basePath: 
+  language: 
+  defaultPoolSize: 0
+  lowerPoolSize: 0
+  streamingPoolSize: 0
+  memoryCutoffThreshold: 0
+  monitorPoolSize: 0
+  monitorQueuePoolSize: 0
+  callbackManagerBufferSize: 0
+  spatialAudioPoolSize: 0
+  maxSoundPropagationDepth: 0
+  engineLogging: 0
+--- !u!4 &597945394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597945392}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &613028535
 GameObject:
   m_ObjectHideFlags: 0
@@ -18756,9 +18830,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1081338261}
   - component: {fileID: 1081338260}
-  - component: {fileID: 1081338259}
   - component: {fileID: 1081338258}
   - component: {fileID: 1081338262}
+  - component: {fileID: 1081338264}
+  - component: {fileID: 1081338263}
   m_Layer: 0
   m_Name: Main Camera (1)
   m_TagString: MainCamera
@@ -18788,14 +18863,6 @@ MonoBehaviour:
   baseOffset: {x: 0, y: 2.5, z: -5}
   maxZoomOutZ: -7
   followSpeed: 15
---- !u!81 &1081338259
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081338257}
-  m_Enabled: 1
 --- !u!20 &1081338260
 Camera:
   m_ObjectHideFlags: 0
@@ -18906,6 +18973,46 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1081338263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081338257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda3ab63b5eafcf4cac5101b88cae1e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDefaultListener: 1
+  bOverrideScalingFactor: 0
+  scalingFactor: -1
+  listenerId: 0
+--- !u!114 &1081338264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081338257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbaeb0e016ef85459620001cc18f610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_listeners:
+    initialListenerList: []
+    useDefaultListeners: 1
+  isEnvironmentAware: 0
+  isStaticObject: 0
+  usePositionOffsetData: 0
+  m_positionOffsetData:
+    KeepMe: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+  scalingFactor: 1
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
 --- !u!1001 &1088167844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35919,6 +36026,7 @@ GameObject:
   - component: {fileID: 2105554613}
   - component: {fileID: 2105554616}
   - component: {fileID: 2105554614}
+  - component: {fileID: 2105554617}
   m_Layer: 0
   m_Name: Squirel Sound 01
   m_TagString: Untagged
@@ -35970,6 +36078,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2105554612}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2105554617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105554612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433c5231c2b7db74ca2b3edd6cfdf1c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Squirrels:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 6e57f4b8af9cd964699d97c0dd1a06ee, type: 2}
 --- !u!1 &2108521301
 GameObject:
   m_ObjectHideFlags: 0
@@ -36181,6 +36305,7 @@ MonoBehaviour:
   allPlayerKartsFinished:
     m_InternalValue: 0
   finishedPlayerKarts: []
+  voiceLines: {fileID: 0}
 --- !u!4 &2116037421
 Transform:
   m_ObjectHideFlags: 0
@@ -38726,3 +38851,4 @@ SceneRoots:
   - {fileID: 1405826690}
   - {fileID: 1339604622}
   - {fileID: 1627731033}
+  - {fileID: 597945394}
