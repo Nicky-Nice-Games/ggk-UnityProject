@@ -122,28 +122,29 @@ public class KartCheckpoint : NetworkBehaviour
         {
             if (checkpointId >= checkpointList.Count - 10 && checkpointId < checkpointList.Count)
             {
+                lap++;
+                checkpointId = 0;
+                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+                {
+                    //lapDisplay.text = "Lap: " + (lap + 1);
+                }
+
                 //Music stuff to be put wherever we are confirmed to have crossed the finish line and it counts
-                if (MusicLapStateManager.instance != null &&
-                    this.GetComponent<NPCDriver>() == null && physicsNPC == null)
+                if (MusicLapStateManager.instance != null)
                 {
                     if (lap + 1 == 2)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap2);
                         voiceLines.PlayLapMade();
+                        Debug.Log("Lap 2 started");
 
                     }
                     else if (lap + 1 == 3)
                     {
                         MusicLapStateManager.instance.SetLapState(LapState.Lap3);
                         voiceLines.PlayLapMade();
+                        Debug.Log("Lap 3 started");
                     }
-                }
-
-                lap++;
-                checkpointId = 0;
-                if (this.GetComponent<NPCDriver>() == null && physicsNPC == null)
-                {
-                    //lapDisplay.text = "Lap: " + (lap + 1);
                 }
 
                 if (lap >= totalLaps)
