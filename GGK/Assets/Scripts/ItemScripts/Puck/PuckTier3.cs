@@ -10,7 +10,7 @@ public class PuckTier3 : BaseItem
     private GameObject kartTarget;                 // The kart the puck tracks to
     [SerializeField] private NavMeshAgent agent;   // The AI component of the puck
     private bool goStraight;                       // If the puck goes straight
-    public GameObject[] karts;
+    public List<GameObject> karts;
     private float startTimer = 0;
     private int itemCount = 3;
 
@@ -24,24 +24,24 @@ public class PuckTier3 : BaseItem
     void Start()
     {
 
-        karts = GameObject.FindGameObjectsWithTag("Kart");
+        karts = GameObject.Find("PlacementManager").GetComponent<PlacementManager>().kartsList;
 
         // If the kart is looking backwards
         // sends puck backwards
         if (!MultiplayerManager.Instance.IsMultiplayer)
         {
             // The puck spawns 15 units in front of the kart
-            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+            transform.position = new Vector3(transform.position.x + transform.forward.x * 7f,
                             transform.position.y,
-                            transform.position.z + transform.forward.z * 5f);
+                            transform.position.z + transform.forward.z * 7f);
             kart.GetComponent<NEWDriver>().playerInfo.offenceUsage["puck3"]++;
         }
         else
         {
             // The puck spawns 15 units in front of the kart
-            transform.position = new Vector3(transform.position.x + transform.forward.x * 5f,
+            transform.position = new Vector3(transform.position.x + transform.forward.x * 7f,
                             transform.position.y,
-                            transform.position.z + transform.forward.z * 5f);
+                            transform.position.z + transform.forward.z * 7f);
 
 
             useCount = 3;
@@ -76,14 +76,20 @@ public class PuckTier3 : BaseItem
     {
         FindClosestKart(karts);
 
-        // Moves the puck towards the closest kart
-        agent.SetDestination(kartTarget.transform.position);
+        Debug.Log("Kart target is: " + kartTarget);
+
         // Moves the puck straight normally but still follows pathing
         if (goStraight)
         {
-            agent.SetDestination(transform.position + (transform.forward * 3));
+            agent.enabled = false;
+            rb.velocity = transform.forward * 200f;
         }
-
+        // Moves the puck towards the closest kart
+        else
+        {
+            if (!agent.enabled) agent.enabled = true;
+            agent.SetDestination(kartTarget.transform.position);
+        }
 
 
         // Counts down to despawn
@@ -212,7 +218,7 @@ public class PuckTier3 : BaseItem
     /// Ignores karts behind player.
     /// </summary>
     /// <param name="karts">A list of every kart in the scene</param>
-    public void FindClosestKart(GameObject[] karts)
+    public void FindClosestKart(List<GameObject> karts)
     {
         GameObject closestKart = null;        // The starting empty closest kart
         float baseDistance = Mathf.Infinity;  // The minimum distance encloses every kart
